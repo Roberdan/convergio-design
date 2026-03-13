@@ -82,7 +82,7 @@ function createFooter() {
         All data is illustrative and does not represent real information.
       </p>
       <p class="mn-micro" style="color:var(--grigio-scuro);margin-top:var(--space-sm)">
-        Version 2.0.0 — 4 themes: Nero, Avorio, Editorial, Colorblind
+        Version 3.0.0 — 4 themes: Nero, Avorio, Editorial, Colorblind
       </p>
     </div>
   `;
