@@ -13,10 +13,12 @@ import { createFormsSection } from './sections/forms.js';
 import { createTablesSection } from './sections/tables.js';
 import { createGaugesSection } from './sections/gauges.js';
 import { createCockpitSection } from './sections/cockpit.js';
+import { createTelemetrySection } from './sections/telemetry.js';
 import { createGanttSection } from './sections/gantt.js';
 import { createIconsSection } from './sections/icons.js';
 import { createAnimationsSection } from './sections/animations.js';
 import { createHeatmapSection } from './sections/heatmap.js';
+import { createTreemapSection } from './sections/treemap.js';
 import { createLayoutsSection } from './sections/layouts.js';
 import { createDetailPanelSection } from './sections/detail-panel.js';
 import { createInteractiveSection } from './sections/interactive.js';
@@ -43,10 +45,12 @@ const sections = [
   createTablesSection(),
   createGaugesSection(),
   createCockpitSection(),
+  createTelemetrySection(),
   createGanttSection(),
   createIconsSection(),
   createAnimationsSection(),
   createHeatmapSection(),
+  createTreemapSection(),
   createLayoutsSection(),
   createDetailPanelSection(),
   createInteractiveSection(),
