@@ -72,12 +72,22 @@ export function funnel(
       if (stage.holdCount && stage.holdCount > 0) renderExitPill(svg, barX, y, 'left', stage.holdCount, data.onHold?.color || '#ea580c', '\u23F8');
       if (stage.withdrawnCount && stage.withdrawnCount > 0) renderExitPill(svg, barX + barW, y, 'right', stage.withdrawnCount, data.withdrawn?.color || '#666', '\u2715');
 
-      // Click
-      if (opts.onClick) {
-        const hit = svgEl('rect', { x: barX, y, width: barW, height: BAR_H, fill: 'transparent', cursor: 'pointer' });
-        hit.addEventListener('click', () => { if (opts.onClick) opts.onClick(stage); });
-        svg.appendChild(hit);
-      }
+      // Hover + Click selection
+      const hit = svgEl('rect', { x: barX, y, width: barW, height: BAR_H, fill: 'transparent', cursor: 'pointer', 'pointer-events': 'all' });
+      hit.addEventListener('mouseenter', () => {
+        (bar as SVGElement & ElementCSSInlineStyle).style.filter = 'brightness(1.3)';
+        (bar as SVGElement & ElementCSSInlineStyle).style.transition = 'filter 0.15s';
+      });
+      hit.addEventListener('mouseleave', () => {
+        (bar as SVGElement & ElementCSSInlineStyle).style.filter = '';
+      });
+      hit.addEventListener('click', () => {
+        svg.querySelectorAll('.mn-funnel__sel').forEach(el => el.remove());
+        const sel = svgEl('rect', { x: barX - 2, y: y - 2, width: barW + 4, height: BAR_H + 4, fill: 'none', stroke: '#FFC72C', 'stroke-width': '2', rx: '6', class: 'mn-funnel__sel' });
+        svg.appendChild(sel);
+        if (opts.onClick) opts.onClick(stage);
+      });
+      svg.appendChild(hit);
 
       if (opts.animate) {
         setTimeout(() => {
