@@ -3648,13 +3648,14 @@ function buildGaugePalette(accent) {
 // src/ts/gauge-engine-complications.ts
 function drawComplications(state, progress) {
   const c = state.config;
+  const comp = c.complications || c;
   const { ctx, size } = state;
   const cx = size / 2, cy = size / 2, radius = size * 0.44;
   const P = state.palette;
-  if (c.crosshair) {
+  if (comp.crosshair) {
     drawCrosshair2(
       ctx,
-      c.crosshair,
+      comp.crosshair,
       cx,
       cy,
       radius,
@@ -3664,10 +3665,10 @@ function drawComplications(state, progress) {
       c
     );
   }
-  if (c.multigraph) {
+  if (comp.multigraph) {
     drawMultigraph(
       ctx,
-      c.multigraph,
+      comp.multigraph,
       cx,
       cy,
       radius,

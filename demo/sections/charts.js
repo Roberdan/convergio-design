@@ -70,7 +70,7 @@ export function createChartsSection() {
         ${halfWrap('hg-lg',260,156,'4.2MW','power')}
       </div>
 
-      <h3 class="mn-title-sub" style="margin-bottom:var(--space-md)">Live Trends</h3>
+      <h3 class="mn-title-sub" style="margin-bottom:var(--space-md)">Trend Sparklines</h3>
       <div style="display:flex;gap:var(--space-xl);flex-wrap:wrap;margin-bottom:var(--space-2xl)">
         <div class="mn-card-dark" style="padding:var(--space-lg);flex:1;min-width:260px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md)">

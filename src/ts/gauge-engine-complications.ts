@@ -11,17 +11,18 @@ export function drawComplications(
   state: GaugeDrawState, progress: number,
 ): void {
   const c = state.config as Record<string, unknown>;
+  const comp = (c.complications || c) as Record<string, unknown>;
   const { ctx, size } = state;
   const cx = size / 2, cy = size / 2, radius = size * 0.44;
   const P = state.palette;
 
-  if (c.crosshair) {
-    drawCrosshair(ctx, c.crosshair as Record<string, unknown>,
+  if (comp.crosshair) {
+    drawCrosshair(ctx, comp.crosshair as Record<string, unknown>,
       cx, cy, radius, size, progress, P, c);
   }
 
-  if (c.multigraph) {
-    drawMultigraph(ctx, c.multigraph as Record<string, unknown>,
+  if (comp.multigraph) {
+    drawMultigraph(ctx, comp.multigraph as Record<string, unknown>,
       cx, cy, radius, size, progress, P);
   }
 }
