@@ -78,8 +78,9 @@ export function gantt(
   wrap.className = 'mn-gantt-timeline__canvas-wrap';
   container.appendChild(wrap); s.wrap = wrap;
   const canvas = document.createElement('canvas');
-  canvas.setAttribute('role', 'img');
+  canvas.setAttribute('role', 'grid');
   canvas.setAttribute('aria-label', 'Interactive Gantt timeline. Use arrow keys to navigate, Enter to expand rows.');
+  canvas.setAttribute('aria-roledescription', 'gantt chart');
   canvas.setAttribute('tabindex', '0');
   wrap.appendChild(canvas); s.canvas = canvas;
   const tip = document.createElement('div');
