@@ -33,6 +33,8 @@ import { createLaunchSection } from './sections/launch.js';
 import { createAccessibilitySection } from './sections/accessibility.js';
 import { createApiReferenceSection } from './sections/api-reference.js';
 import { createDataBindingSection } from './sections/data-binding.js';
+import { createOverlaysSection } from './sections/overlays.js';
+import { createOrgTreeSection } from './sections/org-tree.js';
 
 const root = document.getElementById('demo-root');
 if (!root) throw new Error('Missing #demo-root');
@@ -69,6 +71,8 @@ const sections = [
   createAccessibilitySection(),
   createApiReferenceSection(),
   createDataBindingSection(),
+  createOverlaysSection(),
+  createOrgTreeSection(),
   createFooter(),
 ];
 
