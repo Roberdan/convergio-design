@@ -34,26 +34,26 @@ export function createHeroSection() {
         Data inspired by the <strong style="color:var(--grigio-chiaro)">FightTheStroke Foundation</strong>.
       </p>
 
-      <!-- Design principles — progress rings -->
+      <!-- Design principles — speedometers -->
       <div style="display:flex;gap:var(--space-2xl);justify-content:center;flex-wrap:wrap;margin-bottom:var(--space-2xl)">
         <div style="text-align:center">
-          <div id="hero-ring-1" style="width:100px;height:100px;display:inline-block"></div>
-          <div class="mn-micro" style="color:var(--mn-accent);margin-top:var(--space-sm);font-weight:600;letter-spacing:0.1em">INCLUSION</div>
+          <canvas id="hero-speedo-1" width="140" height="140" style="width:140px;height:140px"></canvas>
+          <div class="mn-micro" style="color:var(--mn-accent);margin-top:var(--space-xs);font-weight:600;letter-spacing:0.1em">INCLUSION</div>
           <div class="mn-micro" style="color:var(--grigio-medio);font-size:0.6rem">WCAG 2.2 AA</div>
         </div>
         <div style="text-align:center">
-          <div id="hero-ring-2" style="width:100px;height:100px;display:inline-block"></div>
-          <div class="mn-micro" style="color:var(--verde-racing);margin-top:var(--space-sm);font-weight:600;letter-spacing:0.1em">PERFORMANCE</div>
+          <canvas id="hero-speedo-2" width="140" height="140" style="width:140px;height:140px"></canvas>
+          <div class="mn-micro" style="color:var(--verde-racing);margin-top:var(--space-xs);font-weight:600;letter-spacing:0.1em">PERFORMANCE</div>
           <div class="mn-micro" style="color:var(--grigio-medio);font-size:0.6rem">Zero Dependencies</div>
         </div>
         <div style="text-align:center">
-          <div id="hero-ring-3" style="width:100px;height:100px;display:inline-block"></div>
-          <div class="mn-micro" style="color:var(--azzurro-chiaro,#4EA8DE);margin-top:var(--space-sm);font-weight:600;letter-spacing:0.1em">PRECISION</div>
+          <canvas id="hero-speedo-3" width="140" height="140" style="width:140px;height:140px"></canvas>
+          <div class="mn-micro" style="color:var(--azzurro-chiaro,#4EA8DE);margin-top:var(--space-xs);font-weight:600;letter-spacing:0.1em">PRECISION</div>
           <div class="mn-micro" style="color:var(--grigio-medio);font-size:0.6rem">90+ Components</div>
         </div>
         <div style="text-align:center">
-          <div id="hero-ring-4" style="width:100px;height:100px;display:inline-block"></div>
-          <div class="mn-micro" style="color:var(--rosso-corsa,#DC0000);margin-top:var(--space-sm);font-weight:600;letter-spacing:0.1em">ELEGANCE</div>
+          <canvas id="hero-speedo-4" width="140" height="140" style="width:140px;height:140px"></canvas>
+          <div class="mn-micro" style="color:var(--rosso-corsa,#DC0000);margin-top:var(--space-xs);font-weight:600;letter-spacing:0.1em">ELEGANCE</div>
           <div class="mn-micro" style="color:var(--grigio-medio);font-size:0.6rem">Ferrari Luce DNA</div>
         </div>
       </div>
@@ -95,13 +95,29 @@ export function createHeroSection() {
 
   setTimeout(() => {
     const M = window.Maranello;
-    if (M?.progressRing) {
-      M.progressRing(section.querySelector('#hero-ring-1'), { value: 100, max: 100, size: 100, color: '#FFC72C' });
-      M.progressRing(section.querySelector('#hero-ring-2'), { value: 95, max: 100, size: 100, color: '#00A651' });
-      M.progressRing(section.querySelector('#hero-ring-3'), { value: 90, max: 100, size: 100, color: '#4EA8DE' });
-      M.progressRing(section.querySelector('#hero-ring-4'), { value: 100, max: 100, size: 100, color: '#DC0000' });
+    if (M?.speedometer) {
+      M.speedometer(section.querySelector('#hero-speedo-1'), {
+        value: 100, max: 100, unit: '%', size: 'sm',
+        ticks: [0, 25, 50, 75, 100], needleColor: '#FFC72C', arcColor: '#FFC72C',
+        subLabel: 'AA', animate: true,
+      });
+      M.speedometer(section.querySelector('#hero-speedo-2'), {
+        value: 95, max: 100, unit: '%', size: 'sm',
+        ticks: [0, 25, 50, 75, 100], needleColor: '#00A651', arcColor: '#00A651',
+        subLabel: '0 deps', animate: true,
+      });
+      M.speedometer(section.querySelector('#hero-speedo-3'), {
+        value: 90, max: 100, unit: '', size: 'sm',
+        ticks: [0, 25, 50, 75, 100], needleColor: '#4EA8DE', arcColor: '#4EA8DE',
+        subLabel: '90+', animate: true,
+      });
+      M.speedometer(section.querySelector('#hero-speedo-4'), {
+        value: 100, max: 100, unit: '%', size: 'sm',
+        ticks: [0, 25, 50, 75, 100], needleColor: '#DC0000', arcColor: '#DC0000',
+        subLabel: 'Luce', animate: true,
+      });
     }
-  }, 200);
+  }, 300);
 
   return section;
 }
