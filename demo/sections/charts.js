@@ -151,9 +151,9 @@ function initCharts(section) {
     { width: 460, height: 200, color: '#FFC72C' });
 
   C.areaChart(g('area-chart-demo'),
-    [{ label: 'Donations', color: '#FFC72C', values: [120,145,132,178,195,210,188,225,247,260,238,275] },
-     { label: 'Sessions', color: '#00A651', values: [80,95,90,110,105,125,118,135,140,150,145,160] },
-     { label: 'At Risk', color: '#DC0000', values: [12,8,15,10,7,11,9,6,8,5,7,4] }],
+    [{ label: 'Donations', color: '#FFC72C', data: [120,145,132,178,195,210,188,225,247,260,238,275] },
+     { label: 'Sessions', color: '#00A651', data: [80,95,90,110,105,125,118,135,140,150,145,160] },
+     { label: 'At Risk', color: '#DC0000', data: [12,8,15,10,7,11,9,6,8,5,7,4] }],
     { width: 460, height: 200 });
 
   C.radar(g('radar-demo'),

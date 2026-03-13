@@ -9,8 +9,9 @@ import { test, expect, ConsoleMessage } from '@playwright/test';
 
 // Expected nav anchors from the demo HTML
 const NAV_ANCHORS = [
-  '#hero', '#tokens', '#cards', '#charts', '#controls',
-  '#forms', '#tables', '#gauges', '#gantt', '#detail-panel',
+  '#hero', '#tokens', '#cards', '#dashboard', '#charts', '#controls',
+  '#forms', '#tables', '#gauges', '#cockpit', '#gantt', '#icons',
+  '#animations', '#layouts', '#detail-panel',
   '#okr', '#map', '#advanced', '#web-components', '#accessibility',
 ];
 
