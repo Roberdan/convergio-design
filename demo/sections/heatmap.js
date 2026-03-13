@@ -1,218 +1,90 @@
-/**
- * Heatmap section — Capacity Grid + Impact Heatmap
- * Pure CSS-class rendering, no JS chart API needed.
- */
-
 const MONTHS = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
-const VOLUNTEERS = [
-  { name: 'Maria Rossi', role: 'Therapist', fte: [0.8, 1.0, 1.2, 1.0, 0.6, 0.4] },
-  { name: 'Luca Bianchi', role: 'Coordinator', fte: [0.5, 0.7, 0.8, 0.9, 1.0, 1.1] },
-  { name: 'Giulia Conti', role: 'Researcher', fte: [0.3, 0.4, 0.6, 0.8, 0.9, 0.7] },
-  { name: 'Marco Verdi', role: 'Therapist', fte: [1.0, 0.9, 0.8, 0.7, 0.5, 0] },
-  { name: 'Sara Moretti', role: 'Volunteer', fte: [0, 0.2, 0.4, 0.6, 0.8, 1.0] },
+const STAFF = [
+  { name: 'Dr. Lucia Rinaldi', role: 'Therapist', fte: [0.8, 1.0, 1.2, 1.0, 0.6, 0.4] },
+  { name: 'Elia Ferri', role: 'Coordinator', fte: [0.5, 0.7, 0.8, 0.9, 1.0, 1.1] },
+  { name: 'Sofia Greco', role: 'Researcher', fte: [0.3, 0.4, 0.6, 0.8, 0.9, 0.7] },
+  { name: 'Marco Verdi', role: 'Therapist', fte: [1.0, 0.9, 0.8, 0.7, 0.5, 0.0] },
+  { name: 'Sara Moretti', role: 'Volunteer', fte: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0] },
   { name: 'Andrea Ricci', role: 'Data Analyst', fte: [0.6, 0.6, 0.7, 0.7, 0.8, 0.8] },
   { name: 'Elena Russo', role: 'Therapist', fte: [0.9, 1.0, 1.1, 1.2, 0.8, 0.5] },
   { name: 'Paolo Gallo', role: 'Fundraiser', fte: [0.4, 0.3, 0.5, 0.4, 0.6, 0.7] },
 ];
-
 const IMPACT = {
-  summary: { idle_talents: 2, over_allocated: 3, staffing_gaps: 1 },
-  talent_impacts: [
-    { name: 'Maria Rossi', role: 'Therapist', fte_before: 0.8, fte_after: 1.2, delta: 0.4, status: 'over' },
-    { name: 'Luca Bianchi', role: 'Coordinator', fte_before: 0.7, fte_after: 0.9, delta: 0.2, status: '' },
-    { name: 'Marco Verdi', role: 'Therapist', fte_before: 0.6, fte_after: 0.2, delta: -0.4, status: 'idle' },
-    { name: 'Sara Moretti', role: 'Volunteer', fte_before: 0, fte_after: 0.8, delta: 0.8, status: '' },
-    { name: 'Elena Russo', role: 'Therapist', fte_before: 1.0, fte_after: 1.3, delta: 0.3, status: 'over' },
+  summary: [{ text: '2 IDLE', border: 'var(--mn-accent)' }, { text: '1 OVER-ALLOCATED', border: 'var(--rosso-corsa)' }, { text: '3 GAPS', border: 'var(--mn-accent)' }],
+  talents: [
+    { name: 'Dr. Rossi', role: 'Therapist · T3', allocation: 0.70, delta: 0.40 },
+    { name: 'Dr. Bianchi', role: 'Coordinator · C2', allocation: 0.88, delta: 0.18 },
+    { name: 'Dr. Verdi', role: 'Therapist · T4', allocation: 1.12, delta: 0.26 },
+    { name: 'Dr. Conti', role: 'Speech Therapist · S1', allocation: 0.82, delta: 0.32 },
+    { name: 'Dr. Moretti', role: 'Researcher · R2', allocation: 1.06, delta: 0.16 },
   ],
-  staffing_gaps: [
-    { role: 'Speech Therapist', title: 'Milano Expansion', available_in_studio: ['Roma Center', 'Torino Hub'] },
-  ],
+  alert: 'Therapist · T4: 0.50 FTE needed — consider backfill',
 };
-
-function fteLevel(v) {
-  if (v === 0) return 'empty';
-  if (v < 0.5) return 'low';
-  if (v <= 0.8) return 'mid';
-  if (v <= 1.0) return 'high';
-  return 'over';
-}
-
-function barClass(v) {
-  if (v <= 0.5) return 'ok';
-  if (v <= 0.8) return 'ok';
-  if (v <= 1.0) return 'warn';
-  return 'danger';
-}
-
-function buildCapacityGrid() {
-  const cols = MONTHS.length + 1;
-  const corner = '<div class="mn-cap-grid__corner">Volunteer</div>';
-  const headers = MONTHS.map(m => `<div class="mn-cap-grid__month">${m} 2026</div>`).join('');
-
-  const rows = VOLUNTEERS.map(v => {
-    const label = `<div class="mn-cap-grid__label">
-      <span class="mn-cap-grid__label-role">${v.name}</span>
-      <span class="mn-micro" style="color:var(--grigio-medio)">${v.role}</span>
-    </div>`;
-    const cells = v.fte.map(f => {
-      const lvl = fteLevel(f);
-      return `<div class="mn-cap-grid__cell mn-cap-grid__cell--${lvl}"
-        data-mn-tip="${v.name} — ${f.toFixed(1)} FTE">${f > 0 ? f.toFixed(1) : ''}</div>`;
-    }).join('');
-    return label + cells;
-  }).join('');
-
-  return `
-    <div class="mn-cap-heatmap">
-      <div class="mn-cap-heatmap__header">
-        <div class="mn-cap-heatmap__title">Capacity Grid — Apr–Sep 2026</div>
-        <div class="mn-cap-heatmap__legend">
-          <span class="mn-micro" style="color:var(--grigio-chiaro)">FTE Load:</span>
-          <span class="mn-cap-heatmap__legend-bar mn-cap-grid__cell--empty"></span> 0
-          <span class="mn-cap-heatmap__legend-bar mn-cap-grid__cell--low"></span> &lt;0.5
-          <span class="mn-cap-heatmap__legend-bar mn-cap-grid__cell--mid"></span> 0.5–0.8
-          <span class="mn-cap-heatmap__legend-bar mn-cap-grid__cell--high"></span> 0.8–1.0
-          <span class="mn-cap-heatmap__legend-bar mn-cap-grid__cell--over"></span> &gt;1.0
-        </div>
-      </div>
-      <div class="mn-cap-grid" style="grid-template-columns:180px repeat(${MONTHS.length},1fr)">
-        ${corner}${headers}${rows}
-      </div>
-      <div class="mn-cap-tooltip" id="mn-cap-tip"></div>
-    </div>`;
-}
-
-function buildImpactHeatmap() {
-  const { summary, talent_impacts, staffing_gaps } = IMPACT;
-
-  const cards = `
-    <div class="mn-heatmap__summary">
-      <div class="mn-heatmap__card mn-heatmap__card--idle">
-        <div class="mn-heatmap__card__number">${summary.idle_talents}</div>
-        <div class="mn-heatmap__card__label">Idle Talents</div>
-      </div>
-      <div class="mn-heatmap__card mn-heatmap__card--over">
-        <div class="mn-heatmap__card__number">${summary.over_allocated}</div>
-        <div class="mn-heatmap__card__label">Over-allocated</div>
-      </div>
-      <div class="mn-heatmap__card mn-heatmap__card--gap">
-        <div class="mn-heatmap__card__number">${summary.staffing_gaps}</div>
-        <div class="mn-heatmap__card__label">Staffing Gaps</div>
-      </div>
-    </div>`;
-
-  const rows = talent_impacts.map(t => {
-    const rowMod = t.status ? ` mn-heatmap__row--${t.status}` : '';
-    const beforeCls = barClass(t.fte_before);
-    const afterCls = barClass(t.fte_after);
-    const deltaCls = t.delta >= 0 ? 'positive' : 'negative';
-    const deltaSign = t.delta >= 0 ? '+' : '';
-    const pctBefore = Math.min(t.fte_before / 1.5 * 100, 100);
-    const pctAfter = Math.min(t.fte_after / 1.5 * 100, 100);
-
-    return `<div class="mn-heatmap__row${rowMod}">
-      <div class="mn-heatmap__person">
-        <span class="mn-heatmap__name">${t.name}</span>
-        <span class="mn-heatmap__role">${t.role}</span>
-      </div>
-      <div class="mn-heatmap__bars">
-        <div class="mn-heatmap__bar mn-heatmap__bar--before mn-heatmap__bar--${beforeCls}"
-          style="width:${pctBefore}%">
-          <span class="mn-heatmap__value">${t.fte_before.toFixed(1)}</span>
-        </div>
-        <div class="mn-heatmap__bar mn-heatmap__bar--after mn-heatmap__bar--${afterCls}"
-          style="width:${pctAfter}%">
-          <span class="mn-heatmap__value">${t.fte_after.toFixed(1)}</span>
-        </div>
-      </div>
-      <div class="mn-heatmap__delta--${deltaCls}">${deltaSign}${t.delta.toFixed(1)}</div>
-    </div>`;
-  }).join('');
-
-  const gaps = staffing_gaps.map(g =>
-    `<div class="mn-heatmap__gap">
-      <span class="mn-heatmap__gap-role">${g.role}</span> — ${g.title}
-      <div class="mn-heatmap__gap-suggestion">
-        Available in: ${g.available_in_studio.map(s => `<span class="mn-chip">${s}</span>`).join(' ')}
-      </div>
-    </div>`
-  ).join('');
-
-  return `
-    <div class="mn-heatmap">
-      <div class="mn-heatmap__title">Scenario Impact — Milano Expansion</div>
-      ${cards}
-      <div style="display:flex;gap:var(--space-md);margin-bottom:var(--space-md)">
-        <span class="mn-chip mn-chip--active">Before</span>
-        <span class="mn-chip mn-chip--active">After</span>
-        <span class="mn-micro" style="align-self:center;color:var(--grigio-medio)">FTE comparison (max 1.5)</span>
-      </div>
-      ${rows}
-      <div style="margin-top:var(--space-lg)">
-        <div class="mn-label" style="margin-bottom:var(--space-sm);color:var(--mn-accent)">Staffing Gaps</div>
-        ${gaps}
-      </div>
-    </div>`;
-}
-
-function initHeatmap(section) {
-  const tip = section.querySelector('#mn-cap-tip');
-  if (!tip) return;
-  let selectedCell = null;
-  section.querySelectorAll('[data-mn-tip]').forEach(cell => {
-    cell.style.cursor = 'pointer';
-    cell.style.transition = 'outline 0.15s, transform 0.1s';
-    cell.addEventListener('mouseenter', e => {
-      tip.textContent = e.target.dataset.mnTip;
-      tip.classList.add('mn-cap-tooltip--visible');
-      const r = e.target.getBoundingClientRect();
-      const sr = section.getBoundingClientRect();
-      tip.style.left = `${r.left - sr.left + r.width / 2}px`;
-      tip.style.top = `${r.top - sr.top - 32}px`;
-    });
-    cell.addEventListener('mouseleave', () => {
-      tip.classList.remove('mn-cap-tooltip--visible');
-    });
-    cell.addEventListener('click', () => {
-      if (selectedCell) {
-        selectedCell.style.outline = '';
-        selectedCell.style.outlineOffset = '';
-        selectedCell.style.transform = '';
-        selectedCell.style.zIndex = '';
-      }
-      selectedCell = cell;
-      cell.style.outline = '2px solid var(--mn-accent, #FFC72C)';
-      cell.style.outlineOffset = '-2px';
-      cell.style.transform = 'scale(1.03)';
-      cell.style.zIndex = '1';
-    });
-  });
-}
 
 export function createHeatmapSection() {
   const section = document.createElement('section');
   section.id = 'heatmap';
   section.className = 'mn-section-dark';
   section.innerHTML = `
+    <style>
+      #heatmap .mn-impact-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:var(--space-md);margin-bottom:var(--space-lg)}
+      #heatmap .mn-impact-summary__card{padding:var(--space-lg);border:1px solid var(--grigio-scuro);border-radius:18px;background:rgba(255,255,255,.02);font:700 var(--text-caption)/1.1 var(--font-display);letter-spacing:.08em;text-transform:uppercase}
+      #heatmap .mn-impact-list{display:grid;gap:var(--space-sm)}
+      #heatmap .mn-impact-row{display:grid;grid-template-columns:minmax(180px,1.4fr) minmax(160px,1fr) auto;gap:var(--space-md);align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+      #heatmap .mn-impact-track{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}#heatmap .mn-impact-track span{display:block;height:100%;border-radius:999px}
+      #heatmap .mn-impact-alert{margin-top:var(--space-lg);padding:var(--space-md) var(--space-lg);border-left:3px solid var(--mn-accent);border-radius:16px;background:rgba(255,199,44,.08)}
+    </style>
     <div class="mn-container">
       <p class="mn-section-number">12 — Resource Heatmap</p>
       <h2 class="mn-title-section" style="margin-bottom:var(--space-sm)">Resource Heatmaps</h2>
-      <p class="mn-body" style="margin-bottom:var(--space-2xl)">
-        Capacity grid and impact analysis — pure CSS, fightthestroke foundation volunteer data.
-      </p>
-
+      <p class="mn-body" style="margin-bottom:var(--space-2xl)">Capacity grid and staffing impact simulation built with FightTheStroke therapy foundation data.</p>
       <h3 class="mn-title-sub" style="margin-bottom:var(--space-md)">Capacity Grid</h3>
-      <div style="margin-bottom:var(--space-2xl);position:relative;overflow-x:auto">
-        ${buildCapacityGrid()}
-      </div>
-
+      <div style="margin-bottom:var(--space-2xl);position:relative;overflow-x:auto">${buildCapacityGrid()}</div>
       <div class="mn-divider-gold" style="margin-bottom:var(--space-2xl)"></div>
-
-      <h3 class="mn-title-sub" style="margin-bottom:var(--space-md)">Impact Heatmap</h3>
-      ${buildImpactHeatmap()}
-    </div>
-  `;
-
+      <h3 class="mn-title-sub" style="margin-bottom:var(--space-md)">Impact Heatmap with Staffing</h3>
+      ${buildImpactSimulation()}
+    </div>`;
   requestAnimationFrame(() => initHeatmap(section));
   return section;
+}
+
+function buildCapacityGrid() {
+  const head = MONTHS.map((month) => `<div class="mn-cap-grid__month">${month} 2026</div>`).join('');
+  const rows = STAFF.map((person) => `<div class="mn-cap-grid__label"><span class="mn-cap-grid__label-role">${person.name}</span><span class="mn-micro" style="color:var(--grigio-medio)">${person.role}</span></div>${person.fte.map((fte, index) => `<div class="mn-cap-grid__cell mn-cap-grid__cell--${fteLevel(fte)}" data-mn-tip="${person.name} — ${MONTHS[index]} · ${fte.toFixed(1)} FTE">${fte > 0 ? fte.toFixed(1) : ''}</div>`).join('')}`).join('');
+  return `<div class="mn-cap-heatmap"><div class="mn-cap-heatmap__header"><div class="mn-cap-heatmap__title">Capacity Grid — Apr–Sep 2026</div><div class="mn-cap-heatmap__legend"><span class="mn-micro" style="color:var(--grigio-chiaro)">FTE Load:</span><span class="mn-cap-heatmap__legend-bar mn-cap-grid__cell--empty"></span> 0 <span class="mn-cap-heatmap__legend-bar mn-cap-grid__cell--low"></span> &lt;0.5 <span class="mn-cap-heatmap__legend-bar mn-cap-grid__cell--mid"></span> 0.5–0.8 <span class="mn-cap-heatmap__legend-bar mn-cap-grid__cell--high"></span> 0.8–1.0 <span class="mn-cap-heatmap__legend-bar mn-cap-grid__cell--over"></span> &gt;1.0</div></div><div class="mn-cap-grid" style="grid-template-columns:180px repeat(${MONTHS.length},1fr)"><div class="mn-cap-grid__corner">Talent</div>${head}${rows}</div><div class="mn-cap-tooltip" id="mn-cap-tip"></div></div>`;
+}
+
+function buildImpactSimulation() {
+  const cards = IMPACT.summary.map((card) => `<div class="mn-impact-summary__card" style="border-color:${card.border};color:${card.border === 'var(--rosso-corsa)' ? 'var(--bianco-caldo)' : 'var(--mn-accent)'}">${card.text}</div>`).join('');
+  const rows = IMPACT.talents.map((talent) => {
+    const tone = talent.allocation > 1 ? 'var(--rosso-corsa)' : 'var(--verde-racing)';
+    const delta = `${talent.delta >= 0 ? '+' : ''}${talent.delta.toFixed(2)}`;
+    return `<div class="mn-impact-row"><div><strong>${talent.name}</strong><div class="mn-micro" style="color:var(--grigio-medio)">${talent.role}</div></div><div class="mn-impact-track"><span style="width:${Math.min(talent.allocation / 1.2 * 100, 100)}%;background:${tone}"></span></div><div style="font-variant-numeric:tabular-nums;text-align:right">${talent.allocation.toFixed(2)} <span style="color:${tone}">${delta}</span></div></div>`;
+  }).join('');
+  return `<div class="mn-card-dark" style="padding:var(--space-xl)"><div class="mn-impact-summary">${cards}</div><div class="mn-impact-list">${rows}</div><div class="mn-impact-alert"><div class="mn-label" style="color:var(--mn-accent);margin-bottom:var(--space-xs)">Staffing gaps alert</div><div class="mn-body" style="margin:0">${IMPACT.alert}</div></div></div>`;
+}
+
+function fteLevel(value) { return value === 0 ? 'empty' : value < 0.5 ? 'low' : value <= 0.8 ? 'mid' : value <= 1.0 ? 'high' : 'over'; }
+function initHeatmap(section) {
+  const tip = section.querySelector('#mn-cap-tip');
+  if (!tip) return;
+  let selectedCell = null;
+  section.querySelectorAll('[data-mn-tip]').forEach((cell) => {
+    cell.style.cursor = 'pointer';
+    cell.style.transition = 'outline .15s, transform .1s';
+    cell.addEventListener('mouseenter', (event) => {
+      tip.textContent = event.currentTarget.dataset.mnTip;
+      tip.classList.add('mn-cap-tooltip--visible');
+      const rect = event.currentTarget.getBoundingClientRect();
+      const host = section.getBoundingClientRect();
+      tip.style.left = `${rect.left - host.left + rect.width / 2}px`;
+      tip.style.top = `${rect.top - host.top - 32}px`;
+    });
+    cell.addEventListener('mouseleave', () => tip.classList.remove('mn-cap-tooltip--visible'));
+    cell.addEventListener('click', () => {
+      if (selectedCell) Object.assign(selectedCell.style, { outline: '', outlineOffset: '', transform: '', zIndex: '' });
+      selectedCell = cell;
+      Object.assign(cell.style, { outline: '2px solid var(--mn-accent, #FFC72C)', outlineOffset: '-2px', transform: 'scale(1.03)', zIndex: '1' });
+    });
+  });
 }

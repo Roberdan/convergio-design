@@ -27,6 +27,7 @@ import { createMapSection } from './sections/map.js';
 import { createSocialGraphSection } from './sections/social-graph.js';
 import { createAdvancedSection } from './sections/advanced.js';
 import { createWebComponentsSection } from './sections/web-components.js';
+import { createLaunchSection } from './sections/launch.js';
 import { createAccessibilitySection } from './sections/accessibility.js';
 import { createApiReferenceSection } from './sections/api-reference.js';
 
@@ -59,28 +60,28 @@ const sections = [
   createSocialGraphSection(),
   createAdvancedSection(),
   createWebComponentsSection(),
+  createLaunchSection(),
   createAccessibilitySection(),
   createApiReferenceSection(),
   createFooter(),
 ];
 
 const fragment = document.createDocumentFragment();
-sections.forEach(s => fragment.appendChild(s));
+sections.forEach((section) => fragment.appendChild(section));
 root.appendChild(fragment);
 
-document.querySelectorAll('.demo-nav__links a').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
+document.querySelectorAll('.demo-nav__links a').forEach((link) => {
+  link.addEventListener('click', (event) => {
+    event.preventDefault();
     const target = document.querySelector(link.getAttribute('href'));
     if (target) target.scrollIntoView({ behavior: 'smooth' });
   });
 });
 
-document.addEventListener('mn-theme-change', (e) => {
+document.addEventListener('mn-theme-change', (event) => {
   const nav = document.querySelector('.demo-nav');
   if (!nav) return;
-  const theme = e.detail?.theme;
-  if (theme === 'avorio') {
+  if (event.detail?.theme === 'avorio') {
     nav.style.background = 'rgba(250,243,230,0.95)';
     nav.style.borderBottomColor = 'var(--avorio-scuro)';
   } else {
@@ -96,20 +97,10 @@ function createFooter() {
   footer.innerHTML = `
     <div class="mn-container">
       <div class="mn-divider-gold--accent mn-divider-gold" style="margin-bottom:var(--space-xl)"></div>
-      <p class="mn-label" style="color:var(--mn-accent);margin-bottom:var(--space-sm)">
-        Maranello Luce Design System
-      </p>
-      <p class="mn-micro" style="color:var(--grigio-medio)">
-        Demo built with fictional data inspired by Fightthestroke Foundation.
-        All data is illustrative and does not represent real information.
-      </p>
-      <p class="mn-micro" style="color:var(--grigio-medio);margin-top:var(--space-xs)">
-        <a href="https://www.fightthestroke.org/donorbox" style="color:var(--mn-accent)">Donate to Fightthestroke</a>
-      </p>
-      <p class="mn-micro" style="color:var(--grigio-scuro);margin-top:var(--space-sm)">
-        v3.1.0 — 4 themes · 91 APIs · 23 Web Components
-      </p>
-    </div>
-  `;
+      <p class="mn-label" style="color:var(--mn-accent);margin-bottom:var(--space-sm)">Maranello Luce Design System</p>
+      <p class="mn-micro" style="color:var(--grigio-medio)">Demo built with fictional data inspired by FightTheStroke Foundation. All data is illustrative and does not represent real information.</p>
+      <p class="mn-micro" style="color:var(--grigio-medio);margin-top:var(--space-xs)"><a href="https://www.fightthestroke.org/donorbox" style="color:var(--mn-accent)">Donate to FightTheStroke</a></p>
+      <p class="mn-micro" style="color:var(--grigio-scuro);margin-top:var(--space-sm)">v3.1.0 — 4 themes · 91 APIs · 23 Web Components</p>
+    </div>`;
   return footer;
 }
