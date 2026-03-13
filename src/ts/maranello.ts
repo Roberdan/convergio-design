@@ -14,6 +14,21 @@ import { commandPalette } from './command-palette';
 import { loginScreen } from './login';
 import { systemStatus } from './system-status';
 import { profileMenu } from './profile-menu';
+import { FerrariGauge } from './gauge-engine';
+import { speedometer } from './speedometer';
+import { gantt } from './gantt';
+import { dataTable } from './data-table';
+import { datePicker } from './date-picker';
+import { mapView } from './map-view';
+import { funnel } from './funnel';
+import { hBarChart } from './charts-hbar';
+import {
+  sparkline, donut, barChart, areaChart, radar, halfGauge, bubble, liveGraph,
+} from './charts';
+import { openDetailPanel, closeDetailPanel } from './controls';
+import { buildUI as aiChat } from './ai-chat-dom';
+import { flipCounter } from './flip-counter';
+import { progressRing } from './progress-ring';
 
 declare global {
   interface Window {
@@ -63,22 +78,24 @@ M.loginScreen = loginScreen;
 M.systemStatus = systemStatus;
 M.profileMenu = profileMenu;
 
-// Internal namespaces (populated by component modules at load time)
-M._charts = M._charts || {};
-M._gantt = M._gantt || {};
-M._gauge = M._gauge || {};
-M._dataTable = M._dataTable || {};
-M._mapView = M._mapView || {};
-M._okrPanel = M._okrPanel || {};
-M._chat = M._chat || {};
-M._detailPanel = M._detailPanel || {};
-M._forms = M._forms || {};
-M._speedo = M._speedo || {};
-M._hbar = M._hbar || {};
-M._funnelHelpers = M._funnelHelpers || {};
-M._loginDom = M._loginDom || {};
-M._profileDom = M._profileDom || {};
-M._a11yDom = M._a11yDom || {};
-M._ferrariControls = M._ferrariControls || {};
+// Visualization components (used by Web Components via window.Maranello)
+M.FerrariGauge = FerrariGauge;
+M.speedometer = speedometer;
+M.gantt = gantt;
+M.dataTable = dataTable;
+M.datePicker = datePicker;
+M.mapView = mapView;
+M.funnel = funnel;
+M.aiChat = aiChat;
+M.flipCounter = flipCounter;
+M.progressRing = progressRing;
+M.openDetailPanel = openDetailPanel;
+M.closeDetailPanel = closeDetailPanel;
+M.detailPanel = openDetailPanel;
+
+// Charts namespace (mn-chart WC looks up M.charts[type])
+M.charts = {
+  sparkline, donut, barChart, areaChart, radar, halfGauge, bubble, liveGraph, hBarChart,
+};
 
 export { M as Maranello };

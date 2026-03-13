@@ -36,7 +36,7 @@ describe('dist output files exist', () => {
 });
 
 describe('IIFE bundle size', () => {
-  const IIFE_MAX_BYTES = 100 * 1024; // 100 KB
+  const IIFE_MAX_BYTES = 200 * 1024; // 200 KB (includes all visualization components)
 
   it(`IIFE bundle is under ${IIFE_MAX_BYTES / 1024} KB`, () => {
     const path = join(DIST, 'iife/maranello.min.js');
