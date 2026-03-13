@@ -32,7 +32,7 @@ export function initAutoResize(el: HTMLTextAreaElement | null): void {
 
 /** Initialize a tag input widget. */
 export function initTagInput(container: Element | null): TagInputApi | null {
-  if (!container) return null;
+  if (!container) { console.warn('[Maranello] initTagInput: container element is null'); return null; }
   const root = container;
   const field = root.querySelector('.mn-tag-input__field') as HTMLInputElement | null;
   if (!field) return null;
@@ -103,7 +103,7 @@ export function initPasswordToggle(wrap: Element | null): void {
 
 /** Initialize a file upload widget with drag-and-drop. */
 export function initFileUpload(container: Element | null): FileUploadApi | null {
-  if (!container) return null;
+  if (!container) { console.warn('[Maranello] initFileUpload: container element is null'); return null; }
   const root = container;
   const input = root.querySelector('input[type="file"]') as HTMLInputElement | null;
   if (!input) return null;
@@ -155,7 +155,7 @@ export function initFileUpload(container: Element | null): FileUploadApi | null 
 
 /** Initialize a multi-step form. */
 export function initFormSteps(container: Element | null): FormStepsApi | null {
-  if (!container) return null;
+  if (!container) { console.warn('[Maranello] initFormSteps: container element is null'); return null; }
   container.setAttribute('role', 'group');
   if (!container.getAttribute('aria-label')) container.setAttribute('aria-label', 'Form steps');
   const steps = container.querySelectorAll('.mn-form-step');
@@ -233,7 +233,7 @@ export function initCharCounter(field: Element): void {
 
 /** Initialize a search input with clear button. */
 export function initSearchClear(wrap: Element | null): void {
-  if (!wrap) return;
+  if (!wrap) { console.warn('[Maranello] initSearchClear: wrapper element is null'); return; }
   const input = wrap.querySelector('.mn-form-input') as HTMLInputElement | null;
   const clearBtn = wrap.querySelector('.mn-search-input__clear') as HTMLElement | null;
   if (!input || !clearBtn) return;
