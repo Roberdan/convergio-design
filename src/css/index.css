@@ -1,0 +1,13 @@
+/**
+ * Maranello Luce Design - CSS aggregator
+ * Import all component stylesheets here.
+ * Consumers import this single file to get the full design system CSS.
+ */
+
+/* Core tokens (to be added in W2) */
+/* @import './tokens.css'; */
+
+/* Accessibility: focus, skip link, reduced motion, high contrast */
+@import './accessibility.css';
+
+/* Component styles (to be added as components are migrated) */

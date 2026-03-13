@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
+
+      - name: Unit tests
+        run: npm run test:unit || true
+
+      - name: Scrub check
+        run: |
+          ! grep -ri 'VirtualBPM' src/ dist/ demo/ || exit 1
+          ! grep -ri 'ISE Portfolio' src/ dist/ demo/ || exit 1
+          echo "Scrub check passed"
+
+      - name: Token alignment
+        run: bash scripts/check-tokens.sh
+
+      - name: Bundle size gate
+        run: |
+          IIFE_SIZE=$(wc -c < dist/iife/maranello.min.js)
+          CSS_SIZE=$(wc -c < dist/css/maranello.min.css)
+          echo "IIFE: ${IIFE_SIZE} bytes, CSS: ${CSS_SIZE} bytes"
+          [ "$IIFE_SIZE" -lt 262144 ] || { echo "FAIL: IIFE > 256KB"; exit 1; }

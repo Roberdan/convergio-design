@@ -1,0 +1,80 @@
+/**
+ * Maranello Luce Design - Live/real-time graph (Canvas 2D)
+ */
+import type { LiveGraphOptions } from './core/types';
+import { cssVar } from './core/utils';
+import { chartHiDpi, getCanvasSize, drawSmoothLine } from './charts-helpers';
+
+/** Render a live/real-time line graph with glow effect. */
+export function liveGraph(
+  canvas: HTMLCanvasElement,
+  data: number[],
+  opts?: LiveGraphOptions,
+): HTMLCanvasElement | undefined {
+  const o = {
+    color: cssVar('--chart-default', '#FFC72C'),
+    lineWidth: 1.5,
+    gridColor: 'rgba(200,200,200,0.06)',
+    gridRows: 4,
+    axisColor: cssVar('--chart-axis', '#616161'),
+    showRedLine: true,
+    redLineValue: null as number | null,
+    smooth: true,
+    maxY: null as number | null,
+    unitLabel: '',
+    ...opts,
+  };
+
+  const size = getCanvasSize(canvas, 200, 80);
+  const w = size.width;
+  const h = size.height;
+  const ctx = chartHiDpi(canvas, w, h);
+
+  if (!data || data.length < 2) return undefined;
+
+  const maxVal = o.maxY ?? Math.max(...data) * 1.1;
+  const pad = { top: 4, right: 4, bottom: 2, left: 2 };
+
+  const gx = (i: number) => pad.left + (i / (data.length - 1)) * (w - pad.left - pad.right);
+  const gy = (v: number) => h - pad.bottom - (v / maxVal) * (h - pad.top - pad.bottom);
+
+  // Grid lines
+  ctx.strokeStyle = o.gridColor;
+  ctx.lineWidth = 0.5;
+  for (let r = 0; r <= o.gridRows; r++) {
+    const yy = pad.top + (r / o.gridRows) * (h - pad.top - pad.bottom);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, yy);
+    ctx.lineTo(w - pad.right, yy);
+    ctx.stroke();
+  }
+
+  // Red limit line
+  if (o.showRedLine && o.redLineValue !== null) {
+    ctx.strokeStyle = cssVar('--signal-danger', '#DC0000');
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    const rl = gy(o.redLineValue);
+    ctx.moveTo(pad.left, rl);
+    ctx.lineTo(w - pad.right, rl);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Data trace
+  ctx.beginPath();
+  drawSmoothLine(ctx, data, gx, gy, o.smooth);
+  ctx.strokeStyle = o.color!;
+  ctx.lineWidth = o.lineWidth ?? 1.5;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  // Glow effect
+  ctx.shadowColor = o.color!;
+  ctx.shadowBlur = 6;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  return canvas;
+}

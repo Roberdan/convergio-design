@@ -1,0 +1,16 @@
+src/
+tests/
+e2e/
+demo/
+docs/
+scripts/
+.github/
+coverage/
+*.tgz
+.DS_Store
+.env
+tsconfig.json
+vitest.config.ts
+esbuild.config.mjs
+.editorconfig
+.eslintrc.*
