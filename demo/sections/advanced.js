@@ -1,6 +1,6 @@
 /**
- * Advanced section — AI Chat, System Status, Command Palette,
- * Modal, Toast, Funnel, Flip Counter, Progress Rings
+ * Advanced section — Extended Components: tooltip, modal, toast,
+ * dropdown, tabs, breadcrumb, avatar, spinner, badge.
  */
 export function createAdvancedSection() {
   const section = document.createElement('section');
@@ -8,200 +8,190 @@ export function createAdvancedSection() {
   section.className = 'mn-section-dark';
   section.innerHTML = `
     <div class="mn-container">
-      <p class="mn-section-number">13 — Advanced Components</p>
-      <h2 class="mn-title-section" style="margin-bottom:var(--space-2xl)">Advanced Components</h2>
+      <p class="mn-section-number">06 / INTERFACE · PATTERNS</p>
+      <div class="mn-watermark">INTERFACCIA</div>
+      <h2 class="mn-title-section mn-mb-sm">Extended Components</h2>
+      <p class="mn-body mn-mb-2xl">Tooltip, modal, toast, dropdown, tabs, breadcrumb, avatar, spinner — every pattern a dashboard needs.</p>
 
-      ${aiChatBlock()}
-      ${systemStatusBlock()}
-      ${commandPaletteBlock()}
-      ${modalToastBlock()}
-      ${funnelBlock()}
-      ${flipCounterBlock()}
-      ${progressRingsBlock()}
+      <div class="demo-section-label mn-mt-2xl">Breadcrumb</div>
+      <nav class="mn-breadcrumb mn-mb-2xl" aria-label="Breadcrumb">
+        <a href="#" class="mn-breadcrumb__item">Portfolio</a>
+        <span class="mn-breadcrumb__sep">▸</span>
+        <a href="#" class="mn-breadcrumb__item">Milano Center</a>
+        <span class="mn-breadcrumb__sep">▸</span>
+        <span class="mn-breadcrumb__item mn-breadcrumb__item--active">Therapy Hub</span>
+      </nav>
+
+      <div class="demo-section-label">Tooltips</div>
+      <div class="mn-flex-wrap mn-gap-xl mn-mb-2xl">
+        <span class="mn-tooltip-wrap">
+          <button class="mn-machined-btn">Hover me</button>
+          <span class="mn-tooltip" role="tooltip">Quality score: 92%</span>
+        </span>
+        <span class="mn-tooltip-wrap">
+          <span class="mn-status mn-status--warning"><span class="mn-status__dot"></span> At Risk</span>
+          <span class="mn-tooltip mn-tooltip--bottom" role="tooltip">3 checks failing since Mar 8</span>
+        </span>
+        <span class="mn-tooltip-wrap">
+          <span class="mn-tag mn-tag--active">Therapy</span>
+          <span class="mn-tooltip" role="tooltip">234 children enrolled in movement therapy</span>
+        </span>
+      </div>
+
+      <div class="demo-section-label">Avatars</div>
+      <div class="mn-flex-wrap mn-gap-lg mn-mb-lg" style="align-items:center">
+        <div class="mn-avatar mn-avatar--xs">MR</div>
+        <div class="mn-avatar mn-avatar--sm">JS</div>
+        <div class="mn-avatar">AK<span class="mn-avatar__status mn-avatar__status--online"></span></div>
+        <div class="mn-avatar mn-avatar--lg">YT<span class="mn-avatar__status mn-avatar__status--busy"></span></div>
+        <div class="mn-avatar mn-avatar--xl">LP<span class="mn-avatar__status mn-avatar__status--away"></span></div>
+      </div>
+      <div class="mn-flex-wrap mn-gap-lg mn-mb-2xl" style="align-items:center">
+        <span class="mn-micro mn-text-muted">Group:</span>
+        <div class="mn-avatar-group">
+          <div class="mn-avatar mn-avatar--sm">MR</div>
+          <div class="mn-avatar mn-avatar--sm">JS</div>
+          <div class="mn-avatar mn-avatar--sm">AK</div>
+          <div class="mn-avatar mn-avatar--sm">+4</div>
+        </div>
+      </div>
+
+      <div class="demo-section-label">Badges & Tags</div>
+      <div class="mn-flex-wrap mn-gap-md mn-mb-2xl" style="align-items:center">
+        <span class="mn-tag mn-tag--active">Active</span>
+        <span class="mn-tag">Therapy</span>
+        <span class="mn-tag mn-tag--sm">Research</span>
+        <span class="mn-tag mn-tag--xs">Q1 2026</span>
+        <span class="mn-status mn-status--success"><span class="mn-status__dot"></span>Online</span>
+        <span class="mn-status mn-status--danger"><span class="mn-status__dot mn-anim-pulseDot"></span>Live Alert</span>
+        <span class="mn-status mn-status--warning"><span class="mn-status__dot"></span>At Risk</span>
+      </div>
+
+      <div class="demo-section-label">Dropdown</div>
+      <div class="mn-mb-2xl">
+        <div class="mn-dropdown" id="adv-dropdown">
+          <button class="mn-dropdown__trigger">Milano Center ▾</button>
+          <div class="mn-dropdown__menu">
+            <button class="mn-dropdown__item mn-dropdown__item--active">Milano Center</button>
+            <button class="mn-dropdown__item">Roma Studio</button>
+            <button class="mn-dropdown__item">Torino Hub</button>
+            <div class="mn-dropdown__divider"></div>
+            <button class="mn-dropdown__item">All Centers</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-section-label">Tabs</div>
+      <div class="mn-tabs mn-mb-2xl" id="adv-tabs" style="max-width:600px">
+        <div class="mn-tabs__list" role="tablist">
+          <button class="mn-tabs__tab mn-tabs__tab--active" role="tab">Overview</button>
+          <button class="mn-tabs__tab" role="tab">Activities</button>
+          <button class="mn-tabs__tab" role="tab">Resources</button>
+          <button class="mn-tabs__tab" role="tab">Quality</button>
+        </div>
+        <div class="mn-tabs__panel mn-tabs__panel--active" role="tabpanel">
+          <p class="mn-micro mn-text-muted">47 active programs · 87% utilization · 65/100 quality score</p>
+        </div>
+        <div class="mn-tabs__panel" role="tabpanel">
+          <p class="mn-micro mn-text-muted">128 therapy activities running across MVP, MVE, and Technical Advisory types</p>
+        </div>
+        <div class="mn-tabs__panel" role="tabpanel">
+          <p class="mn-micro mn-text-muted">46.4 FTE allocated · 12 specialists across 3 time zones</p>
+        </div>
+        <div class="mn-tabs__panel" role="tabpanel">
+          <p class="mn-micro mn-text-muted">9 quality checks: 6 passing, 2 warnings, 1 critical</p>
+        </div>
+      </div>
+
+      <div class="demo-section-label">Spinners</div>
+      <div class="mn-flex-wrap mn-gap-2xl mn-mb-2xl" style="align-items:center">
+        <div class="mn-text-center">
+          <div class="mn-spinner mn-spinner--sm"><div class="mn-spinner__ring"></div></div>
+          <div class="mn-spinner__label">Small</div>
+        </div>
+        <div class="mn-text-center">
+          <div class="mn-spinner"><div class="mn-spinner__ring"></div></div>
+          <div class="mn-spinner__label">Default</div>
+        </div>
+        <div class="mn-text-center">
+          <div class="mn-spinner mn-spinner--lg"><div class="mn-spinner__ring"></div></div>
+          <div class="mn-spinner__label">Large</div>
+        </div>
+        <div class="mn-text-center">
+          <div class="mn-spinner mn-spinner--gauge"><div class="mn-spinner__ring"></div></div>
+          <div class="mn-spinner__label">Gauge</div>
+        </div>
+      </div>
+
+      <div class="demo-section-label">Modal</div>
+      <div class="mn-mb-2xl">
+        <button class="mn-machined-btn" id="adv-modal-open"><span class="mn-machined-btn__indicator"></span>Open Modal</button>
+      </div>
+
+      <div class="mn-modal-backdrop" id="adv-modal">
+        <div class="mn-modal">
+          <div class="mn-modal__header">
+            <span class="mn-modal__title">Engagement Detail</span>
+            <button class="mn-modal__close" id="adv-modal-close" aria-label="Close">✕</button>
+          </div>
+          <div class="mn-modal__body">
+            <p><strong>Milano Therapy Hub</strong> — MVP program in Milano Center.</p>
+            <p style="margin-top:var(--space-md)">Quality: 92% · FTE: 2.4 · Status: Active</p>
+            <p style="margin-top:var(--space-md)">Click outside or press Escape to close.</p>
+          </div>
+          <div class="mn-modal__footer">
+            <button class="mn-btn mn-btn--ghost mn-btn--sm" id="adv-modal-cancel">Cancel</button>
+            <button class="mn-btn mn-btn--accent mn-btn--sm" id="adv-modal-confirm">View Full Detail</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-section-label">Toast Notifications</div>
+      <div class="mn-flex-wrap mn-gap-md mn-mb-2xl">
+        <button class="mn-machined-btn" id="adv-toast-success">Success Toast</button>
+        <button class="mn-machined-btn mn-machined-btn--amber" id="adv-toast-warning">Warning Toast</button>
+        <button class="mn-machined-btn" id="adv-toast-danger">Error Toast</button>
+        <button class="mn-machined-btn mn-machined-btn--off" id="adv-toast-info">Info Toast</button>
+      </div>
     </div>
   `;
-  wireAdvancedEvents(section);
+
+  requestAnimationFrame(() => initAdvanced(section));
   return section;
 }
 
-function aiChatBlock() {
-  return `
-    <h3 class="mn-title-sub" style="margin-bottom:var(--space-lg)">AI Chat</h3>
-    <div class="mn-grid-2" style="margin-bottom:var(--space-3xl)">
-      <div class="mn-card-dark" style="padding:var(--space-lg)">
-        <mn-chat
-          title="Foundation Assistant"
-          welcome="Hello! I can help you explore therapy programs, donation data, and volunteer opportunities."
-          avatar="../src/assets/avatar.jpeg"
-          placeholder="Ask about programs..."
-          quick-actions='["Show therapy stats","Donation summary","Volunteer openings"]'
-        ></mn-chat>
-      </div>
-      <div class="mn-card-dark" style="padding:var(--space-xl)">
-        <h4 class="mn-label" style="color:var(--mn-accent);margin-bottom:var(--space-md)">Chat Features</h4>
-        <ul style="list-style:none;padding:0">
-          ${chatFeature('User avatar and branding')}
-          ${chatFeature('Quick action buttons')}
-          ${chatFeature('Agent selector for multi-model')}
-          ${chatFeature('Voice input (mic button)')}
-          ${chatFeature('Markdown message rendering')}
-          ${chatFeature('Theme-aware styling')}
-        </ul>
-      </div>
-    </div>`;
-}
-
-function chatFeature(text) {
-  return `<li class="mn-body" style="padding:var(--space-xs) 0;border-bottom:1px solid var(--grigio-scuro)">${text}</li>`;
-}
-
-function systemStatusBlock() {
-  return `
-    <h3 class="mn-title-sub" style="margin-bottom:var(--space-lg)">System Status</h3>
-    <div class="mn-card-dark" style="padding:var(--space-lg);margin-bottom:var(--space-3xl)">
-      <mn-system-status
-        services='${svcEsc([
-          { name: 'Therapy Portal' },
-          { name: 'Volunteer Hub' },
-          { name: 'Research Database' },
-          { name: 'Donation Gateway' },
-          { name: 'Notification Service' },
-        ])}'
-        version="2.0.0"
-        environment="Demo"
-      ></mn-system-status>
-    </div>`;
-}
-
-function commandPaletteBlock() {
-  return `
-    <h3 class="mn-title-sub" style="margin-bottom:var(--space-lg)">Command Palette</h3>
-    <div class="mn-card-dark" style="padding:var(--space-xl);text-align:center;margin-bottom:var(--space-3xl)">
-      <p class="mn-body" style="margin-bottom:var(--space-md)">
-        Press <kbd style="background:var(--grigio-scuro);padding:2px 8px;border-radius:4px">Cmd+K</kbd>
-        or click below to open the command palette.
-      </p>
-      <button class="mn-btn mn-btn--ghost-light" id="demo-open-palette">Open Command Palette</button>
-      <mn-command-palette
-        items='${svcEsc([
-          { text: 'View Therapy Programs', icon: 'heart', group: 'Navigation' },
-          { text: 'Donation Dashboard', icon: 'chart', group: 'Navigation' },
-          { text: 'Volunteer Directory', icon: 'users', group: 'Navigation' },
-          { text: 'Export Report', icon: 'download', group: 'Actions', shortcut: 'Cmd+E' },
-          { text: 'Toggle Theme', icon: 'palette', group: 'Settings', shortcut: 'Cmd+T' },
-          { text: 'System Status', icon: 'activity', group: 'Settings' },
-        ])}'
-        placeholder="Search commands..."
-      ></mn-command-palette>
-    </div>`;
-}
-
-function modalToastBlock() {
-  return `
-    <h3 class="mn-title-sub" style="margin-bottom:var(--space-lg)">Modal & Toast</h3>
-    <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;margin-bottom:var(--space-3xl)">
-      <button class="mn-btn mn-btn--accent" id="demo-toast-success">Success Toast</button>
-      <button class="mn-btn mn-btn--ghost" id="demo-toast-warning">Warning Toast</button>
-      <button class="mn-btn" id="demo-toast-info">Info Toast</button>
-      <button class="mn-btn mn-btn--ghost-light" id="demo-toast-danger">Error Toast</button>
-    </div>`;
-}
-
-function funnelBlock() {
-  return `
-    <h3 class="mn-title-sub" style="margin-bottom:var(--space-lg)">Donation Pipeline</h3>
-    <div class="mn-card-dark" style="padding:var(--space-lg);margin-bottom:var(--space-3xl)">
-      <mn-funnel
-        stages='${svcEsc([
-          { label: 'Awareness', count: 5000, color: '#FFC72C' },
-          { label: 'Interest', count: 2800, color: '#4EA8DE' },
-          { label: 'Consideration', count: 1200, color: '#00A651' },
-          { label: 'Pledge', count: 650, color: '#D4622B' },
-          { label: 'Donation', count: 420, color: '#DC0000' },
-          { label: 'Recurring Donor', count: 180, color: '#8B5CF6' },
-        ])}'
-        show-conversion
-        animate
-      ></mn-funnel>
-    </div>`;
-}
-
-function flipCounterBlock() {
-  return `
-    <h3 class="mn-title-sub" style="margin-bottom:var(--space-lg)">Donation Counter</h3>
-    <div class="mn-card-dark" style="padding:var(--space-xl);text-align:center;margin-bottom:var(--space-3xl)">
-      <p class="mn-label" style="margin-bottom:var(--space-md)">Total Donations Received (EUR)</p>
-      <div id="demo-flip-counter" style="display:flex;justify-content:center"></div>
-      <button class="mn-btn mn-btn--sm mn-btn--ghost-light" id="demo-flip-increment" style="margin-top:var(--space-lg)">
-        Simulate New Donation
-      </button>
-    </div>`;
-}
-
-function progressRingsBlock() {
-  return `
-    <h3 class="mn-title-sub" style="margin-bottom:var(--space-lg)">Progress Rings</h3>
-    <div style="display:flex;gap:var(--space-2xl);justify-content:center;flex-wrap:wrap">
-      ${ringCard('Summer Therapy Fund', 72, '#FFC72C')}
-      ${ringCard('Brain Research Initiative', 45, '#4EA8DE')}
-      ${ringCard('Volunteer Network Expansion', 88, '#00A651')}
-      ${ringCard('Tech4Good Pilot', 33, '#D4622B')}
-    </div>`;
-}
-
-function ringCard(label, pct, color) {
-  return `<div class="mn-card-dark" style="padding:var(--space-xl);text-align:center;min-width:160px">
-    <div id="ring-${pct}" data-ring-value="${pct}" data-ring-color="${color}" style="display:flex;justify-content:center;margin-bottom:var(--space-md)"></div>
-    <p class="mn-micro">${label}</p>
-    <p class="mn-label" style="color:${color};margin-top:var(--space-xs)">${pct}%</p>
-  </div>`;
-}
-
-function svcEsc(obj) {
-  return JSON.stringify(obj).replace(/'/g, '&#39;');
-}
-
-function wireAdvancedEvents(section) {
-  requestAnimationFrame(() => {
-    wireToasts(section);
-    wireFlipCounter(section);
-    wirePalette(section);
-    wireProgressRings(section);
-  });
-}
-
-function wireToasts(section) {
+function initAdvanced(section) {
   const M = window.Maranello;
-  if (!M?.toast) return;
-  const toasts = [
-    ['demo-toast-success', 'success', 'Donation Confirmed', 'EUR 250 received for Summer Therapy Fund.'],
-    ['demo-toast-warning', 'warning', 'Low Capacity', 'Milano Center 2 is at 92% capacity.'],
-    ['demo-toast-info', 'info', 'New Volunteer', 'A new volunteer registered in Torino.'],
-    ['demo-toast-danger', 'danger', 'Service Alert', 'Research Database is experiencing delays.'],
-  ];
-  toasts.forEach(([id, type, title, message]) => {
-    section.querySelector('#' + id)?.addEventListener('click', () => M.toast({ type, title, message }));
+
+  if (M?.initDropdown) M.initDropdown(section.querySelector('#adv-dropdown'));
+  if (M?.initTabs) M.initTabs(section.querySelector('#adv-tabs'));
+
+  const openModal = () => {
+    if (M?.openModal) { M.openModal('adv-modal'); return; }
+    section.querySelector('#adv-modal')?.classList.add('mn-modal-backdrop--open');
+  };
+  const closeModal = () => {
+    if (M?.closeModal) { M.closeModal('adv-modal'); return; }
+    section.querySelector('#adv-modal')?.classList.remove('mn-modal-backdrop--open');
+  };
+
+  section.querySelector('#adv-modal-open')?.addEventListener('click', openModal);
+  section.querySelector('#adv-modal-close')?.addEventListener('click', closeModal);
+  section.querySelector('#adv-modal-cancel')?.addEventListener('click', closeModal);
+  section.querySelector('#adv-modal-confirm')?.addEventListener('click', closeModal);
+  section.querySelector('#adv-modal')?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeModal();
   });
-}
 
-function wireFlipCounter(section) {
-  const M = window.Maranello;
-  if (!M?.flipCounter) return;
-  const el = section.querySelector('#demo-flip-counter');
-  if (!el) return;
-  const ctrl = M.flipCounter(el, { value: 284700, digits: 7, prefix: '', suffix: '', separator: ',' });
-  section.querySelector('#demo-flip-increment')?.addEventListener('click', () => ctrl.increment(Math.floor(Math.random() * 500) + 50));
-}
-
-function wirePalette(section) {
-  const palette = section.querySelector('mn-command-palette');
-  section.querySelector('#demo-open-palette')?.addEventListener('click', () => palette?.open?.());
-}
-
-function wireProgressRings(section) {
-  const M = window.Maranello;
-  if (!M?.progressRing) return;
-  section.querySelectorAll('[data-ring-value]').forEach(el => {
-    M.progressRing(el, { value: parseInt(el.dataset.ringValue), max: 100, size: 80, color: el.dataset.ringColor });
-  });
+  if (M?.toast) {
+    const toasts = [
+      ['adv-toast-success', { type: 'success', title: 'Donation Confirmed', message: 'EUR 250 received for Summer Therapy Fund.' }],
+      ['adv-toast-warning', { type: 'warning', title: 'Low Capacity', message: 'Milano Center is at 92% capacity.' }],
+      ['adv-toast-danger',  { type: 'danger',  title: 'Service Alert',   message: 'Research Database is experiencing delays.' }],
+      ['adv-toast-info',    { type: 'info',    title: 'New Volunteer',   message: 'A new volunteer registered in Torino.' }],
+    ];
+    toasts.forEach(([id, opts]) => {
+      section.querySelector('#' + id)?.addEventListener('click', () => M.toast(opts));
+    });
+  }
 }

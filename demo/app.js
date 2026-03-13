@@ -5,12 +5,17 @@
 import { createHeroSection } from './sections/hero.js';
 import { createTokensSection } from './sections/tokens.js';
 import { createCardsSection } from './sections/cards.js';
+import { createDashboardSection } from './sections/dashboard.js';
 import { createChartsSection } from './sections/charts.js';
 import { createControlsSection } from './sections/controls.js';
 import { createFormsSection } from './sections/forms.js';
 import { createTablesSection } from './sections/tables.js';
 import { createGaugesSection } from './sections/gauges.js';
+import { createCockpitSection } from './sections/cockpit.js';
 import { createGanttSection } from './sections/gantt.js';
+import { createIconsSection } from './sections/icons.js';
+import { createAnimationsSection } from './sections/animations.js';
+import { createLayoutsSection } from './sections/layouts.js';
 import { createDetailPanelSection } from './sections/detail-panel.js';
 import { createOkrSection } from './sections/okr-panel.js';
 import { createMapSection } from './sections/map.js';
@@ -25,12 +30,17 @@ const sections = [
   createHeroSection(),
   createTokensSection(),
   createCardsSection(),
+  createDashboardSection(),
   createChartsSection(),
   createControlsSection(),
   createFormsSection(),
   createTablesSection(),
   createGaugesSection(),
+  createCockpitSection(),
   createGanttSection(),
+  createIconsSection(),
+  createAnimationsSection(),
+  createLayoutsSection(),
   createDetailPanelSection(),
   createOkrSection(),
   createMapSection(),

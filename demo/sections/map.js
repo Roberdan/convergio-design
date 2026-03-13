@@ -7,20 +7,26 @@ export function createMapSection() {
   section.className = 'mn-section-dark';
   section.innerHTML = `
     <div class="mn-container">
-      <p class="mn-section-number">12 — Geography</p>
+      <p class="mn-section-number">17 — Geography</p>
       <h2 class="mn-title-section" style="margin-bottom:var(--space-lg)">Map Visualization</h2>
       <p class="mn-body" style="margin-bottom:var(--space-2xl)">
-        Canvas-based interactive map with clustered markers, zoom/pan,
+        Canvas-based interactive world map with clustered markers, zoom/pan,
         and theme-aware styling. Shows therapy center locations across Italy.
       </p>
 
       <div class="mn-card-dark" style="padding:var(--space-lg);margin-bottom:var(--space-2xl)">
         <h4 class="mn-label" style="margin-bottom:var(--space-md)">Therapy Center Network</h4>
-        <mn-map
-          markers='${mapMarkers()}'
-          zoom="1"
-          style="height:400px"
-        ></mn-map>
+        <div id="map-canvas-container" style="width:100%;min-height:400px;border-radius:6px;overflow:hidden;background:var(--nero-profondo)">
+          <p class="mn-micro" style="color:var(--grigio-medio);padding:var(--space-lg)">Loading map…</p>
+        </div>
+
+        <!-- Legend -->
+        <div style="display:flex;gap:var(--space-xl);margin-top:var(--space-md)">
+          ${legendDot('#00A651', 'Active')}
+          ${legendDot('#FFC72C', 'Warning')}
+          ${legendDot('#DC0000', 'Danger')}
+          ${legendDot('#8B5CF6', 'Planned')}
+        </div>
       </div>
 
       <div class="mn-grid-2">
@@ -48,23 +54,67 @@ export function createMapSection() {
       </div>
     </div>
   `;
+
+  /* Mount canvas map after DOM insertion */
+  requestAnimationFrame(() => mountMap(section));
   return section;
 }
 
-function esc(str) { return str.replace(/'/g, '&#39;'); }
+const MAP_MARKERS = [
+  { lat: 45.464, lon: 9.190, label: 'Milano Center 1', status: 'active' },
+  { lat: 45.470, lon: 9.205, label: 'Milano Center 2', status: 'active' },
+  { lat: 45.458, lon: 9.175, label: 'Milano Center 3', status: 'active' },
+  { lat: 41.902, lon: 12.496, label: 'Roma Center 1', status: 'active' },
+  { lat: 41.890, lon: 12.510, label: 'Roma Center 2', status: 'active' },
+  { lat: 45.070, lon: 7.687, label: 'Torino Center', status: 'active' },
+  { lat: 43.769, lon: 11.255, label: 'Firenze Center', status: 'warning' },
+  { lat: 44.494, lon: 11.343, label: 'Bologna (Planned)', status: 'planned' },
+];
 
-function mapMarkers() {
-  const markers = [
-    { id: 'm1', lat: 45.464, lon: 9.190, label: 'Milano Center 1', size: 'lg', status: 'active', color: '#FFC72C' },
-    { id: 'm2', lat: 45.470, lon: 9.205, label: 'Milano Center 2', size: 'md', status: 'active', color: '#FFC72C' },
-    { id: 'm3', lat: 45.458, lon: 9.175, label: 'Milano Center 3', size: 'md', status: 'active', color: '#FFC72C' },
-    { id: 'm4', lat: 41.902, lon: 12.496, label: 'Roma Center 1', size: 'lg', status: 'active', color: '#4EA8DE' },
-    { id: 'm5', lat: 41.890, lon: 12.510, label: 'Roma Center 2', size: 'md', status: 'active', color: '#4EA8DE' },
-    { id: 'm6', lat: 45.070, lon: 7.687, label: 'Torino Center', size: 'md', status: 'active', color: '#00A651' },
-    { id: 'm7', lat: 43.769, lon: 11.255, label: 'Firenze Center', size: 'md', status: 'active', color: '#D4622B' },
-    { id: 'm8', lat: 44.494, lon: 11.343, label: 'Bologna (Planned)', size: 'sm', status: 'planned', color: '#8B5CF6' },
-  ];
-  return esc(JSON.stringify(markers));
+function mountMap(section) {
+  const container = section.querySelector('#map-canvas-container');
+  if (!container) return;
+
+  const M = window.Maranello;
+  if (M && typeof M.mapView === 'function') {
+    try {
+      container.innerHTML = '';
+      M.mapView(container, {
+        markers: MAP_MARKERS,
+        width: 800,
+        height: 400,
+        theme: 'dark',
+      });
+      return;
+    } catch (err) {
+      console.warn('[map] Maranello.mapView error:', err);
+    }
+  }
+
+  /* Fallback: plain marker list if mapView unavailable */
+  container.innerHTML = `
+    <div style="padding:var(--space-xl)">
+      <p class="mn-micro" style="color:var(--grigio-medio);margin-bottom:var(--space-md)">
+        Map canvas unavailable — marker list:
+      </p>
+      ${MAP_MARKERS.map(m => `
+        <div style="display:flex;align-items:center;gap:var(--space-sm);padding:var(--space-xs) 0">
+          <span style="width:8px;height:8px;border-radius:50%;background:${statusColor(m.status)};display:inline-block;flex-shrink:0"></span>
+          <span class="mn-body" style="font-size:0.85rem">${m.label}</span>
+          <span class="mn-micro" style="color:var(--grigio-medio)">${m.lat.toFixed(2)}, ${m.lon.toFixed(2)}</span>
+        </div>`).join('')}
+    </div>`;
+}
+
+function statusColor(s) {
+  return s === 'active' ? '#00A651' : s === 'warning' ? '#FFC72C' : s === 'planned' ? '#8B5CF6' : '#DC0000';
+}
+
+function legendDot(color, label) {
+  return `<div style="display:flex;align-items:center;gap:6px">
+    <span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block"></span>
+    <span class="mn-micro" style="color:var(--grigio-chiaro)">${label}</span>
+  </div>`;
 }
 
 function cityRow(city, count, status) {
