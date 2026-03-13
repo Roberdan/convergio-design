@@ -56,14 +56,14 @@
 
   /* Avorio theme overrides */
   .mn-avorio .mn-mapbox-popup .mapboxgl-popup-content {
-    background: #fff;
-    color: #2c2c2c;
-    border-color: #d5cfc2;
+    background: var(--bianco-puro, #fff);
+    color: var(--nero-assoluto, #2c2c2c);
+    border-color: var(--grigio-alluminio, #d5cfc2);
   }
 
   .mn-avorio .mapboxgl-ctrl-group {
-    background: #fff !important;
-    border-color: #d5cfc2 !important;
+    background: var(--bianco-puro, #fff) !important;
+    border-color: var(--grigio-alluminio, #d5cfc2) !important;
   }
 
   .mn-avorio .mapboxgl-ctrl-group button span {

@@ -82,7 +82,7 @@
 }
 .mn-live-panel__info-secondary {
   font-size: 0.7rem;
-  color: #9e9e9e;
+  color: var(--grigio-chiaro, #9e9e9e);
 }
 
 
