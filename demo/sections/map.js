@@ -84,6 +84,10 @@ function mountMap(section) {
         width: 800,
         height: 400,
         theme: 'dark',
+        zoom: 4,
+        center: [42.5, 12.0],
+        clusterRadius: 25,
+        minClusterSize: 10,
       });
       return;
     } catch (err) {

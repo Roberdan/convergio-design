@@ -16,15 +16,14 @@
 
 const _base = new URL('.', import.meta.url).href;
 
-/** Resolve FerrariGauge: ESM-first, CDN fallback. */
+/** Resolve FerrariGauge: CDN-first (if IIFE loaded), ESM fallback. */
 async function resolveEngine() {
+  if (window.Maranello?.FerrariGauge) return window.Maranello.FerrariGauge;
   try {
     const mod = await import(new URL('../ts/gauge-engine.js', _base).href);
     if (mod?.FerrariGauge) return mod.FerrariGauge;
-  } catch {
-    // ESM module not available — fall through to CDN path
-  }
-  return window.Maranello?.FerrariGauge ?? null;
+  } catch { /* ESM not available */ }
+  return null;
 }
 
 function cssLink(path) {

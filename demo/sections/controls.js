@@ -118,7 +118,12 @@ export function createControlsSection() {
 
       <div class="demo-section-label">Drag Rotary</div>
       <div class="mn-flex-center mn-gap-2xl mn-mb-2xl">
-        <div id="ctrl-drag-rotary"></div>
+        <div id="ctrl-drag-rotary" class="mn-rotary" style="width:120px;height:120px">
+          <div class="mn-rotary__housing" style="width:100%;height:100%;border-radius:50%;background:var(--nero-2);border:2px solid var(--grigio-scuro);position:relative">
+            <div class="mn-rotary__pointer" style="position:absolute;top:10%;left:50%;width:2px;height:40%;background:var(--mn-accent);transform-origin:bottom center"></div>
+          </div>
+          <div class="mn-rotary__label mn-micro" style="text-align:center;margin-top:var(--space-xs);color:var(--grigio-chiaro)">Drive Mode</div>
+        </div>
       </div>
     </div>
   `;
