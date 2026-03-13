@@ -78,7 +78,7 @@ function initChat(M, section) {
 
   try {
     const ctrl = M.aiChat(container, {
-      title: 'Fightthestroke Assistant',
+      title: 'FightTheStroke Assistant',
       placeholder: 'Ask about programs, children, or outcomes…',
       welcomeMessage: 'Hi! I can help you with therapy programs, children outcomes, and volunteer management.',
       avatar: 'https://github.com/Roberdan.png',

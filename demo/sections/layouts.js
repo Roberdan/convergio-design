@@ -120,7 +120,7 @@ function notifItem(title, time, unread, accentColor) {
       <div class="mn-body" style="font-size:0.85rem">${title}</div>
       <div class="mn-micro" style="color:var(--grigio-medio);margin-top:2px">${time}</div>
     </div>
-    <button class="mn-notif-close" style="background:none;border:none;color:var(--grigio-medio);cursor:pointer;font-size:0.8rem;padding:2px 6px;border-radius:4px;transition:color 0.15s,background 0.15s" aria-label="Dismiss">✕</button>
+    <button class="mn-notif-close" style="background:none;border:none;color:var(--grigio-medio);cursor:pointer;padding:4px;border-radius:4px;transition:color 0.15s,background 0.15s;display:flex;align-items:center" aria-label="Dismiss"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </div>`;
 }
 
@@ -185,6 +185,12 @@ function tryRenderCharts(section) {
     try {
       funnelEl.innerHTML = '';
       const ctrl = M.funnel(funnelEl, {
+        animate: true,
+        showLabels: true,
+        showCounts: true,
+        onClick: (stage) => {
+          if (M.toast) M.toast({ type: 'info', title: stage.label, message: `${stage.count} engagements in ${stage.label} stage` });
+        },
         data: {
           pipeline: FUNNEL_STAGES.map(s => ({
             label: s.label, count: s.count, color: s.color,

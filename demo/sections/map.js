@@ -61,14 +61,14 @@ export function createMapSection() {
 }
 
 const MAP_MARKERS = [
-  { id: 'm1', lat: 45.464, lon: 9.190, label: 'Milano Center 1', detail: 'Active · 120 children', color: '#00A651' },
-  { id: 'm2', lat: 45.510, lon: 9.280, label: 'Milano Center 2', detail: 'Active · 85 children', color: '#00A651' },
-  { id: 'm3', lat: 45.420, lon: 9.120, label: 'Milano Center 3', detail: 'Active · 95 children', color: '#00A651' },
-  { id: 'r1', lat: 41.902, lon: 12.496, label: 'Roma Center 1', detail: 'Active · 110 children', color: '#00A651' },
-  { id: 'r2', lat: 41.850, lon: 12.600, label: 'Roma Center 2', detail: 'Active · 72 children', color: '#00A651' },
-  { id: 't1', lat: 45.070, lon: 7.687, label: 'Torino Center', detail: 'Active · 64 children', color: '#00A651' },
-  { id: 'f1', lat: 43.769, lon: 11.255, label: 'Firenze Center', detail: 'Warning · capacity 92%', color: '#FFC72C' },
-  { id: 'b1', lat: 44.494, lon: 11.343, label: 'Bologna (Planned)', detail: 'Opening Q3 2026', color: '#8B5CF6' },
+  { id: 'm1', lat: 45.464, lon: 9.190, label: 'Milano Center 1', detail: 'Active · 120 children', color: '#00E676', size: 8 },
+  { id: 'm2', lat: 45.510, lon: 9.280, label: 'Milano Center 2', detail: 'Active · 85 children', color: '#00E676', size: 8 },
+  { id: 'm3', lat: 45.420, lon: 9.120, label: 'Milano Center 3', detail: 'Active · 95 children', color: '#00E676', size: 8 },
+  { id: 'r1', lat: 41.902, lon: 12.496, label: 'Roma Center 1', detail: 'Active · 110 children', color: '#00E676', size: 8 },
+  { id: 'r2', lat: 41.850, lon: 12.600, label: 'Roma Center 2', detail: 'Active · 72 children', color: '#00E676', size: 8 },
+  { id: 't1', lat: 45.070, lon: 7.687, label: 'Torino Center', detail: 'Active · 64 children', color: '#00E676', size: 8 },
+  { id: 'f1', lat: 43.769, lon: 11.255, label: 'Firenze Center', detail: 'Warning · capacity 92%', color: '#FFD54F', size: 8 },
+  { id: 'b1', lat: 44.494, lon: 11.343, label: 'Bologna (Planned)', detail: 'Opening Q3 2026', color: '#B388FF', size: 8 },
 ];
 
 function mountMap(section) {
@@ -81,10 +81,15 @@ function mountMap(section) {
       container.innerHTML = '';
       M.mapView(container, {
         markers: MAP_MARKERS,
-        zoom: 6,
-        padding: 40,
+        zoom: 1,
+        padding: 30,
         onClick: (m) => console.log('[map] clicked:', m.label),
       });
+      // Pan to Italy after render
+      setTimeout(() => {
+        const ctrl = M.mapView.__lastCtrl;
+        if (ctrl?.setZoom) ctrl.setZoom(1);
+      }, 500);
       return;
     } catch (err) {
       console.warn('[map] Maranello.mapView error:', err);

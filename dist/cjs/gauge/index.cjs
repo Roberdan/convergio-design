@@ -498,9 +498,9 @@ function drawComplications(state, progress) {
 }
 function drawCrosshair(ctx, ch, cx, cy, radius, size, progress, P, cfg) {
   const gridR = radius * 0.78;
-  ctx.strokeStyle = ch.gridColor || "#3a3019";
-  ctx.lineWidth = 0.6;
-  ctx.globalAlpha = 0.6;
+  ctx.strokeStyle = ch.gridColor || "#5a4a20";
+  ctx.lineWidth = 0.8;
+  ctx.globalAlpha = 0.85;
   ctx.beginPath();
   ctx.moveTo(cx - gridR, cy);
   ctx.lineTo(cx + gridR, cy);
@@ -606,7 +606,7 @@ function drawCrosshair(ctx, ch, cx, cy, radius, size, progress, P, cfg) {
       const sdy = cy + sd.y * gridR * progress;
       const sdR = sd.r || 3;
       ctx.save();
-      ctx.globalAlpha = 0.4 + 0.6 * progress;
+      ctx.globalAlpha = 0.6 + 0.4 * progress;
       ctx.shadowColor = sd.color;
       ctx.shadowBlur = sdR * 2;
       ctx.beginPath();
@@ -654,7 +654,7 @@ function drawMultigraph(ctx, mg, cx, cy, radius, size, progress, P) {
     ctx.lineTo(gRight, y);
     ctx.stroke();
   }
-  const visiblePoints = Math.ceil(data.length * progress);
+  const visiblePoints = Math.max(1, Math.ceil(data.length * progress));
   ctx.beginPath();
   ctx.moveTo(gLeft, gBottom);
   for (let i = 0; i < visiblePoints; i++) {

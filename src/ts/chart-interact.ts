@@ -46,7 +46,7 @@ function buildTooltipHTML(meta: ChartMeta, index: number, series: string[]): str
   }
   if (meta.type === 'bar') { const d = (meta.data as Array<{ label?: string; value: number; color?: string }>)[index]; const color = d.color || series[index % series.length]; return '<div class="mn-chart-tooltip__label">' + esc(d.label || 'Bar ' + (index + 1)) + '</div><div class="mn-chart-tooltip__value" style="color:' + color + ';">' + d.value + '</div>'; }
   if (meta.type === 'donut') { const seg = (meta.segments as Array<{ color: string; value: number; label?: string; pct: number }>)[index]; return '<div style="display:flex;align-items:center;gap:6px;"><span class="mn-chart-tooltip__dot" style="background:' + seg.color + ';"></span><span class="mn-chart-tooltip__value">' + seg.value + '</span></div>' + (seg.label ? '<div class="mn-chart-tooltip__label">' + esc(seg.label) + '</div>' : '') + '<div style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">' + seg.pct + '%</div>'; }
-  if (meta.type === 'bubble') { const b = (meta.data as Array<{ label?: string; x: number; y: number; z?: number }>)[index]; return '<div class="mn-chart-tooltip__label">' + esc(b.label || 'Point') + '</div><div style="font-size:0.65rem;color:var(--chart-label,#9e9e9e);">x: ' + b.x + ' \u00B7 y: ' + b.y + (b.z ? ' \u00B7 size: ' + b.z : '') + '</div>'; }
+  if (meta.type === 'bubble') { const b = (meta.data as Array<{ label?: string; x: number; y: number; z?: number; r?: number }>)[index]; const size = b.z ?? b.r; return '<div class="mn-chart-tooltip__label">' + esc(b.label || 'Point') + '</div><div style="font-size:0.65rem;color:var(--chart-label,#9e9e9e);">x: ' + b.x + ' \u00B7 y: ' + b.y + (size ? ' \u00B7 size: ' + size : '') + '</div>'; }
   if (meta.type === 'radar') { const r = (meta.data as Array<{ label: string; value: number }>)[index]; return '<div class="mn-chart-tooltip__label">' + esc(r.label) + '</div><div class="mn-chart-tooltip__value" style="color:var(--chart-default,#FFC72C);">' + r.value + '<span style="color:var(--chart-axis,#616161);font-size:0.6rem;">/' + meta.max + '</span></div>'; }
   return '';
 }
@@ -100,6 +100,27 @@ function findNearestIndex(mouseX: number, meta: ChartMeta): number {
     for (const r of (meta.barRects as Array<{ x: number; w: number }>)) { if (mouseX >= r.x && mouseX <= r.x + r.w) return (meta.barRects as unknown[]).indexOf(r); }
     return -1;
   }
+  if ((meta.type === 'bubble' || meta.type === 'radar') && meta.points) {
+    const points = meta.points as Array<{ x: number; y: number; r?: number }>;
+    const mouseY = Number(meta.mouseY ?? 0);
+    let best = -1, bestDist = Infinity;
+    points.forEach((p, i) => {
+      const dist = Math.hypot(mouseX - p.x, mouseY - p.y);
+      const limit = (p.r ?? (meta.type === 'bubble' ? 14 : 10)) + 6;
+      if (dist <= limit && dist < bestDist) { best = i; bestDist = dist; }
+    });
+    return best;
+  }
+  if (meta.type === 'donut' && meta.center && meta.innerRadius && meta.outerRadius && meta.segments) {
+    const { x, y } = meta.center as { x: number; y: number };
+    const mouseY = Number(meta.mouseY ?? 0), dist = Math.hypot(mouseX - x, mouseY - y);
+    const norm = (a: number) => (a + Math.PI * 2) % (Math.PI * 2), angle = norm(Math.atan2(mouseY - y, mouseX - x));
+    if (dist < (meta.innerRadius as number) || dist > (meta.outerRadius as number)) return -1;
+    return (meta.segments as Array<{ start: number; end: number }>).findIndex(({ start, end }) => {
+      const a = norm(start), b = norm(end);
+      return a <= b ? angle >= a && angle <= b : angle >= a || angle <= b;
+    });
+  }
   return -1;
 }
 
@@ -124,7 +145,7 @@ export function chartInteract(
     if (idx < 0) { hide(); return; }
     meta.nearestIndex = idx; currentIndex = idx;
     const gx = meta.gx as ((i: number) => number) | undefined;
-    drawCrosshair(canvas, meta.type === 'bar' || meta.type === 'donut' || meta.type === 'bubble' ? -1 : gx ? gx(idx) : lx, meta, s);
+    drawCrosshair(canvas, meta.type === 'bar' || meta.type === 'donut' || meta.type === 'bubble' || meta.type === 'radar' ? -1 : gx ? gx(idx) : lx, meta, s);
     tip.innerHTML = buildTooltipHTML(meta, idx, s);
     tip.classList.add('mn-chart-tooltip--visible'); tip.setAttribute('aria-hidden', 'false');
     positionTooltip(tip, cx, cy);

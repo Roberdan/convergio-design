@@ -35,9 +35,9 @@ function drawCrosshair(
   const gridR = radius * 0.78;
 
   // Grid lines
-  ctx.strokeStyle = (ch.gridColor as string) || '#3a3019';
-  ctx.lineWidth = 0.6;
-  ctx.globalAlpha = 0.6;
+  ctx.strokeStyle = (ch.gridColor as string) || '#5a4a20';
+  ctx.lineWidth = 0.8;
+  ctx.globalAlpha = 0.85;
   ctx.beginPath(); ctx.moveTo(cx - gridR, cy); ctx.lineTo(cx + gridR, cy); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(cx, cy - gridR); ctx.lineTo(cx, cy + gridR); ctx.stroke();
   ctx.globalAlpha = 0.25;
@@ -99,7 +99,7 @@ function drawCrosshair(
       const sdx = cx + (sd.x as number) * gridR * progress;
       const sdy = cy + (sd.y as number) * gridR * progress;
       const sdR = (sd.r as number) || 3;
-      ctx.save(); ctx.globalAlpha = 0.4 + 0.6 * progress;
+      ctx.save(); ctx.globalAlpha = 0.6 + 0.4 * progress;
       ctx.shadowColor = sd.color as string; ctx.shadowBlur = sdR * 2;
       ctx.beginPath(); ctx.arc(sdx, sdy, sdR, 0, Math.PI * 2);
       ctx.fillStyle = sd.color as string; ctx.fill(); ctx.restore();
@@ -142,7 +142,7 @@ function drawMultigraph(
   }
 
   // Area fill
-  const visiblePoints = Math.ceil(data.length * progress);
+  const visiblePoints = Math.max(1, Math.ceil(data.length * progress));
   ctx.beginPath(); ctx.moveTo(gLeft, gBottom);
   for (let i = 0; i < visiblePoints; i++) {
     const x = gLeft + (i / (data.length - 1)) * gWidth;

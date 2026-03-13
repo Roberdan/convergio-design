@@ -62,7 +62,7 @@ export function createFormsSection() {
         </div>
         <div id="wizard-panel-3" class="mn-wizard-panel" style="display:none">
           <p class="mn-body" style="margin-bottom:var(--space-md)">Review your details and submit the registration.</p>
-          <p class="mn-micro" style="color:var(--grigio-chiaro)">By submitting you agree to Fightthestroke's volunteer terms.</p>
+          <p class="mn-micro" style="color:var(--grigio-chiaro)">By submitting you agree to FightTheStroke's volunteer terms.</p>
         </div>
         <div style="display:flex;gap:var(--space-md);padding-top:var(--space-lg)">
           <button id="wizard-back" class="mn-btn mn-btn--ghost" disabled>Back</button>
@@ -91,8 +91,8 @@ export function createFormsSection() {
                 <input id="search-field" class="mn-input" type="search" placeholder="Search programs, volunteers…"
                   style="width:100%;padding-left:34px">
               </div>
-              <ul id="search-suggestions" class="mn-search-bar__list" style="display:none;position:absolute;top:100%;left:0;right:0;margin:var(--space-xs) 0 0;padding:var(--space-xs);list-style:none;background:var(--nero);border:1px solid var(--grigio-scuro);border-radius:6px;z-index:10">
-                ${SEARCH_SUGGESTIONS.map(s => `<li class="mn-search-bar__item" style="padding:var(--space-sm) var(--space-md);border-radius:4px;cursor:pointer;color:var(--grigio-chiaro);font-size:var(--font-sm)">${s}</li>`).join('')}
+              <ul id="search-suggestions" class="mn-search-bar__list" style="display:none;position:absolute;top:100%;left:0;right:0;margin:var(--space-xs) 0 0;padding:var(--space-xs);list-style:none;background:var(--nero-soft,#141414);border:1px solid var(--mn-accent,#FFC72C);border-radius:6px;z-index:10;box-shadow:0 8px 24px rgba(0,0,0,0.5)">
+                ${SEARCH_SUGGESTIONS.map(s => `<li class="mn-search-bar__item" style="padding:var(--space-sm) var(--space-md);border-radius:4px;cursor:pointer;color:var(--bianco-caldo,#f5f5f5);font-size:0.85rem;transition:background 0.15s">${s}</li>`).join('')}
               </ul>
             </div>
           </div>
@@ -103,9 +103,9 @@ export function createFormsSection() {
           <div class="mn-card-dark" style="padding:var(--space-xl)">
             <h4 class="mn-label" style="margin-bottom:var(--space-lg);color:var(--mn-accent)">Date Range</h4>
             <div style="display:flex;flex-direction:column;gap:var(--space-md)">
-              <div><label class="mn-label" style="display:block;margin-bottom:var(--space-xs)">Start Date</label>
+              <div><label class="mn-label" style="display:block;margin-bottom:var(--space-xs);color:var(--grigio-alluminio,#c0c0c0)">Start Date</label>
                 <input id="dp-start" class="mn-input" type="text" placeholder="YYYY-MM-DD" style="width:100%"></div>
-              <div><label class="mn-label" style="display:block;margin-bottom:var(--space-xs)">End Date</label>
+              <div><label class="mn-label" style="display:block;margin-bottom:var(--space-xs);color:var(--grigio-alluminio,#c0c0c0)">End Date</label>
                 <input id="dp-end" class="mn-input" type="text" placeholder="YYYY-MM-DD" style="width:100%"></div>
             </div>
           </div>

@@ -97,7 +97,25 @@ export function createAnimationsSection() {
       </div>
 
       <div class="demo-section-label">Composable Dashboard Grid</div>
-      <div class="mn-dashboard mn-mb-2xl">
+      <!-- Dashboard header toolbar -->
+      <div style="display:flex;align-items:center;gap:var(--space-md);padding:12px 16px;background:linear-gradient(180deg,rgba(255,199,44,0.06),transparent);border:1px solid var(--grigio-scuro,#333);border-radius:var(--radius-md) var(--radius-md) 0 0;margin-bottom:0">
+        <span class="mn-label" style="color:var(--mn-accent);font-size:0.75rem;letter-spacing:0.06em">FIGHT<span style="color:var(--grigio-alluminio)">THE</span>STROKE</span>
+        <div style="display:flex;gap:2px;margin-left:var(--space-md)">
+          <button class="mn-btn-cluster__item mn-btn-cluster__item--active" style="padding:6px 8px;font-size:0.6rem" title="Dashboard">▦</button>
+          <button class="mn-btn-cluster__item" style="padding:6px 8px;font-size:0.6rem" title="Table">☰</button>
+          <button class="mn-btn-cluster__item" style="padding:6px 8px;font-size:0.6rem" title="Cards">▧</button>
+        </div>
+        <div style="flex:1"></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:4px 12px;border:1px solid var(--grigio-scuro,#333);border-radius:4px;font-size:0.7rem;color:var(--grigio-medio)">
+          <span>Filters</span><span style="color:var(--grigio-scuro)">|</span><span style="opacity:0.5">Filter by name, program…</span>
+          <span class="mn-micro" style="margin-left:var(--space-lg);padding:2px 6px;border:1px solid var(--grigio-scuro);border-radius:3px;font-size:0.55rem">⌘K</span>
+        </div>
+        <div style="display:flex;gap:4px;margin-left:var(--space-md)">
+          <button class="mn-machined-btn" style="padding:4px 8px;font-size:0.65rem" title="Refresh">↻</button>
+          <button class="mn-machined-btn" style="padding:4px 8px;font-size:0.65rem" title="Settings">⚙</button>
+        </div>
+      </div>
+      <div class="mn-dashboard mn-mb-2xl" style="border:1px solid var(--grigio-scuro,#333);border-top:0;border-radius:0 0 var(--radius-md) var(--radius-md);padding-top:var(--space-md)">
         <div class="mn-cell-3">
           <div class="mn-panel mn-hover-lift" style="text-align:center;padding:var(--space-md)">
             <div class="mn-shimmer mn-shimmer--bar mn-mb-sm" style="width:60%;margin:0 auto var(--space-sm)"></div>

@@ -2565,7 +2565,8 @@ function buildTooltipHTML(meta, index, series) {
   }
   if (meta.type === "bubble") {
     const b = meta.data[index];
-    return '<div class="mn-chart-tooltip__label">' + esc(b.label || "Point") + '</div><div style="font-size:0.65rem;color:var(--chart-label,#9e9e9e);">x: ' + b.x + " \xB7 y: " + b.y + (b.z ? " \xB7 size: " + b.z : "") + "</div>";
+    const size = b.z ?? b.r;
+    return '<div class="mn-chart-tooltip__label">' + esc(b.label || "Point") + '</div><div style="font-size:0.65rem;color:var(--chart-label,#9e9e9e);">x: ' + b.x + " \xB7 y: " + b.y + (size ? " \xB7 size: " + size : "") + "</div>";
   }
   if (meta.type === "radar") {
     const r = meta.data[index];
@@ -2648,6 +2649,30 @@ function findNearestIndex(mouseX, meta) {
     }
     return -1;
   }
+  if ((meta.type === "bubble" || meta.type === "radar") && meta.points) {
+    const points = meta.points;
+    const mouseY = Number(meta.mouseY ?? 0);
+    let best = -1, bestDist = Infinity;
+    points.forEach((p, i) => {
+      const dist = Math.hypot(mouseX - p.x, mouseY - p.y);
+      const limit = (p.r ?? (meta.type === "bubble" ? 14 : 10)) + 6;
+      if (dist <= limit && dist < bestDist) {
+        best = i;
+        bestDist = dist;
+      }
+    });
+    return best;
+  }
+  if (meta.type === "donut" && meta.center && meta.innerRadius && meta.outerRadius && meta.segments) {
+    const { x, y } = meta.center;
+    const mouseY = Number(meta.mouseY ?? 0), dist = Math.hypot(mouseX - x, mouseY - y);
+    const norm = (a) => (a + Math.PI * 2) % (Math.PI * 2), angle = norm(Math.atan2(mouseY - y, mouseX - x));
+    if (dist < meta.innerRadius || dist > meta.outerRadius) return -1;
+    return meta.segments.findIndex(({ start, end }) => {
+      const a = norm(start), b = norm(end);
+      return a <= b ? angle >= a && angle <= b : angle >= a || angle <= b;
+    });
+  }
   return -1;
 }
 function chartInteract(canvas, meta, series) {
@@ -2672,7 +2697,7 @@ function chartInteract(canvas, meta, series) {
     meta.nearestIndex = idx;
     currentIndex = idx;
     const gx = meta.gx;
-    drawCrosshair(canvas, meta.type === "bar" || meta.type === "donut" || meta.type === "bubble" ? -1 : gx ? gx(idx) : lx, meta, s);
+    drawCrosshair(canvas, meta.type === "bar" || meta.type === "donut" || meta.type === "bubble" || meta.type === "radar" ? -1 : gx ? gx(idx) : lx, meta, s);
     tip.innerHTML = buildTooltipHTML(meta, idx, s);
     tip.classList.add("mn-chart-tooltip--visible");
     tip.setAttribute("aria-hidden", "false");
@@ -3222,9 +3247,9 @@ function drawComplications(state, progress) {
 }
 function drawCrosshair2(ctx, ch, cx, cy, radius, size, progress, P, cfg) {
   const gridR = radius * 0.78;
-  ctx.strokeStyle = ch.gridColor || "#3a3019";
-  ctx.lineWidth = 0.6;
-  ctx.globalAlpha = 0.6;
+  ctx.strokeStyle = ch.gridColor || "#5a4a20";
+  ctx.lineWidth = 0.8;
+  ctx.globalAlpha = 0.85;
   ctx.beginPath();
   ctx.moveTo(cx - gridR, cy);
   ctx.lineTo(cx + gridR, cy);
@@ -3330,7 +3355,7 @@ function drawCrosshair2(ctx, ch, cx, cy, radius, size, progress, P, cfg) {
       const sdy = cy + sd.y * gridR * progress;
       const sdR = sd.r || 3;
       ctx.save();
-      ctx.globalAlpha = 0.4 + 0.6 * progress;
+      ctx.globalAlpha = 0.6 + 0.4 * progress;
       ctx.shadowColor = sd.color;
       ctx.shadowBlur = sdR * 2;
       ctx.beginPath();
@@ -3378,7 +3403,7 @@ function drawMultigraph(ctx, mg, cx, cy, radius, size, progress, P) {
     ctx.lineTo(gRight, y);
     ctx.stroke();
   }
-  const visiblePoints = Math.ceil(data.length * progress);
+  const visiblePoints = Math.max(1, Math.ceil(data.length * progress));
   ctx.beginPath();
   ctx.moveTo(gLeft, gBottom);
   for (let i = 0; i < visiblePoints; i++) {
@@ -4826,8 +4851,8 @@ var DPR3 = window.devicePixelRatio || 1;
 var TAU = Math.PI * 2;
 var SIZE_PX = { sm: 6, md: 10, lg: 14 };
 var THEMES = {
-  editorial: { land: "#2a2a28", water: "#0a0a0a", border: "#3a3a38", grid: "rgba(200,200,200,0.04)", text: "#c8c8c8", muted: "#616161" },
-  nero: { land: "#252520", water: "#050505", border: "#3a3a38", grid: "rgba(200,200,200,0.03)", text: "#c8c8c8", muted: "#555" },
+  editorial: { land: "#333330", water: "#0d0d0d", border: "#444440", grid: "rgba(200,200,200,0.06)", text: "#c8c8c8", muted: "#616161" },
+  nero: { land: "#2e2e2a", water: "#080808", border: "#444440", grid: "rgba(200,200,200,0.05)", text: "#c8c8c8", muted: "#555" },
   avorio: { land: "#e8d5b0", water: "#faf3e6", border: "#d7c39a", grid: "rgba(0,0,0,0.05)", text: "#1a1a1a", muted: "#888" },
   colorblind: { land: "#1a1a1a", water: "#0a0a0a", border: "#2a2a2a", grid: "rgba(200,200,200,0.04)", text: "#c8c8c8", muted: "#616161" }
 };

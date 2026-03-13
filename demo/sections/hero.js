@@ -1,5 +1,5 @@
 /**
- * Hero section — branding showcase for Fightthestroke Foundation demo
+ * Hero section — branding showcase for FightTheStroke Foundation demo
  */
 export function createHeroSection() {
   const section = document.createElement('section');
@@ -8,14 +8,14 @@ export function createHeroSection() {
   section.innerHTML = `
     <div class="mn-container" style="text-align:center">
       <p class="mn-section-number">Maranello Luce Design System</p>
-      <h1 class="mn-watermark">Fightthestroke</h1>
+      <h1 class="mn-watermark">FightTheStroke</h1>
       <div class="mn-divider-gold--accent mn-divider-gold"></div>
       <h2 class="mn-title-hero" style="margin-bottom:var(--space-lg)">
         Foundation Dashboard
       </h2>
       <p class="mn-body">
         A fictional demonstration of the Maranello Luce Design System
-        using data inspired by the Fightthestroke Foundation — an Italian
+        using data inspired by the FightTheStroke Foundation — an Italian
         non-profit supporting children affected by stroke.
       </p>
       <div class="mn-stat-row" style="margin-top:var(--space-3xl)">

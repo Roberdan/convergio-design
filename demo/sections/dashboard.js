@@ -11,7 +11,7 @@ export function createDashboardSection() {
       <h2 class="mn-title-section" style="margin-bottom:var(--space-sm)">Dashboard Strip</h2>
       <p class="mn-body" style="margin-bottom:var(--space-2xl)">
         KPI stat cards with delta indicators, filter tags, and a sortable engagement table.
-        All data is fictional Fightthestroke portfolio data.
+        All data is fictional FightTheStroke portfolio data.
       </p>
 
       <!-- Header bar -->

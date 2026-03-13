@@ -945,7 +945,8 @@ function buildTooltipHTML(meta, index, series) {
   }
   if (meta.type === "bubble") {
     const b = meta.data[index];
-    return '<div class="mn-chart-tooltip__label">' + esc(b.label || "Point") + '</div><div style="font-size:0.65rem;color:var(--chart-label,#9e9e9e);">x: ' + b.x + " \xB7 y: " + b.y + (b.z ? " \xB7 size: " + b.z : "") + "</div>";
+    const size = b.z ?? b.r;
+    return '<div class="mn-chart-tooltip__label">' + esc(b.label || "Point") + '</div><div style="font-size:0.65rem;color:var(--chart-label,#9e9e9e);">x: ' + b.x + " \xB7 y: " + b.y + (size ? " \xB7 size: " + size : "") + "</div>";
   }
   if (meta.type === "radar") {
     const r = meta.data[index];
@@ -1028,6 +1029,30 @@ function findNearestIndex(mouseX, meta) {
     }
     return -1;
   }
+  if ((meta.type === "bubble" || meta.type === "radar") && meta.points) {
+    const points = meta.points;
+    const mouseY = Number(meta.mouseY ?? 0);
+    let best = -1, bestDist = Infinity;
+    points.forEach((p, i) => {
+      const dist = Math.hypot(mouseX - p.x, mouseY - p.y);
+      const limit = (p.r ?? (meta.type === "bubble" ? 14 : 10)) + 6;
+      if (dist <= limit && dist < bestDist) {
+        best = i;
+        bestDist = dist;
+      }
+    });
+    return best;
+  }
+  if (meta.type === "donut" && meta.center && meta.innerRadius && meta.outerRadius && meta.segments) {
+    const { x, y } = meta.center;
+    const mouseY = Number(meta.mouseY ?? 0), dist = Math.hypot(mouseX - x, mouseY - y);
+    const norm = (a) => (a + Math.PI * 2) % (Math.PI * 2), angle = norm(Math.atan2(mouseY - y, mouseX - x));
+    if (dist < meta.innerRadius || dist > meta.outerRadius) return -1;
+    return meta.segments.findIndex(({ start, end }) => {
+      const a = norm(start), b = norm(end);
+      return a <= b ? angle >= a && angle <= b : angle >= a || angle <= b;
+    });
+  }
   return -1;
 }
 function chartInteract(canvas, meta, series) {
@@ -1052,7 +1077,7 @@ function chartInteract(canvas, meta, series) {
     meta.nearestIndex = idx;
     currentIndex = idx;
     const gx = meta.gx;
-    drawCrosshair(canvas, meta.type === "bar" || meta.type === "donut" || meta.type === "bubble" ? -1 : gx ? gx(idx) : lx, meta, s);
+    drawCrosshair(canvas, meta.type === "bar" || meta.type === "donut" || meta.type === "bubble" || meta.type === "radar" ? -1 : gx ? gx(idx) : lx, meta, s);
     tip.innerHTML = buildTooltipHTML(meta, idx, s);
     tip.classList.add("mn-chart-tooltip--visible");
     tip.setAttribute("aria-hidden", "false");

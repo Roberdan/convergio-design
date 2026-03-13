@@ -10,7 +10,7 @@ export function createCockpitSection() {
       <p class="mn-section-number">09 — Cockpit</p>
       <h2 class="mn-title-section mn-mb-sm">Cockpit Instruments</h2>
       <p class="mn-body mn-mb-2xl">
-        Fightthestroke foundation cockpit with live-style telemetry dials and service health visibility.
+        FightTheStroke foundation cockpit with live-style telemetry dials and service health visibility.
       </p>
 
       <div class="mn-divider-gold mn-mb-lg"></div>
@@ -35,9 +35,7 @@ export function createCockpitSection() {
 
       <h3 class="mn-title-sub mn-mb-sm">System Status</h3>
       <p class="mn-micro mn-mb-lg">Endpoints are fictional and expected to appear degraded/offline in demo mode.</p>
-      <div class="mn-card-dark" style="padding:var(--space-xl)">
-        <div id="cockpit-system-status"></div>
-      </div>
+      <div id="cockpit-system-status"></div>
     </div>
   `;
 

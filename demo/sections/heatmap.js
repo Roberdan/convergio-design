@@ -158,7 +158,10 @@ function buildImpactHeatmap() {
 function initHeatmap(section) {
   const tip = section.querySelector('#mn-cap-tip');
   if (!tip) return;
+  let selectedCell = null;
   section.querySelectorAll('[data-mn-tip]').forEach(cell => {
+    cell.style.cursor = 'pointer';
+    cell.style.transition = 'outline 0.15s, transform 0.1s';
     cell.addEventListener('mouseenter', e => {
       tip.textContent = e.target.dataset.mnTip;
       tip.classList.add('mn-cap-tooltip--visible');
@@ -169,6 +172,19 @@ function initHeatmap(section) {
     });
     cell.addEventListener('mouseleave', () => {
       tip.classList.remove('mn-cap-tooltip--visible');
+    });
+    cell.addEventListener('click', () => {
+      if (selectedCell) {
+        selectedCell.style.outline = '';
+        selectedCell.style.outlineOffset = '';
+        selectedCell.style.transform = '';
+        selectedCell.style.zIndex = '';
+      }
+      selectedCell = cell;
+      cell.style.outline = '2px solid var(--mn-accent, #FFC72C)';
+      cell.style.outlineOffset = '-2px';
+      cell.style.transform = 'scale(1.03)';
+      cell.style.zIndex = '1';
     });
   });
 }
