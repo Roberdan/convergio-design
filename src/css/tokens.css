@@ -110,6 +110,7 @@
   --bianco:        var(--bianco-puro);
   --mn-accent:     var(--giallo-ferrari);
   --mn-accent-text: #111111;
+  --mn-line-height: 1.6;
 
   /* ─── Color: Scope ─── */
   --scope-local:     #4EA8DE;
