@@ -109,7 +109,7 @@ function halfWrap(id, w, h, val, unit) {
   return `<div style="text-align:center"><canvas id="${id}" width="${w}" height="${h}"></canvas><div class="mn-micro" style="color:var(--mn-accent)">${val} <span style="color:var(--grigio-chiaro)">${unit}</span></div></div>`;
 }
 function liveWrap(id, label, unit) {
-  return `<div class="mn-card-dark" style="padding:var(--space-md)"><div class="mn-label" style="margin-bottom:var(--space-sm)">${label}</div><canvas id="${id}" width="200" height="60"></canvas><div id="${id}-value" class="mn-micro" aria-live="polite" style="color:var(--avorio);margin-top:var(--space-sm)">Last value — ${unit}</div></div>`;
+  return `<div class="mn-card-dark" style="padding:var(--space-md);flex:1;min-width:280px"><div class="mn-label" style="margin-bottom:var(--space-sm)">${label}</div><canvas id="${id}" width="500" height="80" style="width:100%;height:80px"></canvas><div id="${id}-value" class="mn-micro" aria-live="polite" style="color:var(--avorio);margin-top:var(--space-sm)">Last value — ${unit}</div></div>`;
 }
 function ringWrap(id, sz, pct, label) {
   return `<div style="text-align:center"><div id="${id}" style="width:${sz}px;height:${sz}px;display:inline-block"></div><div class="mn-micro" style="color:var(--grigio-chiaro);margin-top:4px">${pct} ${label}</div></div>`;
@@ -155,7 +155,7 @@ function initCharts(section) {
   C.halfGauge(g('hg-lg'), { value: 75, max: 100, width: 260, height: 156 });
 
   const paintLive = ({ id, data, color, unit }) => {
-    C.liveGraph(g(id), data, { width: 200, height: 60, color });
+    C.liveGraph(g(id), data, { width: 500, height: 80, color });
     const last = data[data.length - 1], out = g(`${id}-value`);
     if (out) out.textContent = `Last value: ${last} ${unit}`;
   };
