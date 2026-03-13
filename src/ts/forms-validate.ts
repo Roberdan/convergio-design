@@ -75,11 +75,23 @@ export function validateField(field: Element): boolean {
   const errorEl = field.querySelector('.mn-field__error') as HTMLElement | null;
   if (!valid) {
     field.classList.add('mn-field--error');
-    if (errorEl) errorEl.textContent = errorMsg;
-  } else if (value.length > 0) {
-    field.classList.add('mn-field--success');
+    input.setAttribute('aria-invalid', 'true');
+    if (errorEl) {
+      if (!errorEl.id) {
+        errorEl.id = 'mn-err-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
+      }
+      errorEl.setAttribute('aria-live', 'assertive');
+      errorEl.textContent = errorMsg;
+      input.setAttribute('aria-describedby', errorEl.id);
+    }
+  } else {
+    input.removeAttribute('aria-invalid');
+    if (errorEl) {
+      input.removeAttribute('aria-describedby');
+      errorEl.textContent = '';
+    }
+    if (value.length > 0) field.classList.add('mn-field--success');
   }
-  if (errorEl && valid) errorEl.textContent = '';
   return valid;
 }
 

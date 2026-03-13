@@ -1,8 +1,5 @@
-/**
- * Maranello Luce Design - Form widgets
- * Auto-resize, tag input, password toggle, file upload,
- * form steps, inline edit, char counter, search clear.
- */
+/** Maranello Luce Design - Form widgets: auto-resize, tag input, password toggle,
+ * file upload, form steps, inline edit, char counter, search clear. */
 
 import { eventBus } from './core/events';
 import { escapeHtml } from './core/sanitize';
@@ -39,6 +36,7 @@ export function initTagInput(container: Element | null): TagInputApi | null {
   const root = container;
   const field = root.querySelector('.mn-tag-input__field') as HTMLInputElement | null;
   if (!field) return null;
+  if (!field.hasAttribute('aria-label')) field.setAttribute('aria-label', 'Type to add tags');
   let tags: string[] = [];
 
   function addTag(text: string): void {
@@ -127,20 +125,22 @@ export function initFileUpload(container: Element | null): FileUploadApi | null 
     eventBus.emit('file-upload', { files, container: root });
     updateLabel();
   });
+  const liveRegion = root.querySelector('.mn-file-upload__live') as HTMLElement
+    ?? Object.assign(document.createElement('span'), { className: 'mn-file-upload__live' });
+  liveRegion.setAttribute('aria-live', 'polite');
+  liveRegion.setAttribute('role', 'status');
+  liveRegion.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)';
+  if (!liveRegion.parentNode) root.appendChild(liveRegion);
   function updateLabel(): void {
     const textEl = root.querySelector('.mn-file-upload__text') as HTMLElement | null;
-    if (textEl && files.length > 0) {
-      textEl.textContent = '';
-      const strong = document.createElement('strong');
-      if (files.length === 1) {
-        strong.textContent = files[0].name;
-        textEl.appendChild(strong);
-      } else {
-        strong.textContent = files.length + ' files';
-        textEl.appendChild(strong);
-        textEl.appendChild(document.createTextNode(' selected'));
-      }
-    }
+    if (!textEl || files.length === 0) return;
+    textEl.textContent = '';
+    const strong = document.createElement('strong');
+    const msg = files.length === 1 ? files[0].name : files.length + ' files selected';
+    strong.textContent = files.length === 1 ? files[0].name : files.length + ' files';
+    textEl.appendChild(strong);
+    if (files.length > 1) textEl.appendChild(document.createTextNode(' selected'));
+    liveRegion.textContent = msg;
   }
   return {
     getFiles: () => files,
@@ -156,14 +156,20 @@ export function initFileUpload(container: Element | null): FileUploadApi | null 
 /** Initialize a multi-step form. */
 export function initFormSteps(container: Element | null): FormStepsApi | null {
   if (!container) return null;
+  container.setAttribute('role', 'group');
+  if (!container.getAttribute('aria-label')) container.setAttribute('aria-label', 'Form steps');
   const steps = container.querySelectorAll('.mn-form-step');
   let current = 0;
   function setStep(index: number): void {
     current = Math.max(0, Math.min(index, steps.length - 1));
     steps.forEach((step, i) => {
       step.classList.remove('mn-form-step--active', 'mn-form-step--complete');
+      step.removeAttribute('aria-current');
       if (i < current) step.classList.add('mn-form-step--complete');
-      if (i === current) step.classList.add('mn-form-step--active');
+      if (i === current) {
+        step.classList.add('mn-form-step--active');
+        step.setAttribute('aria-current', 'step');
+      }
     });
     eventBus.emit('form-step-change', { step: current, total: steps.length });
   }
