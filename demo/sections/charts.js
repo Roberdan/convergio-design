@@ -157,18 +157,20 @@ function initCharts(section) {
   const paintLive = ({ id, data, color, unit }) => {
     C.liveGraph(g(id), data, { width: 500, height: 80, color });
     const last = data[data.length - 1], out = g(`${id}-value`);
-    if (out) out.textContent = `Last value: ${last} ${unit}`;
+    if (out) out.textContent = `${last} ${unit}`;
   };
   liveCharts.forEach(paintLive);
   clearInterval(section._mnLiveTimer);
   section._mnLiveTimer = window.setInterval(() => {
-    liveCharts.forEach((chart, i) => {
-      const delta = Math.round((Math.random() - 0.35) * 10) + (i ? 1 : 3);
-      chart.data.push(Math.max(10, chart.data[chart.data.length - 1] + delta));
-      chart.data.shift();
+    liveCharts.forEach((chart) => {
+      const prev = chart.data[chart.data.length - 1];
+      const delta = Math.round((Math.random() - 0.5) * 8);
+      const next = Math.max(20, Math.min(120, prev + delta));
+      chart.data.push(next);
+      if (chart.data.length > 20) chart.data.shift();
       paintLive(chart);
     });
-  }, 1800);
+  }, 3000);
 
   const M = window.Maranello;
   g('radar-score').innerHTML = `<span style="color:var(--mn-accent)">${Math.round(radarData.reduce((sum, { value }) => sum + value, 0) / radarData.length)}/100</span> overall score`;

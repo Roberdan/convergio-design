@@ -5289,7 +5289,7 @@ var THEMES = {
   colorblind: { land: "#1a1a1a", water: "#0a0a0a", border: "#2a2a2a", grid: "rgba(200,200,200,0.04)", text: "#c8c8c8", muted: "#616161" }
 };
 function ll(lon, lat) {
-  return [(lon + 180) / 360, (90 - lat) / 180];
+  return [lon, lat];
 }
 var CONTINENTS = {
   northAmerica: [ll(-130, 55), ll(-125, 60), ll(-115, 62), ll(-100, 63), ll(-95, 68), ll(-88, 65), ll(-80, 62), ll(-65, 60), ll(-60, 50), ll(-65, 45), ll(-70, 42), ll(-75, 35), ll(-80, 30), ll(-85, 28), ll(-90, 28), ll(-97, 25), ll(-100, 20), ll(-105, 20), ll(-110, 23), ll(-115, 30), ll(-120, 34), ll(-125, 40), ll(-125, 48), ll(-130, 55)],

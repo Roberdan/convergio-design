@@ -34,34 +34,27 @@ export function createHeroSection() {
         Data inspired by the <strong style="color:var(--grigio-chiaro)">FightTheStroke Foundation</strong>.
       </p>
 
-      <!-- Mini gauges strip -->
-      <div style="display:flex;gap:var(--space-xl);justify-content:center;flex-wrap:wrap;margin-bottom:var(--space-2xl)">
-        <div class="mn-gauge" style="width:120px">
-          <div class="mn-gauge__instrument" style="width:120px;height:120px">
-            <div class="mn-gauge__dial">
-              <canvas class="mn-gauge__canvas" data-gauge='${miniGauge(92,'#FFC72C','Quality')}'></canvas>
-              <div class="mn-gauge__glass"></div>
-            </div>
-          </div>
-          <span class="mn-gauge__label" style="font-size:0.6rem">Quality</span>
+      <!-- Design principles — progress rings -->
+      <div style="display:flex;gap:var(--space-2xl);justify-content:center;flex-wrap:wrap;margin-bottom:var(--space-2xl)">
+        <div style="text-align:center">
+          <div id="hero-ring-1" style="width:100px;height:100px;display:inline-block"></div>
+          <div class="mn-micro" style="color:var(--mn-accent);margin-top:var(--space-sm);font-weight:600;letter-spacing:0.1em">INCLUSION</div>
+          <div class="mn-micro" style="color:var(--grigio-medio);font-size:0.6rem">WCAG 2.2 AA</div>
         </div>
-        <div class="mn-gauge" style="width:120px">
-          <div class="mn-gauge__instrument" style="width:120px;height:120px">
-            <div class="mn-gauge__dial">
-              <canvas class="mn-gauge__canvas" data-gauge='${miniGauge(78,'#00A651','Impact')}'></canvas>
-              <div class="mn-gauge__glass"></div>
-            </div>
-          </div>
-          <span class="mn-gauge__label" style="font-size:0.6rem">Impact</span>
+        <div style="text-align:center">
+          <div id="hero-ring-2" style="width:100px;height:100px;display:inline-block"></div>
+          <div class="mn-micro" style="color:var(--verde-racing);margin-top:var(--space-sm);font-weight:600;letter-spacing:0.1em">PERFORMANCE</div>
+          <div class="mn-micro" style="color:var(--grigio-medio);font-size:0.6rem">Zero Dependencies</div>
         </div>
-        <div class="mn-gauge" style="width:120px">
-          <div class="mn-gauge__instrument" style="width:120px;height:120px">
-            <div class="mn-gauge__dial">
-              <canvas class="mn-gauge__canvas" data-gauge='${miniGauge(65,'#4EA8DE','Reach')}'></canvas>
-              <div class="mn-gauge__glass"></div>
-            </div>
-          </div>
-          <span class="mn-gauge__label" style="font-size:0.6rem">Reach</span>
+        <div style="text-align:center">
+          <div id="hero-ring-3" style="width:100px;height:100px;display:inline-block"></div>
+          <div class="mn-micro" style="color:var(--azzurro-chiaro,#4EA8DE);margin-top:var(--space-sm);font-weight:600;letter-spacing:0.1em">PRECISION</div>
+          <div class="mn-micro" style="color:var(--grigio-medio);font-size:0.6rem">90+ Components</div>
+        </div>
+        <div style="text-align:center">
+          <div id="hero-ring-4" style="width:100px;height:100px;display:inline-block"></div>
+          <div class="mn-micro" style="color:var(--rosso-corsa,#DC0000);margin-top:var(--space-sm);font-weight:600;letter-spacing:0.1em">ELEGANCE</div>
+          <div class="mn-micro" style="color:var(--grigio-medio);font-size:0.6rem">Ferrari Luce DNA</div>
         </div>
       </div>
 
@@ -101,21 +94,14 @@ export function createHeroSection() {
   `;
 
   setTimeout(() => {
-    if (window.Maranello?.initGauges) {
-      window.Maranello.initGauges({ selector: '#hero .mn-gauge__canvas', threshold: 0 });
+    const M = window.Maranello;
+    if (M?.progressRing) {
+      M.progressRing(section.querySelector('#hero-ring-1'), { value: 100, max: 100, size: 100, color: '#FFC72C' });
+      M.progressRing(section.querySelector('#hero-ring-2'), { value: 95, max: 100, size: 100, color: '#00A651' });
+      M.progressRing(section.querySelector('#hero-ring-3'), { value: 90, max: 100, size: 100, color: '#4EA8DE' });
+      M.progressRing(section.querySelector('#hero-ring-4'), { value: 100, max: 100, size: 100, color: '#DC0000' });
     }
   }, 200);
 
   return section;
-}
-
-function miniGauge(value, color, label) {
-  return JSON.stringify({
-    value, max: 100, color, ticks: 5, subticks: 4,
-    startAngle: -225, endAngle: 45, showNeedle: true,
-    numbers: [0, 50, 100],
-    complications: {
-      centerValue: String(value), centerUnit: '%',
-    }
-  });
 }
