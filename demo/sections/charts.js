@@ -64,23 +64,6 @@ export function createChartsSection() {
         ${halfWrap('hg-md',180,108,'96','accuracy')}
         ${halfWrap('hg-lg',260,156,'4.2k/s','tokens')}
       </div>
-      <h3 class="mn-title-sub" style="margin-bottom:var(--space-md)">Trend Sparklines</h3>
-      <div style="display:flex;gap:var(--space-xl);flex-wrap:wrap;margin-bottom:var(--space-2xl)">
-        <div class="mn-card-dark" style="padding:var(--space-lg);flex:1;min-width:260px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md)">
-            <span class="mn-label">Token Spend Trend</span>
-            <span class="mn-micro" style="color:var(--mn-accent)">+17% ↑</span>
-          </div>
-          <canvas id="trend-1" width="460" height="60" style="width:100%;height:60px"></canvas>
-        </div>
-        <div class="mn-card-dark" style="padding:var(--space-lg);flex:1;min-width:260px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md)">
-            <span class="mn-label">Inference Runs</span>
-            <span class="mn-micro" style="color:var(--verde-racing)">+11% ↑</span>
-          </div>
-          <canvas id="trend-2" width="460" height="60" style="width:100%;height:60px"></canvas>
-        </div>
-      </div>
       <h3 class="mn-title-sub" style="margin-bottom:var(--space-md)">Progress Rings</h3>
       <div style="display:flex;gap:var(--space-xl);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-2xl)">
         ${ringWrap('ring-1',60,'72%','Budget')}
@@ -136,8 +119,6 @@ function initCharts(section) {
   C.halfGauge(g('hg-sm'), { value: 68, max: 100, width: 100, height: 60 });
   C.halfGauge(g('hg-md'), { value: 96, max: 100, width: 180, height: 108 });
   C.halfGauge(g('hg-lg'), { value: 84, max: 100, width: 260, height: 156 });
-  C.sparkline(g('trend-1'), [42,48,55,52,61,58,65,63,70,68,72,75,80,84,88], { color: '#FFC72C', width: 460, height: 60 });
-  C.sparkline(g('trend-2'), [520,560,610,640,690,730,790,830,880,920,970,1010,1060,1110,1180], { color: '#00A651', width: 460, height: 60 });
   const M = window.Maranello;
   g('radar-score').innerHTML = `<span style="color:var(--mn-accent)">${Math.round(radarData.reduce((sum, { value }) => sum + value, 0) / radarData.length)}/100</span> accuracy score`;
   if (M.progressRing) {
