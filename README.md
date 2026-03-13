@@ -223,9 +223,72 @@ dist/
   fonts/     Font files
 ```
 
+## Examples
+
+### Dashboard with stat cards and gauge
+
+```html
+<body class="mn-nero">
+  <div class="mn-section-dark" style="padding: 2rem">
+    <h2 class="mn-title-section">Operations Dashboard</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem">
+      <div class="mn-stat-card">
+        <span class="mn-stat-value">1,247</span>
+        <span class="mn-stat-label">Total Users</span>
+        <span class="mn-tag mn-tag--success">+12%</span>
+      </div>
+      <div class="mn-stat-card">
+        <span class="mn-stat-value">98.7%</span>
+        <span class="mn-stat-label">Uptime</span>
+      </div>
+      <div class="mn-stat-card">
+        <mn-gauge value="72" label="CPU" min="0" max="100"></mn-gauge>
+      </div>
+    </div>
+    <mn-chart type="area" data='[{"x":1,"y":20},{"x":2,"y":45},{"x":3,"y":30}]'></mn-chart>
+  </div>
+</body>
+```
+
+### Data table with filters
+
+```html
+<mn-data-table
+  src="/api/projects"
+  sortable
+  paginate
+  page-size="20"
+  theme="nero">
+</mn-data-table>
+```
+
+### Ferrari-style controls
+
+```html
+<mn-ferrari-control type="rotary" label="Volume" min="0" max="100" value="65"></mn-ferrari-control>
+<mn-speedometer value="7200" max="9000" label="RPM" theme="nero"></mn-speedometer>
+```
+
+### Gantt timeline
+
+```html
+<mn-gantt
+  data='[{"name":"Design","start":"2026-01-01","end":"2026-02-15"},{"name":"Dev","start":"2026-02-01","end":"2026-04-30"}]'
+  theme="nero">
+</mn-gantt>
+```
+
+### Accessibility panel
+
+```html
+<mn-a11y></mn-a11y> <!-- Adds font-size, contrast, motion controls -->
+```
+
+See the [live demo](https://roberdan.github.io/MaranelloLuceDesign/) for a full component gallery.
+
 ## Screenshots
 
-See the demo page (`npm run dev`) for a live component gallery with all themes.
+See the demo page (`npm run dev`) or [GitHub Pages](https://roberdan.github.io/MaranelloLuceDesign/) for all themes.
 
 ## Copyright
 
