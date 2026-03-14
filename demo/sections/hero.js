@@ -18,13 +18,13 @@ export function createHeroSection() {
       <p class="mn-section-number" style="letter-spacing:0.2em;margin-bottom:var(--space-md)">MARANELLO LUCE DESIGN SYSTEM</p>
 
       <h1 class="mn-title-hero" style="font-size:clamp(3rem,8vw,6rem);margin-bottom:var(--space-sm);line-height:0.95">
-        <span style="color:var(--mn-accent)">Mirror</span><span style="color:var(--bianco-caldo,#f5f5f5)">Design</span>
+        <span style="color:var(--mn-accent)">Maranello</span> <span style="color:var(--bianco-caldo,#f5f5f5)">Luce</span> <span style="color:var(--grigio-alluminio)">Design</span>
       </h1>
 
       <div class="mn-divider-gold--accent mn-divider-gold" style="margin:var(--space-lg) auto"></div>
 
       <h2 class="mn-title-sub" style="color:var(--grigio-alluminio);margin-bottom:var(--space-xl);font-weight:400;letter-spacing:0.1em">
-        MIRRORDESIGN OPERATIONS DASHBOARD
+        MARANELLO LUCE OPERATIONS DASHBOARD
       </h2>
 
       <p class="mn-body" style="max-width:640px;margin:0 auto var(--space-2xl);color:var(--grigio-medio);line-height:1.7">
