@@ -25,14 +25,15 @@ export function meshNetworkSection() {
             <button class="mn-mesh-network__action"><span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span> DISCOVER</button>
             <button class="mn-mesh-network__action"><span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></span> FULL SYNC</button>
             <button class="mn-mesh-network__action"><span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span> PUSH</button>
-            <span class="mn-mesh-node__stats">3/3 online</span>
+            <span class="mn-mesh-node__stats">4/4 online</span>
           </div>
         </div>
 
         <div class="mn-mesh-network__grid">
           <article class="mn-mesh-node" style="--mn-mesh-border-accent: var(--signal-ok);">
+            <div style="display:flex;gap:4px;margin-bottom:var(--space-sm)"><span style="width:8px;height:8px;border-radius:50%;background:#DC0000"></span><span style="width:8px;height:8px;border-radius:50%;background:#FFC72C"></span><span style="width:8px;height:8px;border-radius:50%;background:#00A651"></span></div>
             <div class="mn-mesh-node__header">
-              <span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2c1 1.5 1 3 0 4"/><path d="M17 8c3 3 3 8 0 12-2 2.5-4 2-5 0-1 2-3 2.5-5 0-3-4-3-9 0-12 2-2 4-2 5 0 1-2 3-2 5 0z"/></svg></span>
+              <span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.7 19.5c-.9 1.3-1.9 2.5-3.4 2.5-1.5 0-2-.9-3.7-.9-1.8 0-2.3.9-3.7.9-1.5 0-2.6-1.3-3.5-2.6C2.7 16.8 1.6 13 3.2 10.3c.8-1.4 2.3-2.3 3.9-2.3 1.5 0 2.4 1 3.6 1s2.3-1 3.9-1c1.3 0 2.6.7 3.5 2-3.1 1.7-2.6 6.1.6 7.5zM15.4 2c.1 1.5-.4 3-1.4 4.1-.9 1-2.3 1.8-3.6 1.7-.2-1.4.5-2.9 1.4-3.9C12.7 2.8 14.2 2.1 15.4 2z"/></svg></span>
               <h4 class="mn-mesh-node__name">M1-MARIO</h4>
               <span class="mn-mesh-status mn-mesh-status--on" title="online"></span>
             </div>
@@ -61,8 +62,9 @@ export function meshNetworkSection() {
           </article>
 
           <article class="mn-mesh-node" style="--mn-mesh-border-accent: var(--giallo);">
+            <div style="display:flex;gap:4px;margin-bottom:var(--space-sm)"><span style="width:8px;height:8px;border-radius:50%;background:#DC0000"></span><span style="width:8px;height:8px;border-radius:50%;background:#FFC72C"></span><span style="width:8px;height:8px;border-radius:50%;background:#00A651"></span></div>
             <div class="mn-mesh-node__header">
-              <span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2c1 1.5 1 3 0 4"/><path d="M17 8c3 3 3 8 0 12-2 2.5-4 2-5 0-1 2-3 2.5-5 0-3-4-3-9 0-12 2-2 4-2 5 0 1-2 3-2 5 0z"/></svg></span>
+              <span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.7 19.5c-.9 1.3-1.9 2.5-3.4 2.5-1.5 0-2-.9-3.7-.9-1.8 0-2.3.9-3.7.9-1.5 0-2.6-1.3-3.5-2.6C2.7 16.8 1.6 13 3.2 10.3c.8-1.4 2.3-2.3 3.9-2.3 1.5 0 2.4 1 3.6 1s2.3-1 3.9-1c1.3 0 2.6.7 3.5 2-3.1 1.7-2.6 6.1.6 7.5zM15.4 2c.1 1.5-.4 3-1.4 4.1-.9 1-2.3 1.8-3.6 1.7-.2-1.4.5-2.9 1.4-3.9C12.7 2.8 14.2 2.1 15.4 2z"/></svg></span>
               <h4 class="mn-mesh-node__name">M3-MAX</h4>
               <span class="mn-mesh-status mn-mesh-status--on" title="online"></span>
             </div>
@@ -91,8 +93,9 @@ export function meshNetworkSection() {
           </article>
 
           <article class="mn-mesh-node" style="--mn-mesh-border-accent: var(--azzurro-chiaro, #4EA8DE);">
+            <div style="display:flex;gap:4px;margin-bottom:var(--space-sm)"><span style="width:8px;height:8px;border-radius:50%;background:#DC0000"></span><span style="width:8px;height:8px;border-radius:50%;background:#FFC72C"></span><span style="width:8px;height:8px;border-radius:50%;background:#00A651"></span></div>
             <div class="mn-mesh-node__header">
-              <span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><ellipse cx="12" cy="14" rx="6" ry="8"/><circle cx="10" cy="11" r="1" fill="currentColor"/><circle cx="14" cy="11" r="1" fill="currentColor"/><path d="M10 14h4"/><path d="M8 20l-2 2M16 20l2 2"/></svg></span>
+              <span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9 2 7 5 7 8c0 1.5.4 2.8 1 3.8L6 16c-.5 1-.8 2.2-.3 3 .5.8 1.5 1 2.3.5l1.5-1 .5 2c.2.8 1 1.5 2 1.5s1.8-.7 2-1.5l.5-2 1.5 1c.8.5 1.8.3 2.3-.5.5-.8.2-2-.3-3l-2-4.2c.6-1 1-2.3 1-3.8 0-3-2-6-5-6zm-2 7a1 1 0 110-2 1 1 0 010 2zm4 0a1 1 0 110-2 1 1 0 010 2z"/></svg></span>
               <h4 class="mn-mesh-node__name">OMARCHY</h4>
               <span class="mn-mesh-status mn-mesh-status--on" title="online"></span>
             </div>
@@ -118,11 +121,40 @@ export function meshNetworkSection() {
               <button class="mn-mesh-action"><span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.7-1.5A4 4 0 1 1 18 18Z"/></svg></span></button>
             </div>
           </article>
+
+          <article class="mn-mesh-node" style="--mn-mesh-border-accent: var(--verde-racing);">
+            <div style="display:flex;gap:4px;margin-bottom:var(--space-sm)"><span style="width:8px;height:8px;border-radius:50%;background:#DC0000"></span><span style="width:8px;height:8px;border-radius:50%;background:#FFC72C"></span><span style="width:8px;height:8px;border-radius:50%;background:#00A651"></span></div>
+            <div class="mn-mesh-node__header">
+              <span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 12V6.5l8-1.1V12H3zm0 .5h8v6.6l-8-1.1V12.5zm9 0h9V21l-9-1.2V12.5zM12 12V5.3L21 4v8H12z"/></svg></span>
+              <h4 class="mn-mesh-node__name">SURFACE-PRO</h4>
+              <span class="mn-mesh-status mn-mesh-status--on" title="online"></span>
+            </div>
+            <p class="mn-mesh-node__role">● Worker · Remote</p>
+            <div class="mn-mesh-badges">
+              <span class="mn-mesh-badge mn-mesh-badge--copilot">Copilot</span>
+            </div>
+            <div class="mn-mesh-bar">
+              <span class="mn-mesh-bar__label">CPU</span>
+              <span class="mn-mesh-bar__track"><span class="mn-mesh-bar__fill mn-mesh-bar__fill--cpu" style="width: 22%"></span></span>
+              <span class="mn-mesh-bar__label">22%</span>
+            </div>
+            <div class="mn-mesh-bar">
+              <span class="mn-mesh-bar__label">RAM</span>
+              <span class="mn-mesh-bar__track"><span class="mn-mesh-bar__fill mn-mesh-bar__fill--ram" style="width: 55%"></span></span>
+              <span class="mn-mesh-bar__label">55%</span>
+            </div>
+            <p class="mn-mesh-node__stats">1 active task · sync 99%</p>
+            <div class="mn-mesh-node__actions">
+              <button class="mn-mesh-action"><span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></span></button>
+              <button class="mn-mesh-action"><span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span></button>
+              <button class="mn-mesh-action"><span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12c2 0 2-4 4-4s2 8 4 8 2-8 4-8 2 4 4 4 2-4 4-4"/></svg></span></button>
+            </div>
+          </article>
         </div>
 
         <div class="mn-mesh-network__footer mn-mesh-network__bottom">
           <span class="mn-mesh-network__title"><span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--mn-accent)"><path d="M12 2l6 10-6 10-6-10z"/></svg></span> AUGMENTED BRAIN</span>
-          <span class="mn-mesh-node__stats">3/3 online · 8 sessions · 2 plans · 12 tasks · 36 synapses</span>
+          <span class="mn-mesh-node__stats">4/4 online · 8 sessions · 2 plans · 12 tasks · 36 synapses</span>
         </div>
       </div>
     </section>

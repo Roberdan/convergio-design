@@ -12,7 +12,7 @@ export function createHeroSection() {
 
     <div class="mn-container" style="text-align:center;position:relative;z-index:1">
       <div style="margin-bottom:var(--space-xl)">
-        <span class="mn-micro" style="display:inline-block;padding:4px 16px;border:1px solid var(--mn-accent);border-radius:999px;color:var(--mn-accent);letter-spacing:0.12em;font-weight:600;margin-bottom:var(--space-lg)">INTERACTIVE DEMO</span>
+        <span class="mn-micro" style="display:inline-flex;align-items:center;gap:6px;padding:4px 16px;border:1px solid var(--mn-accent);border-radius:999px;color:var(--mn-accent);letter-spacing:0.12em;font-weight:600;margin-bottom:var(--space-lg)">INTERACTIVE DEMO · <span style="color:var(--rosso-corsa,#DC0000)">BETA</span></span>
       </div>
 
       <p class="mn-section-number" style="letter-spacing:0.2em;margin-bottom:var(--space-md)">MARANELLO LUCE DESIGN SYSTEM · FOR AI AGENTS</p>
