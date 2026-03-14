@@ -48,9 +48,10 @@ test.describe('Accessibility', () => {
       document.querySelectorAll('canvas').length,
     );
 
-    if (canvasCount === 0) {
-      // Charts section did not mount (WC/JS not loaded in serve-demo mode) — skip
-      test.skip();
+    // Skip if Maranello JS not loaded (aria-labels are set by JS, not HTML)
+    const hasMaranello = await page.evaluate(() => typeof (window as any).Maranello !== 'undefined');
+    if (canvasCount === 0 || !hasMaranello) {
+      test.skip(true, 'Charts not mounted or Maranello IIFE not loaded');
       return;
     }
 
