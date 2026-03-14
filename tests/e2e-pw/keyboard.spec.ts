@@ -12,6 +12,7 @@ test.describe('Keyboard navigation', () => {
   // ── 1. Tab order through major sections ───────────────────────────────────
   test('Tab traverses nav links in document order', async ({ page }) => {
     await page.goto('/');
+    await page.waitForLoadState('domcontentloaded');
 
     // Collect the first N focusable elements via repeated Tab presses
     const focused: string[] = [];

@@ -13,6 +13,7 @@ const NAV_ANCHORS = [
   '#forms', '#tables', '#gauges', '#cockpit', '#telemetry', '#gantt', '#icons',
   '#animations', '#heatmap', '#treemap', '#layouts', '#detail-panel', '#interactive',
   '#okr', '#map', '#advanced', '#web-components', '#launch', '#accessibility', '#api-reference',
+  '#data-binding', '#overlays', '#org-tree',
 ];
 
 test.describe('Demo page', () => {
