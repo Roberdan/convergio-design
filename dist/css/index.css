@@ -218,6 +218,27 @@
     --content-width: 1200px;
     --content-narrow: 800px;
   }
+
+  body.mn-glass {
+    --glass-blur: 16px;
+    --glass-blur-lg: 24px;
+    --glass-blur-sm: 8px;
+    --glass-saturation: 1.2;
+    --glass-tint: #ffffff14;
+    --glass-tint-hover: #ffffff1f;
+    --glass-tint-active: #ffffff29;
+    --glass-tint-raised: #ffffff1a;
+    --glass-border: #ffffff26;
+    --glass-border-hover: #ffffff40;
+    --glass-border-focus: #ffc72c80;
+    --glass-shadow: 0 4px 24px #00000026;
+    --glass-shadow-lg: 0 8px 40px #0003;
+    --glass-shadow-inset: inset 0 1px 0 #ffffff0f;
+    --glass-overlay: #0a0a0a80;
+    --glass-scrim: #0000004d;
+    --glass-specular: #ffffff0a;
+    --glass-transition: backdrop-filter .3s ease, background .3s ease;
+  }
 }
 
 @layer base {
@@ -8529,6 +8550,77 @@
     background: var(--rosso-corsa);
   }
 
+  .mn-okr__kr-bar {
+    border-radius: inherit;
+    transition: width .9s cubic-bezier(.2, 1, .2, 1);
+  }
+
+  .mn-okr__kr-bar--on-track {
+    background: linear-gradient(90deg, var(--verde-racing), var(--verde-racing-light));
+    box-shadow: 0 0 8px #00a6514d;
+  }
+
+  .mn-okr__kr-bar--at-risk {
+    background: linear-gradient(90deg, var(--giallo-ferrari), var(--giallo-ferrari-light));
+    box-shadow: 0 0 8px #ffc72c4d;
+  }
+
+  .mn-okr__kr-bar--behind {
+    background: linear-gradient(90deg, var(--rosso-corsa), var(--rosso-corsa-light));
+    box-shadow: 0 0 8px #dc00004d;
+  }
+
+  .mn-okr__empty {
+    border: 1px dashed var(--grigio-scuro);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    text-align: center;
+    color: var(--grigio-chiaro);
+  }
+
+  @keyframes mn-okr-card-rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 960px) {
+    .mn-okr__summary {
+      grid-template-columns: 1fr;
+    }
+
+    .mn-okr__hero {
+      text-align: center;
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+
+    .mn-okr__average {
+      justify-items: center;
+    }
+
+    .mn-okr__period-tag {
+      justify-self: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mn-okr__ring-progress, .mn-okr__ring-progress--overall, .mn-okr__kr-bar, .mn-okr__objective, .mn-okr__gauge-progress, .mn-okr__needle {
+      transition: none;
+      animation: none;
+    }
+
+    .mn-okr__objective:hover {
+      transform: none;
+    }
+  }
+
   .mn-nav-group {
     background: var(--nero-2, #1a1a1a);
     border: 1px solid var(--bordo, #333);
@@ -11541,6 +11633,38 @@
     background: var(--mn-cb-yellow);
   }
 
+  body.mn-colorblind .mn-okr__kr-bar--on-track {
+    background: linear-gradient(90deg, var(--mn-cb-blue), var(--mn-cb-blue));
+    box-shadow: 0 0 8px #0072b24d;
+  }
+
+  body.mn-colorblind .mn-okr__kr-bar--at-risk {
+    background: linear-gradient(90deg, var(--mn-cb-yellow), var(--mn-cb-yellow));
+    box-shadow: 0 0 8px #e69f004d;
+  }
+
+  body.mn-colorblind .mn-okr__kr-bar--behind {
+    background: linear-gradient(90deg, var(--mn-cb-orange), var(--mn-cb-orange));
+    box-shadow: 0 0 8px #d55e004d;
+  }
+
+  body.mn-colorblind .mn-cap-grid__cell--low {
+    background: var(--mn-cb-blue);
+  }
+
+  body.mn-colorblind .mn-cap-grid__cell--mid {
+    background: var(--mn-cb-yellow);
+  }
+
+  body.mn-colorblind .mn-cap-grid__cell--high, body.mn-colorblind .mn-cap-grid__cell--over {
+    background: var(--mn-cb-orange);
+  }
+
+  body.mn-avorio .mn-page-header {
+    background: var(--avorio-chiaro);
+    border-bottom-color: var(--avorio-scuro);
+  }
+
   body.mn-avorio .mn-page-header__title {
     color: var(--nero-assoluto);
   }
@@ -12112,12 +12236,16 @@
   }
 
   body.mn-nero {
+    background: var(--nero-assoluto);
+    color: var(--bianco-caldo);
     --mn-accent: var(--giallo-ferrari);
     --mn-accent-hover: var(--giallo-hover);
     --mn-accent-text: #111;
   }
 
   body.mn-avorio {
+    background: var(--avorio-chiaro);
+    color: var(--nero-assoluto);
     --mn-accent: var(--rosso-corsa);
     --mn-accent-hover: #b30000;
     --mn-accent-text: #fff;
@@ -14047,72 +14175,6 @@
 .mn-okr__kr-bar {
   width: 0%;
   height: 100%;
-}
-
-.mn-okr__kr-bar--on-track {
-  background: linear-gradient(90deg, var(--verde-racing), var(--verde-racing-light));
-  box-shadow: 0 0 8px #00a6514d;
-}
-
-.mn-okr__kr-bar--at-risk {
-  background: linear-gradient(90deg, var(--giallo-ferrari), var(--giallo-ferrari-light));
-  box-shadow: 0 0 8px #ffc72c4d;
-}
-
-.mn-okr__kr-bar--behind {
-  background: linear-gradient(90deg, var(--rosso-corsa), var(--rosso-corsa-light));
-  box-shadow: 0 0 8px #dc00004d;
-}
-
-.mn-okr__empty {
-  border: 1px dashed var(--grigio-scuro);
-  border-radius: var(--radius-md);
-  padding: var(--space-lg);
-  text-align: center;
-  color: var(--grigio-chiaro);
-}
-
-@keyframes mn-okr-card-rise {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (max-width: 960px) {
-  .mn-okr__summary {
-    grid-template-columns: 1fr;
-  }
-
-  .mn-okr__hero {
-    text-align: center;
-    grid-template-columns: 1fr;
-    justify-items: center;
-  }
-
-  .mn-okr__average {
-    justify-items: center;
-  }
-
-  .mn-okr__period-tag {
-    justify-self: center;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mn-okr__ring-progress, .mn-okr__ring-progress--overall, .mn-okr__kr-bar, .mn-okr__objective, .mn-okr__gauge-progress, .mn-okr__needle {
-    transition: none;
-    animation: none;
-  }
-
-  .mn-okr__objective:hover {
-    transform: none;
-  }
 }
 
 .mn-icon {

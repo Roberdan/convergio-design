@@ -8,6 +8,17 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [3.3.0] - 14 Mar 2026
 
 ### Added
+- **Liquid Glass theme overlay** — translucent `backdrop-filter` surfaces via `body.mn-glass` class
+  - `tokens-glass.css` — glass material tokens (blur, tint, border, shadow, overlay)
+  - `themes-glass-base.css` — section-level glass surfaces with `@supports` fallback
+  - `themes-glass-components.css` — glass overrides for card, btn, input, tag, accordion, signal-panel
+  - `themes-glass-layouts.css` — glass overrides for sidebar, nav, modal, drawer, detail-panel, data-table, toast
+  - `themes-glass-variants.css` — per-theme glass combos (nero+glass, avorio+glass, colorblind+glass)
+- **Glass JS API**: `setGlass()`, `toggleGlass()`, `getGlass()` in core utils
+- **Dual-level theme rotary** (`themeRotary`) — outer ring: 4 theme positions, center: glass toggle
+- **`<mn-theme-rotary>`** Web Component with shadow DOM, keyboard accessible
+- Glass demo section in demo pages
+- ADR-0005: Liquid Glass Theme architecture decision record
 - Body `background`/`color` for `mn-nero` and `mn-avorio` theme classes — full-page theme support
 - Nero overrides: sim panel, network graph, filter chips, column layout, binnacle, strip/pod
 - Avorio overrides: Ferrari control labels, detail panel comments, slide-out shadows, spinner, sim panel, network graph

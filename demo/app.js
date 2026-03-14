@@ -35,46 +35,60 @@ import { createApiReferenceSection } from './sections/api-reference.js';
 import { createDataBindingSection } from './sections/data-binding.js';
 import { createOverlaysSection } from './sections/overlays.js';
 import { createOrgTreeSection } from './sections/org-tree.js';
+import { createGlassSection } from './sections/section-glass.js';
 
 const root = document.getElementById('demo-root');
 if (!root) throw new Error('Missing #demo-root');
 
+function safe(fn, name) {
+  try { return fn(); } catch (e) {
+    console.error(`[demo] ${name} crashed:`, e);
+    const el = document.createElement('section');
+    el.className = 'mn-section-dark';
+    el.innerHTML = `<div class="mn-container" style="padding:var(--space-xl)">
+      <p style="color:var(--rosso-corsa)">⚠ Section "${name}" failed to render</p>
+      <pre class="mn-micro" style="color:var(--grigio-medio)">${e.message}</pre></div>`;
+    return el;
+  }
+}
+
 const sections = [
-  createHeroSection(),
-  createTokensSection(),
-  createCardsSection(),
-  createDashboardSection(),
-  createChartsSection(),
-  createNetworkSection(),
-  createControlsSection(),
-  createFormsSection(),
-  createTablesSection(),
-  createGaugesSection(),
-  createCockpitSection(),
-  createTelemetrySection(),
-  createGanttSection(),
-  createIconsSection(),
-  createAnimationsSection(),
-  createHeatmapSection(),
-  createTreemapSection(),
-  createLayoutsSection(),
-  createDetailPanelSection(),
-  createInteractiveSection(),
-  createOkrSection(),
-  createMapSection(),
-  createSocialGraphSection(),
-  createAdvancedSection(),
-  createMeshNetworkSection(),
-  createConvergioSection(),
-  createWebComponentsSection(),
-  createLaunchSection(),
-  createAccessibilitySection(),
-  createApiReferenceSection(),
-  createDataBindingSection(),
-  createOverlaysSection(),
-  createOrgTreeSection(),
+  safe(createHeroSection, 'hero'),
+  safe(createTokensSection, 'tokens'),
+  safe(createCardsSection, 'cards'),
+  safe(createDashboardSection, 'dashboard'),
+  safe(createChartsSection, 'charts'),
+  safe(createNetworkSection, 'network'),
+  safe(createControlsSection, 'controls'),
+  safe(createFormsSection, 'forms'),
+  safe(createTablesSection, 'tables'),
+  safe(createGaugesSection, 'gauges'),
+  safe(createCockpitSection, 'cockpit'),
+  safe(createTelemetrySection, 'telemetry'),
+  safe(createGanttSection, 'gantt'),
+  safe(createIconsSection, 'icons'),
+  safe(createAnimationsSection, 'animations'),
+  safe(createHeatmapSection, 'heatmap'),
+  safe(createTreemapSection, 'treemap'),
+  safe(createLayoutsSection, 'layouts'),
+  safe(createDetailPanelSection, 'detail-panel'),
+  safe(createInteractiveSection, 'interactive'),
+  safe(createOkrSection, 'okr'),
+  safe(createMapSection, 'map'),
+  safe(createSocialGraphSection, 'social-graph'),
+  safe(createAdvancedSection, 'advanced'),
+  safe(createMeshNetworkSection, 'mesh-network'),
+  safe(createConvergioSection, 'convergio'),
+  safe(createWebComponentsSection, 'web-components'),
+  safe(createGlassSection, 'glass'),
+  safe(createLaunchSection, 'launch'),
+  safe(createAccessibilitySection, 'accessibility'),
+  safe(createApiReferenceSection, 'api-reference'),
+  safe(createDataBindingSection, 'data-binding'),
+  safe(createOverlaysSection, 'overlays'),
+  safe(createOrgTreeSection, 'org-tree'),
   createFooter(),
-];
+].filter(Boolean);
 
 const fragment = document.createDocumentFragment();
 sections.forEach((section) => fragment.appendChild(section));

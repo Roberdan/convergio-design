@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glass Theme Test</title>
+  <link rel="stylesheet" href="../dist/css/maranello.css">
+  <style>
+    body { margin: 0; min-height: 100vh; font-family: var(--font-body, system-ui); }
+    .test-bg { position: fixed; inset: 0; z-index: -1;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a3e 30%, #2a0a2a 60%, #0a0a0a 100%);
+    }
+    .test-container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .test-controls { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; align-items: center; }
+    .test-controls button { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--glass-border, #444);
+      background: var(--glass-tint, #222); color: #fff; cursor: pointer; font-size: 14px; }
+    .test-controls button:hover { background: var(--glass-tint-hover, #333); }
+    .test-controls button.active { background: var(--mn-accent); color: #111; font-weight: 600; }
+    .test-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .test-status { padding: 1rem; border-radius: 8px; background: rgba(0,0,0,0.3); margin-bottom: 2rem;
+      font-family: monospace; font-size: 13px; color: var(--grigio-chiaro, #ccc); }
+    h1 { color: var(--mn-accent, #FFC72C); margin: 0 0 0.5rem; font-size: 1.8rem; }
+    h2 { color: var(--bianco-caldo, #fafafa); margin: 2rem 0 1rem; font-size: 1.2rem; }
+    .rotary-mount { display: flex; justify-content: center; padding: 2rem; }
+  </style>
+</head>
+<body class="mn-nero">
+  <div class="test-bg"></div>
+  <div class="test-container">
+    <h1>🧊 Liquid Glass Theme Test</h1>
+
+    <!-- Controls -->
+    <div class="test-controls">
+      <button onclick="setThemeBtn('editorial')">Editorial</button>
+      <button onclick="setThemeBtn('nero')" class="active">Nero</button>
+      <button onclick="setThemeBtn('avorio')">Avorio</button>
+      <button onclick="setThemeBtn('colorblind')">Colorblind</button>
+      <span style="color:#666">|</span>
+      <button id="glass-btn" onclick="toggleGlassBtn()">🧊 Glass: OFF</button>
+    </div>
+
+    <!-- Status -->
+    <div class="test-status" id="status">
+      Theme: nero | Glass: off | Accent: --
+    </div>
+
+    <!-- Theme Rotary WC -->
+    <h2>Dual-Level Theme Rotary (Web Component)</h2>
+    <div class="rotary-mount">
+      <mn-theme-rotary size="160"></mn-theme-rotary>
+    </div>
+
+    <!-- JS API Rotary -->
+    <h2>Theme Rotary (JS API)</h2>
+    <div class="rotary-mount" id="js-rotary-mount"></div>
+
+    <!-- Glass Surface Preview -->
+    <h2>Glass Surface Samples</h2>
+    <div class="test-grid">
+      <div class="mn-card" style="padding:1.5rem">
+        <div class="mn-card__title">Revenue Pipeline</div>
+        <div class="mn-card__text">Card surface — should become translucent with backdrop blur when glass is ON.</div>
+      </div>
+      <div class="mn-card" style="padding:1.5rem">
+        <div class="mn-card__title">Team Velocity</div>
+        <div class="mn-card__text">Second card — notice the border glow and shadow depth change in glass mode.</div>
+      </div>
+      <div class="mn-card" style="padding:1.5rem">
+        <div class="mn-card__title">Sprint Progress</div>
+        <div class="mn-card__text">Third card — hover to see glass-tint-hover and border-hover transitions.</div>
+      </div>
+    </div>
+
+    <h2>Buttons</h2>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem">
+      <button class="mn-btn">Primary</button>
+      <button class="mn-btn mn-btn--ghost">Ghost</button>
+      <span class="mn-tag">Tag</span>
+      <span class="mn-tag mn-tag--active">Active Tag</span>
+    </div>
+
+    <h2>Inputs</h2>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem">
+      <input class="mn-input" placeholder="Glass input…" style="width:250px">
+      <select class="mn-select"><option>Glass select</option></select>
+    </div>
+
+    <h2>Table</h2>
+    <div class="mn-table-wrap" style="margin-bottom:2rem">
+      <table class="mn-table">
+        <thead><tr><th>Function</th><th>Description</th><th>Returns</th></tr></thead>
+        <tbody>
+          <tr><td><code>setGlass(true)</code></td><td>Enable glass overlay</td><td>void</td></tr>
+          <tr><td><code>toggleGlass()</code></td><td>Toggle glass on/off</td><td>boolean</td></tr>
+          <tr><td><code>getGlass()</code></td><td>Check glass state</td><td>boolean</td></tr>
+          <tr><td><code>themeRotary({container})</code></td><td>Create rotary controller</td><td>Controller</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Signal Panel</h2>
+    <div class="mn-signal-panel" style="padding:1.5rem;margin-bottom:2rem">
+      <div class="mn-signal-panel__eyebrow">SYSTEM</div>
+      <div class="mn-signal-panel__title">Glass Overlay Active</div>
+      <p style="color:var(--grigio-chiaro)">This signal panel should show translucent glass surface with backdrop blur.</p>
+    </div>
+  </div>
+
+  <script src="../dist/iife/maranello.min.js"></script>
+  <script type="module" src="../src/wc/mn-theme-rotary.js"></script>
+  <script>
+    function updateStatus() {
+      const theme = Maranello.getTheme();
+      const glass = Maranello.getGlass();
+      document.getElementById('status').textContent =
+        'Theme: ' + theme + ' | Glass: ' + (glass ? 'ON ✅' : 'off') + ' | Accent: ' + Maranello.getAccent();
+      document.getElementById('glass-btn').textContent = '🧊 Glass: ' + (glass ? 'ON' : 'OFF');
+      document.getElementById('glass-btn').classList.toggle('active', glass);
+      document.querySelectorAll('.test-controls button').forEach(b => {
+        if (b.id !== 'glass-btn') b.classList.toggle('active', b.textContent.toLowerCase() === theme);
+      });
+      // Update bg gradient per theme
+      const bg = document.querySelector('.test-bg');
+      if (theme === 'avorio') bg.style.background = 'linear-gradient(135deg, #faf3e6 0%, #e8d5b0 30%, #f5e5c7 60%, #faf3e6 100%)';
+      else if (theme === 'editorial') bg.style.background = 'linear-gradient(135deg, #1a1a1a 0%, #2a2a3e 30%, #1a2a2a 60%, #1a1a1a 100%)';
+      else bg.style.background = 'linear-gradient(135deg, #0a0a0a 0%, #1a1a3e 30%, #2a0a2a 60%, #0a0a0a 100%)';
+    }
+
+    function setThemeBtn(mode) {
+      Maranello.setTheme(mode);
+      updateStatus();
+    }
+
+    function toggleGlassBtn() {
+      Maranello.toggleGlass();
+      updateStatus();
+    }
+
+    // Init JS rotary
+    const mount = document.getElementById('js-rotary-mount');
+    if (Maranello.themeRotary) {
+      Maranello.themeRotary({ container: mount, size: 160, onChange: updateStatus });
+    }
+
+    // Listen for WC events
+    document.addEventListener('mn-theme-change', updateStatus);
+    document.addEventListener('mn-glass-change', updateStatus);
+
+    updateStatus();
+  </script>
+</body>
+</html>

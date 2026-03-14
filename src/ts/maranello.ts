@@ -6,6 +6,7 @@
 
 import { VERSION, eventBus, cssVar, getTheme, setTheme, cycleTheme } from './index';
 import { getAccent, clamp, lerp, hiDpiCanvas, createElement, escapeHtml } from './core/utils';
+import { getGlass, setGlass, toggleGlass } from './core/utils';
 import { formatNumber, formatDate, debounce, throttle } from './core/utils';
 import { icons, renderIcon, iconCatalog } from './icons';
 import { navIcons } from './icons-nav';
@@ -15,6 +16,7 @@ import { dataIcons } from './icons-data';
 import { objectIcons } from './icons-objects';
 import { azIcons } from './icons-az';
 import { initThemeToggle } from './theme-toggle';
+import { themeRotary } from './theme-rotary';
 import { toast } from './toast';
 import { openModal, closeModal } from './modal';
 import { commandPalette } from './command-palette';
@@ -115,8 +117,12 @@ M.getTheme = getTheme;
 M.setTheme = setTheme;
 M.cycleTheme = cycleTheme;
 M.initThemeToggle = initThemeToggle;
+M.themeRotary = themeRotary;
 M.getAccent = getAccent;
 M.cssVar = cssVar;
+M.getGlass = getGlass;
+M.setGlass = setGlass;
+M.toggleGlass = toggleGlass;
 
 // Shared helpers
 M.clamp = clamp;

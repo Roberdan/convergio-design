@@ -30,6 +30,7 @@ const WC_TAGS = [
   'mn-system-status',
   'mn-tab',
   'mn-tabs',
+  'mn-theme-rotary',
   'mn-theme-toggle',
   'mn-toast',
 ] as const;
@@ -64,6 +65,7 @@ export async function registerAll(): Promise<void> {
     import('./mn-speedometer.js'),
     import('./mn-system-status.js'),
     import('./mn-tabs.js'),
+    import('./mn-theme-rotary.js'),
     import('./mn-theme-toggle.js'),
     import('./mn-toast.js'),
   ]);

@@ -13,6 +13,12 @@ export declare function setTheme(mode: ThemeMode): void;
 export declare function cycleTheme(): ThemeMode;
 /** Read the accent color from CSS custom properties. */
 export declare function getAccent(fallback?: string): string;
+/** Check if glass mode is currently active. */
+export declare function getGlass(): boolean;
+/** Enable or disable glass mode. */
+export declare function setGlass(on: boolean): void;
+/** Toggle glass mode on/off. Returns new state. */
+export declare function toggleGlass(): boolean;
 /** Debounce a function call. */
 export declare function debounce<T extends (...args: never[]) => void>(fn: T, ms: number): (...args: Parameters<T>) => void;
 /** Throttle a function call. */

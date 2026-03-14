@@ -2,7 +2,7 @@
  * Maranello Luce Design - Main ES module entry point
  * Re-exports the public API surface for library consumers.
  */
-export declare const VERSION = "3.2.1";
+export declare const VERSION = "3.3.0";
 export * from './core/types';
 export { EventBus, eventBus } from './core/events';
 export type { EventCallback } from './core/events';
@@ -19,6 +19,9 @@ export { dataIcons } from './icons-data';
 export { objectIcons } from './icons-objects';
 export { initThemeToggle } from './theme-toggle';
 export type { ThemeGaugeInstance, ThemeToggleController } from './theme-toggle';
+export { themeRotary } from './theme-rotary';
+export type { ThemeRotaryOptions, ThemeRotaryController } from './theme-rotary';
+export { getGlass, setGlass, toggleGlass } from './core/utils';
 export { toast } from './toast';
 export { openModal, closeModal } from './modal';
 export { commandPalette } from './command-palette';

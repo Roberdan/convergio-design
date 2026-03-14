@@ -1,8 +1,8 @@
-/* Maranello Luce Design v3.2.1 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v3.3.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 import {
   gantt
-} from "../chunks/chunk-72VFLS54.js";
-import "../chunks/chunk-IALFYTKY.js";
+} from "../chunks/chunk-XS6ZY2O5.js";
+import "../chunks/chunk-JTCZVEB6.js";
 export {
   gantt
 };

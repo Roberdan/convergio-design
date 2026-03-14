@@ -1,4 +1,4 @@
-/* Maranello Luce Design v3.2.1 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v3.3.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 "use strict";
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -827,6 +827,7 @@ function speedoPalette() {
   const cl = document.body.classList;
   const isCB = cl.contains("mn-colorblind");
   const isNero = cl.contains("mn-nero");
+  const isAvorio = cl.contains("mn-avorio");
   const D = {
     needle: null,
     arc: null,
@@ -846,6 +847,24 @@ function speedoPalette() {
     barBright: "#aaa"
   };
   if (isCB) return { ...D, needle: "#4D9DE0", arc: "#7EC8E3", barStops: ["#E15759", "#EDC948", "#59A14F"] };
+  if (isAvorio) return {
+    ...D,
+    bg: ["#faf3e6", "#f0e4cc", "#e8d5b0"],
+    border: "#c4b99a",
+    minorTick: "#999",
+    majStroke: "#555",
+    majText: "#333",
+    capFill: "#333",
+    capStroke: "#555",
+    value: "#1a1a1a",
+    unit: "#555",
+    subLabel: "#777",
+    barBg: "#e8d5b0",
+    barDim: "#777",
+    barBright: "#444",
+    needle: "#DC0000",
+    arc: "#DC0000"
+  };
   if (isNero) return {
     ...D,
     bg: ["#050505", "#111", "#1a1a1a"],

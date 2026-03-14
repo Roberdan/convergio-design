@@ -1,4 +1,4 @@
-/* Maranello Luce Design v3.2.1 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v3.3.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 import {
   SERIES,
   areaChart,
@@ -17,15 +17,15 @@ import {
   radar,
   sparkline,
   sparklineInteract
-} from "./chunks/chunk-7Y7WS3KI.js";
+} from "./chunks/chunk-D4TS4PJN.js";
 import {
   FerrariGauge,
   buildGaugePalette,
   speedometer
-} from "./chunks/chunk-BX66OLUY.js";
+} from "./chunks/chunk-H6ZGEGXX.js";
 import {
   gantt
-} from "./chunks/chunk-72VFLS54.js";
+} from "./chunks/chunk-XS6ZY2O5.js";
 import {
   closeDetailPanel,
   closeDrawer,
@@ -38,7 +38,7 @@ import {
   steppedRotary,
   toggleLever,
   toggleNotifications
-} from "./chunks/chunk-B2WLUWS5.js";
+} from "./chunks/chunk-PLSWC3F7.js";
 import {
   ALLOWED_BIND_PROPERTIES,
   clamp,
@@ -50,6 +50,7 @@ import {
   formatDate,
   formatNumber,
   getAccent,
+  getGlass,
   getTheme,
   hiDpiCanvas,
   isValidColor,
@@ -57,9 +58,11 @@ import {
   sanitizeAttr,
   sanitizeHtml,
   sanitizeSvg,
+  setGlass,
   setTheme,
-  throttle
-} from "./chunks/chunk-IALFYTKY.js";
+  throttle,
+  toggleGlass
+} from "./chunks/chunk-JTCZVEB6.js";
 import {
   addValidator,
   defaultMessages,
@@ -78,11 +81,11 @@ import {
   validateField,
   validateForm,
   validators
-} from "./chunks/chunk-XS3HV6WU.js";
+} from "./chunks/chunk-YZDPMMKC.js";
 import {
   EventBus,
   eventBus
-} from "./chunks/chunk-35KGZ4N4.js";
+} from "./chunks/chunk-HHVWQPGK.js";
 
 // src/ts/network-messages.ts
 function resolveContainer(container) {
@@ -828,6 +831,125 @@ function initThemeToggle(toggleId, gaugeInstances = [], onAutoContrast) {
     },
     destroy: () => {
       toggle.removeEventListener("click", onClick);
+    }
+  };
+}
+
+// src/ts/theme-rotary.ts
+var THEME_POSITIONS = [
+  { mode: "editorial", label: "ED", angle: -45 },
+  { mode: "nero", label: "NR", angle: 45 },
+  { mode: "avorio", label: "AV", angle: 135 },
+  { mode: "colorblind", label: "CB", angle: 225 }
+];
+var STYLE_ID = "mn-theme-rotary-css";
+function ensureStyles() {
+  if (document.getElementById(STYLE_ID)) return;
+  const s = document.createElement("style");
+  s.id = STYLE_ID;
+  s.textContent = `
+.mn-theme-rotary{display:inline-flex;flex-direction:column;align-items:center;user-select:none;gap:8px}
+.mn-theme-rotary__dial{position:relative;border-radius:50%}
+.mn-theme-rotary__ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--grigio-scuro,#444);pointer-events:none}
+.mn-theme-rotary__pointer{position:absolute;top:8px;left:50%;width:2px;border-radius:1px;background:var(--mn-accent,#FFC72C);transform:translateX(-50%) rotate(0deg);transform-origin:50% calc(var(--rotary-center) - 8px);pointer-events:none;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.mn-theme-rotary__pos{position:absolute;font-family:var(--font-body,sans-serif);font-size:.55rem;color:var(--grigio-medio,#777);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transform:translate(-50%,-50%);white-space:nowrap;transition:color .15s}
+.mn-theme-rotary__pos--active{color:var(--bianco-caldo,#f5f0e8);font-weight:700}
+.mn-theme-rotary__center{position:absolute;top:50%;left:50%;border-radius:50%;cursor:pointer;transform:translate(-50%,-50%);transition:background .2s,box-shadow .2s;display:flex;align-items:center;justify-content:center}
+.mn-theme-rotary__center:hover{box-shadow:0 0 12px rgba(255,199,44,.3)}
+.mn-theme-rotary__center--glass{background:rgba(255,255,255,.12)!important;box-shadow:0 0 16px rgba(255,199,44,.4),inset 0 1px 0 rgba(255,255,255,.15)}
+.mn-theme-rotary__glass-icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;opacity:.7;transition:opacity .15s}
+.mn-theme-rotary__center--glass .mn-theme-rotary__glass-icon{opacity:1;stroke:var(--mn-accent,#FFC72C)}
+`;
+  document.head.appendChild(s);
+}
+function angleForTheme(mode) {
+  return THEME_POSITIONS.find((p) => p.mode === mode)?.angle ?? -45;
+}
+var GLASS_SVG = `<svg class="mn-theme-rotary__glass-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-dasharray="4 2"/><path d="M12 4v2m0 12v2M4 12h2m12 0h2"/></svg>`;
+function themeRotary(opts) {
+  ensureStyles();
+  const { container, size = 140 } = opts;
+  const center = size / 2;
+  const labelRadius = size / 2 + 18;
+  const pointerLen = size * 0.18;
+  const centerSize = size * 0.32;
+  const root = createElement("div", "mn-theme-rotary");
+  const dial = createElement("div", "mn-theme-rotary__dial");
+  dial.style.width = dial.style.height = size + "px";
+  root.appendChild(dial);
+  const ring = createElement("div", "mn-theme-rotary__ring");
+  dial.appendChild(ring);
+  const pointer = createElement("div", "mn-theme-rotary__pointer");
+  pointer.style.height = pointerLen + "px";
+  pointer.style.setProperty("--rotary-center", center + "px");
+  dial.appendChild(pointer);
+  const labels = /* @__PURE__ */ new Map();
+  for (const pos of THEME_POSITIONS) {
+    const rad = (pos.angle - 90) * (Math.PI / 180);
+    const lx = center + Math.cos(rad) * labelRadius;
+    const ly = center + Math.sin(rad) * labelRadius;
+    const el4 = createElement("div", "mn-theme-rotary__pos");
+    el4.textContent = pos.label;
+    el4.style.left = lx + "px";
+    el4.style.top = ly + "px";
+    el4.dataset.theme = pos.mode;
+    el4.addEventListener("click", () => applyTheme(pos.mode));
+    dial.appendChild(el4);
+    labels.set(pos.mode, el4);
+  }
+  const centerBtn = createElement("div", "mn-theme-rotary__center");
+  centerBtn.style.width = centerBtn.style.height = centerSize + "px";
+  centerBtn.style.background = "radial-gradient(circle at 40% 35%, var(--grigio-scuro, #444), var(--nero-soft, #1a1a1a))";
+  centerBtn.style.boxShadow = "0 3px 8px rgba(0,0,0,.55), inset 0 1px 1px rgba(255,255,255,.15)";
+  centerBtn.innerHTML = GLASS_SVG;
+  centerBtn.title = "Toggle glass mode";
+  centerBtn.setAttribute("role", "switch");
+  centerBtn.setAttribute("tabindex", "0");
+  centerBtn.addEventListener("click", () => toggleGlassMode());
+  centerBtn.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleGlassMode();
+    }
+  });
+  dial.appendChild(centerBtn);
+  container.appendChild(root);
+  function applyTheme(mode) {
+    setTheme(mode);
+    updateVisual();
+    eventBus.emit("theme:change", { theme: mode, glass: getGlass() });
+    opts.onChange?.(mode, getGlass());
+  }
+  function toggleGlassMode() {
+    const next = !getGlass();
+    setGlass(next);
+    updateVisual();
+    eventBus.emit("glass:change", { glass: next, theme: getTheme() });
+    opts.onChange?.(getTheme(), next);
+  }
+  function updateVisual() {
+    const current = getTheme();
+    const angle = angleForTheme(current);
+    pointer.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+    for (const [mode, el4] of labels) {
+      el4.classList.toggle("mn-theme-rotary__pos--active", mode === current);
+    }
+    const glass = getGlass();
+    centerBtn.classList.toggle("mn-theme-rotary__center--glass", glass);
+    centerBtn.setAttribute("aria-checked", String(glass));
+  }
+  updateVisual();
+  return {
+    getTheme,
+    setTheme: applyTheme,
+    getGlass,
+    setGlass: (on3) => {
+      setGlass(on3);
+      updateVisual();
+      opts.onChange?.(getTheme(), on3);
+    },
+    destroy: () => {
+      root.remove();
     }
   };
 }
@@ -4419,6 +4541,7 @@ function speedoPalette() {
   const cl = document.body.classList;
   const isCB = cl.contains("mn-colorblind");
   const isNero = cl.contains("mn-nero");
+  const isAvorio = cl.contains("mn-avorio");
   const D = {
     needle: null,
     arc: null,
@@ -4443,6 +4566,26 @@ function speedoPalette() {
       needle: "#4D9DE0",
       arc: "#7EC8E3",
       barStops: ["#E15759", "#EDC948", "#59A14F"]
+    };
+  }
+  if (isAvorio) {
+    return {
+      ...D,
+      bg: ["#faf3e6", "#f0e4cc", "#e8d5b0"],
+      border: "#c4b99a",
+      minorTick: "#999",
+      majStroke: "#555",
+      majText: "#333",
+      capFill: "#333",
+      capStroke: "#555",
+      value: "#1a1a1a",
+      unit: "#555",
+      subLabel: "#777",
+      barBg: "#e8d5b0",
+      barDim: "#777",
+      barBright: "#444",
+      needle: "#DC0000",
+      arc: "#DC0000"
     };
   }
   if (isNero) {
@@ -6285,8 +6428,12 @@ M.getTheme = getTheme;
 M.setTheme = setTheme;
 M.cycleTheme = cycleTheme;
 M.initThemeToggle = initThemeToggle;
+M.themeRotary = themeRotary;
 M.getAccent = getAccent;
 M.cssVar = cssVar;
+M.getGlass = getGlass;
+M.setGlass = setGlass;
+M.toggleGlass = toggleGlass;
 M.clamp = clamp;
 M.lerp = lerp;
 M.hiDpiCanvas = hiDpiCanvas;
@@ -6382,7 +6529,7 @@ M.charts = {
 registerExtras(M);
 
 // src/ts/index.ts
-var VERSION = "3.2.1";
+var VERSION = "3.3.0";
 export {
   COLOR,
   CONTINENTS,
@@ -6474,6 +6621,7 @@ export {
   getAccent,
   getCanvasSize,
   getFieldInput,
+  getGlass,
   getIcon,
   getInitials,
   getMarkerColors,
@@ -6549,6 +6697,7 @@ export {
   renderers,
   resolveContainer3 as resolveContainer,
   saveSettings,
+  setGlass,
   setTheme,
   showTip,
   showToast,
@@ -6560,8 +6709,10 @@ export {
   statusIcons,
   steppedRotary,
   systemStatus,
+  themeRotary,
   throttle,
   toast,
+  toggleGlass,
   toggleLever,
   toggleNotifications,
   updateGauge,
