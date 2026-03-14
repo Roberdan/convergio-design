@@ -17,6 +17,11 @@ export function createControlsSection() {
       <div class="mn-watermark">COMANDI</div>
       <h2 class="mn-title-section mn-mb-sm mn-anim-fadeInUp">Ferrari Controls</h2>
       <p class="mn-body mn-mb-2xl">Every switch, knob and button feels milled from solid aluminum. Haptic precision in every interaction.</p>
+      <details class="mn-code-snippet">
+        <summary class="mn-label" style="cursor:pointer;color:var(--mn-accent);margin-bottom:var(--space-sm)">⟨/⟩ Usage</summary>
+        <pre class="mn-card-dark" style="padding:var(--space-md);font-family:var(--font-mono);font-size:var(--text-micro);overflow-x:auto;margin-bottom:var(--space-lg);border-left:3px solid var(--mn-accent)"><code>Maranello.manettino(el, { positions: ['Wet', 'Sport', 'Race'] });
+Maranello.initSlider(el);</code></pre>
+      </details>
       <div class="demo-section-label mn-mt-2xl">Machined Aluminum Buttons</div>
       <div class="mn-flex-wrap mn-gap-md mn-mb-lg" style="align-items:center">
         <button class="mn-machined-btn"><span class="mn-machined-btn__indicator"></span>Engine Start</button>

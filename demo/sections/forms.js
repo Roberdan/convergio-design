@@ -16,6 +16,13 @@ export function createFormsSection() {
       <p class="mn-section-number">05 — Data Entry</p>
       <h2 class="mn-title-section mn-mb-sm mn-anim-fadeInUp">Forms &amp; Inputs</h2>
       <p class="mn-body mn-mb-2xl">Wizard, tags, search, date pickers, and agent configuration forms.</p>
+      <details class="mn-code-snippet">
+        <summary class="mn-label" style="cursor:pointer;color:var(--mn-accent);margin-bottom:var(--space-sm)">⟨/⟩ Usage</summary>
+        <pre class="mn-card-dark" style="padding:var(--space-md);font-family:var(--font-mono);font-size:var(--text-micro);overflow-x:auto;margin-bottom:var(--space-lg);border-left:3px solid var(--mn-accent)"><code>&lt;form class="mn-form"&gt;
+  &lt;div class="mn-field"&gt;&lt;label&gt;Email&lt;/label&gt;&lt;input class="mn-input" type="email" required&gt;&lt;/div&gt;
+&lt;/form&gt;
+Maranello.initForms();</code></pre>
+      </details>
       <div class="mn-card-dark mn-mb-2xl" style="padding:var(--space-xl)">
         <h4 class="mn-label" style="margin-bottom:var(--space-lg);color:var(--mn-accent)">Agent Configuration Wizard</h4>
         <div id="wizard-steps" style="display:flex;gap:var(--space-lg);margin-bottom:var(--space-xl)">

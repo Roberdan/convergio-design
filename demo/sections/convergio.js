@@ -3,6 +3,13 @@ export function convergioSection() {
     <section class="demo-section" id="convergio">
       <h2 class="demo-section__title">◆ Convergio Dashboard</h2>
       <p class="demo-section__desc">Agentic AI orchestration components — toolbars, mission cards, night agents, and the Idea Jar.</p>
+      <details class="mn-code-snippet">
+        <summary class="mn-label" style="cursor:pointer;color:var(--mn-accent);margin-bottom:var(--space-sm)">⟨/⟩ Usage</summary>
+        <pre class="mn-card-dark" style="padding:var(--space-md);font-family:var(--font-mono);font-size:var(--text-micro);overflow-x:auto;margin-bottom:var(--space-lg);border-left:3px solid var(--mn-accent)"><code>&lt;article class="mn-mission-card"&gt;&lt;p class="mn-mission-card__title"&gt;Mission&lt;/p&gt;&lt;/article&gt;
+&lt;article class="mn-night-agent"&gt;
+  &lt;div class="mn-night-agent__header"&gt;&lt;p class="mn-mission-card__title"&gt;Night Agent&lt;/p&gt;&lt;/div&gt;
+&lt;/article&gt;</code></pre>
+      </details>
 
       <div class="mn-convergio-toolbar">
         <div class="mn-convergio-toolbar__nav">

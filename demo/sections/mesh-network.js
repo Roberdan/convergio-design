@@ -3,6 +3,13 @@ export function meshNetworkSection() {
     <section class="demo-section" id="mesh-network">
       <h2 class="demo-section__title">◆ Mesh Network</h2>
       <p class="demo-section__desc">Convergio-style mesh node visualization for distributed AI agent orchestration.</p>
+      <details class="mn-code-snippet">
+        <summary class="mn-label" style="cursor:pointer;color:var(--mn-accent);margin-bottom:var(--space-sm)">⟨/⟩ Usage</summary>
+        <pre class="mn-card-dark" style="padding:var(--space-md);font-family:var(--font-mono);font-size:var(--text-micro);overflow-x:auto;margin-bottom:var(--space-lg);border-left:3px solid var(--mn-accent)"><code>&lt;article class="mn-mesh-node"&gt;
+  &lt;div class="mn-mesh-node__header"&gt;&lt;h4 class="mn-mesh-node__name"&gt;M1-MARIO&lt;/h4&gt;&lt;/div&gt;
+  &lt;p class="mn-mesh-node__role"&gt;● Worker · Local&lt;/p&gt;
+&lt;/article&gt;</code></pre>
+      </details>
 
       <div class="mn-mesh-network">
         <div class="mn-mesh-network__toolbar mn-mesh-network__top">

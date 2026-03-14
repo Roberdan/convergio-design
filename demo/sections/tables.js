@@ -48,6 +48,13 @@ export function createTablesSection() {
       <p class="mn-section-number">06 — Data Display</p>
       <h2 class="mn-title-section" style="margin-bottom:var(--space-lg)">Interactive Deployment Table</h2>
       <p class="mn-body" style="margin-bottom:var(--space-2xl)">Column filters, grouped deployment rows, status LEDs, accuracy bars, and ownership detail for Maranello Luce agent deployments.</p>
+      <details class="mn-code-snippet">
+        <summary class="mn-label" style="cursor:pointer;color:var(--mn-accent);margin-bottom:var(--space-sm)">⟨/⟩ Usage</summary>
+        <pre class="mn-card-dark" style="padding:var(--space-md);font-family:var(--font-mono);font-size:var(--text-micro);overflow-x:auto;margin-bottom:var(--space-lg);border-left:3px solid var(--mn-accent)"><code>&lt;mn-data-table
+  columns='[{"key":"program","label":"Pipeline"}]'
+  data='[{"program":"Pipeline Alpha"}]'
+  page-size="10"&gt;&lt;/mn-data-table&gt;</code></pre>
+      </details>
       <div class="mn-card-dark" style="padding:var(--space-xl)"><div class="mn-tag-group" style="margin-bottom:var(--space-md)"><span class="mn-tag mn-tag--light mn-tag--xs">Filter every column</span><span class="mn-tag mn-tag--light mn-tag--xs">Sort with header arrows</span><span class="mn-tag mn-tag--light mn-tag--xs">Collapse each group</span></div><div id="deployment-table-host"></div></div>
     </div>`;
   requestAnimationFrame(() => initTable(section));

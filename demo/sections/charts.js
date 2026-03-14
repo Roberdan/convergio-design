@@ -11,6 +11,11 @@ export function createChartsSection() {
       <p class="mn-section-number">03 — Data Visualization</p>
       <h2 class="mn-title-section" style="margin-bottom:var(--space-sm)">Charts &amp; Data</h2>
       <p class="mn-body" style="margin-bottom:var(--space-2xl)">12 chart types — pure Canvas 2D, zero dependencies. Maranello Luce agent telemetry.</p>
+      <details class="mn-code-snippet">
+        <summary class="mn-label" style="cursor:pointer;color:var(--mn-accent);margin-bottom:var(--space-sm)">⟨/⟩ Usage</summary>
+        <pre class="mn-card-dark" style="padding:var(--space-md);font-family:var(--font-mono);font-size:var(--text-micro);overflow-x:auto;margin-bottom:var(--space-lg);border-left:3px solid var(--mn-accent)"><code>Maranello.charts.sparkline(canvas, [10, 20, 30, 40], { color: '#FFC72C' });
+Maranello.charts.donut(canvas, [{ label: 'A', value: 30 }, { label: 'B', value: 70 }]);</code></pre>
+      </details>
       <h3 class="mn-title-sub" style="margin-bottom:var(--space-md)">Sparklines</h3>
       <div style="display:flex;gap:var(--space-xl);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-2xl)">
         ${sparkWrap('spark-1','Monthly token spend','Default')}

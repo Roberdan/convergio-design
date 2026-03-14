@@ -12,6 +12,13 @@ export function createDashboardSection() {
       <p class="mn-section-number">04 — Dashboard</p>
       <h2 class="mn-title-section" style="margin-bottom:var(--space-sm)">Dashboard Strip</h2>
       <p class="mn-body" style="margin-bottom:var(--space-2xl)">KPI stat cards, live telemetry, and a sortable pipeline operations view built with Maranello Luce demo data.</p>
+      <details class="mn-code-snippet">
+        <summary class="mn-label" style="cursor:pointer;color:var(--mn-accent);margin-bottom:var(--space-sm)">⟨/⟩ Usage</summary>
+        <pre class="mn-card-dark" style="padding:var(--space-md);font-family:var(--font-mono);font-size:var(--text-micro);overflow-x:auto;margin-bottom:var(--space-lg);border-left:3px solid var(--mn-accent)"><code>&lt;div class="mn-card-dark mn-stat"&gt;
+  &lt;div class="mn-stat__value"&gt;47&lt;/div&gt;
+  &lt;div class="mn-stat__label"&gt;Pipelines&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </details>
       ${livePanel()}
       <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:var(--space-md);margin:var(--space-2xl) 0 var(--space-xl)"><div><h3 class="mn-title-sub">Maranello Luce Pipeline Desk</h3><p class="mn-micro" style="color:var(--grigio-medio)">Operations overview · March 2026</p></div><div style="display:flex;gap:var(--space-sm)"><button class="mn-btn mn-btn--ghost-light mn-btn--sm">Export</button><button class="mn-btn mn-btn--accent mn-btn--sm">+ Pipeline</button></div></div>
       <div class="mn-grid-4" style="margin-bottom:var(--space-xl)">${statCard('47', 'Pipelines', '+18%', 'up', '#FFC72C')}${statCard('312', 'Agents', '+6%', 'up', '#00A651')}${statCard('96%', 'Accuracy', '+2%', 'up', '#4EA8DE')}${statCard('3', 'Blocked', '-1', 'down', '#DC0000')}</div>
