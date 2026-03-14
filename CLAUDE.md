@@ -187,7 +187,7 @@ Ferrari Luce-inspired design system for business dashboards. Part of Convergio.
 
 - Max 250 lines/file — split if exceeds
 - English only (code + comments)
-- MIT license, © Roberdan 2026
+- MPL-2.0 license, © Roberdan 2026
 - CSS: all rules in `@layer` blocks
 - TS: strict mode, no `any`, named exports only
 - Comments: explain WHY, not WHAT, <5% density

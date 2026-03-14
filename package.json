@@ -92,7 +92,7 @@
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build"
   },
-  "license": "MIT",
+  "license": "MPL-2.0",
   "author": "Roberto D'Angelo (Roberdan)",
   "repository": {
     "type": "git",
