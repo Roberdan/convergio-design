@@ -13431,6 +13431,39 @@
     border-color: #ffffff26;
     font-size: .85rem;
   }
+
+  @media (max-width: 640px) {
+    .mn-hide-mobile {
+      display: none !important;
+    }
+
+    .mn-stack-mobile {
+      flex-direction: column !important;
+    }
+
+    .mn-full-mobile {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
+
+  @media (min-width: 641px) {
+    .mn-show-mobile {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .mn-hide-tablet {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .mn-hide-desktop {
+      display: none !important;
+    }
+  }
 }
 
 .mn-profile-dropdown__avatar-lg img {

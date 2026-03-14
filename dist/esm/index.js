@@ -22,7 +22,7 @@ import {
   FerrariGauge,
   buildGaugePalette,
   speedometer
-} from "./chunks/chunk-P2EBIWGW.js";
+} from "./chunks/chunk-IBXYZOLB.js";
 import {
   gantt
 } from "./chunks/chunk-44KTI45C.js";
@@ -975,11 +975,11 @@ function toast(options) {
 
 // src/ts/modal.ts
 function openModal(id) {
-  const backdrop = document.getElementById(id);
-  if (!backdrop) return;
-  const modal = backdrop.querySelector(".mn-modal");
+  const backdrop2 = document.getElementById(id);
+  if (!backdrop2) return;
+  const modal = backdrop2.querySelector(".mn-modal");
   if (!modal) return;
-  backdrop.classList.add("mn-modal-backdrop--open");
+  backdrop2.classList.add("mn-modal-backdrop--open");
   modal.setAttribute("role", "dialog");
   modal.setAttribute("aria-modal", "true");
   const focusable = modal.querySelectorAll(
@@ -1010,10 +1010,10 @@ function openModal(id) {
   document.addEventListener("keydown", trapFocus);
 }
 function closeModal(id) {
-  const backdrop = document.getElementById(id);
-  if (!backdrop) return;
-  const modal = backdrop.querySelector(".mn-modal");
-  backdrop.classList.remove("mn-modal-backdrop--open");
+  const backdrop2 = document.getElementById(id);
+  if (!backdrop2) return;
+  const modal = backdrop2.querySelector(".mn-modal");
+  backdrop2.classList.remove("mn-modal-backdrop--open");
   if (modal?._mnTrapFocus) {
     document.removeEventListener("keydown", modal._mnTrapFocus);
     delete modal._mnTrapFocus;
@@ -1518,7 +1518,7 @@ function initMessages(state, els, opts) {
     inputEl.style.height = "auto";
     inputEl.rows = 1;
   }
-  function autoResize() {
+  function autoResize2() {
     inputEl.style.height = "auto";
     inputEl.style.height = Math.min(inputEl.scrollHeight, 80) + "px";
   }
@@ -1636,7 +1636,7 @@ function initMessages(state, els, opts) {
     agentSelector.addEventListener("click", () => toggleAgentGrid());
   }
   inputEl.addEventListener("input", () => {
-    autoResize();
+    autoResize2();
     updateSendVisibility();
   });
   inputEl.addEventListener("keydown", (e) => {
@@ -2030,6 +2030,57 @@ function profileMenu(trigger, options) {
       btn.parentNode?.removeChild(btn);
     }
   };
+}
+
+// src/ts/auto-resize.ts
+function autoResize(canvas, factory, data, opts) {
+  if (typeof window === "undefined" || !window.ResizeObserver) return () => {
+  };
+  const parent = canvas.parentElement;
+  if (!parent) return () => {
+  };
+  let ctrl = null;
+  const resize = debounce(() => {
+    const rect = parent.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) return;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    canvas.style.width = rect.width + "px";
+    canvas.style.height = rect.height + "px";
+    const ctx = canvas.getContext("2d");
+    if (ctx) ctx.scale(dpr, dpr);
+    if (ctrl && typeof ctrl.destroy === "function") {
+      ctrl.destroy();
+    }
+    ctrl = factory(canvas, data, { ...opts, width: rect.width, height: rect.height });
+  }, 150);
+  const observer = new ResizeObserver(resize);
+  observer.observe(parent);
+  resize();
+  return () => {
+    observer.disconnect();
+    if (ctrl && typeof ctrl.destroy === "function") {
+      ctrl.destroy();
+    }
+  };
+}
+function autoResizeAll(selector = "canvas[data-auto-resize]", chartLib) {
+  const canvases = document.querySelectorAll(selector);
+  const cleanups = [];
+  const lib = chartLib || (typeof window !== "undefined" ? window.Maranello : null);
+  if (!lib) return () => {
+  };
+  canvases.forEach((canvas) => {
+    const type = canvas.dataset.chartType;
+    if (!type) return;
+    const factory = lib[type];
+    if (typeof factory !== "function") return;
+    const data = JSON.parse(canvas.dataset.chartData || "[]");
+    const opts = JSON.parse(canvas.dataset.chartOptions || "{}");
+    cleanups.push(autoResize(canvas, factory, data, opts));
+  });
+  return () => cleanups.forEach((fn) => fn());
 }
 
 // src/ts/map-view-helpers.ts
@@ -2791,6 +2842,62 @@ function socialGraph(container, opts = { nodes: [], edges: [] }) {
       hostEl.innerHTML = "";
     }
   };
+}
+
+// src/ts/sidebar-toggle.ts
+var backdrop = null;
+function ensureBackdrop() {
+  if (backdrop) return backdrop;
+  backdrop = document.createElement("div");
+  backdrop.className = "mn-sidebar__backdrop";
+  document.body.appendChild(backdrop);
+  return backdrop;
+}
+function closeSidebar(sidebar) {
+  sidebar.classList.remove("mn-sidebar--mobile-open");
+  const bd = ensureBackdrop();
+  bd.classList.remove("mn-sidebar__backdrop--visible");
+}
+function openSidebar(sidebar) {
+  sidebar.classList.add("mn-sidebar--mobile-open");
+  const bd = ensureBackdrop();
+  bd.classList.add("mn-sidebar__backdrop--visible");
+}
+function initSidebarToggle(sidebarEl, triggerEl) {
+  const bd = ensureBackdrop();
+  const onTrigger = () => {
+    if (sidebarEl.classList.contains("mn-sidebar--mobile-open")) {
+      closeSidebar(sidebarEl);
+    } else {
+      openSidebar(sidebarEl);
+    }
+  };
+  const onBackdrop = () => closeSidebar(sidebarEl);
+  const onEsc = (e) => {
+    if (e.key === "Escape" && sidebarEl.classList.contains("mn-sidebar--mobile-open")) {
+      closeSidebar(sidebarEl);
+    }
+  };
+  const mql = window.matchMedia("(min-width: 641px)");
+  const onDesktop = (e) => {
+    if ("matches" in e && e.matches) closeSidebar(sidebarEl);
+  };
+  triggerEl.addEventListener("click", onTrigger);
+  bd.addEventListener("click", onBackdrop);
+  document.addEventListener("keydown", onEsc);
+  mql.addEventListener("change", onDesktop);
+  return () => {
+    triggerEl.removeEventListener("click", onTrigger);
+    bd.removeEventListener("click", onBackdrop);
+    document.removeEventListener("keydown", onEsc);
+    mql.removeEventListener("change", onDesktop);
+  };
+}
+function initSidebarToggleAuto() {
+  const sidebar = document.querySelector(".mn-sidebar");
+  const trigger = document.querySelector("[data-sidebar-toggle], .mn-sidebar-toggle");
+  if (!sidebar || !trigger) return null;
+  return initSidebarToggle(sidebar, trigger);
 }
 
 // src/ts/data-binding.ts
@@ -4451,7 +4558,8 @@ function autoContrast(selector, threshold = 0.35) {
 var GAUGE_SIZES = {
   sm: 120,
   md: 220,
-  lg: 320
+  lg: 320,
+  fluid: 0
 };
 function resolveCanvas(target) {
   if (typeof target === "string") {
@@ -5277,8 +5385,8 @@ function validateField2(value, field) {
 function buildDOM(container, opts, activeTab, onTabClick) {
   container.innerHTML = "";
   container.classList.add("mn-detail-panel");
-  const backdrop = createElement("div", "mn-detail-panel__backdrop");
-  container.parentNode.insertBefore(backdrop, container);
+  const backdrop2 = createElement("div", "mn-detail-panel__backdrop");
+  container.parentNode.insertBefore(backdrop2, container);
   const header = createElement("div", "mn-detail-panel__header");
   const titleEl = createElement("div", "mn-detail-panel__title");
   titleEl.textContent = opts.title ?? "";
@@ -5323,7 +5431,7 @@ function buildDOM(container, opts, activeTab, onTabClick) {
     }
   }
   container.appendChild(footer);
-  return { backdrop, titleEl, editBtn, saveBtn, cancelBtn, closeBtn, tabBar, body, footer };
+  return { backdrop: backdrop2, titleEl, editBtn, saveBtn, cancelBtn, closeBtn, tabBar, body, footer };
 }
 function renderBody(body, state, opts) {
   body.innerHTML = "";
@@ -6478,6 +6586,10 @@ M.initScrollReveal = initScrollReveal;
 M.initNavTracking = initNavTracking;
 M.relativeLuminance = relativeLuminance;
 M.autoContrast = autoContrast;
+M.autoResize = autoResize;
+M.autoResizeAll = autoResizeAll;
+M.initSidebarToggle = initSidebarToggle;
+M.initSidebarToggleAuto = initSidebarToggleAuto;
 M.charts = {
   sparkline,
   donut,
@@ -6529,6 +6641,8 @@ export {
   autoBind,
   autoBindSliders,
   autoContrast,
+  autoResize,
+  autoResizeAll,
   autoTextColor,
   azIcons,
   barChart,
@@ -6616,6 +6730,8 @@ export {
   initRotary,
   initScrollReveal,
   initSearchClear,
+  initSidebarToggle,
+  initSidebarToggleAuto,
   initSlider,
   initTabs,
   initTagInput,

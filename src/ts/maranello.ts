@@ -37,7 +37,9 @@ import {
   sparkline, donut, barChart, areaChart, radar, halfGauge, bubble, liveGraph,
 } from './charts';
 import { chartInteract, sparklineInteract } from './chart-interact';
+import { autoResize, autoResizeAll } from './auto-resize';
 import { openDetailPanel, closeDetailPanel, openDrawer, closeDrawer, initOrgTree } from './controls';
+import { initSidebarToggle, initSidebarToggleAuto } from './sidebar-toggle';
 import { createDetailPanel } from './detail-panel';
 import { registerDatePicker, editors } from './detail-panel-editors';
 import { buildUI } from './ai-chat-dom';
@@ -224,6 +226,12 @@ M.initScrollReveal = initScrollReveal;
 M.initNavTracking = initNavTracking;
 M.relativeLuminance = relativeLuminance;
 M.autoContrast = autoContrast;
+
+// Responsive
+M.autoResize = autoResize;
+M.autoResizeAll = autoResizeAll;
+M.initSidebarToggle = initSidebarToggle;
+M.initSidebarToggleAuto = initSidebarToggleAuto;
 
 // Charts namespace (mn-chart WC looks up M.charts[type])
 M.charts = {

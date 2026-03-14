@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 14 Mar 2026
+
+### Added
+- Responsive mobile adaptation: breakpoints at 640px (mobile) and 1024px (tablet)
+- `responsive-tokens.css` — spacing/layout token overrides per breakpoint
+- `responsive-layouts.css` — sidebar off-canvas, detail panel/chat/notification/login full-width on mobile
+- `responsive-data.css` — compact data table, toolbar wrap, strip-pod/binnacle stack on mobile
+- `responsive-forms.css` — single-column grids, 44px touch targets, full-width buttons
+- `responsive-charts.css` — chart/gauge container max-width, gantt scroll constraint
+- `autoResize()` / `autoResizeAll()` — ResizeObserver wrapper for canvas charts
+- `initSidebarToggle()` / `initSidebarToggleAuto()` — mobile hamburger sidebar toggle
+- `size='fluid'` option for FerrariGauge and speedometer (parent-bound + ResizeObserver)
+- ResizeObserver in `mn-chart`, `mn-gauge`, `mn-speedometer` WCs (auto-resize when no explicit size)
+- 6 responsive utility classes: `mn-hide-mobile`, `mn-show-mobile`, `mn-hide-tablet`, `mn-hide-desktop`, `mn-stack-mobile`, `mn-full-mobile`
+- `demo/responsive.html` — iframe viewport simulator (375/768/1280) showcasing all responsive features
+- Responsive test fixtures in `demo/e2e.html`
+- E2E responsive viewport tests (Playwright at 375/768/1280)
+- Unit tests for responsive CSS and autoResize
+- ADR-0001: Responsive Mobile Adaptation
+
 ## [3.3.0] - 14 Mar 2026
 
 ### Added

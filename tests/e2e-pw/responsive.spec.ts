@@ -1,0 +1,84 @@
+/**
+ * Playwright E2E tests — Responsive viewport behavior.
+ * Tests at 375px (mobile), 768px (tablet), 1280px (desktop).
+ * Uses /demo/e2e.html with responsive test fixtures.
+ */
+import { test, expect } from '@playwright/test';
+
+const MOBILE  = { width: 375,  height: 812 };
+const TABLET  = { width: 768,  height: 1024 };
+const DESKTOP = { width: 1280, height: 800 };
+
+test.describe('Responsive — Mobile (375px)', () => {
+  test.use({ viewport: MOBILE });
+
+  test('sidebar is off-canvas at 375px', async ({ page }) => {
+    await page.goto('/demo/e2e.html');
+    const sidebar = page.locator('[data-testid="sidebar"]');
+    await expect(sidebar).toBeVisible();
+    const box = await sidebar.boundingBox();
+    // Sidebar should be translated off-screen or have zero width
+    expect(box === null || box.width === 0 || box.x + box.width <= 0).toBeTruthy();
+  });
+
+  test('spacing token --space-5xl is 3rem at mobile', async ({ page }) => {
+    await page.goto('/demo/e2e.html');
+    const val = await page.evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--space-5xl').trim()
+    );
+    expect(val).toBe('3rem');
+  });
+
+  test('form grid is single-column at 375px', async ({ page }) => {
+    await page.goto('/demo/e2e.html');
+    const form = page.locator('[data-testid="form-grid"]');
+    const cols = await form.evaluate(el =>
+      getComputedStyle(el).getPropertyValue('grid-template-columns').trim()
+    );
+    // Single column: should be one value (e.g., "343px" or "1fr")
+    expect(cols.split(' ').length).toBe(1);
+  });
+
+  test('data table scroll container has overflow-x auto', async ({ page }) => {
+    await page.goto('/demo/e2e.html');
+    const scroll = page.locator('[data-testid="data-table"] .mn-dt__scroll');
+    const overflow = await scroll.evaluate(el =>
+      getComputedStyle(el).overflowX
+    );
+    expect(overflow).toBe('auto');
+  });
+});
+
+test.describe('Responsive — Tablet (768px)', () => {
+  test.use({ viewport: TABLET });
+
+  test('spacing tokens are intermediate at tablet', async ({ page }) => {
+    await page.goto('/demo/e2e.html');
+    const val = await page.evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--space-5xl').trim()
+    );
+    expect(val).toBe('5rem');
+  });
+});
+
+test.describe('Responsive — Desktop (1280px)', () => {
+  test.use({ viewport: DESKTOP });
+
+  test('spacing tokens are full at desktop', async ({ page }) => {
+    await page.goto('/demo/e2e.html');
+    const val = await page.evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--space-5xl').trim()
+    );
+    expect(val).toBe('8rem');
+  });
+
+  test('form grid has multiple columns at desktop', async ({ page }) => {
+    await page.goto('/demo/e2e.html');
+    const form = page.locator('[data-testid="form-grid"]');
+    const cols = await form.evaluate(el =>
+      getComputedStyle(el).getPropertyValue('grid-template-columns').trim()
+    );
+    // Desktop: should have 2+ columns
+    expect(cols.split(' ').length).toBeGreaterThanOrEqual(2);
+  });
+});

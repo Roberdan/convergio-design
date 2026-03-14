@@ -218,6 +218,35 @@
     --content-width: 1200px;
     --content-narrow: 800px;
   }
+
+  @media (max-width: 640px) {
+    :root {
+      --space-5xl: 3rem;
+      --space-4xl: 2rem;
+      --space-3xl: 1.5rem;
+      --space-2xl: 1.5rem;
+      --space-xxl: 1.5rem;
+      --space-xl: 1.25rem;
+      --space-lg: 1rem;
+      --content-width: 100%;
+      --content-narrow: 100%;
+      --text-hero: clamp(1.75rem, 6vw, 2.5rem);
+      --text-xxl: clamp(1.25rem, 4vw, 1.75rem);
+      --text-h1: clamp(1.25rem, 4vw, 1.75rem);
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    :root {
+      --space-5xl: 5rem;
+      --space-4xl: 3.5rem;
+      --space-3xl: 2.5rem;
+      --space-2xl: 2rem;
+      --space-xxl: 2rem;
+      --content-width: 100%;
+      --content-narrow: 100%;
+    }
+  }
 }
 
 @layer base {
@@ -3638,6 +3667,40 @@
       font-size: 16px;
     }
   }
+
+  @media (max-width: 640px) {
+    .mn-form--grid, .mn-form--grid-2, .mn-form--grid-3 {
+      grid-template-columns: 1fr;
+    }
+
+    .mn-form-input, .mn-form-select, .mn-form-textarea, .mn-input, select.mn-form-select {
+      min-height: 44px;
+      font-size: var(--text-body);
+    }
+
+    .mn-form--inline {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .mn-form--inline .mn-field {
+      width: 100%;
+    }
+
+    .mn-form__actions {
+      flex-direction: column;
+    }
+
+    .mn-form__actions .mn-btn {
+      width: 100%;
+    }
+
+    .mn-form-steps__nav {
+      -webkit-overflow-scrolling: touch;
+      gap: var(--space-xs);
+      overflow-x: auto;
+    }
+  }
 }
 
 @layer charts {
@@ -5012,6 +5075,33 @@
     position: absolute;
     top: 0;
     bottom: 0;
+  }
+
+  @media (max-width: 640px) {
+    .mn-chart-wrap, .mn-chart__root, mn-chart {
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .mn-chart-wrap canvas, mn-chart canvas {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .mn-gauge-wrap, mn-gauge {
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .mn-gantt {
+      -webkit-overflow-scrolling: touch;
+      max-height: 320px;
+      overflow: auto;
+    }
+
+    .mn-gantt__header {
+      font-size: var(--text-small);
+    }
   }
 }
 
@@ -11144,6 +11234,166 @@
   .mn-grid-template--masonry-auto {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
+
+  @media (max-width: 640px) {
+    .mn-sidebar {
+      z-index: 1100;
+      width: 0;
+      transition: transform .3s var(--ease-out), width .3s var(--ease-out);
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+      transform: translateX(-100%);
+    }
+
+    .mn-sidebar--mobile-open {
+      width: 260px;
+      transform: translateX(0);
+    }
+
+    .mn-sidebar__backdrop {
+      z-index: 1099;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s var(--ease-out);
+      background: #00000080;
+      position: fixed;
+      inset: 0;
+    }
+
+    .mn-sidebar__backdrop--visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mn-sidebar--collapsed {
+      width: 0;
+      transform: translateX(-100%);
+    }
+
+    .mn-detail-panel {
+      max-width: 100vw;
+      right: 0;
+      width: 100% !important;
+    }
+
+    .mn-detail-panel--dual-left, .mn-detail-panel--dual-right {
+      max-width: 100vw;
+      width: 100% !important;
+    }
+
+    .mn-detail-panel--dual {
+      flex-direction: column;
+    }
+
+    .mn-chat-panel {
+      max-width: 100vw;
+      left: 1rem;
+      right: 1rem;
+      width: calc(100vw - 2rem) !important;
+    }
+
+    .mn-chat-panel--wide {
+      max-width: 100vw;
+      width: calc(100vw - 2rem) !important;
+    }
+
+    .mn-notification-center {
+      width: 100vw;
+      max-width: 100vw;
+      left: 0;
+      right: 0;
+    }
+
+    .mn-login {
+      width: auto;
+      max-width: 100%;
+      padding: var(--space-md);
+    }
+
+    .mn-login__card {
+      max-width: 100%;
+      padding: var(--space-lg);
+    }
+
+    .mn-drawer {
+      max-width: 100vw;
+      width: 100vw !important;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .mn-detail-panel {
+      width: 50vw;
+      max-width: 460px;
+    }
+
+    .mn-chat-panel--wide {
+      width: 480px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .mn-dt__th, .mn-dt__td {
+      padding: var(--space-xs) var(--space-sm);
+      font-size: var(--text-small);
+    }
+
+    .mn-dt__scroll {
+      -webkit-overflow-scrolling: touch;
+      overflow-x: auto;
+    }
+
+    .mn-dt__filter-row {
+      display: none;
+    }
+
+    .mn-dt__toolbar {
+      gap: var(--space-xs);
+      flex-wrap: wrap;
+    }
+
+    .mn-dt__actions {
+      justify-content: flex-start;
+      width: 100%;
+    }
+
+    .convergio-toolbar {
+      gap: var(--space-xs);
+      padding: var(--space-sm);
+      flex-wrap: wrap;
+    }
+
+    .convergio-toolbar__group {
+      width: 100%;
+    }
+
+    .mn-strip {
+      padding: var(--space-sm);
+      flex-direction: column;
+    }
+
+    .mn-pod {
+      width: 100%;
+      min-height: auto;
+    }
+
+    .mn-signal-panel, .mn-binnacle {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .mn-dt__th, .mn-dt__td {
+      padding: var(--space-sm);
+    }
+
+    .mn-signal-panel, .mn-binnacle {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
 }
 
 @layer extended {
@@ -14819,6 +15069,39 @@
     color: var(--grigio-chiaro);
     border-color: #ffffff26;
     font-size: .85rem;
+  }
+
+  @media (max-width: 640px) {
+    .mn-hide-mobile {
+      display: none !important;
+    }
+
+    .mn-stack-mobile {
+      flex-direction: column !important;
+    }
+
+    .mn-full-mobile {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
+
+  @media (min-width: 641px) {
+    .mn-show-mobile {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .mn-hide-tablet {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .mn-hide-desktop {
+      display: none !important;
+    }
   }
 }
 

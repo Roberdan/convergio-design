@@ -56,6 +56,8 @@ __export(index_exports, {
   autoBind: () => autoBind,
   autoBindSliders: () => autoBindSliders,
   autoContrast: () => autoContrast,
+  autoResize: () => autoResize,
+  autoResizeAll: () => autoResizeAll,
   autoTextColor: () => autoTextColor,
   azIcons: () => azIcons,
   barChart: () => barChart,
@@ -144,6 +146,8 @@ __export(index_exports, {
   initRotary: () => initRotary,
   initScrollReveal: () => initScrollReveal,
   initSearchClear: () => initSearchClear,
+  initSidebarToggle: () => initSidebarToggle,
+  initSidebarToggleAuto: () => initSidebarToggleAuto,
   initSlider: () => initSlider,
   initTabs: () => initTabs,
   initTagInput: () => initTagInput,
@@ -1575,11 +1579,11 @@ function toast(options) {
 
 // src/ts/modal.ts
 function openModal(id) {
-  const backdrop = document.getElementById(id);
-  if (!backdrop) return;
-  const modal = backdrop.querySelector(".mn-modal");
+  const backdrop2 = document.getElementById(id);
+  if (!backdrop2) return;
+  const modal = backdrop2.querySelector(".mn-modal");
   if (!modal) return;
-  backdrop.classList.add("mn-modal-backdrop--open");
+  backdrop2.classList.add("mn-modal-backdrop--open");
   modal.setAttribute("role", "dialog");
   modal.setAttribute("aria-modal", "true");
   const focusable = modal.querySelectorAll(
@@ -1610,10 +1614,10 @@ function openModal(id) {
   document.addEventListener("keydown", trapFocus);
 }
 function closeModal(id) {
-  const backdrop = document.getElementById(id);
-  if (!backdrop) return;
-  const modal = backdrop.querySelector(".mn-modal");
-  backdrop.classList.remove("mn-modal-backdrop--open");
+  const backdrop2 = document.getElementById(id);
+  if (!backdrop2) return;
+  const modal = backdrop2.querySelector(".mn-modal");
+  backdrop2.classList.remove("mn-modal-backdrop--open");
   if (modal?._mnTrapFocus) {
     document.removeEventListener("keydown", modal._mnTrapFocus);
     delete modal._mnTrapFocus;
@@ -2118,7 +2122,7 @@ function initMessages(state, els, opts) {
     inputEl.style.height = "auto";
     inputEl.rows = 1;
   }
-  function autoResize() {
+  function autoResize2() {
     inputEl.style.height = "auto";
     inputEl.style.height = Math.min(inputEl.scrollHeight, 80) + "px";
   }
@@ -2236,7 +2240,7 @@ function initMessages(state, els, opts) {
     agentSelector.addEventListener("click", () => toggleAgentGrid());
   }
   inputEl.addEventListener("input", () => {
-    autoResize();
+    autoResize2();
     updateSendVisibility();
   });
   inputEl.addEventListener("keydown", (e) => {
@@ -3797,6 +3801,57 @@ function sparklineInteract(canvas, data, opts) {
   });
 }
 
+// src/ts/auto-resize.ts
+function autoResize(canvas, factory, data, opts) {
+  if (typeof window === "undefined" || !window.ResizeObserver) return () => {
+  };
+  const parent = canvas.parentElement;
+  if (!parent) return () => {
+  };
+  let ctrl = null;
+  const resize = debounce(() => {
+    const rect = parent.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) return;
+    const dpr2 = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr2;
+    canvas.height = rect.height * dpr2;
+    canvas.style.width = rect.width + "px";
+    canvas.style.height = rect.height + "px";
+    const ctx = canvas.getContext("2d");
+    if (ctx) ctx.scale(dpr2, dpr2);
+    if (ctrl && typeof ctrl.destroy === "function") {
+      ctrl.destroy();
+    }
+    ctrl = factory(canvas, data, { ...opts, width: rect.width, height: rect.height });
+  }, 150);
+  const observer = new ResizeObserver(resize);
+  observer.observe(parent);
+  resize();
+  return () => {
+    observer.disconnect();
+    if (ctrl && typeof ctrl.destroy === "function") {
+      ctrl.destroy();
+    }
+  };
+}
+function autoResizeAll(selector = "canvas[data-auto-resize]", chartLib) {
+  const canvases = document.querySelectorAll(selector);
+  const cleanups = [];
+  const lib = chartLib || (typeof window !== "undefined" ? window.Maranello : null);
+  if (!lib) return () => {
+  };
+  canvases.forEach((canvas) => {
+    const type = canvas.dataset.chartType;
+    if (!type) return;
+    const factory = lib[type];
+    if (typeof factory !== "function") return;
+    const data = JSON.parse(canvas.dataset.chartData || "[]");
+    const opts = JSON.parse(canvas.dataset.chartOptions || "{}");
+    cleanups.push(autoResize(canvas, factory, data, opts));
+  });
+  return () => cleanups.forEach((fn) => fn());
+}
+
 // src/ts/gauge-engine-draw-details.ts
 function drawNeedle(s, progress, sa, totalSweep, value, max, color) {
   const { ctx, cx, cy, radius } = s;
@@ -4473,11 +4528,13 @@ var SIZES = { sm: 120, md: 220, lg: 320 };
 var FerrariGauge = class {
   constructor(canvas) {
     this.srSpan = null;
+    this._resizeObserver = null;
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.config = JSON.parse(canvas.dataset.gauge || "{}");
     this.dpr = window.devicePixelRatio || 1;
     this.init();
+    if (canvas.dataset.size === "fluid") this._attachFluidObserver();
   }
   get palette() {
     const accent = getAccent();
@@ -4487,7 +4544,7 @@ var FerrariGauge = class {
   init() {
     const sizeKey = this.canvas.dataset.size;
     let size;
-    if (sizeKey && SIZES[sizeKey]) {
+    if (sizeKey && sizeKey !== "fluid" && SIZES[sizeKey]) {
       size = SIZES[sizeKey];
     } else {
       const rect = (this.canvas.parentElement || this.canvas).getBoundingClientRect();
@@ -4571,6 +4628,27 @@ var FerrariGauge = class {
     };
     drawGauge(state, progress);
     drawComplications(state, progress);
+  }
+  /** Attach ResizeObserver for size='fluid' mode. */
+  _attachFluidObserver() {
+    if (typeof window === "undefined" || !window.ResizeObserver) return;
+    const parent = this.canvas.parentElement;
+    if (!parent) return;
+    const handler = debounce(() => {
+      this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+      this.init();
+    }, 150);
+    this._resizeObserver = new ResizeObserver(handler);
+    this._resizeObserver.observe(parent);
+  }
+  /** Clean up ResizeObserver and screen reader helpers. */
+  destroy() {
+    this._resizeObserver?.disconnect();
+    this._resizeObserver = null;
+    if (this.srSpan) {
+      this.srSpan.remove();
+      this.srSpan = null;
+    }
   }
 };
 
@@ -4799,7 +4877,14 @@ function speedometer(canvas, opts) {
     animate: true,
     ...opts
   };
-  const dim = SIZES2[options.size] || SIZES2.md;
+  const isFluid = options.size === "fluid";
+  let dim;
+  if (isFluid) {
+    const rect = (canvas.parentElement || canvas).getBoundingClientRect();
+    dim = Math.min(rect.width, rect.height) || SIZES2.md;
+  } else {
+    dim = SIZES2[options.size] || SIZES2.md;
+  }
   const dpr2 = window.devicePixelRatio || 1;
   canvas.width = dim * dpr2;
   canvas.height = dim * dpr2;
@@ -4812,8 +4897,7 @@ function speedometer(canvas, opts) {
   const max = options.max;
   const unit = options.unit || "";
   function buildLabel(v) {
-    const suffix = unit ? `${Math.round(v)}${unit}` : String(Math.round(v));
-    return `Speedometer: ${suffix} of ${max}`;
+    return `Speedometer: ${unit ? `${Math.round(v)}${unit}` : Math.round(v)} of ${max}`;
   }
   canvas.setAttribute("role", "img");
   const initLabel = buildLabel(options.value);
@@ -4838,11 +4922,9 @@ function speedometer(canvas, opts) {
   }
   function animateTo(toAngle, toVal) {
     if (animId) cancelAnimationFrame(animId);
-    const fromA = curAngle, fromV = curVal;
-    const t0 = performance.now(), dur = 800;
+    const fromA = curAngle, fromV = curVal, t0 = performance.now(), dur = 800;
     const tick = (now) => {
-      const p = Math.min(1, (now - t0) / dur);
-      const ep = easeOutCubic(p);
+      const p = Math.min(1, (now - t0) / dur), ep = easeOutCubic(p);
       curAngle = fromA + (toAngle - fromA) * ep;
       curVal = fromV + (toVal - fromV) * ep;
       draw();
@@ -4861,6 +4943,19 @@ function speedometer(canvas, opts) {
   } else {
     draw();
   }
+  let resizeObs = null;
+  if (isFluid && window.ResizeObserver && canvas.parentElement) {
+    const p = canvas.parentElement;
+    resizeObs = new ResizeObserver(debounce(() => {
+      const r = p.getBoundingClientRect();
+      const nd = Math.min(r.width, r.height);
+      if (nd <= 0 || nd === dim) return;
+      if (animId) cancelAnimationFrame(animId);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      speedometer(canvas, { ...opts || {}, size: "fluid", value: curVal, animate: false });
+    }, 150));
+    resizeObs.observe(p);
+  }
   return {
     setValue(v) {
       const ta = v2a(v, max);
@@ -4878,6 +4973,7 @@ function speedometer(canvas, opts) {
     },
     destroy() {
       if (animId) cancelAnimationFrame(animId);
+      resizeObs?.disconnect();
       ctx.clearRect(0, 0, dim * dpr2, dim * dpr2);
     }
   };
@@ -6712,10 +6808,10 @@ function openDetailPanel(id) {
   const panel = document.getElementById(id);
   if (!panel) return;
   panel.classList.add("mn-detail-panel--open");
-  const backdrop = panel.previousElementSibling;
-  if (backdrop && backdrop.classList.contains("mn-detail-panel__backdrop")) {
-    backdrop.classList.add("mn-detail-panel__backdrop--visible");
-    backdrop.addEventListener(
+  const backdrop2 = panel.previousElementSibling;
+  if (backdrop2 && backdrop2.classList.contains("mn-detail-panel__backdrop")) {
+    backdrop2.classList.add("mn-detail-panel__backdrop--visible");
+    backdrop2.addEventListener(
       "click",
       () => closeDetailPanel(id),
       { once: true }
@@ -6728,9 +6824,9 @@ function closeDetailPanel(id) {
   const panel = document.getElementById(id);
   if (!panel) return;
   panel.classList.remove("mn-detail-panel--open");
-  const backdrop = panel.previousElementSibling;
-  if (backdrop && backdrop.classList.contains("mn-detail-panel__backdrop")) {
-    backdrop.classList.remove("mn-detail-panel__backdrop--visible");
+  const backdrop2 = panel.previousElementSibling;
+  if (backdrop2 && backdrop2.classList.contains("mn-detail-panel__backdrop")) {
+    backdrop2.classList.remove("mn-detail-panel__backdrop--visible");
   }
 }
 function openDrawer(id, triggerEl) {
@@ -6738,10 +6834,10 @@ function openDrawer(id, triggerEl) {
   if (!drawer) return;
   drawer.classList.add("mn-drawer--open");
   const trigger = triggerEl ?? document.activeElement;
-  const backdrop = drawer.previousElementSibling;
-  if (backdrop && backdrop.classList.contains("mn-drawer__backdrop")) {
-    backdrop.classList.add("mn-drawer__backdrop--visible");
-    backdrop.addEventListener(
+  const backdrop2 = drawer.previousElementSibling;
+  if (backdrop2 && backdrop2.classList.contains("mn-drawer__backdrop")) {
+    backdrop2.classList.add("mn-drawer__backdrop--visible");
+    backdrop2.addEventListener(
       "click",
       () => closeDrawer(id, trigger),
       { once: true }
@@ -6777,9 +6873,9 @@ function closeDrawer(id, triggerEl) {
   const drawer = document.getElementById(id);
   if (!drawer) return;
   drawer.classList.remove("mn-drawer--open");
-  const backdrop = drawer.previousElementSibling;
-  if (backdrop && backdrop.classList.contains("mn-drawer__backdrop")) {
-    backdrop.classList.remove("mn-drawer__backdrop--visible");
+  const backdrop2 = drawer.previousElementSibling;
+  if (backdrop2 && backdrop2.classList.contains("mn-drawer__backdrop")) {
+    backdrop2.classList.remove("mn-drawer__backdrop--visible");
   }
   const handler = drawer._mnDrawerKeyHandler;
   if (typeof handler === "function") {
@@ -6862,6 +6958,62 @@ function initDrillDown(container) {
       trigger.setAttribute("aria-expanded", String(!isOpen));
     });
   });
+}
+
+// src/ts/sidebar-toggle.ts
+var backdrop = null;
+function ensureBackdrop() {
+  if (backdrop) return backdrop;
+  backdrop = document.createElement("div");
+  backdrop.className = "mn-sidebar__backdrop";
+  document.body.appendChild(backdrop);
+  return backdrop;
+}
+function closeSidebar(sidebar) {
+  sidebar.classList.remove("mn-sidebar--mobile-open");
+  const bd = ensureBackdrop();
+  bd.classList.remove("mn-sidebar__backdrop--visible");
+}
+function openSidebar(sidebar) {
+  sidebar.classList.add("mn-sidebar--mobile-open");
+  const bd = ensureBackdrop();
+  bd.classList.add("mn-sidebar__backdrop--visible");
+}
+function initSidebarToggle(sidebarEl, triggerEl) {
+  const bd = ensureBackdrop();
+  const onTrigger = () => {
+    if (sidebarEl.classList.contains("mn-sidebar--mobile-open")) {
+      closeSidebar(sidebarEl);
+    } else {
+      openSidebar(sidebarEl);
+    }
+  };
+  const onBackdrop = () => closeSidebar(sidebarEl);
+  const onEsc = (e) => {
+    if (e.key === "Escape" && sidebarEl.classList.contains("mn-sidebar--mobile-open")) {
+      closeSidebar(sidebarEl);
+    }
+  };
+  const mql = window.matchMedia("(min-width: 641px)");
+  const onDesktop = (e) => {
+    if ("matches" in e && e.matches) closeSidebar(sidebarEl);
+  };
+  triggerEl.addEventListener("click", onTrigger);
+  bd.addEventListener("click", onBackdrop);
+  document.addEventListener("keydown", onEsc);
+  mql.addEventListener("change", onDesktop);
+  return () => {
+    triggerEl.removeEventListener("click", onTrigger);
+    bd.removeEventListener("click", onBackdrop);
+    document.removeEventListener("keydown", onEsc);
+    mql.removeEventListener("change", onDesktop);
+  };
+}
+function initSidebarToggleAuto() {
+  const sidebar = document.querySelector(".mn-sidebar");
+  const trigger = document.querySelector("[data-sidebar-toggle], .mn-sidebar-toggle");
+  if (!sidebar || !trigger) return null;
+  return initSidebarToggle(sidebar, trigger);
 }
 
 // src/ts/controls-ferrari.ts
@@ -9309,7 +9461,8 @@ function autoContrast(selector, threshold = 0.35) {
 var GAUGE_SIZES = {
   sm: 120,
   md: 220,
-  lg: 320
+  lg: 320,
+  fluid: 0
 };
 function resolveCanvas(target) {
   if (typeof target === "string") {
@@ -10135,8 +10288,8 @@ function validateField2(value, field) {
 function buildDOM(container, opts, activeTab, onTabClick) {
   container.innerHTML = "";
   container.classList.add("mn-detail-panel");
-  const backdrop = createElement("div", "mn-detail-panel__backdrop");
-  container.parentNode.insertBefore(backdrop, container);
+  const backdrop2 = createElement("div", "mn-detail-panel__backdrop");
+  container.parentNode.insertBefore(backdrop2, container);
   const header = createElement("div", "mn-detail-panel__header");
   const titleEl = createElement("div", "mn-detail-panel__title");
   titleEl.textContent = opts.title ?? "";
@@ -10181,7 +10334,7 @@ function buildDOM(container, opts, activeTab, onTabClick) {
     }
   }
   container.appendChild(footer);
-  return { backdrop, titleEl, editBtn, saveBtn, cancelBtn, closeBtn, tabBar, body, footer };
+  return { backdrop: backdrop2, titleEl, editBtn, saveBtn, cancelBtn, closeBtn, tabBar, body, footer };
 }
 function renderBody(body, state, opts) {
   body.innerHTML = "";
@@ -11339,6 +11492,10 @@ M.initScrollReveal = initScrollReveal;
 M.initNavTracking = initNavTracking;
 M.relativeLuminance = relativeLuminance;
 M.autoContrast = autoContrast;
+M.autoResize = autoResize;
+M.autoResizeAll = autoResizeAll;
+M.initSidebarToggle = initSidebarToggle;
+M.initSidebarToggleAuto = initSidebarToggleAuto;
 M.charts = {
   sparkline,
   donut,

@@ -1,0 +1,37 @@
+/* MARANELLO DESIGN SYSTEM — Responsive Charts v3.4.0
+   Chart wrappers, gauge, gantt — mobile overrides */
+
+@layer charts {
+
+@media (max-width: 640px) {
+
+  /* Chart containers: fluid width, no overflow */
+  .mn-chart-wrap,
+  .mn-chart__root,
+  mn-chart {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .mn-chart-wrap canvas,
+  mn-chart canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Gauge: prevent overflow */
+  .mn-gauge-wrap,
+  mn-gauge {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  /* Gantt: constrained height with scroll */
+  .mn-gantt {
+    max-height: 320px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mn-gantt__header { font-size: var(--text-small); }
+}
+
+} /* end @layer charts */

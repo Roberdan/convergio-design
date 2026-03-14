@@ -46,6 +46,7 @@ export const GAUGE_SIZES: Record<GaugeSize, number> = {
   sm: 120,
   md: 220,
   lg: 320,
+  fluid: 0,
 };
 
 // ---------------------------------------------------------------------------

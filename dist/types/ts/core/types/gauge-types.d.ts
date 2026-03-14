@@ -3,7 +3,7 @@
  * Extracted from: gauge-engine-class, gauge-engine-draw,
  *   gauge-engine, speedometer-draw, speedometer
  */
-export type GaugeSize = 'sm' | 'md' | 'lg';
+export type GaugeSize = 'sm' | 'md' | 'lg' | 'fluid';
 export interface GaugeConfig {
     value?: number;
     min?: number;

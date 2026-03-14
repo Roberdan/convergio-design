@@ -99,6 +99,9 @@ export * from './charts';
 // Chart interaction (tooltips, crosshair, hover)
 export { chartInteract, sparklineInteract } from './chart-interact';
 
+// Auto-resize for responsive charts
+export { autoResize, autoResizeAll } from './auto-resize';
+
 // Gauge engine
 export { FerrariGauge } from './gauge-engine';
 export { buildGaugePalette } from './gauge-engine-palette';
@@ -123,6 +126,9 @@ export {
   openDrawer, closeDrawer,
   initOrgTree, toggleNotifications, initDrillDown,
 } from './controls';
+
+// Sidebar toggle (mobile)
+export { initSidebarToggle, initSidebarToggleAuto } from './sidebar-toggle';
 
 // Ferrari controls (cruise lever, toggle lever, manettino, rotary)
 export { cruiseLever, toggleLever } from './controls-ferrari';
