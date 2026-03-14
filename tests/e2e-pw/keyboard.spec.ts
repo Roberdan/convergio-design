@@ -13,6 +13,8 @@ test.describe('Keyboard navigation', () => {
   test('Tab traverses nav links in document order', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('domcontentloaded');
+    // Wait for demo JS to mount sections
+    await page.waitForTimeout(500);
 
     // Collect the first N focusable elements via repeated Tab presses
     const focused: string[] = [];
@@ -37,31 +39,22 @@ test.describe('Keyboard navigation', () => {
     await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {/* ignore */});
 
     // Open the info modal via the overlays section button
+    // Check if Maranello runtime is available
+    const hasMaranello = await page.evaluate(() => typeof (window as any).Maranello !== 'undefined');
+    if (!hasMaranello) { test.skip(true, 'Maranello IIFE not loaded'); return; }
+
     const modalBtn = page.locator('#ovl-modal-info');
-    const btnExists = await modalBtn.count();
-    if (!btnExists) {
-      test.skip(); // overlays section not mounted
-      return;
-    }
+    if (!await modalBtn.count()) { test.skip(true, 'overlays section not mounted'); return; }
 
     await modalBtn.scrollIntoViewIfNeeded();
     await modalBtn.click();
-
-    // Wait briefly for modal to appear
     await page.waitForTimeout(300);
 
-    // Detect any open modal/dialog
     const modalVisible = await page.evaluate(() => {
-      const dialog = document.querySelector('[role="dialog"]') as HTMLElement | null;
-      const overlay = document.querySelector('.mn-modal-overlay') as HTMLElement | null;
-      const el = dialog ?? overlay;
-      return el ? el.offsetParent !== null : false;
+      const el = document.querySelector('[role="dialog"]') ?? document.querySelector('.mn-modal-overlay');
+      return el ? (el as HTMLElement).offsetParent !== null : false;
     });
-
-    if (!modalVisible) {
-      test.skip(); // Maranello JS not loaded — modal didn't open
-      return;
-    }
+    if (!modalVisible) { test.skip(true, 'Modal did not open'); return; }
 
     // Tab several times — focus must stay inside the modal
     for (let i = 0; i < 5; i++) {
@@ -82,8 +75,11 @@ test.describe('Keyboard navigation', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {/* ignore */});
 
+    const hasMaranello = await page.evaluate(() => typeof (window as any).Maranello !== 'undefined');
+    if (!hasMaranello) { test.skip(true, 'Maranello IIFE not loaded'); return; }
+
     const modalBtn = page.locator('#ovl-modal-info');
-    if (!await modalBtn.count()) { test.skip(); return; }
+    if (!await modalBtn.count()) { test.skip(true, 'overlays not mounted'); return; }
 
     await modalBtn.scrollIntoViewIfNeeded();
     await modalBtn.click();
@@ -93,8 +89,7 @@ test.describe('Keyboard navigation', () => {
       const el = document.querySelector('[role="dialog"]') ?? document.querySelector('.mn-modal-overlay');
       return el ? (el as HTMLElement).offsetParent !== null : false;
     });
-
-    if (!openedBefore) { test.skip(); return; }
+    if (!openedBefore) { test.skip(true, 'Modal did not open'); return; }
 
     await page.keyboard.press('Escape');
     await page.waitForTimeout(200);

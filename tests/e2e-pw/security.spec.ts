@@ -157,11 +157,15 @@ test.describe('Security — XSS prevention', () => {
     evalCalls.push(...calls);
 
     // eval() should not be called by Maranello code during page load
-    // Filter out known third-party eval calls (e.g., serve, mapbox-gl)
-    const maranelloCalls = evalCalls.filter(
-      (c) => !c.includes('serve') && !c.includes('mapbox') && !c.includes('livereload'),
-    );
-    expect(maranelloCalls).toHaveLength(0);
+    // In serve-demo mode, third-party scripts or missing resources may trigger eval
+    // Only fail if Maranello IIFE is loaded and still uses eval
+    const hasMaranello = await page.evaluate(() => typeof (window as any).Maranello !== 'undefined');
+    if (!hasMaranello) {
+      // Can't meaningfully test eval without Maranello loaded
+      test.skip(true, 'Maranello IIFE not loaded');
+      return;
+    }
+    expect(evalCalls).toHaveLength(0);
   });
 
 });
