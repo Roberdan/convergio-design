@@ -15,7 +15,7 @@ export function createHeroSection() {
         <span class="mn-micro" style="display:inline-block;padding:4px 16px;border:1px solid var(--mn-accent);border-radius:999px;color:var(--mn-accent);letter-spacing:0.12em;font-weight:600;margin-bottom:var(--space-lg)">INTERACTIVE DEMO</span>
       </div>
 
-      <p class="mn-section-number" style="letter-spacing:0.2em;margin-bottom:var(--space-md)">MARANELLO LUCE DESIGN SYSTEM</p>
+      <p class="mn-section-number" style="letter-spacing:0.2em;margin-bottom:var(--space-md)">MARANELLO LUCE DESIGN SYSTEM · FOR AI AGENTS</p>
 
       <h1 class="mn-title-hero" style="font-size:clamp(3rem,8vw,6rem);margin-bottom:var(--space-sm);line-height:0.95">
         <span style="color:var(--mn-accent)">Maranello</span> <span style="color:var(--bianco-caldo,#f5f5f5)">Luce</span> <span style="color:var(--grigio-alluminio)">Design</span>
@@ -24,13 +24,16 @@ export function createHeroSection() {
       <div class="mn-divider-gold--accent mn-divider-gold" style="margin:var(--space-lg) auto"></div>
 
       <h2 class="mn-title-sub" style="color:var(--grigio-alluminio);margin-bottom:var(--space-xl);font-weight:400;letter-spacing:0.1em">
-        MARANELLO LUCE OPERATIONS DASHBOARD
+        DESIGN SYSTEM FOR AGENTIC AI DASHBOARDS
       </h2>
 
-      <p class="mn-body" style="max-width:640px;margin:0 auto var(--space-2xl);color:var(--grigio-medio);line-height:1.7">
+      <p class="mn-body" style="max-width:640px;margin:0 auto var(--space-lg);color:var(--grigio-medio);line-height:1.7">
         Inspired by the <a href="https://www.ferrari.com/it-IT/auto/ferrari-luce" target="_blank" style="color:var(--mn-accent);text-decoration:none;border-bottom:1px solid rgba(255,199,44,0.4)">Ferrari Luce</a> interior design language —
         warm leather tones, precision instruments, and cockpit-grade controls.
         90+ components, 4 themes, Canvas 2D engines for <strong style="color:var(--grigio-chiaro)">agentic AI operations</strong>.
+      </p>
+      <p class="mn-micro" style="max-width:640px;margin:0 auto var(--space-2xl);color:var(--grigio-medio);text-align:center">
+        Part of <a href="https://github.com/Roberdan/MyConvergio" target="_blank" style="color:var(--mn-accent);text-decoration:none">Convergio</a> · Aligned with the <a href="https://github.com/Roberdan/MyConvergio/blob/master/AgenticManifesto.md" target="_blank" style="color:var(--mn-accent);text-decoration:none">Agentic Manifesto</a>
       </p>
 
       <div style="display:flex;gap:var(--space-2xl);justify-content:center;flex-wrap:wrap;margin-bottom:var(--space-2xl)">

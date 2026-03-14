@@ -99,20 +99,32 @@ export function createAnimationsSection() {
       <div class="demo-section-label">Composable Dashboard Grid</div>
       <!-- Dashboard header toolbar -->
       <div style="display:flex;align-items:center;gap:var(--space-md);padding:12px 16px;background:linear-gradient(180deg,rgba(255,199,44,0.06),transparent);border:1px solid var(--grigio-scuro,#333);border-radius:var(--radius-md) var(--radius-md) 0 0;margin-bottom:0">
-        <span class="mn-label" style="color:var(--mn-accent);font-size:0.75rem;letter-spacing:0.06em">MARANELLO<span style="color:var(--grigio-alluminio)"> LUCE</span></span>
-        <div style="display:flex;gap:2px;margin-left:var(--space-md)">
-          <button class="mn-btn-cluster__item mn-btn-cluster__item--active" style="padding:6px 8px;font-size:0.6rem" title="Dashboard">▦</button>
-          <button class="mn-btn-cluster__item" style="padding:6px 8px;font-size:0.6rem" title="Table">☰</button>
-          <button class="mn-btn-cluster__item" style="padding:6px 8px;font-size:0.6rem" title="Cards">▧</button>
+        <div style="display:flex;gap:var(--space-sm);align-items:center">
+          <button class="mn-btn-cluster__item mn-btn-cluster__item--active" style="padding:6px 8px;display:flex;align-items:center;justify-content:center" title="Grid view" aria-label="Grid view">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="1.5" width="5" height="5"/><rect x="9.5" y="1.5" width="5" height="5"/><rect x="1.5" y="9.5" width="5" height="5"/><rect x="9.5" y="9.5" width="5" height="5"/></svg>
+          </button>
+          <button class="mn-btn-cluster__item" style="padding:6px 8px;display:flex;align-items:center;justify-content:center" title="List view" aria-label="List view">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="3" y1="3" x2="13" y2="3"/><line x1="3" y1="8" x2="13" y2="8"/><line x1="3" y1="13" x2="13" y2="13"/></svg>
+          </button>
+          <button class="mn-btn-cluster__item" style="padding:6px 8px;display:flex;align-items:center;justify-content:center" title="Compact view" aria-label="Compact view">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="2" width="13" height="3"/><rect x="1.5" y="7" width="13" height="3"/><rect x="1.5" y="12" width="13" height="2.5"/></svg>
+          </button>
+          <button class="mn-btn mn-btn--ghost mn-btn--sm" style="padding:6px 10px">Filters</button>
         </div>
-        <div style="flex:1"></div>
-        <div style="display:flex;align-items:center;gap:6px;padding:4px 12px;border:1px solid var(--grigio-scuro,#333);border-radius:4px;font-size:0.7rem;color:var(--grigio-medio)">
-          <span>Filters</span><span style="color:var(--grigio-scuro)">|</span><span style="opacity:0.5">Filter by name, program…</span>
-          <span class="mn-micro" style="margin-left:var(--space-lg);padding:2px 6px;border:1px solid var(--grigio-scuro);border-radius:3px;font-size:0.55rem">⌘K</span>
+        <div style="flex:1;display:flex;justify-content:center">
+          <div style="display:flex;align-items:center;gap:var(--space-sm);max-width:400px;width:100%;background:var(--superficie-1);border:1px solid var(--grigio-scuro);border-radius:var(--radius-md);padding:var(--space-xs) var(--space-md)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--grigio-medio)" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><line x1="10.4" y1="10.4" x2="14" y2="14"/></svg>
+            <input type="text" placeholder="Filter by name, program..." style="flex:1;background:none;border:none;color:var(--grigio-chiaro);font-family:var(--font-body);outline:none">
+          </div>
         </div>
-        <div style="display:flex;gap:4px;margin-left:var(--space-md)">
-          <button class="mn-machined-btn" style="padding:4px 8px;font-size:0.65rem" title="Refresh">↻</button>
-          <button class="mn-machined-btn" style="padding:4px 8px;font-size:0.65rem" title="Settings">⚙</button>
+        <div style="display:flex;gap:var(--space-sm);align-items:center">
+          <kbd style="padding:2px 6px;border:1px solid var(--grigio-scuro);border-radius:4px;font-size:0.65rem;color:var(--grigio-medio)">⌘K</kbd>
+          <button class="mn-machined-btn" style="padding:4px 8px;display:flex;align-items:center;justify-content:center" title="Sort" aria-label="Sort">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M4 3h8"/><path d="M6 8h6"/><path d="M8 13h4"/><path d="M4 3v10"/></svg>
+          </button>
+          <button class="mn-machined-btn" style="padding:4px 8px;display:flex;align-items:center;justify-content:center" title="Settings" aria-label="Settings">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.5v1.4M8 13.1v1.4M1.5 8h1.4M13.1 8h1.4M3.1 3.1l1 1M11.9 11.9l1 1M12.9 3.1l-1 1M4.1 11.9l-1 1"/></svg>
+          </button>
         </div>
       </div>
       <div class="mn-dashboard mn-mb-2xl" style="border:1px solid var(--grigio-scuro,#333);border-top:0;border-radius:0 0 var(--radius-md) var(--radius-md);padding-top:var(--space-md)">

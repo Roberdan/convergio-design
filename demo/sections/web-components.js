@@ -7,7 +7,7 @@ const OKR_OPTIONS = esc(JSON.stringify({ title: 'Spring OKR', period: 'Q2 2026' 
 const MAP_MARKERS = esc(JSON.stringify([{ id: 'm1', lat: 38.90, lon: -77.04, label: 'us-east-1', detail: 'Primary routing mesh', color: '#FFC72C', size: 8 }, { id: 'm2', lat: 53.35, lon: -6.26, label: 'eu-west-1', detail: 'Evaluation cluster', color: '#00A651', size: 8 }]));
 const PROFILE_SECTIONS = esc(JSON.stringify([{ items: [{ label: 'Runtime overview' }, { label: 'Settings' }] }, { items: [{ label: 'Switch theme' }, { label: 'Sign out' }] }]));
 const DETAIL_SECTIONS = esc(JSON.stringify({ data: { region: 'us-east-1', pipeline: 'Pipeline Alpha', readiness: 'Ready' } }));
-const COMMAND_ITEMS = esc(JSON.stringify([{ text: 'Open routing board', icon: '▣' }, { text: 'Jump to eu-west-1', icon: '⌘' }, { text: 'Launch eval pack', icon: '✦' }]));
+const COMMAND_ITEMS = esc(JSON.stringify([{ text: 'Open routing board', icon: '■' }, { text: 'Jump to eu-west-1', icon: '⌘' }, { text: 'Launch eval pack', icon: '◆' }]));
 const HBAR_DATA = esc(JSON.stringify([{ label: 'Opus', value: 82 }, { label: 'Sonnet', value: 68 }]));
 const FUNNEL_STAGES = esc(JSON.stringify([{ label: 'Draft', value: 120 }, { label: 'Validated', value: 84 }, { label: 'Running', value: 56 }]));
 const GROUPS = [
@@ -43,7 +43,7 @@ const GROUPS = [
   ] },
   { title: 'Interactive', items: [
     { tag: 'mn-toast', desc: 'Auto-dismissing toast notifications for operator feedback.', preview: `<button class="mn-btn mn-btn--ghost" data-toast>Spawn toast</button><div class="mn-wc-toast-stack"></div>` },
-    { tag: 'mn-chat', desc: 'Conversational assistant surface for pipeline support and routing triage.', size: 'tall', preview: `<mn-chat id="wc-chat" title="Maranello Luce Copilot" welcome-message="Ask about routing health or next reviews." quick-actions='["us-east-1 load","Token spend"]'></mn-chat>` },
+    { tag: 'mn-chat', desc: 'Conversational assistant surface for pipeline support and routing triage.', size: 'tall', preview: `<div class="mn-card-dark" style="width:100%;padding:var(--space-lg);max-height:200px;overflow:hidden"><div style="display:flex;flex-direction:column;gap:var(--space-sm)"><div class="mn-label" style="color:var(--mn-accent);margin-bottom:var(--space-xs)">Maranello Luce Copilot</div><div style="padding:var(--space-sm) var(--space-md);background:rgba(78,168,222,0.15);border-radius:12px 12px 12px 4px;max-width:85%"><span class="mn-micro" style="color:var(--grigio-chiaro)">How many canary slots are available?</span></div><div style="padding:var(--space-sm) var(--space-md);background:rgba(255,199,44,0.1);border-radius:12px 12px 4px 12px;max-width:85%;align-self:flex-end"><span class="mn-micro" style="color:var(--grigio-chiaro)">eu-west-1 has 6 canary slots free.</span></div></div></div>` },
   ] },
 ];
 
@@ -69,16 +69,16 @@ function groupBlock(group) { return `<div class="mn-wc-group"><div style="displa
 function card(item) { return `<article class="mn-card-dark" style="padding:var(--space-lg)"><div class="mn-wc-preview mn-wc-preview--${item.size || 'base'}">${item.preview}</div><div class="mn-wc-meta" style="margin-top:var(--space-md)"><code class="mn-micro" style="color:var(--mn-accent)">&lt;${item.tag}&gt;</code><p class="mn-card__text">${item.desc}</p></div></article>`; }
 async function initCatalog(section) {
   await Promise.all(WC_MODULES.map((name) => import(`../../src/wc/${name}.js`).catch(() => null)));
-  section.querySelectorAll('[data-open]').forEach((button) => button.addEventListener('click', () => { section.querySelector(`#${button.getAttribute('data-open')}`)?.open?.(); }));
+  section.querySelectorAll('[data-open]').forEach((button) => button.addEventListener('click', () => {
+    const targetId = button.getAttribute('data-open');
+    if (!targetId) return;
+    const target = section.querySelector(`#${targetId}`);
+    if (!target) return;
+    if (typeof target.open === 'function') { target.open(); return; }
+    if (typeof target.show === 'function') { target.show(); return; }
+    if (typeof target.toggle === 'function') { target.toggle(true); return; }
+    target.setAttribute('open', '');
+  }));
   section.querySelectorAll('[data-toast]').forEach((button) => button.addEventListener('click', () => { const stack = button.parentElement?.querySelector('.mn-wc-toast-stack'); if (!stack) return; const toast = document.createElement('mn-toast'); toast.setAttribute('title', 'Runbook synced'); toast.setAttribute('message', 'Pipeline Alpha state refreshed across the runtime board.'); toast.setAttribute('type', 'success'); toast.setAttribute('duration', '2600'); stack.appendChild(toast); }));
-  setTimeout(() => inlineChat(section.querySelector('#wc-chat')), 300);
-}
-function inlineChat(chat) {
-  if (!chat?.open) return;
-  chat.open();
-  chat.addMessage?.('user', 'How many canary slots are available?');
-  chat.addMessage?.('ai', 'eu-west-1 has 6 canary slots free and us-east-1 can open 4 more after the next cache warmup.');
-  const panel = chat.shadowRoot?.querySelector('.mn-chat-panel'); const fab = chat.shadowRoot?.querySelector('.mn-chat-fab'); const root = chat.shadowRoot?.querySelector('.mn-wc-root');
-  if (root) root.style.position = 'relative'; if (panel) panel.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border-radius:12px'; if (fab) fab.style.cssText = 'position:absolute;left:12px;bottom:12px';
 }
 function esc(value) { return String(value).replace(/'/g, '&#39;'); }
