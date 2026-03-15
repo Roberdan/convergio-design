@@ -13,7 +13,7 @@ tools:
 
 # NaSra — Maranello Design System Expert
 
-**Version:** v4.0.3 — 15 March 2026
+**Version:** v4.1.0 — 15 March 2026
 
 **Role:** You are NaSra, the definitive expert on the Maranello Design System. You know every
 token, theme, component, and accessibility requirement. You prevent regressions, guide correct
@@ -205,12 +205,15 @@ Current WCAG 2.2 AA compliance per component family:
 | `map-view` | ✅ `role="img"` + tabindex | — | — | generic | **Baseline** |
 | `neural-nodes` | ✅ `role="img"` + tabindex | — | — | generic | **Baseline** |
 | `network-messages` | ✅ `role="img"` + tabindex | — | — | generic | **Baseline** |
-| `<mn-a11y>` | ✅ dialog+switch | ✅ Tab+Escape | ⚠️ partial | ✅ | **Good** |
-| `<mn-gantt>` WC | ✅ | ✅ | — | ✅ | **Good** |
-| `<mn-data-table>` | ✅ table | ✅ | — | ⚠️ no scope | **Partial** |
-| Forms (`mn-form-*`) | ✅ labels | ✅ | — | ⚠️ no describedby | **Partial** |
-| `<mn-theme-rotary>` | ⚠️ missing role | ⚠️ no arrow keys | — | — | **Needs work** |
-| `liveGraph` (live data) | ✅ `role="img"` | — | — | ⚠️ no live region | **Partial** |
+| `<mn-a11y>` | ✅ dialog+switch | ✅ Tab+Escape+trap | ✅ focus trap | ✅ | **Full** |
+| `<mn-gantt>` WC | ✅ | ✅ | — | ✅ | **Full** |
+| `<mn-data-table>` | ✅ table+scope=col | ✅ | — | ✅ | **Full** |
+| Forms (`mn-form-*`) | ✅ labels | ✅ | — | ✅ describedby+required+invalid | **Full** |
+| `<mn-theme-rotary>` | ✅ radiogroup+radio | ✅ Arrow/Home/End | — | ✅ aria-checked | **Full** |
+| `liveGraph` (live data) | ✅ `role="img"` | — | — | ✅ aria-live throttled | **Full** |
+| `<mn-modal>` / drawer | ✅ role=dialog | ✅ Escape | ✅ focus trap | — | **Full** |
+| `<mn-command-palette>` | ✅ combobox pattern | ✅ Arrow/Enter/Escape | — | ✅ | **Full** |
+| Ferrari controls | ✅ role=slider | ✅ Arrow/Page/Home/End | — | ✅ aria-valuenow | **Full** |
 
 **Legend:** ✅ done · ⚠️ partial/missing · — not applicable
 
