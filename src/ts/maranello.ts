@@ -4,7 +4,7 @@
  * W3/W4 module registrations are in maranello-exports.ts.
  */
 
-import { VERSION, eventBus, cssVar, getTheme, setTheme, cycleTheme } from './index';
+import { VERSION, eventBus, cssVar, palette, getTheme, setTheme, cycleTheme } from './index';
 import { getAccent, clamp, lerp, hiDpiCanvas, createElement, escapeHtml } from './core/utils';
 import { formatNumber, formatDate, debounce, throttle } from './core/utils';
 import { icons, renderIcon, iconCatalog } from './icons';
@@ -121,6 +121,7 @@ M.initThemeToggle = initThemeToggle;
 M.themeRotary = themeRotary;
 M.getAccent = getAccent;
 M.cssVar = cssVar;
+M.palette = palette;
 
 // Shared helpers
 M.clamp = clamp;

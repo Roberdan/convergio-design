@@ -17,15 +17,15 @@ import {
   radar,
   sparkline,
   sparklineInteract
-} from "./chunks/chunk-UMAYPDOD.js";
+} from "./chunks/chunk-37POZM75.js";
 import {
   FerrariGauge,
   buildGaugePalette,
   speedometer
-} from "./chunks/chunk-IBXYZOLB.js";
+} from "./chunks/chunk-HW4XUPKU.js";
 import {
   gantt
-} from "./chunks/chunk-44KTI45C.js";
+} from "./chunks/chunk-I2UNIBSH.js";
 import {
   closeDetailPanel,
   closeDrawer,
@@ -38,7 +38,7 @@ import {
   steppedRotary,
   toggleLever,
   toggleNotifications
-} from "./chunks/chunk-BTM7KOOP.js";
+} from "./chunks/chunk-XLAK74UA.js";
 import {
   ALLOWED_BIND_PROPERTIES,
   clamp,
@@ -54,12 +54,13 @@ import {
   hiDpiCanvas,
   isValidColor,
   lerp,
+  palette,
   sanitizeAttr,
   sanitizeHtml,
   sanitizeSvg,
   setTheme,
   throttle
-} from "./chunks/chunk-UHYPJJPP.js";
+} from "./chunks/chunk-3NVT4YO4.js";
 import {
   addValidator,
   defaultMessages,
@@ -1021,12 +1022,12 @@ function closeModal(id) {
 }
 
 // src/ts/command-palette.ts
-function getVisibleItems(palette) {
-  const all = palette.querySelectorAll(".mn-command-palette__item");
+function getVisibleItems(palette2) {
+  const all = palette2.querySelectorAll(".mn-command-palette__item");
   return Array.from(all).filter((el4) => el4.style.display !== "none");
 }
-function clearActive(palette) {
-  palette.querySelectorAll(".mn-command-palette__item").forEach((el4) => {
+function clearActive(palette2) {
+  palette2.querySelectorAll(".mn-command-palette__item").forEach((el4) => {
     el4.classList.remove("mn-command-palette__item--active");
     el4.setAttribute("aria-selected", "false");
   });
@@ -1044,13 +1045,13 @@ function activateItem(input, items, index) {
   }
 }
 function commandPalette(id) {
-  const palette = document.getElementById(id);
-  if (!palette) return { open: () => {
+  const palette2 = document.getElementById(id);
+  if (!palette2) return { open: () => {
   }, close: () => {
   } };
-  const input = palette.querySelector(".mn-command-palette__input");
-  const listEl = palette.querySelector(".mn-command-palette__list");
-  const items = palette.querySelectorAll(".mn-command-palette__item");
+  const input = palette2.querySelector(".mn-command-palette__input");
+  const listEl = palette2.querySelector(".mn-command-palette__list");
+  const items = palette2.querySelectorAll(".mn-command-palette__item");
   let activeIndex = -1;
   if (listEl) {
     listEl.setAttribute("role", "listbox");
@@ -1070,18 +1071,18 @@ function commandPalette(id) {
     if (!item.id) item.id = id + "-item-" + i;
   });
   function open() {
-    palette.classList.add("mn-command-palette--open");
+    palette2.classList.add("mn-command-palette--open");
     if (input) {
       input.value = "";
       input.setAttribute("aria-expanded", "true");
       input.focus();
     }
     activeIndex = -1;
-    clearActive(palette);
+    clearActive(palette2);
     filterItems("");
   }
   function close() {
-    palette.classList.remove("mn-command-palette--open");
+    palette2.classList.remove("mn-command-palette--open");
     if (input) {
       input.setAttribute("aria-expanded", "false");
       input.setAttribute("aria-activedescendant", "");
@@ -1101,12 +1102,12 @@ function commandPalette(id) {
       item.style.display = match ? "" : "none";
     });
     activeIndex = -1;
-    clearActive(palette);
+    clearActive(palette2);
   }
   if (input) {
     input.addEventListener("input", () => filterItems(input.value));
     input.addEventListener("keydown", (e) => {
-      const visible = getVisibleItems(palette);
+      const visible = getVisibleItems(palette2);
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
@@ -1133,7 +1134,7 @@ function commandPalette(id) {
   document.addEventListener("keydown", (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key === "k") {
       e.preventDefault();
-      palette.classList.contains("mn-command-palette--open") ? close() : open();
+      palette2.classList.contains("mn-command-palette--open") ? close() : open();
     }
   });
   items.forEach((item) => {
@@ -6505,6 +6506,7 @@ M.initThemeToggle = initThemeToggle;
 M.themeRotary = themeRotary;
 M.getAccent = getAccent;
 M.cssVar = cssVar;
+M.palette = palette;
 M.clamp = clamp;
 M.lerp = lerp;
 M.hiDpiCanvas = hiDpiCanvas;
@@ -6757,6 +6759,7 @@ export {
   openDetailPanel,
   openDrawer,
   openModal,
+  palette,
   profileMenu,
   progressRing,
   project,

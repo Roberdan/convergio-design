@@ -173,6 +173,7 @@ __export(index_exports, {
   openDetailPanel: () => openDetailPanel,
   openDrawer: () => openDrawer,
   openModal: () => openModal,
+  palette: () => palette,
   profileMenu: () => profileMenu,
   progressRing: () => progressRing,
   project: () => project,
@@ -566,16 +567,32 @@ function cycleTheme() {
 function getAccent(fallback = "#FFC72C") {
   return cssVar("--giallo-ferrari", fallback);
 }
-function getGlass() {
-  return document.body.classList.contains("mn-glass");
-}
-function setGlass(on3) {
-  document.body.classList.toggle("mn-glass", on3);
-}
-function toggleGlass() {
-  const next = !getGlass();
-  setGlass(next);
-  return next;
+function palette(el4 = document.documentElement) {
+  const read = (name) => getComputedStyle(el4).getPropertyValue(name).trim();
+  return {
+    // Semantic (theme-aware) — use these for UI surfaces
+    surface: read("--mn-surface"),
+    surfaceRaised: read("--mn-surface-raised"),
+    surfaceSunken: read("--mn-surface-sunken"),
+    text: read("--mn-text"),
+    textMuted: read("--mn-text-muted"),
+    border: read("--mn-border"),
+    accent: read("--mn-accent"),
+    // Brand primitives — fixed across themes
+    giallo: read("--giallo-ferrari"),
+    rosso: read("--rosso-corsa"),
+    verde: read("--verde-racing"),
+    azzurro: read("--status-info"),
+    biancoCaldo: read("--bianco-caldo"),
+    grigioChiaro: read("--grigio-chiaro"),
+    grigioMedio: read("--grigio-medio"),
+    neroAssoluto: read("--nero-assoluto"),
+    // Status — use in charts, badges, gauges
+    statusOk: read("--status-ok"),
+    statusWarn: read("--status-warn"),
+    statusError: read("--status-error"),
+    statusInfo: read("--status-info")
+  };
 }
 function debounce(fn, ms) {
   let timer = null;
@@ -1625,12 +1642,12 @@ function closeModal(id) {
 }
 
 // src/ts/command-palette.ts
-function getVisibleItems(palette) {
-  const all = palette.querySelectorAll(".mn-command-palette__item");
+function getVisibleItems(palette2) {
+  const all = palette2.querySelectorAll(".mn-command-palette__item");
   return Array.from(all).filter((el4) => el4.style.display !== "none");
 }
-function clearActive(palette) {
-  palette.querySelectorAll(".mn-command-palette__item").forEach((el4) => {
+function clearActive(palette2) {
+  palette2.querySelectorAll(".mn-command-palette__item").forEach((el4) => {
     el4.classList.remove("mn-command-palette__item--active");
     el4.setAttribute("aria-selected", "false");
   });
@@ -1648,13 +1665,13 @@ function activateItem(input, items, index) {
   }
 }
 function commandPalette(id) {
-  const palette = document.getElementById(id);
-  if (!palette) return { open: () => {
+  const palette2 = document.getElementById(id);
+  if (!palette2) return { open: () => {
   }, close: () => {
   } };
-  const input = palette.querySelector(".mn-command-palette__input");
-  const listEl = palette.querySelector(".mn-command-palette__list");
-  const items = palette.querySelectorAll(".mn-command-palette__item");
+  const input = palette2.querySelector(".mn-command-palette__input");
+  const listEl = palette2.querySelector(".mn-command-palette__list");
+  const items = palette2.querySelectorAll(".mn-command-palette__item");
   let activeIndex = -1;
   if (listEl) {
     listEl.setAttribute("role", "listbox");
@@ -1674,18 +1691,18 @@ function commandPalette(id) {
     if (!item.id) item.id = id + "-item-" + i;
   });
   function open() {
-    palette.classList.add("mn-command-palette--open");
+    palette2.classList.add("mn-command-palette--open");
     if (input) {
       input.value = "";
       input.setAttribute("aria-expanded", "true");
       input.focus();
     }
     activeIndex = -1;
-    clearActive(palette);
+    clearActive(palette2);
     filterItems("");
   }
   function close() {
-    palette.classList.remove("mn-command-palette--open");
+    palette2.classList.remove("mn-command-palette--open");
     if (input) {
       input.setAttribute("aria-expanded", "false");
       input.setAttribute("aria-activedescendant", "");
@@ -1705,12 +1722,12 @@ function commandPalette(id) {
       item.style.display = match ? "" : "none";
     });
     activeIndex = -1;
-    clearActive(palette);
+    clearActive(palette2);
   }
   if (input) {
     input.addEventListener("input", () => filterItems(input.value));
     input.addEventListener("keydown", (e) => {
-      const visible = getVisibleItems(palette);
+      const visible = getVisibleItems(palette2);
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
@@ -1737,7 +1754,7 @@ function commandPalette(id) {
   document.addEventListener("keydown", (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key === "k") {
       e.preventDefault();
-      palette.classList.contains("mn-command-palette--open") ? close() : open();
+      palette2.classList.contains("mn-command-palette--open") ? close() : open();
     }
   });
   items.forEach((item) => {
@@ -11408,9 +11425,7 @@ M.initThemeToggle = initThemeToggle;
 M.themeRotary = themeRotary;
 M.getAccent = getAccent;
 M.cssVar = cssVar;
-M.getGlass = getGlass;
-M.setGlass = setGlass;
-M.toggleGlass = toggleGlass;
+M.palette = palette;
 M.clamp = clamp;
 M.lerp = lerp;
 M.hiDpiCanvas = hiDpiCanvas;

@@ -15,6 +15,7 @@ export type { EventCallback } from './core/events';
 // Utilities
 export {
   cssVar,
+  palette,
   getTheme,
   setTheme,
   cycleTheme,
