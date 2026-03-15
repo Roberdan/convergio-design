@@ -1,0 +1,192 @@
+name: "Full WCAG 2.2 AA Accessibility"
+description: >
+  Bring Maranello Luce Design System to full WCAG 2.2 AA compliance.
+  Baseline (role/aria-label on all canvas) is done in v4.0.3.
+  This plan covers: focus management, keyboard navigation, screen reader
+  data access, semantic HTML improvements, live region announcements,
+  contrast audit, and documentation.
+
+baseline_done:
+  - "All charts-* use applyChartA11y (role=img, aria-label, sr-only span)"
+  - "Gantt: role=grid, tabindex, arrow key nav"
+  - "Speedometer + gauge-engine: role=img, live aria-label updates"
+  - "social-graph, map-view, neural-nodes, network-messages: role=img + tabindex"
+  - "<mn-a11y>: Tab+Escape keyboard, FAB aria-expanded, panel role=dialog"
+  - ".mn-sr-only class in accessibility.css"
+  - "mn-reduced-motion, mn-high-contrast CSS hooks"
+  - "Skip link in demo"
+
+waves:
+
+  - id: W1
+    name: "Contrast Audit"
+    goal: "No WCAG 1.4.3 (text 4.5:1) or 1.4.11 (UI 3:1) failures on any theme"
+    tasks:
+      - id: T1.1
+        name: "Script: contrast checker against all 4 themes"
+        detail: >
+          Build scripts/check-contrast.mjs — parse CSS vars for each theme,
+          compute luminance ratios for all text/bg combos, output failures.
+          Run in CI on push.
+        files: ["scripts/check-contrast.mjs", ".github/workflows/ci.yml"]
+
+      - id: T1.2
+        name: "Fix any contrast failures found by T1.1"
+        detail: >
+          Apply adaptive token fixes (not primitive) per theme.
+          Must pass on Editorial, Nero, Avorio, Colorblind.
+        depends_on: [T1.1]
+
+  - id: W2
+    name: "Keyboard Navigation"
+    goal: "Every interactive element reachable and operable by keyboard alone"
+    tasks:
+      - id: T2.1
+        name: "Focus trap in <mn-a11y> panel dialog"
+        detail: >
+          Add trapFocus() (pattern in NaSra) to mn-a11y-fallback.js.
+          Tab cycles within panel when open. Shift+Tab also trapped.
+          Existing Escape already returns focus to FAB.
+        files: ["src/wc/mn-a11y-fallback.js"]
+
+      - id: T2.2
+        name: "Keyboard nav: mn-theme-rotary"
+        detail: >
+          Add role=group + ArrowLeft/ArrowRight to cycle themes.
+          Each option needs role=radio + aria-checked. Announce theme name on change.
+        files: ["src/wc/mn-theme-rotary.js", "src/ts/theme-rotary.ts"]
+
+      - id: T2.3
+        name: "Keyboard nav: mn-ferrari-control (dial/knob)"
+        detail: >
+          Add role=slider, aria-valuemin/max/now, ArrowUp/Down/Left/Right.
+          Step 1 unit per arrow, 10 per Page Up/Down, Home=min, End=max.
+        files: ["src/ts/controls-ferrari.ts", "src/ts/controls-ferrari-dials.ts"]
+
+      - id: T2.4
+        name: "Tab order audit — demo page"
+        detail: >
+          Tab through entire demo, verify logical order matches visual order.
+          Fix any tabindex=-1 traps or skipped interactive elements.
+          Document exceptions in TROUBLESHOOTING.md.
+        files: ["demo/index.html", "TROUBLESHOOTING.md"]
+
+  - id: W3
+    name: "Screen Reader Data Access"
+    goal: "Canvas chart data readable by screen readers via table alternative"
+    tasks:
+      - id: T3.1
+        name: "applyChartA11y: use real data in aria-label + inject sr table"
+        detail: >
+          Extend applyChartA11y(canvas, label, data?) to:
+          1. Set aria-label with actual min/max/last values (already done for sparkline)
+          2. Optionally inject sr-only <table> with labels+values (new param)
+          All charts-*.ts pass real data summary to applyChartA11y.
+        files: ["src/ts/charts-helpers.ts", "src/ts/charts-sparkline.ts",
+                "src/ts/charts-donut.ts", "src/ts/charts-sparkbar.ts",
+                "src/ts/charts-area.ts", "src/ts/charts-live.ts",
+                "src/ts/charts-radar.ts", "src/ts/charts-bubble.ts",
+                "src/ts/charts-halfgauge.ts"]
+
+      - id: T3.2
+        name: "liveGraph: aria-live region for real-time updates"
+        detail: >
+          Add sr-only aria-live="polite" sibling. On each data push,
+          announce latest value + trend direction (e.g. "CPU: 42%, up from 38%").
+          Throttle to 1 announcement per 5 seconds to avoid SR spam.
+        files: ["src/ts/charts-live.ts"]
+
+      - id: T3.3
+        name: "social-graph + neural-nodes: node count in aria-label"
+        detail: >
+          Update aria-label dynamically: "Social graph: {n} nodes, {e} edges"
+          and "Neural network: {layers} layers, {nodes} nodes".
+        files: ["src/ts/social-graph.ts", "src/ts/neural-nodes.ts"]
+
+  - id: W4
+    name: "Semantic HTML — Forms & Tables"
+    goal: "All form controls and data tables meet WCAG 1.3.1 and 4.1.2"
+    tasks:
+      - id: T4.1
+        name: "DataTable: add scope attributes to headers"
+        detail: >
+          th elements need scope="col" (column headers) or scope="row" (row headers).
+          Check mn-data-table WC and data-table-render.ts.
+        files: ["src/ts/data-table-render.ts", "src/wc/mn-data-table.js"]
+
+      - id: T4.2
+        name: "Forms: aria-describedby for error messages"
+        detail: >
+          Each input error message must be linked via aria-describedby.
+          Required fields: aria-required="true". Invalid fields: aria-invalid="true".
+          Check forms-validate.ts and forms-widgets.ts.
+        files: ["src/ts/forms-validate.ts", "src/ts/forms-widgets.ts"]
+
+      - id: T4.3
+        name: "Ensure all form controls have visible, programmatic labels"
+        detail: >
+          Audit all mn-form-* CSS classes and initForm* functions.
+          Every input must have: explicit <label for> OR aria-label OR aria-labelledby.
+          No placeholder-as-label antipattern.
+        files: ["src/ts/forms.ts", "src/css/forms-inputs.css"]
+
+  - id: W5
+    name: "Live Regions & Dynamic Content"
+    goal: "Dynamic content changes announced to screen readers"
+    tasks:
+      - id: T5.1
+        name: "Toast notifications: aria-live assertive for errors, polite for info"
+        detail: >
+          toast() function currently uses mn-toast WC. Verify role="status"
+          or role="alert" on toast container. Errors = assertive, others = polite.
+        files: ["src/ts/toast.ts", "src/wc/mn-toast.js"]
+
+      - id: T5.2
+        name: "Loading states: aria-busy on containers during async operations"
+        detail: >
+          Add aria-busy="true" to chart containers while data loads.
+          Remove on render complete. Announce result via sr-only region.
+        files: ["src/wc/mn-chart.js", "src/ts/charts.ts"]
+
+  - id: W6
+    name: "Docs + NaSra Final Update"
+    goal: "All a11y work reflected in docs, NaSra, AGENT.md, TROUBLESHOOTING.md"
+    tasks:
+      - id: T6.1
+        name: "NaSra: update status matrix to reflect completed waves"
+        detail: >
+          Update the A11y Implementation Status table in NaSra.agent.md.
+          All ⚠️ items resolved in W1-W5 should become ✅.
+        files: [".github/agents/NaSra.agent.md"]
+
+      - id: T6.2
+        name: "AGENT.md: add WCAG 2.2 compliance summary section"
+        detail: >
+          Add Accessibility section to AGENT.md with: compliance level,
+          key patterns, applyChartA11y API, mn-sr-only class, a11y panel.
+        files: ["AGENT.md"]
+
+      - id: T6.3
+        name: "TROUBLESHOOTING.md: a11y known issues and fixes"
+        detail: >
+          Document: canvas charts not navigable (by design — use sr table instead),
+          focus trap requires visible focus ring (focusVisible=true), etc.
+        files: ["TROUBLESHOOTING.md"]
+
+      - id: T6.4
+        name: "CHANGELOG + version bump (4.1.0 — minor, adds keyboard nav)"
+        files: ["CHANGELOG.md", "package.json"]
+
+success_criteria:
+  - "scripts/check-contrast.mjs exits 0 on all 4 themes"
+  - "Full keyboard tab-through of demo with no traps or skipped elements"
+  - "All canvas charts have meaningful aria-label (not just 'Area chart: 3 series')"
+  - "liveGraph announces value changes to SR without spam"
+  - "DataTable: NVDA/VoiceOver reads column headers correctly"
+  - "Forms: all errors linked via aria-describedby"
+  - "Toast errors announced immediately (role=alert)"
+  - "NaSra status matrix: all components ✅ or — (not applicable)"
+
+version_target: "4.1.0"
+estimated_waves: 6
+priority: high
