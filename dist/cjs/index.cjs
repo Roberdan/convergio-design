@@ -1823,31 +1823,33 @@ function render(container, state, opts) {
     const errorEl = card.lastElementChild;
     errorEl.setAttribute("role", "alert");
   }
-  const statusSection = createElement("div", "mn-login__status");
-  statusSection.appendChild(createElement("div", "mn-login__status-title", { text: "SYSTEM STATUS" }));
-  const gaugeRow = createElement("div", "mn-login__status-gauges");
-  if (state.checks?.length) {
-    state.checks.forEach((c) => gaugeRow.appendChild(createServiceCard(c)));
-  } else {
-    ["Database", "Cache", "API"].forEach((name) => {
-      gaugeRow.appendChild(createServiceCard({ name, status: "healthy", latency_ms: null }));
-    });
-  }
-  statusSection.appendChild(gaugeRow);
-  let overall = "healthy";
-  if (state.checks) {
-    for (const c of state.checks) {
-      if (c.status === "unhealthy") {
-        overall = "unhealthy";
-        break;
-      }
-      if (c.status === "degraded" && overall !== "unhealthy") overall = "degraded";
+  if (opts.showStatus !== false) {
+    const statusSection = createElement("div", "mn-login__status");
+    statusSection.appendChild(createElement("div", "mn-login__status-title", { text: "SYSTEM STATUS" }));
+    const gaugeRow = createElement("div", "mn-login__status-gauges");
+    if (state.checks?.length) {
+      state.checks.forEach((c) => gaugeRow.appendChild(createServiceCard(c)));
+    } else {
+      ["Database", "Cache", "API"].forEach((name) => {
+        gaugeRow.appendChild(createServiceCard({ name, status: "healthy", latency_ms: null }));
+      });
     }
+    statusSection.appendChild(gaugeRow);
+    let overall = "healthy";
+    if (state.checks) {
+      for (const c of state.checks) {
+        if (c.status === "unhealthy") {
+          overall = "unhealthy";
+          break;
+        }
+        if (c.status === "degraded" && overall !== "unhealthy") overall = "degraded";
+      }
+    }
+    statusSection.appendChild(createElement("div", `mn-login__overall mn-login__overall--${overall}`, {
+      text: overall === "healthy" ? "All systems operational" : overall === "degraded" ? "Some services degraded" : "Service disruption detected"
+    }));
+    card.appendChild(statusSection);
   }
-  statusSection.appendChild(createElement("div", `mn-login__overall mn-login__overall--${overall}`, {
-    text: overall === "healthy" ? "All systems operational" : overall === "degraded" ? "Some services degraded" : "Service disruption detected"
-  }));
-  card.appendChild(statusSection);
   const footer = createElement("div", "mn-login__footer");
   footer.appendChild(createElement("span", "mn-login__version", { text: state.version ?? "" }));
   const envValue = state.env ?? "production";
@@ -4957,6 +4959,7 @@ function speedometer(canvas, opts) {
       const nd = Math.min(r.width, r.height);
       if (nd <= 0 || nd === dim) return;
       if (animId) cancelAnimationFrame(animId);
+      resizeObs?.disconnect();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       speedometer(canvas, { ...opts || {}, size: nd, value: curVal, animate: false });
     }, 150));

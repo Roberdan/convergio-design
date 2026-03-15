@@ -54,7 +54,7 @@ These 7 tokens redefine per-theme and cascade into shadow DOM — use them in co
 | `--mn-accent` | `--giallo-ferrari` | `--rosso-corsa` | Primary interactive color |
 | `--mn-accent-hover` | `--giallo-hover` | `#b30000` | Hover state |
 | `--mn-accent-text` | `#111` | `#fff` | Text on accent bg |
-| `--status-ok` / `--status-warn` / `--status-error` / `--status-info` | — | — | Status indicators |
+| `--signal-ok` / `--signal-warning` / `--signal-danger` / `--signal-info` | — | — | Status indicators |
 
 ### `Maranello.palette()` — Live Token Reader
 
@@ -71,7 +71,7 @@ function renderChart(canvas, data) {
 }
 ```
 
-Returns `{ surface, surfaceRaised, surfaceSunken, text, textMuted, border, accent, giallo, rosso, verde, azzurro, biancoCaldo, grigioChiaro, grigioMedio, neroAssoluto, statusOk, statusWarn, statusError, statusInfo }`.
+Returns `{ surface, surfaceRaised, surfaceSunken, text, textMuted, border, accent, giallo, rosso, verde, azzurro, biancoCaldo, grigioChiaro, grigioMedio, neroAssoluto, signalOk, signalWarning, signalDanger, signalInfo }`.
 
 ## Section Classes
 

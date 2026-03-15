@@ -111,10 +111,10 @@
     flex-wrap: wrap !important;
   }
 
-  /* Typography: scale down */
-  .mn-title-hero { font-size: clamp(1.5rem, 6vw, 2.5rem) !important; }
-  .mn-title-section { font-size: clamp(1.2rem, 5vw, 2rem) !important; }
-  .mn-title-sub { font-size: clamp(1rem, 4vw, 1.5rem) !important; }
+  /* Typography: scale down, respecting a11y font scale */
+  .mn-title-hero { font-size: calc(clamp(1.5rem, 6vw, 2.5rem) * var(--mn-a11y-font-scale, 1)) !important; }
+  .mn-title-section { font-size: calc(clamp(1.2rem, 5vw, 2rem) * var(--mn-a11y-font-scale, 1)) !important; }
+  .mn-title-sub { font-size: calc(clamp(1rem, 4vw, 1.5rem) * var(--mn-a11y-font-scale, 1)) !important; }
 
   /* Sim panel: stack */
   .mn-sim-panel {

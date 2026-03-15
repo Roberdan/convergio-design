@@ -12032,6 +12032,31 @@
     color: var(--nero-assoluto);
   }
 
+  body.mn-avorio .mn-mission-btn, body.mn-avorio .mn-night-agent__action {
+    color: var(--grigio-scuro);
+    border-color: var(--grigio-alluminio);
+    background: var(--bianco-puro);
+  }
+
+  body.mn-avorio .mn-mission-btn--delegate {
+    color: var(--mn-accent);
+    border-color: var(--mn-accent);
+  }
+
+  body.mn-avorio .mn-mission-btn--start {
+    color: var(--signal-ok);
+    border-color: var(--signal-ok);
+  }
+
+  body.mn-avorio .mn-mission-btn--reset {
+    color: var(--grigio-medio);
+  }
+
+  body.mn-avorio .mn-mission-btn--cancel {
+    color: var(--signal-danger);
+    border-color: var(--signal-danger);
+  }
+
   body.mn-colorblind {
     --giallo: #ffb000;
     --rosso: var(--mn-cb-orange);

@@ -1146,6 +1146,7 @@ function speedometer(canvas, opts) {
       const nd = Math.min(r.width, r.height);
       if (nd <= 0 || nd === dim) return;
       if (animId) cancelAnimationFrame(animId);
+      resizeObs?.disconnect();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       speedometer(canvas, { ...opts || {}, size: nd, value: curVal, animate: false });
     }, 150));

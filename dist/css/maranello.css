@@ -11569,15 +11569,15 @@
     }
 
     .mn-title-hero {
-      font-size: clamp(1.5rem, 6vw, 2.5rem) !important;
+      font-size: calc(clamp(1.5rem, 6vw, 2.5rem) * var(--mn-a11y-font-scale, 1)) !important;
     }
 
     .mn-title-section {
-      font-size: clamp(1.2rem, 5vw, 2rem) !important;
+      font-size: calc(clamp(1.2rem, 5vw, 2rem) * var(--mn-a11y-font-scale, 1)) !important;
     }
 
     .mn-title-sub {
-      font-size: clamp(1rem, 4vw, 1.5rem) !important;
+      font-size: calc(clamp(1rem, 4vw, 1.5rem) * var(--mn-a11y-font-scale, 1)) !important;
     }
 
     .mn-sim-panel {
@@ -13580,6 +13580,31 @@
   body.mn-avorio .mn-drill-down:hover {
     background: var(--avorio-medio);
     color: var(--nero-assoluto);
+  }
+
+  body.mn-avorio .mn-mission-btn, body.mn-avorio .mn-night-agent__action {
+    color: var(--grigio-scuro);
+    border-color: var(--grigio-alluminio);
+    background: var(--bianco-puro);
+  }
+
+  body.mn-avorio .mn-mission-btn--delegate {
+    color: var(--mn-accent);
+    border-color: var(--mn-accent);
+  }
+
+  body.mn-avorio .mn-mission-btn--start {
+    color: var(--signal-ok);
+    border-color: var(--signal-ok);
+  }
+
+  body.mn-avorio .mn-mission-btn--reset {
+    color: var(--grigio-medio);
+  }
+
+  body.mn-avorio .mn-mission-btn--cancel {
+    color: var(--signal-danger);
+    border-color: var(--signal-danger);
   }
 
   body.mn-colorblind {

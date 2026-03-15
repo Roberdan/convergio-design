@@ -130,8 +130,11 @@ const CSS = `
   .center { display: none; }
 }
 `;
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
 function lbl(id) {
-  return LABELS[id] ?? id;
+  return LABELS[id] ?? esc(id);
 }
 function syncTheme(el) {
   const cls = document.body.className;
@@ -171,7 +174,7 @@ class MnSectionNav extends HTMLElement {
     const next = idx < sections.length - 1 ? sections[idx + 1] : null;
     this.shadowRoot.innerHTML = `<style>${CSS}</style>
 <nav class="nav" role="navigation" aria-label="Section navigation">
-  <button class="btn btn--prev" ${!prev ? 'disabled aria-hidden="true"' : `aria-label="Precedente: ${lbl(prev)}"`}>
+  <button class="btn btn--prev" ${!prev ? 'disabled aria-hidden="true"' : `aria-label="Previous: ${lbl(prev)}"`}>
     <span class="arrow" aria-hidden="true">\u25C0</span>
     <span class="lbl">${prev ? lbl(prev) : ""}</span>
   </button>
@@ -182,7 +185,7 @@ class MnSectionNav extends HTMLElement {
     <span class="sep">\xB7</span>
     <span class="cur">${lbl(current)}</span>
   </div>
-  <button class="btn btn--next" ${!next ? 'disabled aria-hidden="true"' : `aria-label="Successivo: ${lbl(next)}"`}>
+  <button class="btn btn--next" ${!next ? 'disabled aria-hidden="true"' : `aria-label="Next: ${lbl(next)}"`}>
     <span class="lbl">${next ? lbl(next) : ""}</span>
     <span class="arrow" aria-hidden="true">\u25B6</span>
   </button>

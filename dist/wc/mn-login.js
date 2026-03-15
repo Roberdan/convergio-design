@@ -63,6 +63,7 @@ class MnLogin extends HTMLElement {
       version: void 0,
       healthUrl,
       autoHealth: !!healthUrl,
+      showStatus: false,
       onLogin: () => {
         this.dispatchEvent(new CustomEvent("mn-login", {
           bubbles: true,

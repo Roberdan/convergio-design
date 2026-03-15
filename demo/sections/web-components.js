@@ -49,8 +49,8 @@ const GROUPS = [
     { tag: 'mn-modal', desc: 'Modal dialog for confirmations, alerts, and quick approvals.', preview: `<button class="mn-btn mn-btn--ghost" data-open="wc-modal">Open modal</button><mn-modal id="wc-modal" title="Release review">The us-east-1 deployment lane is ready for final sign-off.</mn-modal>` },
   ] },
   { title: 'Interactive', items: [
-    { tag: 'mn-toast', desc: 'Auto-dismissing toast notifications for operator feedback.', preview: `<button class="mn-btn mn-btn--ghost" data-toast>Spawn toast</button><div class="mn-wc-toast-stack"></div>` },
-    { tag: 'mn-chat', desc: 'Conversational assistant surface for pipeline support and routing triage.', size: 'tall', preview: `<div class="mn-card-dark" style="width:100%;padding:var(--space-lg);max-height:200px;overflow:hidden"><div style="display:flex;flex-direction:column;gap:var(--space-sm)"><div class="mn-label" style="color:var(--mn-accent);margin-bottom:var(--space-xs)">Maranello Luce Copilot</div><div style="padding:var(--space-sm) var(--space-md);background:rgba(78,168,222,0.15);border-radius:12px 12px 12px 4px;max-width:85%"><span class="mn-micro" style="color:var(--grigio-chiaro)">How many canary slots are available?</span></div><div style="padding:var(--space-sm) var(--space-md);background:rgba(255,199,44,0.1);border-radius:12px 12px 4px 12px;max-width:85%;align-self:flex-end"><span class="mn-micro" style="color:var(--grigio-chiaro)">eu-west-1 has 6 canary slots free.</span></div></div></div>` },
+    { tag: 'mn-toast', desc: 'Auto-dismissing toast notifications for operator feedback.', preview: `<button class="mn-btn mn-btn--ghost" data-toast>Spawn toast</button><div class="mn-wc-toast-stack"><div class="mn-toast mn-toast--success" style="position:relative;margin-top:8px"><div class="mn-toast__content"><strong class="mn-toast__title">Runbook synced</strong><p class="mn-toast__message mn-micro">State refreshed across runtime board.</p></div></div></div>` },
+    { tag: 'mn-chat', desc: 'Conversational assistant surface for pipeline support and routing triage.', size: 'tall', preview: `<mn-chat style="height:200px;display:block"></mn-chat>` },
   ] },
 ];
 
@@ -86,16 +86,21 @@ function card(item) {
 }
 
 async function initCatalog(section) {
-  const loaded = new Set();
+  // Map stores promises so all cards sharing a module await the SAME import — prevents race condition
+  const loadedPromises = new Map();
 
   const loadCard = async (article) => {
     const idx = parseInt(article.dataset.wcIdx ?? '-1', 10);
     if (idx < 0 || idx >= FLAT_ITEMS.length) return;
     const item = FLAT_ITEMS[idx];
     const mod = TAG_TO_MODULE[item.tag] ?? item.tag;
-    if (!loaded.has(mod)) {
-      loaded.add(mod);
-      await import(`../../src/wc/${mod}.js`).catch(() => null);
+    if (!loadedPromises.has(mod)) {
+      loadedPromises.set(mod, import(`../../src/wc/${mod}.js`).catch(() => null));
+    }
+    await loadedPromises.get(mod);
+    // Wait for custom element registration before injecting preview HTML
+    if (item.tag !== 'mn-tab') {
+      await customElements.whenDefined(item.tag).catch(() => null);
     }
     const previewEl = article.querySelector('.mn-wc-preview');
     if (previewEl) {
