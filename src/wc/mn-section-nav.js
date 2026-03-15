@@ -1,6 +1,9 @@
 /**
  * mn-section-nav — Section pagination bar (prev/next).
- * Attributes: sections (comma-separated ids), current (active section id).
+ * Attributes:
+ *   sections   comma-separated section ids
+ *   current    active section id
+ *   data-pos   "top" | "bottom"  (accent border side)
  * Listens to mn-theme-change for automatic theming.
  */
 
@@ -21,61 +24,89 @@ const LABELS = {
 
 const CSS = `
 :host { display: block; width: 100%; box-sizing: border-box; }
+
 .nav {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 1.5rem; height: 52px;
-  background: var(--mn-snav-bg, rgba(17,17,17,0.97));
-  border-top: 1px solid var(--mn-snav-border, rgba(200,200,200,0.12));
-  border-bottom: 1px solid var(--mn-snav-border, rgba(200,200,200,0.12));
+  padding: 0 2rem; height: 56px;
+  background: #0d0d0d;
   font-family: var(--font-display, 'Space Grotesk', sans-serif);
-  font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
-  gap: 0.5rem;
+  font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+  font-weight: 500; gap: 1rem;
+  border-top: 1px solid rgba(200,200,200,0.07);
+  border-bottom: 1px solid rgba(200,200,200,0.07);
+  position: relative;
 }
+
+/* Accent stripe — top bar gets it on bottom, bottom bar on top */
+:host([data-pos="top"]) .nav { border-bottom: 2px solid rgba(255,199,44,0.35); border-top: none; }
+:host([data-pos="bottom"]) .nav { border-top: 2px solid rgba(255,199,44,0.35); border-bottom: none; }
+
 .btn {
-  display: flex; align-items: center; gap: 0.5rem;
+  display: flex; align-items: center; gap: 0.55rem;
   background: none; border: none; cursor: pointer;
-  color: var(--mn-snav-fg, rgba(200,200,200,0.65));
+  color: rgba(200,200,200,0.5);
   font-family: inherit; font-size: inherit;
-  letter-spacing: inherit; text-transform: inherit;
-  padding: 0.4rem 0; transition: color 0.18s; min-width: 0; flex: 1;
+  letter-spacing: inherit; text-transform: inherit; font-weight: inherit;
+  padding: 0.5rem 0; transition: color 0.18s;
+  min-width: 0; flex: 1;
 }
 .btn:hover:not([disabled]) { color: var(--mn-accent, #FFC72C); }
-.btn:focus-visible { outline: 2px solid var(--mn-accent, #FFC72C); outline-offset: 2px; border-radius: 2px; }
-.btn[disabled] { opacity: 0.2; cursor: default; }
+.btn:focus-visible {
+  outline: 2px solid var(--mn-accent, #FFC72C);
+  outline-offset: 3px; border-radius: 2px;
+}
+/* keep flex space but make invisible — so center stays centered */
+.btn[disabled] { opacity: 0; pointer-events: none; }
 .btn--prev { justify-content: flex-start; }
 .btn--next { justify-content: flex-end; }
+
 .arrow {
-  flex-shrink: 0; font-size: 0.7rem;
+  flex-shrink: 0; font-size: 0.8rem;
   color: var(--mn-accent, #FFC72C);
   transition: color 0.18s;
 }
-.btn[disabled] .arrow { color: inherit; }
-.lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
+.btn:hover:not([disabled]) .arrow { color: inherit; }
+
+.lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
+
 .center {
-  flex: 0 0 auto; text-align: center;
-  color: var(--mn-snav-center, rgba(200,200,200,0.38));
-  font-size: 0.6rem; padding: 0 0.75rem; white-space: nowrap;
+  flex: 0 0 auto; text-align: center; white-space: nowrap;
+  color: rgba(200,200,200,0.38); font-size: 0.65rem;
+  padding: 0 0.5rem; line-height: 1; user-select: none;
 }
-.center strong { color: var(--mn-accent, #FFC72C); font-weight: 700; }
-/* Avorio */
+.pos { color: var(--mn-accent, #FFC72C); font-weight: 700; font-size: 0.8rem; }
+.sep { opacity: 0.3; margin: 0 0.3em; }
+.cur { color: rgba(200,200,200,0.6); }
+
+/* ── Avorio ── */
 :host([data-theme="avorio"]) .nav {
-  background: rgba(250,243,230,0.97);
-  border-color: rgba(0,0,0,0.09);
+  background: rgba(250,243,230,0.98);
+  border-color: rgba(0,0,0,0.07);
 }
-:host([data-theme="avorio"]) .btn { color: rgba(60,60,60,0.6); }
+:host([data-theme="avorio"][data-pos="top"]) .nav { border-bottom-color: rgba(220,0,0,0.3); }
+:host([data-theme="avorio"][data-pos="bottom"]) .nav { border-top-color: rgba(220,0,0,0.3); }
+:host([data-theme="avorio"]) .btn { color: rgba(40,40,40,0.45); }
 :host([data-theme="avorio"]) .btn:hover:not([disabled]) { color: #DC0000; }
 :host([data-theme="avorio"]) .arrow { color: #DC0000; }
-:host([data-theme="avorio"]) .center { color: rgba(60,60,60,0.38); }
-:host([data-theme="avorio"]) .center strong { color: #DC0000; }
-/* Colorblind */
+:host([data-theme="avorio"]) .center { color: rgba(40,40,40,0.35); }
+:host([data-theme="avorio"]) .pos { color: #DC0000; }
+:host([data-theme="avorio"]) .cur { color: rgba(40,40,40,0.55); }
+
+/* ── Colorblind ── */
+:host([data-theme="colorblind"][data-pos="top"]) .nav { border-bottom-color: rgba(0,114,178,0.4); }
+:host([data-theme="colorblind"][data-pos="bottom"]) .nav { border-top-color: rgba(0,114,178,0.4); }
 :host([data-theme="colorblind"]) .btn:hover:not([disabled]) { color: #0072B2; }
 :host([data-theme="colorblind"]) .arrow { color: #0072B2; }
-:host([data-theme="colorblind"]) .center strong { color: #0072B2; }
-/* Mobile */
-@media (max-width: 480px) {
-  .lbl { max-width: 88px; }
+:host([data-theme="colorblind"]) .pos { color: #0072B2; }
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  .lbl { max-width: 90px; }
+  .center { font-size: 0.58rem; padding: 0 0.25rem; }
+  .nav { padding: 0 1rem; }
+}
+@media (max-width: 400px) {
   .center { display: none; }
-  .nav { padding: 0 0.75rem; }
 }
 `;
 
@@ -89,12 +120,9 @@ function syncTheme(el) {
 }
 
 class MnSectionNav extends HTMLElement {
-  static observedAttributes = ['sections', 'current', 'data-theme'];
+  static observedAttributes = ['sections', 'current', 'data-theme', 'data-pos'];
 
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-  }
+  constructor() { super(); this.attachShadow({ mode: 'open' }); }
 
   connectedCallback() {
     this._onTheme = (e) => {
@@ -121,21 +149,21 @@ class MnSectionNav extends HTMLElement {
     const idx = sections.indexOf(current);
     const prev = idx > 0 ? sections[idx - 1] : null;
     const next = idx < sections.length - 1 ? sections[idx + 1] : null;
-    const pos = idx + 1;
-    const total = sections.length;
 
     this.shadowRoot.innerHTML = `<style>${CSS}</style>
 <nav class="nav" role="navigation" aria-label="Section navigation">
-  <button class="btn btn--prev" ${!prev ? 'disabled' : ''}
-    aria-label="${prev ? 'Precedente: ' + lbl(prev) : 'Prima sezione'}">
+  <button class="btn btn--prev" ${!prev ? 'disabled aria-hidden="true"' : `aria-label="Precedente: ${lbl(prev)}"`}>
     <span class="arrow" aria-hidden="true">◀</span>
     <span class="lbl">${prev ? lbl(prev) : ''}</span>
   </button>
-  <div class="center" aria-live="polite">
-    <strong>${pos}</strong>&thinsp;/&thinsp;${total}&ensp;·&ensp;${lbl(current)}
+  <div class="center" aria-live="polite" aria-atomic="true">
+    <span class="pos">${idx + 1}</span>
+    <span class="sep">/</span>
+    <span>${sections.length}</span>
+    <span class="sep">·</span>
+    <span class="cur">${lbl(current)}</span>
   </div>
-  <button class="btn btn--next" ${!next ? 'disabled' : ''}
-    aria-label="${next ? 'Successivo: ' + lbl(next) : 'Ultima sezione'}">
+  <button class="btn btn--next" ${!next ? 'disabled aria-hidden="true"' : `aria-label="Successivo: ${lbl(next)}"`}>
     <span class="lbl">${next ? lbl(next) : ''}</span>
     <span class="arrow" aria-hidden="true">▶</span>
   </button>

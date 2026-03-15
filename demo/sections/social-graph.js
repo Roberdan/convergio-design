@@ -195,7 +195,11 @@ function drawFallbackGraph(host, opts) {
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(n.avatar, n.x, n.y + 0.5);
     });
   };
-  const animate = () => { step(); draw(); requestAnimationFrame(animate); };
+  const animate = () => {
+    // Stop RAF when canvas is removed from DOM (prevents leak on section change)
+    if (!canvas.isConnected) return;
+    step(); draw(); requestAnimationFrame(animate);
+  };
   canvas.addEventListener('mousedown', (e) => { const p = point(e); drag = hit(p.x, p.y); });
   canvas.addEventListener('mousemove', (e) => {
     const p = point(e);

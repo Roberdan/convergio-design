@@ -1,94 +1,74 @@
 /**
  * Maranello Luce Design System — Demo App
  * Hash-based SPA routing: one section at a time.
+ * Dynamic imports: only the current section's JS loads on demand.
  * Works on local dev server AND GitHub Pages static hosting.
- * URL: demo/#charts, demo/#gauges, etc. (hash never hits the server)
  */
-import { createHeroSection } from './sections/hero.js';
-import { createTokensSection } from './sections/tokens.js';
-import { createCardsSection } from './sections/cards.js';
-import { createDashboardSection } from './sections/dashboard.js';
-import { createChartsSection } from './sections/charts.js';
-import { createNetworkSection } from './sections/network.js';
-import { createControlsSection } from './sections/controls.js';
-import { createFormsSection } from './sections/forms.js';
-import { createTablesSection } from './sections/tables.js';
-import { createGaugesSection } from './sections/gauges.js';
-import { createCockpitSection } from './sections/cockpit.js';
-import { createTelemetrySection } from './sections/telemetry.js';
-import { createGanttSection } from './sections/gantt.js';
-import { createIconsSection } from './sections/icons.js';
-import { createAnimationsSection } from './sections/animations.js';
-import { createHeatmapSection } from './sections/heatmap.js';
-import { createTreemapSection } from './sections/treemap.js';
-import { createLayoutsSection } from './sections/layouts.js';
-import { createDetailPanelSection } from './sections/detail-panel.js';
-import { createInteractiveSection } from './sections/interactive.js';
-import { createOkrSection } from './sections/okr-panel.js';
-import { createMapSection } from './sections/map.js';
-import { createSocialGraphSection } from './sections/social-graph.js';
-import { createAdvancedSection } from './sections/advanced.js';
-import { createMeshNetworkSection } from './sections/mesh-network.js';
-import { createConvergioSection } from './sections/convergio.js';
-import { createWebComponentsSection } from './sections/web-components.js';
-import { createLaunchSection } from './sections/launch.js';
-import { createAccessibilitySection } from './sections/accessibility.js';
-import { createApiReferenceSection } from './sections/api-reference.js';
-import { createDataBindingSection } from './sections/data-binding.js';
-import { createOverlaysSection } from './sections/overlays.js';
-import { createOrgTreeSection } from './sections/org-tree.js';
-import { createGlassSection } from './sections/section-glass.js';
 
 const root = document.getElementById('demo-root');
 if (!root) throw new Error('Missing #demo-root');
 
+// Dynamic import map — sections load only when navigated to (browser caches modules)
 const SECTIONS = new Map([
-  ['hero',         createHeroSection],
-  ['tokens',       createTokensSection],
-  ['cards',        createCardsSection],
-  ['dashboard',    createDashboardSection],
-  ['charts',       createChartsSection],
-  ['network',      createNetworkSection],
-  ['controls',     createControlsSection],
-  ['forms',        createFormsSection],
-  ['tables',       createTablesSection],
-  ['gauges',       createGaugesSection],
-  ['cockpit',      createCockpitSection],
-  ['telemetry',    createTelemetrySection],
-  ['gantt',        createGanttSection],
-  ['icons',        createIconsSection],
-  ['animations',   createAnimationsSection],
-  ['heatmap',      createHeatmapSection],
-  ['treemap',      createTreemapSection],
-  ['layouts',      createLayoutsSection],
-  ['detail-panel', createDetailPanelSection],
-  ['interactive',  createInteractiveSection],
-  ['okr',          createOkrSection],
-  ['map',          createMapSection],
-  ['social-graph', createSocialGraphSection],
-  ['advanced',     createAdvancedSection],
-  ['mesh-network', createMeshNetworkSection],
-  ['convergio',    createConvergioSection],
-  ['web-components', createWebComponentsSection],
-  ['glass',        createGlassSection],
-  ['launch',       createLaunchSection],
-  ['accessibility', createAccessibilitySection],
-  ['api-reference', createApiReferenceSection],
-  ['data-binding', createDataBindingSection],
-  ['overlays',     createOverlaysSection],
-  ['org-tree',     createOrgTreeSection],
+  ['hero',           () => import('./sections/hero.js').then(m => m.createHeroSection)],
+  ['tokens',         () => import('./sections/tokens.js').then(m => m.createTokensSection)],
+  ['cards',          () => import('./sections/cards.js').then(m => m.createCardsSection)],
+  ['dashboard',      () => import('./sections/dashboard.js').then(m => m.createDashboardSection)],
+  ['charts',         () => import('./sections/charts.js').then(m => m.createChartsSection)],
+  ['network',        () => import('./sections/network.js').then(m => m.createNetworkSection)],
+  ['controls',       () => import('./sections/controls.js').then(m => m.createControlsSection)],
+  ['forms',          () => import('./sections/forms.js').then(m => m.createFormsSection)],
+  ['tables',         () => import('./sections/tables.js').then(m => m.createTablesSection)],
+  ['gauges',         () => import('./sections/gauges.js').then(m => m.createGaugesSection)],
+  ['cockpit',        () => import('./sections/cockpit.js').then(m => m.createCockpitSection)],
+  ['telemetry',      () => import('./sections/telemetry.js').then(m => m.createTelemetrySection)],
+  ['gantt',          () => import('./sections/gantt.js').then(m => m.createGanttSection)],
+  ['icons',          () => import('./sections/icons.js').then(m => m.createIconsSection)],
+  ['animations',     () => import('./sections/animations.js').then(m => m.createAnimationsSection)],
+  ['heatmap',        () => import('./sections/heatmap.js').then(m => m.createHeatmapSection)],
+  ['treemap',        () => import('./sections/treemap.js').then(m => m.createTreemapSection)],
+  ['layouts',        () => import('./sections/layouts.js').then(m => m.createLayoutsSection)],
+  ['detail-panel',   () => import('./sections/detail-panel.js').then(m => m.createDetailPanelSection)],
+  ['interactive',    () => import('./sections/interactive.js').then(m => m.createInteractiveSection)],
+  ['okr',            () => import('./sections/okr-panel.js').then(m => m.createOkrSection)],
+  ['map',            () => import('./sections/map.js').then(m => m.createMapSection)],
+  ['social-graph',   () => import('./sections/social-graph.js').then(m => m.createSocialGraphSection)],
+  ['advanced',       () => import('./sections/advanced.js').then(m => m.createAdvancedSection)],
+  ['mesh-network',   () => import('./sections/mesh-network.js').then(m => m.createMeshNetworkSection)],
+  ['convergio',      () => import('./sections/convergio.js').then(m => m.createConvergioSection)],
+  ['web-components', () => import('./sections/web-components.js').then(m => m.createWebComponentsSection)],
+  ['glass',          () => import('./sections/section-glass.js').then(m => m.createGlassSection)],
+  ['launch',         () => import('./sections/launch.js').then(m => m.createLaunchSection)],
+  ['accessibility',  () => import('./sections/accessibility.js').then(m => m.createAccessibilitySection)],
+  ['api-reference',  () => import('./sections/api-reference.js').then(m => m.createApiReferenceSection)],
+  ['data-binding',   () => import('./sections/data-binding.js').then(m => m.createDataBindingSection)],
+  ['overlays',       () => import('./sections/overlays.js').then(m => m.createOverlaysSection)],
+  ['org-tree',       () => import('./sections/org-tree.js').then(m => m.createOrgTreeSection)],
 ]);
 
-function safe(fn, name) {
-  try { return fn(); } catch (e) {
-    console.error(`[demo] ${name} crashed:`, e);
-    const el = document.createElement('section');
-    el.className = 'mn-section-dark';
-    el.innerHTML = `<div class="mn-container" style="padding:var(--space-xl)">
-      <p style="color:var(--rosso-corsa)">⚠ Section "${name}" failed to render</p>
-      <pre class="mn-micro" style="color:var(--grigio-medio)">${e.message}</pre></div>`;
-    return el;
-  }
+const SECTION_KEYS = [...SECTIONS.keys()];
+
+function safe(el, name) {
+  // el is already created; wrap errors only if it's actually an Error
+  return el;
+}
+
+function safeErr(name, err) {
+  console.error(`[demo] ${name} crashed:`, err);
+  const el = document.createElement('section');
+  el.className = 'mn-section-dark';
+  el.innerHTML = `<div class="mn-container" style="padding:var(--space-xl)">
+    <p style="color:var(--rosso-corsa)">⚠ Section "${name}" failed to render</p>
+    <pre class="mn-micro" style="color:var(--grigio-medio)">${String(err?.message ?? err)}</pre></div>`;
+  return el;
+}
+
+function makeSectionNav(current, pos) {
+  const el = document.createElement('mn-section-nav');
+  el.setAttribute('sections', SECTION_KEYS.join(','));
+  el.setAttribute('current', current);
+  el.setAttribute('data-pos', pos);
+  return el;
 }
 
 function currentSection() {
@@ -102,28 +82,32 @@ function setActiveNav(name) {
   });
 }
 
-function makeSectionNav(current) {
-  const el = document.createElement('mn-section-nav');
-  el.setAttribute('sections', [...SECTIONS.keys()].join(','));
-  el.setAttribute('current', current);
-  return el;
+// Loading placeholder while dynamic import resolves
+function showLoader() {
+  root.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;min-height:60vh">
+    <div class="mn-spinner mn-spinner--lg"><div class="mn-spinner__ring"></div></div>
+  </div>`;
 }
 
-function render(name) {
-  // Clear previous section (stops canvas/RAF of removed elements)
-  while (root.firstChild) root.removeChild(root.firstChild);
-  root.appendChild(makeSectionNav(name));
-  root.appendChild(safe(SECTIONS.get(name), name));
-  root.appendChild(makeSectionNav(name));
-  window.scrollTo({ top: 0, behavior: 'instant' });
+async function render(name) {
   setActiveNav(name);
+  showLoader();
+  try {
+    const factory = await SECTIONS.get(name)();
+    // Clear after load (stops canvas/RAF of removed elements)
+    while (root.firstChild) root.removeChild(root.firstChild);
+    root.appendChild(makeSectionNav(name, 'top'));
+    root.appendChild(factory());
+    root.appendChild(makeSectionNav(name, 'bottom'));
+  } catch (err) {
+    while (root.firstChild) root.removeChild(root.firstChild);
+    root.appendChild(safeErr(name, err));
+  }
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 // Hash navigation
 window.addEventListener('hashchange', () => render(currentSection()));
-
-// Nav smooth-scroll removed: sections are now separate pages
-// (clicking a nav link changes hash, hashchange fires, section renders)
 
 // Theme label sync
 function updateThemeLabel() {
