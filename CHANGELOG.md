@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.5.0] - 15 Mar 2026
+
+### Added
+- `neuralNodes()` data-driven API (Convergio spec): pass `nodes: NeuralNodeData[]` with id, label, sublabel, color, size, group, badge, energy — backward-compatible, existing `nodeCount` usage unchanged
+- Explicit connections via `connections: NeuralConnection[]` with `from`, `to`, `strength`
+- Force-directed layout (`forceLayout: true`): node repulsion, connection attraction, group clustering, smooth damping
+- Canvas label rendering: label, sublabel, badge pill — energy-based fade, always visible on hover
+- Extended controller: `setNodes()`, `setConnections()`, `addNode()`, `removeNode()`, `updateNode()`, `highlightNode()`
+- `pulse()` now accepts string node id alongside numeric index
+- Exported types: `NeuralNodeData`, `NeuralConnection`, `NeuralNodesOptions`, `NeuralNodesController`
+
 ## [4.4.0] - 15 Mar 2026
 
 ### Added
