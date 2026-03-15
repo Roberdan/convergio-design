@@ -8366,6 +8366,105 @@
     content: "▼ ";
   }
 
+  .mn-heatmap__cell {
+    min-width: 44px;
+    height: 28px;
+    font-family: var(--font-mono, "Barlow Condensed",sans-serif);
+    color: var(--mn-text);
+    cursor: default;
+    border-radius: 2px;
+    justify-content: center;
+    align-items: center;
+    font-size: .65rem;
+    transition: background .2s, transform .1s;
+    display: flex;
+    position: relative;
+  }
+
+  .mn-heatmap__cell:hover {
+    z-index: 5;
+    transform: scale(1.15);
+  }
+
+  .mn-heatmap__cell[data-tooltip]:hover:after {
+    content: attr(data-tooltip);
+    border-radius: var(--radius-sm);
+    background: var(--superficie-3, #222);
+    border: 1px solid var(--bordo, #333);
+    color: var(--mn-text);
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+    padding: 4px 8px;
+    font-size: .6rem;
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .mn-heatmap__filter-bar {
+    border-bottom: 1px solid var(--mn-border-subtle);
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    display: flex;
+  }
+
+  .mn-heatmap__legend {
+    color: var(--mn-text-muted);
+    align-items: center;
+    gap: 6px;
+    font-size: .6rem;
+    display: flex;
+  }
+
+  .mn-heatmap__legend-bar {
+    background: linear-gradient(90deg, var(--mn-surface-sunken) 0%, var(--verde-racing) 40%, var(--mn-accent) 65%, var(--rosso-corsa) 100%);
+    border-radius: 4px;
+    width: 100px;
+    height: 8px;
+  }
+
+  .mn-heatmap__header {
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px;
+    display: flex;
+  }
+
+  .mn-heatmap__header-month {
+    text-align: center;
+    font-family: var(--font-mono, "Barlow Condensed",sans-serif);
+    color: var(--mn-text-muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    font-size: .6rem;
+  }
+
+  body.mn-avorio .mn-heatmap__cell {
+    color: var(--nero-assoluto);
+  }
+
+  body.mn-avorio .mn-heatmap__cell[data-tooltip]:hover:after {
+    background: var(--bianco-caldo);
+    border-color: var(--grigio-alluminio);
+    color: var(--nero-assoluto);
+  }
+
+  body.mn-avorio .mn-heatmap__filter-bar {
+    border-bottom-color: var(--grigio-alluminio);
+  }
+
+  body.mn-avorio .mn-heatmap__legend {
+    color: var(--grigio-medio);
+  }
+
+  body.mn-colorblind .mn-heatmap__legend-bar {
+    background: linear-gradient(90deg, var(--mn-surface-sunken) 0%, var(--mn-cb-green) 40%, var(--mn-cb-yellow) 65%, var(--mn-cb-orange) 100%);
+  }
+
   .mn-hbar {
     --mn-hbar-label-width: clamp(160px, 25vw, 260px);
     --mn-hbar-bar-height: 28px;

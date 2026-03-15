@@ -4058,6 +4058,192 @@ function datePicker(anchor, opts) {
   return { close: closePicker };
 }
 
+// src/ts/forms-tags-field.ts
+function initTagsField(el4, opts) {
+  const tags = [];
+  const onChange = opts?.onChange;
+  const maxTags = opts?.maxTags ?? Infinity;
+  const placeholder = opts?.placeholder ?? "Add tag...";
+  el4.innerHTML = "";
+  el4.classList.add("mn-tags-field");
+  const chipsContainer = document.createElement("div");
+  chipsContainer.className = "mn-tags-field__chips";
+  el4.appendChild(chipsContainer);
+  const input = document.createElement("input");
+  input.className = "mn-tags-field__input";
+  input.type = "text";
+  input.placeholder = placeholder;
+  input.setAttribute("aria-label", placeholder);
+  el4.appendChild(input);
+  el4.addEventListener("click", () => input.focus());
+  function notify() {
+    if (onChange) onChange(tags.slice());
+  }
+  function createChip(value) {
+    const chip = document.createElement("span");
+    chip.className = "mn-chip";
+    chip.appendChild(document.createTextNode(value));
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "mn-chip__remove";
+    removeBtn.type = "button";
+    removeBtn.setAttribute("aria-label", "Remove " + escapeHtml(value));
+    removeBtn.textContent = "\xD7";
+    removeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      removeTag(value);
+    });
+    chip.appendChild(removeBtn);
+    return chip;
+  }
+  function addTag(value) {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    if (tags.indexOf(trimmed) !== -1) return;
+    if (tags.length >= maxTags) return;
+    tags.push(trimmed);
+    chipsContainer.appendChild(createChip(trimmed));
+    updatePlaceholder();
+    notify();
+  }
+  function removeTag(value) {
+    const idx = tags.indexOf(value);
+    if (idx === -1) return;
+    tags.splice(idx, 1);
+    const chips = chipsContainer.querySelectorAll(".mn-chip");
+    chips.forEach((chip) => {
+      const text = chip.firstChild?.textContent ?? "";
+      if (text === value) chip.remove();
+    });
+    updatePlaceholder();
+    notify();
+  }
+  function updatePlaceholder() {
+    input.placeholder = tags.length > 0 ? "" : placeholder;
+  }
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addTag(input.value);
+      input.value = "";
+    }
+  });
+  if (opts?.initialTags) {
+    opts.initialTags.forEach((t) => addTag(t));
+  }
+  function destroy() {
+    el4.innerHTML = "";
+    el4.classList.remove("mn-tags-field");
+    tags.length = 0;
+  }
+  return { addTag, removeTag, getTags: () => tags.slice(), destroy };
+}
+
+// src/ts/forms-person-field.ts
+function deriveInitials(name) {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 0) return "??";
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+function initPersonField(el4, opts) {
+  const { searchFn, onSelect, placeholder = "Search people..." } = opts;
+  let selectedId = "";
+  el4.innerHTML = "";
+  el4.classList.add("mn-person-field");
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "mn-input mn-person-field__input";
+  input.placeholder = placeholder;
+  input.setAttribute("aria-label", placeholder);
+  if (opts.value) input.value = opts.value;
+  el4.appendChild(input);
+  const dropdown = document.createElement("div");
+  dropdown.className = "mn-person-field__dropdown";
+  dropdown.style.display = "none";
+  dropdown.setAttribute("role", "listbox");
+  el4.appendChild(dropdown);
+  function hideDropdown() {
+    dropdown.style.display = "none";
+    dropdown.innerHTML = "";
+  }
+  function renderResults(results) {
+    dropdown.innerHTML = "";
+    if (results.length === 0) {
+      dropdown.style.display = "none";
+      return;
+    }
+    dropdown.style.display = "";
+    for (const person of results) {
+      const item = document.createElement("div");
+      item.className = "mn-person-field__item";
+      item.setAttribute("role", "option");
+      item.setAttribute("tabindex", "-1");
+      const initials2 = person.initials ?? deriveInitials(person.name);
+      const avatar = document.createElement("span");
+      avatar.className = "mn-person__avatar";
+      avatar.textContent = initials2;
+      item.appendChild(avatar);
+      const info = document.createElement("div");
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "mn-person-field__name";
+      nameSpan.textContent = escapeHtml(person.name);
+      info.appendChild(nameSpan);
+      if (person.email) {
+        const emailSpan = document.createElement("div");
+        emailSpan.className = "mn-person-field__email";
+        emailSpan.textContent = escapeHtml(person.email);
+        info.appendChild(emailSpan);
+      }
+      item.appendChild(info);
+      item.addEventListener("click", () => {
+        input.value = person.name;
+        selectedId = person.id;
+        hideDropdown();
+        if (onSelect) onSelect({ id: person.id, name: person.name });
+      });
+      dropdown.appendChild(item);
+    }
+  }
+  const doSearch = debounce(async () => {
+    const query = input.value.trim();
+    if (!query) {
+      hideDropdown();
+      return;
+    }
+    try {
+      const results = await searchFn(query);
+      renderResults(results);
+    } catch {
+      hideDropdown();
+    }
+  }, 300);
+  input.addEventListener("input", () => {
+    doSearch();
+  });
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      hideDropdown();
+    }
+  });
+  const onDocClick2 = (e) => {
+    if (!el4.contains(e.target)) hideDropdown();
+  };
+  document.addEventListener("click", onDocClick2);
+  function destroy() {
+    document.removeEventListener("click", onDocClick2);
+    el4.innerHTML = "";
+    el4.classList.remove("mn-person-field");
+  }
+  return {
+    getValue: () => input.value,
+    setValue: (name) => {
+      input.value = name;
+      selectedId = "";
+    },
+    destroy
+  };
+}
+
 // src/ts/funnel-helpers.ts
 function hexLum(hex) {
   let h = (hex || "#888888").replace("#", "");
@@ -5246,6 +5432,21 @@ var renderers = {
     div.textContent = val ? String(val) : DASH;
     return div;
   },
+  country(val) {
+    const wrap = createElement("span", "mn-detail-panel__field-value mn-detail-panel__country");
+    if (val) {
+      const str = String(val);
+      const code = createElement("span", "mn-country__code");
+      code.textContent = str.substring(0, 2).toUpperCase();
+      wrap.appendChild(code);
+      const name = createElement("span");
+      name.textContent = str;
+      wrap.appendChild(name);
+    } else {
+      wrap.textContent = DASH;
+    }
+    return wrap;
+  },
   readonly(val) {
     const span = createElement("span", "mn-detail-panel__field-value mn-detail-panel__field-value--muted");
     span.textContent = val ? String(val) : DASH;
@@ -5346,6 +5547,14 @@ var editors = {
     setTimeout(() => updateStatusSelectColor(sel, field.statusColors), 0);
     return sel;
   },
+  country(val, _field, onChange) {
+    const input = createElement("input", "mn-form-input mn-form-input--sm mn-detail-panel__edit-input");
+    input.type = "text";
+    input.value = val ? String(val) : "";
+    input.placeholder = "Country name";
+    input.addEventListener("input", () => onChange(input.value));
+    return input;
+  },
   person(val, field, onChange) {
     const wrap = createElement("div", "mn-detail-panel__person-edit");
     const input = createElement("input", "mn-form-input mn-form-input--sm mn-detail-panel__edit-input");
@@ -5360,15 +5569,14 @@ var editors = {
       onChange(input.value);
       if (debounceTimer !== null) clearTimeout(debounceTimer);
       const query = input.value.trim();
-      if (query.length < 2 || !field.onSearch) {
+      const hasSearch = field.onSearch || field.searchFn;
+      if (query.length < 2 || !hasSearch) {
         results.innerHTML = "";
         results.classList.remove("mn-detail-panel__person-results--open");
         return;
       }
       debounceTimer = setTimeout(() => {
-        const searchFn = field.onSearch;
-        if (!searchFn) return;
-        const res = searchFn(query);
+        const res = field.searchFn ? field.searchFn(query) : field.onSearch(query);
         if (res && typeof res.then === "function") {
           res.then((items) => {
             renderPersonResults(results, items, input, (v) => onChange(v));
@@ -5473,8 +5681,30 @@ function buildDOM(container, opts, activeTab, onTabClick) {
   const backdrop2 = createElement("div", "mn-detail-panel__backdrop");
   container.parentNode.insertBefore(backdrop2, container);
   const header = createElement("div", "mn-detail-panel__header");
+  if (opts.parentLink) {
+    const back = createElement("button", "mn-detail__back");
+    back.type = "button";
+    back.textContent = "\u2190 " + opts.parentLink.label;
+    back.addEventListener("click", () => opts.parentLink.onClick());
+    header.appendChild(back);
+  }
+  const titleRow = createElement("div", "mn-detail-panel__title-row");
   const titleEl = createElement("div", "mn-detail-panel__title");
   titleEl.textContent = opts.title ?? "";
+  titleRow.appendChild(titleEl);
+  if (opts.externalLinks?.length) {
+    for (const link of opts.externalLinks) {
+      const btn = createElement("button", "mn-detail__ext-link");
+      btn.type = "button";
+      btn.title = link.label;
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+      btn.addEventListener("click", () => {
+        window.open(link.url, "_blank", "noopener");
+      });
+      titleRow.appendChild(btn);
+    }
+  }
+  header.appendChild(titleRow);
   const headerActions = createElement("div", "mn-detail-panel__header-actions");
   const editBtn = createElement("button", "mn-detail-panel__action-btn mn-detail-panel__edit-btn");
   editBtn.textContent = "Edit";
@@ -5489,7 +5719,7 @@ function buildDOM(container, opts, activeTab, onTabClick) {
   closeBtn.innerHTML = "\u2715";
   closeBtn.title = "Close panel";
   headerActions.append(editBtn, saveBtn, cancelBtn, closeBtn);
-  header.append(titleEl, headerActions);
+  header.appendChild(headerActions);
   container.appendChild(header);
   let tabBar = null;
   if (opts.tabs && opts.tabs.length > 1) {
@@ -5521,6 +5751,10 @@ function buildDOM(container, opts, activeTab, onTabClick) {
 function renderBody(body, state, opts) {
   body.innerHTML = "";
   state.errors = {};
+  if (state.activeTab && opts.tabRenderers?.[state.activeTab]) {
+    opts.tabRenderers[state.activeTab](body, opts.data);
+    return;
+  }
   if (state.activeTab && opts.subComponents?.[state.activeTab]) {
     opts.subComponents[state.activeTab](body, state.data, {
       isEditing: state.isEditing,
@@ -6495,6 +6729,133 @@ function gridLayout(container, template = "masonry-auto", options) {
   };
 }
 
+// src/ts/search-drawer.ts
+var drawerCounter = 0;
+function openSearchDrawer(opts) {
+  const {
+    title,
+    onSearch,
+    onResultClick,
+    placeholder = "Search...",
+    sections = []
+  } = opts;
+  drawerCounter++;
+  const drawerId = `mn-search-drawer-${drawerCounter}`;
+  const backdrop2 = document.createElement("div");
+  backdrop2.className = "mn-drawer__backdrop";
+  document.body.appendChild(backdrop2);
+  const drawer = document.createElement("div");
+  drawer.id = drawerId;
+  drawer.className = "mn-drawer mn-drawer--right";
+  document.body.appendChild(drawer);
+  const content = document.createElement("div");
+  content.className = "mn-search-drawer";
+  const heading = document.createElement("h2");
+  heading.textContent = title;
+  content.appendChild(heading);
+  const searchWrap = document.createElement("div");
+  searchWrap.className = "mn-search-drawer__search";
+  const searchInput = document.createElement("input");
+  searchInput.type = "text";
+  searchInput.className = "mn-input";
+  searchInput.placeholder = placeholder;
+  searchInput.setAttribute("aria-label", placeholder);
+  searchWrap.appendChild(searchInput);
+  content.appendChild(searchWrap);
+  const loadingEl = document.createElement("div");
+  loadingEl.className = "mn-search-drawer__loading";
+  loadingEl.textContent = "Searching...";
+  loadingEl.style.display = "none";
+  content.appendChild(loadingEl);
+  const resultsEl = document.createElement("div");
+  resultsEl.className = "mn-search-drawer__results";
+  resultsEl.setAttribute("role", "listbox");
+  content.appendChild(resultsEl);
+  const emptyEl = document.createElement("div");
+  emptyEl.className = "mn-search-drawer__empty";
+  emptyEl.textContent = "No results";
+  emptyEl.style.display = "none";
+  content.appendChild(emptyEl);
+  for (const section of sections) {
+    const sectionEl = document.createElement("div");
+    sectionEl.className = "mn-search-drawer__section";
+    const label = document.createElement("div");
+    label.className = "mn-search-drawer__section-label";
+    label.textContent = section.label;
+    sectionEl.appendChild(label);
+    const body = document.createElement("div");
+    section.renderer(body);
+    sectionEl.appendChild(body);
+    content.appendChild(sectionEl);
+  }
+  drawer.appendChild(content);
+  openDrawer(drawerId);
+  function renderResults(results) {
+    resultsEl.innerHTML = "";
+    emptyEl.style.display = results.length === 0 ? "" : "none";
+    for (const result of results) {
+      const item = document.createElement("div");
+      item.className = "mn-search-drawer__item";
+      item.setAttribute("role", "option");
+      const titleSpan = document.createElement("div");
+      titleSpan.className = "mn-search-drawer__item-title";
+      titleSpan.textContent = escapeHtml(result.title);
+      item.appendChild(titleSpan);
+      if (result.subtitle) {
+        const sub = document.createElement("div");
+        sub.className = "mn-search-drawer__item-sub";
+        sub.textContent = escapeHtml(result.subtitle);
+        item.appendChild(sub);
+      }
+      if (result.badge) {
+        const badge = document.createElement("span");
+        badge.className = "mn-badge";
+        badge.textContent = escapeHtml(result.badge);
+        if (result.badgeColor) badge.style.backgroundColor = result.badgeColor;
+        item.appendChild(badge);
+      }
+      item.addEventListener("click", () => onResultClick(result));
+      resultsEl.appendChild(item);
+    }
+  }
+  const doSearch = debounce(async () => {
+    const query = searchInput.value.trim();
+    if (!query) {
+      resultsEl.innerHTML = "";
+      emptyEl.style.display = "none";
+      loadingEl.style.display = "none";
+      return;
+    }
+    loadingEl.style.display = "";
+    try {
+      const results = await onSearch(query);
+      loadingEl.style.display = "none";
+      renderResults(results);
+    } catch {
+      loadingEl.style.display = "none";
+      resultsEl.innerHTML = "";
+      emptyEl.style.display = "";
+    }
+  }, 300);
+  searchInput.addEventListener("input", () => {
+    doSearch();
+  });
+  function cleanup() {
+    closeDrawer(drawerId);
+    setTimeout(() => {
+      backdrop2.remove();
+      drawer.remove();
+    }, 300);
+  }
+  return {
+    close: cleanup,
+    setResults: renderResults,
+    setLoading: (loading) => {
+      loadingEl.style.display = loading ? "" : "none";
+    }
+  };
+}
+
 // src/ts/maranello-exports.ts
 function registerExtras(M2) {
   M2.SPEEDO_FONT = SPEEDO_FONT;
@@ -6836,6 +7197,7 @@ export {
   initNavTracking,
   initOrgTree,
   initPasswordToggle,
+  initPersonField,
   initRotary,
   initScrollReveal,
   initSearchClear,
@@ -6844,6 +7206,7 @@ export {
   initSlider,
   initTabs,
   initTagInput,
+  initTagsField,
   initThemeToggle,
   lerp,
   liveGraph,
@@ -6866,6 +7229,7 @@ export {
   openDetailPanel,
   openDrawer,
   openModal,
+  openSearchDrawer,
   palette,
   profileMenu,
   progressRing,

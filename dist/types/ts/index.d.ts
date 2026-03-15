@@ -1,7 +1,4 @@
-/**
- * Maranello Luce Design - Main ES module entry point
- * Re-exports the public API surface for library consumers.
- */
+/** Maranello Luce Design - Main ES module entry point. Public API surface. */
 export declare const VERSION = "4.3.0";
 export * from './core/types';
 export { EventBus, eventBus } from './core/events';
@@ -59,6 +56,10 @@ export { validateField, validateForm, initLiveValidation, addValidator, getField
 export type { FormInputElement, FormValidator, FormValidators, FormMessages } from './forms-validate';
 export { initAutoResize, initTagInput, initPasswordToggle, initFileUpload, initFormSteps, initInlineEdit, initCharCounter, initSearchClear, } from './forms-widgets';
 export type { TagInputApi, FileUploadApi, FormStepsApi } from './forms-widgets';
+export { initTagsField } from './forms-tags-field';
+export type { TagsFieldOptions, TagsFieldApi } from './forms-tags-field';
+export { initPersonField } from './forms-person-field';
+export type { PersonResult, PersonFieldOptions, PersonFieldApi } from './forms-person-field';
 export { progressRing } from './progress-ring';
 export { funnel } from './funnel';
 export { hexLum, autoTextColor, resolveContainer } from './funnel-helpers';
@@ -90,4 +91,6 @@ export type { TipElements, MapEventState, MapEventCallbacks, EventCleanup, } fro
 export * from './map-view-helpers';
 export { gridLayout } from './grid-layout';
 export type { GridTemplateName, GridLayoutOptions, GridLayoutController } from './grid-layout';
+export { openSearchDrawer } from './search-drawer';
+export type { SearchDrawerOptions, SearchDrawerResult, SearchDrawerController, } from './search-drawer';
 export { Maranello } from './maranello';

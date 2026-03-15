@@ -3,7 +3,7 @@
  * Extracted from: detail-panel-ui, detail-panel-renderers,
  *   detail-panel-editors, detail-panel, okr-panel-hero, okr-panel-cards
  */
-export type DetailFieldType = 'text' | 'number' | 'date' | 'select' | 'status' | 'person' | 'score' | 'textarea' | 'readonly' | 'badge' | 'custom';
+export type DetailFieldType = 'text' | 'number' | 'date' | 'select' | 'status' | 'person' | 'score' | 'textarea' | 'readonly' | 'badge' | 'custom' | 'country';
 export interface DetailFieldValidation {
     required?: boolean;
     min?: number;
@@ -18,8 +18,18 @@ export interface DetailFieldOption {
     label: string;
 }
 export interface DetailPersonItem {
+    id?: string;
     name: string;
     email?: string;
+    initials?: string;
+}
+export interface DetailParentLink {
+    label: string;
+    onClick: () => void;
+}
+export interface DetailExternalLink {
+    label: string;
+    url: string;
 }
 export interface DetailField {
     key: string;
@@ -37,6 +47,12 @@ export interface DetailField {
     badgeColors?: Record<string, string>;
     validate?: DetailFieldValidation;
     onSearch?: (query: string) => DetailPersonItem[] | Promise<DetailPersonItem[]>;
+    searchFn?: (q: string) => Promise<Array<{
+        id: string;
+        name: string;
+        email?: string;
+        initials?: string;
+    }>>;
     render?: (value: unknown, data: Record<string, unknown>) => HTMLElement;
 }
 export interface DetailSection {
@@ -61,6 +77,9 @@ export interface DetailPanelOptions {
         isEditing: boolean;
         changes: Record<string, unknown>;
     }) => void>;
+    tabRenderers?: Record<string, (body: HTMLElement, data: unknown) => void>;
+    parentLink?: DetailParentLink;
+    externalLinks?: DetailExternalLink[];
     footerActions?: DetailFooterAction[];
 }
 export interface DetailPanelState {

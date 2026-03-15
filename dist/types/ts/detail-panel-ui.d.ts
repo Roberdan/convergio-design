@@ -1,7 +1,4 @@
-/**
- * Maranello Luce Design - Detail panel UI (DOM construction + body rendering)
- * Builds the panel skeleton, tabs, footer, and renders fields via renderers/editors.
- */
+/** Maranello Luce Design - Detail panel UI (DOM + body rendering) */
 import type { DetailPanelOptions, DetailPanelState, DetailField } from './core/types';
 /** DOM references returned by buildDOM. */
 export interface DetailPanelDOM {
