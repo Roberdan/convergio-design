@@ -148,9 +148,12 @@ function drawArcBar(
   s.ctx.lineCap = 'round'; s.ctx.stroke();
   const val = ((ab.value as number) / (ab.max as number)) * totalSweep * progress;
   const fillEnd = s.rad(sa + val);
-  const g = s.ctx.createConicGradient(s.rad(sa + 90), s.cx, s.cy);
+  // Gradient must start where the arc starts; stops scaled to arc fraction so
+  // last color aligns with arc end (270° arc = 0.75 of the 360° conic sweep).
+  const arcFrac = totalSweep / 360;
+  const g = s.ctx.createConicGradient(s.rad(sa), s.cx, s.cy);
   const stops = (ab.colorStops as string[] | undefined) || ['#DC0000', '#FFC72C', '#00A651'];
-  stops.forEach((col, i) => g.addColorStop(i / (stops.length - 1), col));
+  stops.forEach((col, i) => g.addColorStop((i / (stops.length - 1)) * arcFrac, col));
   s.ctx.beginPath(); s.ctx.arc(s.cx, s.cy, arcR, s.rad(sa), fillEnd);
   s.ctx.strokeStyle = g; s.ctx.lineWidth = 5; s.ctx.lineCap = 'round'; s.ctx.stroke();
   const na = s.rad(sa + val);

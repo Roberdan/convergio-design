@@ -430,9 +430,10 @@ function drawArcBar(s, c, progress, sa, totalSweep) {
   s.ctx.stroke();
   const val = ab.value / ab.max * totalSweep * progress;
   const fillEnd = s.rad(sa + val);
-  const g = s.ctx.createConicGradient(s.rad(sa + 90), s.cx, s.cy);
+  const arcFrac = totalSweep / 360;
+  const g = s.ctx.createConicGradient(s.rad(sa), s.cx, s.cy);
   const stops = ab.colorStops || ["#DC0000", "#FFC72C", "#00A651"];
-  stops.forEach((col, i) => g.addColorStop(i / (stops.length - 1), col));
+  stops.forEach((col, i) => g.addColorStop(i / (stops.length - 1) * arcFrac, col));
   s.ctx.beginPath();
   s.ctx.arc(s.cx, s.cy, arcR, s.rad(sa), fillEnd);
   s.ctx.strokeStyle = g;
@@ -1170,4 +1171,4 @@ export {
   FerrariGauge,
   speedometer
 };
-//# sourceMappingURL=chunk-OW2VCDPA.js.map
+//# sourceMappingURL=chunk-6LNMM2NK.js.map
