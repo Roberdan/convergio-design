@@ -184,8 +184,7 @@ export function speedometer(
   const cx = dim / 2, cy = dim / 2, R = dim * 0.4;
 
   // Accessibility: role, aria-label, fallback text, sr-only span
-  const max = options.max as number;
-  const unit = (options.unit as string) || '';
+  const max = options.max as number, unit = (options.unit as string) || '';
 
   function buildLabel(v: number): string {
     return `Speedometer: ${unit ? `${Math.round(v)}${unit}` : Math.round(v)} of ${max}`;

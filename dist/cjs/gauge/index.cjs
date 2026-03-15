@@ -1089,8 +1089,7 @@ function speedometer(canvas, opts) {
   ctx.scale(dpr, dpr);
   const s = dim / 220;
   const cx = dim / 2, cy = dim / 2, R = dim * 0.4;
-  const max = options.max;
-  const unit = options.unit || "";
+  const max = options.max, unit = options.unit || "";
   function buildLabel(v) {
     return `Speedometer: ${unit ? `${Math.round(v)}${unit}` : Math.round(v)} of ${max}`;
   }
