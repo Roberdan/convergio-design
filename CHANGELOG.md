@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.5.1] - 15 Mar 2026
+
+### Added
+- `M.openSearchDrawer(opts)` registered on IIFE bundle (`window.Maranello`) — search/command drawer with debounced async results, custom sections, focus trap
+- `M.initTagsField(el, opts)` registered on IIFE bundle — tag chip input aligned to VirtualBPM spec: `value` initial tags, `suggestions` autocomplete dropdown, comma-adds, Backspace-removes-last, `setValue(tags[])` controller method
+
 ## [4.5.0] - 15 Mar 2026
 
 ### Added
