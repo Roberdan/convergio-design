@@ -85,7 +85,7 @@
     "build:wc": "node scripts/build-wc.mjs",
     "build:fonts": "node scripts/build-fonts.mjs",
     "build:types": "tsc --emitDeclarationOnly",
-    "dev": "serve demo -l 3000",
+    "dev": "serve . -l 3000",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
