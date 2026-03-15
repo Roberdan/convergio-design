@@ -37,9 +37,9 @@ class MnA11y extends HTMLElement {
     const link = cssLink('../css/accessibility.css');
     const style = document.createElement('style');
     style.textContent = `
-      :host { display: contents }
-      .mn-a11y-fab { position: fixed; bottom: 20px; right: 20px; z-index: 8500;
-        width: 44px; height: 44px; border-radius: 50%; border: none;
+      :host { display: block; position: fixed; bottom: 20px; right: 20px;
+        z-index: 8500; width: 44px; height: 44px; overflow: visible }
+      .mn-a11y-fab { width: 44px; height: 44px; border-radius: 50%;
         background: var(--nero-soft, #1a1a1a);
         border: 1px solid var(--grigio-scuro, #444);
         color: var(--grigio-chiaro, #ccc); cursor: pointer;
