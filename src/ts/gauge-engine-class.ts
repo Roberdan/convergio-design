@@ -42,7 +42,7 @@ export interface GaugeEntry {
 // Size presets (mirrors FerrariGauge.SIZES for external access)
 // ---------------------------------------------------------------------------
 
-export const GAUGE_SIZES: Record<GaugeSize, number> = {
+export const GAUGE_SIZES: Record<'sm' | 'md' | 'lg' | 'fluid', number> = {
   sm: 120,
   md: 220,
   lg: 320,

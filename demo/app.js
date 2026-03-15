@@ -37,7 +37,6 @@ const SECTIONS = new Map([
   ['mesh-network',   () => import('./sections/mesh-network.js').then(m => m.createMeshNetworkSection)],
   ['convergio',      () => import('./sections/convergio.js').then(m => m.createConvergioSection)],
   ['web-components', () => import('./sections/web-components.js').then(m => m.createWebComponentsSection)],
-  ['glass',          () => import('./sections/section-glass.js').then(m => m.createGlassSection)],
   ['launch',         () => import('./sections/launch.js').then(m => m.createLaunchSection)],
   ['accessibility',  () => import('./sections/accessibility.js').then(m => m.createAccessibilitySection)],
   ['api-reference',  () => import('./sections/api-reference.js').then(m => m.createApiReferenceSection)],
