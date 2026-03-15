@@ -171,4 +171,7 @@ body.mn-avorio .mn-ctrl-manettino__pos--active { color: var(--rosso-corsa); }
 body.mn-avorio .mn-ctrl-lever--on .mn-ctrl-lever__track { border-color: var(--rosso-corsa); }
 body.mn-avorio .mn-ctrl-stepped__housing { background: radial-gradient(circle at 40% 35%, var(--avorio-medio) 0%, var(--avorio-scuro) 100%); border-color: var(--avorio-scuro); }
 body.mn-avorio .mn-ctrl-stepped__mark--active { color: var(--nero-assoluto); }
+
+/* Theme rotary — --rotary-center is set dynamically via JS (size/2) */
+.mn-theme-rotary__pointer { --rotary-center: 70px; }
 } /* end @layer controls */

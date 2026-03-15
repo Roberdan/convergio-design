@@ -1638,6 +1638,10 @@
     color: var(--nero-assoluto);
   }
 
+  .mn-theme-rotary__pointer {
+    --rotary-center: 70px;
+  }
+
   .mn-machined-btn {
     justify-content: center;
     align-items: center;
