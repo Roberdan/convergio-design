@@ -36,7 +36,7 @@ export function createTablesSection() {
   section.innerHTML = `
     <style>
       #tables .mn-rich-table__headbtn{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:0;background:none;border:0;color:inherit;font:600 var(--text-caption)/1.2 var(--font-display);text-transform:uppercase;letter-spacing:.06em;cursor:pointer}
-      #tables .mn-rich-table__filter{width:100%;padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.03);color:var(--mn-text);font-size:var(--text-micro)}
+      #tables .mn-rich-table__filter{width:100%;padding:8px 10px;border:1px solid var(--grigio-scuro,#333);border-radius:999px;background:var(--mn-surface,transparent);color:var(--mn-text);font-size:var(--text-micro)}
       #tables .mn-rich-table__group td{padding:12px;background:rgba(255,199,44,.08);font:700 var(--text-caption)/1 var(--font-display);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
       #tables .mn-rich-table__row:hover{background:rgba(255,199,44,.08)}
       #tables .mn-rich-table__owner{display:flex;align-items:center;gap:10px}#tables .mn-rich-table__avatar{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:rgba(255,199,44,.16);color:var(--mn-accent);font:700 var(--text-micro)/1 var(--font-display)}
@@ -55,7 +55,7 @@ export function createTablesSection() {
   data='[{"program":"Pipeline Alpha"}]'
   page-size="10"&gt;&lt;/mn-data-table&gt;</code></pre>
       </details>
-      <div class="mn-card-dark" style="padding:var(--space-xl)"><div class="mn-tag-group" style="margin-bottom:var(--space-md)"><span class="mn-tag mn-tag--light mn-tag--xs">Filter every column</span><span class="mn-tag mn-tag--light mn-tag--xs">Sort with header arrows</span><span class="mn-tag mn-tag--light mn-tag--xs">Collapse each group</span></div><div id="deployment-table-host"></div></div>
+      <div class="mn-card" style="padding:var(--space-xl)"><div class="mn-tag-group" style="margin-bottom:var(--space-md)"><span class="mn-tag mn-tag--light mn-tag--xs">Filter every column</span><span class="mn-tag mn-tag--light mn-tag--xs">Sort with header arrows</span><span class="mn-tag mn-tag--light mn-tag--xs">Collapse each group</span></div><div id="deployment-table-host"></div></div>
     </div>`;
   requestAnimationFrame(() => initTable(section));
   return section;

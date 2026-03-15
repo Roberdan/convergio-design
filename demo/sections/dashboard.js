@@ -63,10 +63,6 @@ function initDashboard(section) {
 
     charts.sparkline(canvas, spark.data, { color: spark.color, width, height, lineWidth: 2, fillOpacity: 0.18 });
 
-    if (M.sparklineInteract) {
-      M.sparklineInteract(canvas, spark.data, { color: spark.color, labels });
-    }
-
     if (M.chartInteract) {
       const pad = { top: 2, right: 2, bottom: 2, left: 2 };
       const range = max - min || 1;

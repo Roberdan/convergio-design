@@ -99,6 +99,12 @@ function initHeaderNav() {
     const idx = SECTION_KEYS.indexOf(currentSection());
     if (idx < SECTION_KEYS.length - 1) window.location.hash = SECTION_KEYS[idx + 1];
   });
+  document.addEventListener('keydown', (e) => {
+    if (e.target.closest('input,textarea,select,[contenteditable]')) return;
+    const idx = SECTION_KEYS.indexOf(currentSection());
+    if (e.key === 'ArrowRight' && idx < SECTION_KEYS.length - 1) window.location.hash = SECTION_KEYS[idx + 1];
+    else if (e.key === 'ArrowLeft' && idx > 0) window.location.hash = SECTION_KEYS[idx - 1];
+  });
 }
 
 function currentSection() {
