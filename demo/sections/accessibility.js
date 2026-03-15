@@ -120,7 +120,7 @@ function mountFab() {
   fab.className = 'mn-a11y-demo-fab';
   fab.type = 'button';
   fab.setAttribute('aria-label', 'Open accessibility settings');
-  fab.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M15 7l2.5-2.5M15 7l2.5 2.5M11 17H4M9 17l-2.5-2.5M9 17l-2.5 2.5M20 12H9M15 12l-2.5-2.5M15 12l-2.5 2.5"/></svg>`;
+  fab.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2" fill="currentColor" stroke="none"/><path d="M6 10h12M12 10v5M9.5 20l2.5-5 2.5 5"/></svg>`;
   document.body.appendChild(fab);
   return fab;
 }

@@ -160,21 +160,36 @@ function networkMessages(container, opts = { nodes: [], connections: [] }) {
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = "rgba(3,7,12,0.36)";
     ctx.fillRect(0, 0, width, height);
-    ctx.save();
-    ctx.lineWidth = 1.15;
-    ctx.setLineDash([6, 8]);
+    ctx.setLineDash([]);
     for (const link of options.connections) {
       const from = map.get(link.from), to = map.get(link.to);
       if (!from || !to) continue;
       const a = point(from), b = point(to);
       const active = messages.some((msg) => msg.from === link.from && msg.to === link.to);
-      ctx.strokeStyle = link.color ?? (active ? alpha("#FFC72C", 0.45) : "rgba(255,255,255,0.16)");
+      const baseColor = link.color ?? "rgba(78,168,222,0.35)";
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      const dx = mx - 0.5 * width, dy = my - 0.5 * height;
+      const len = Math.sqrt(dx * dx + dy * dy) || 1;
+      const dist = Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
+      const cpx = mx + dx / len * dist * 0.28, cpy = my + dy / len * dist * 0.28;
+      ctx.save();
+      ctx.lineWidth = active ? 2 : 1.5;
+      if (active && options.glowEffect) {
+        ctx.shadowColor = baseColor;
+        ctx.shadowBlur = 8;
+      }
+      const op = active ? 0.7 : 0.38;
+      const recolor = (c) => c.replace(/[\d.]+\)$/, `${op})`);
+      const grad = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
+      grad.addColorStop(0, link.color ? recolor(link.color) : `rgba(78,168,222,${op})`);
+      grad.addColorStop(1, link.color ? recolor(link.color) : `rgba(255,199,44,${op})`);
+      ctx.strokeStyle = grad;
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
+      ctx.quadraticCurveTo(cpx, cpy, b.x, b.y);
       ctx.stroke();
+      ctx.restore();
     }
-    ctx.restore();
     for (let i = flashes.length - 1; i >= 0; i--) {
       const flash = flashes[i];
       flash.life -= dt * 26e-4;
@@ -709,7 +724,7 @@ var objectIcons = {
 var platformIcons = {
   apple: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.2 6.2c.9-1.1 1.3-2.2 1.2-3.2-1.2.1-2.4.8-3.2 1.8-.7.9-1.2 2.1-1.1 3.2 1.2.1 2.3-.6 3.1-1.8z"/><path d="M12.2 8.5c-1.6 0-2.3.8-3.5.8S6.7 8.5 5.5 8.6C3.4 8.8 1.7 10.6 1.7 13c0 1.8.7 3.8 1.8 5.3 1 1.4 2.1 3 3.6 2.9 1.4-.1 1.9-.9 3.6-.9s2.1.9 3.6.9c1.6 0 2.5-1.5 3.5-2.9.8-1.1 1.2-2.2 1.4-2.8-2.7-1-3.1-4.9-.5-6.4-.7-1-1.9-1.6-3.1-1.6-1.5-.1-2.6.9-3.4.9z"/></svg>',
   windows: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5l8-1v8H3zM13 3.2l8-1.2V11h-8zM3 13h8v8l-8-1zM13 13h8v10l-8-1.2z"/></svg>',
-  linux: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 8a3 3 0 0 1 6 0v3.2c1.9 1 3 2.8 3 5V19a2 2 0 0 1-2 2h-1v-3H9v3H8a2 2 0 0 1-2-2v-2.6c0-2.2 1.1-4 3-5z"/><circle cx="10.3" cy="9.7" r=".4" fill="currentColor" stroke="none"/><circle cx="13.7" cy="9.7" r=".4" fill="currentColor" stroke="none"/><path d="M10 13.2h4M9 18h6"/></svg>',
+  linux: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="8" rx="4.5" ry="5.5"/><ellipse cx="12" cy="8.5" rx="2" ry="2.5" fill="currentColor" stroke="none" opacity="0.3"/><circle cx="10.2" cy="7.2" r="0.5" fill="currentColor" stroke="none"/><circle cx="13.8" cy="7.2" r="0.5" fill="currentColor" stroke="none"/><path d="M10.5 9.5q1.5 1 3 0"/><path d="M9 13.5c-2 1-3.5 2.5-3.5 5a1 1 0 001 1h11a1 1 0 001-1c0-2.5-1.5-4-3.5-5"/><ellipse cx="12" cy="15.5" rx="2.5" ry="2" fill="currentColor" stroke="none" opacity="0.15"/><path d="M9.5 13c0 1 .8 2.5 2.5 2.5s2.5-1.5 2.5-2.5"/><path d="M10 19.5l-1 2"/><path d="M14 19.5l1 2"/></svg>',
   android: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.5a4 4 0 0 1 8 0V17a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"/><path d="M9.2 7.2L7.8 5.6M14.8 7.2l1.4-1.6M6 12v4M18 12v4"/><circle cx="10.3" cy="11.7" r=".4" fill="currentColor" stroke="none"/><circle cx="13.7" cy="11.7" r=".4" fill="currentColor" stroke="none"/></svg>',
   cpu: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1.5"/><rect x="10" y="10" width="4" height="4" rx=".6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>',
   memory: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="2"/><path d="M7 8v8M11 8v8M15 8v8M19 8v8M5 19v2M9 19v2M13 19v2M17 19v2"/></svg>',
@@ -4061,24 +4076,28 @@ function funnel(container, options) {
     const total = data.total || pipe.reduce((a, s) => a + s.count, 0);
     const reach = cumulativeReach(pipe.map((s) => s.count));
     const rows = pipe.length;
-    const svgH = PAD * 2 + rows * BAR_H + (rows - 1) * GAP;
+    const containerH = host.clientHeight || 0;
+    const dynH = containerH > 100 ? containerH : 0;
+    const barH = dynH > 0 ? Math.max(28, Math.floor((dynH - PAD * 2 - (rows - 1) * 24) / rows)) : BAR_H;
+    const gap = dynH > 0 ? 24 : GAP;
+    const svgH = PAD * 2 + rows * barH + (rows - 1) * gap;
     const svg = svgEl("svg", { viewBox: "0 0 " + VB_W + " " + svgH, preserveAspectRatio: "xMidYMid meet" });
     svg.style.width = "100%";
-    svg.style.height = "auto";
+    svg.style.height = dynH > 0 ? "100%" : "auto";
     pipe.forEach((stageRaw, i) => {
       const stage = isValidColor(stageRaw.color) ? stageRaw : { ...stageRaw, color: "var(--grigio-alluminio)" };
       const barW = Math.max(PIPE_W * MIN_BAR, stage.count / maxC * PIPE_W);
       const barX = PIPE_L + (PIPE_W - barW) / 2;
-      const y = PAD + i * (BAR_H + GAP);
+      const y = PAD + i * (barH + gap);
       if (i < rows - 1) {
         const ns = pipe[i + 1];
         const nW = Math.max(PIPE_W * MIN_BAR, ns.count / maxC * PIPE_W);
         const nX = PIPE_L + (PIPE_W - nW) / 2;
-        svg.appendChild(svgEl("path", { d: trapPath(barX, barW, nX, nW, y + BAR_H, y + BAR_H + GAP), fill: stage.color, opacity: "0.12" }));
+        svg.appendChild(svgEl("path", { d: trapPath(barX, barW, nX, nW, y + barH, y + barH + gap), fill: stage.color, opacity: "0.12" }));
         const rate = reach[i] > 0 ? Math.round(reach[i + 1] / reach[i] * 100) : 0;
-        svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + BAR_H + GAP / 2 + 1, "text-anchor": "middle", "dominant-baseline": "middle", "font-size": 9, "font-family": "'Barlow Condensed',sans-serif", fill: "var(--grigio-medio,#777)", "font-weight": "500" }, "\u2193 " + rate + "%"));
+        svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + barH + gap / 2 + 1, "text-anchor": "middle", "dominant-baseline": "middle", "font-size": 9, "font-family": "'Barlow Condensed',sans-serif", fill: "var(--grigio-medio,#777)", "font-weight": "500" }, "\u2193 " + rate + "%"));
       }
-      const bar = svgEl("rect", { x: barX, y, width: barW, height: BAR_H, rx: RAD, fill: stage.color });
+      const bar = svgEl("rect", { x: barX, y, width: barW, height: barH, rx: RAD, fill: stage.color });
       bar.classList.add("mn-funnel__bar");
       bar.setAttribute("data-stage", stage.label);
       if (opts.animate) {
@@ -4087,15 +4106,15 @@ function funnel(container, options) {
       }
       svg.appendChild(bar);
       const tc = autoTextColor(stage.color);
-      svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + 14, "text-anchor": "middle", "font-size": 11, "font-family": "'Inter',sans-serif", fill: tc, "font-weight": "600" }, stage.label));
+      svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + Math.round(barH * 0.37), "text-anchor": "middle", "font-size": 11, "font-family": "'Inter',sans-serif", fill: tc, "font-weight": "600" }, stage.label));
       let cTxt = String(stage.count);
       if (total > 0) cTxt += " (" + Math.round(stage.count / total * 100) + "%)";
-      svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + 29, "text-anchor": "middle", "font-size": 14, "font-family": "'Barlow Condensed',sans-serif", fill: tc, "font-weight": "700" }, cTxt));
+      svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + Math.round(barH * 0.76), "text-anchor": "middle", "font-size": 14, "font-family": "'Barlow Condensed',sans-serif", fill: tc, "font-weight": "700" }, cTxt));
       const holdClr = isValidColor(data.onHold?.color || "") ? data.onHold.color : "#ea580c";
       const wdClr = isValidColor(data.withdrawn?.color || "") ? data.withdrawn.color : "#666";
       if (stage.holdCount && stage.holdCount > 0) renderExitPill(svg, barX, y, "left", stage.holdCount, holdClr, "\u23F8");
       if (stage.withdrawnCount && stage.withdrawnCount > 0) renderExitPill(svg, barX + barW, y, "right", stage.withdrawnCount, wdClr, "\u2715");
-      const hit = svgEl("rect", { x: barX, y, width: barW, height: BAR_H, fill: "transparent", cursor: "pointer", "pointer-events": "all" });
+      const hit = svgEl("rect", { x: barX, y, width: barW, height: barH, fill: "transparent", cursor: "pointer", "pointer-events": "all" });
       hit.addEventListener("mouseenter", () => {
         bar.style.filter = "brightness(1.3)";
         bar.style.transition = "filter 0.15s";
@@ -4105,7 +4124,7 @@ function funnel(container, options) {
       });
       hit.addEventListener("click", () => {
         svg.querySelectorAll(".mn-funnel__sel").forEach((el4) => el4.remove());
-        const sel = svgEl("rect", { x: barX - 2, y: y - 2, width: barW + 4, height: BAR_H + 4, fill: "none", stroke: "#FFC72C", "stroke-width": "2", rx: "6", class: "mn-funnel__sel" });
+        const sel = svgEl("rect", { x: barX - 2, y: y - 2, width: barW + 4, height: barH + 4, fill: "none", stroke: "#FFC72C", "stroke-width": "2", rx: "6", class: "mn-funnel__sel" });
         svg.appendChild(sel);
         if (opts.onClick) opts.onClick(stage);
       });

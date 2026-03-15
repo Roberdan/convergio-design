@@ -5978,6 +5978,23 @@
     color: var(--grigio-medio);
   }
 
+  @media (max-width: 640px) {
+    .mn-login {
+      min-height: 0;
+      padding: var(--space-xl) var(--space-md);
+    }
+
+    .mn-login__status-gauges {
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .mn-login__btn {
+      padding: 12px 20px;
+      font-size: .85rem;
+    }
+  }
+
   .mn-layout {
     flex-direction: column;
     height: calc(100vh - 56px);

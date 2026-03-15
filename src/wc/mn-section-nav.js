@@ -17,7 +17,7 @@ const LABELS = {
   'detail-panel': 'Detail Panel', 'interactive': 'Chat', 'okr': 'OKR',
   'map': 'Map', 'social-graph': 'Social Graph', 'advanced': 'Advanced',
   'mesh-network': 'Mesh Network', 'convergio': 'Convergio',
-  'web-components': 'Web Comps', 'glass': 'Glass', 'launch': 'Launch',
+  'web-components': 'Web Comps', 'launch': 'Launch',
   'accessibility': 'A11y', 'api-reference': 'API Ref',
   'data-binding': 'Data Binding', 'overlays': 'Overlays', 'org-tree': 'Org Tree',
 };

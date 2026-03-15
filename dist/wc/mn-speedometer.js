@@ -126,7 +126,7 @@ class MnSpeedometer extends HTMLElement {
         this._canvas.height = px;
         this._canvas.style.width = px + "px";
         this._canvas.style.height = px + "px";
-        this._ctrl = M.speedometer(this._canvas, { ...this._buildOpts(), size: "fluid" });
+        this._ctrl = M.speedometer(this._canvas, { ...this._buildOpts(), size: px });
       }, 150);
     });
     this._resizeObs.observe(this);

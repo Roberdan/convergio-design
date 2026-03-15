@@ -31,7 +31,7 @@ const GROUPS = [
   ] },
   { title: 'Controls', items: [
     { tag: 'mn-ferrari-control', desc: 'Cockpit-grade control wrapper for slider, rotary, and lever inputs.', preview: `<mn-ferrari-control type="slider" options='{"label":"Budget","min":0,"max":100,"value":72}'></mn-ferrari-control>` },
-    { tag: 'mn-theme-toggle', desc: 'Cycles the four demo themes with a compact branded switch.', preview: `<mn-theme-toggle mode="nero"></mn-theme-toggle>` },
+    { tag: 'mn-theme-toggle', desc: 'Cycles the four demo themes with a compact branded switch.', preview: `<div class="mn-wc-theme-mock" style="display:flex;align-items:center;gap:8px;pointer-events:none" aria-hidden="true"><span style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--mn-accent,#FFC72C);color:#111;font-size:1rem">&#9680;</span><span class="mn-micro" style="color:var(--grigio-chiaro)">Theme Toggle</span></div>` },
     { tag: 'mn-date-picker', desc: 'Date selector with min/max rules and deployment windows.', preview: `<mn-date-picker value="2026-04-14" min="2026-04-01" max="2026-05-31"></mn-date-picker>` },
     { tag: 'mn-command-palette', desc: 'Keyboard-first action launcher for quick navigation and commands.', preview: `<button class="mn-btn mn-btn--ghost" data-open="wc-palette">Open palette</button><mn-command-palette id="wc-palette" items='${COMMAND_ITEMS}' placeholder="Type a command"></mn-command-palette>` },
     { tag: 'mn-a11y', desc: 'Floating accessibility hub for contrast, motion, and focus settings.', preview: `<div class="mn-micro" style="color:var(--grigio-chiaro);text-align:center">Floating FAB preview</div><mn-a11y></mn-a11y>` },
@@ -103,7 +103,8 @@ async function initCatalog(section) {
       // Wire event handlers for this card
       previewEl.querySelectorAll('[data-open]').forEach((btn) => {
         btn.addEventListener('click', () => {
-          const t = section.querySelector('#' + btn.getAttribute('data-open'));
+          const targetId = btn.getAttribute('data-open');
+          const t = previewEl.querySelector('#' + targetId) || section.querySelector('#' + targetId);
           if (!t) return;
           if (typeof t.open === 'function') { t.open(); return; }
           if (typeof t.show === 'function') { t.show(); return; }

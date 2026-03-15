@@ -47,10 +47,18 @@ const SECTIONS = new Map([
 
 const SECTION_KEYS = [...SECTIONS.keys()];
 
-function safe(el, name) {
-  // el is already created; wrap errors only if it's actually an Error
-  return el;
-}
+const SECTION_LABELS = {
+  'hero': 'Home', 'tokens': 'Tokens', 'cards': 'Cards', 'dashboard': 'Dashboard',
+  'charts': 'Charts', 'network': 'Network', 'controls': 'Controls', 'forms': 'Forms',
+  'tables': 'Tables', 'gauges': 'Gauges', 'cockpit': 'Cockpit', 'telemetry': 'Telemetry',
+  'gantt': 'Gantt', 'icons': 'Icons', 'animations': 'Anim', 'heatmap': 'Heatmap',
+  'treemap': 'Treemap', 'layouts': 'Layouts', 'detail-panel': 'Detail',
+  'interactive': 'Chat', 'okr': 'OKR', 'map': 'Map', 'social-graph': 'Social',
+  'advanced': 'Advanced', 'mesh-network': 'Mesh', 'convergio': 'Convergio',
+  'web-components': 'WC', 'launch': 'Launch', 'accessibility': 'A11y',
+  'api-reference': 'API', 'data-binding': 'Binding', 'overlays': 'Overlays',
+  'org-tree': 'Org',
+};
 
 function safeErr(name, err) {
   console.error(`[demo] ${name} crashed:`, err);
@@ -62,12 +70,35 @@ function safeErr(name, err) {
   return el;
 }
 
-function makeSectionNav(current, pos) {
-  const el = document.createElement('mn-section-nav');
-  el.setAttribute('sections', SECTION_KEYS.join(','));
-  el.setAttribute('current', current);
-  el.setAttribute('data-pos', pos);
-  return el;
+function updateHeaderNav(name) {
+  const idx = SECTION_KEYS.indexOf(name);
+  const prev = idx > 0 ? SECTION_KEYS[idx - 1] : null;
+  const next = idx < SECTION_KEYS.length - 1 ? SECTION_KEYS[idx + 1] : null;
+  const prevBtn = document.getElementById('demo-pg-prev');
+  const nextBtn = document.getElementById('demo-pg-next');
+  const label = document.getElementById('demo-pg-label');
+  if (prevBtn) {
+    prevBtn.disabled = !prev;
+    prevBtn.title = prev ? (SECTION_LABELS[prev] || prev) : '';
+    prevBtn.setAttribute('aria-label', prev ? `Previous: ${SECTION_LABELS[prev] || prev}` : 'Previous section');
+  }
+  if (nextBtn) {
+    nextBtn.disabled = !next;
+    nextBtn.title = next ? (SECTION_LABELS[next] || next) : '';
+    nextBtn.setAttribute('aria-label', next ? `Next: ${SECTION_LABELS[next] || next}` : 'Next section');
+  }
+  if (label) label.textContent = `${idx + 1} / ${SECTION_KEYS.length}`;
+}
+
+function initHeaderNav() {
+  document.getElementById('demo-pg-prev')?.addEventListener('click', () => {
+    const idx = SECTION_KEYS.indexOf(currentSection());
+    if (idx > 0) window.location.hash = SECTION_KEYS[idx - 1];
+  });
+  document.getElementById('demo-pg-next')?.addEventListener('click', () => {
+    const idx = SECTION_KEYS.indexOf(currentSection());
+    if (idx < SECTION_KEYS.length - 1) window.location.hash = SECTION_KEYS[idx + 1];
+  });
 }
 
 function currentSection() {
@@ -79,6 +110,7 @@ function setActiveNav(name) {
   document.querySelectorAll('.demo-nav__links a').forEach((a) => {
     a.classList.toggle('demo-nav__link--active', a.getAttribute('href') === '#' + name);
   });
+  updateHeaderNav(name);
 }
 
 // Loading placeholder while dynamic import resolves
@@ -95,9 +127,7 @@ async function render(name) {
     const factory = await SECTIONS.get(name)();
     // Clear after load (stops canvas/RAF of removed elements)
     while (root.firstChild) root.removeChild(root.firstChild);
-    root.appendChild(makeSectionNav(name, 'top'));
     root.appendChild(factory());
-    root.appendChild(makeSectionNav(name, 'bottom'));
   } catch (err) {
     while (root.firstChild) root.removeChild(root.firstChild);
     root.appendChild(safeErr(name, err));
@@ -138,6 +168,9 @@ document.addEventListener('mn-theme-change', (event) => {
 });
 
 requestAnimationFrame(updateThemeLabel);
+
+// Wire header prev/next buttons once
+initHeaderNav();
 
 // Initial render
 render(currentSection());

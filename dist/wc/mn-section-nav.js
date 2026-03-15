@@ -29,7 +29,6 @@ const LABELS = {
   "mesh-network": "Mesh Network",
   "convergio": "Convergio",
   "web-components": "Web Comps",
-  "glass": "Glass",
   "launch": "Launch",
   "accessibility": "A11y",
   "api-reference": "API Ref",
