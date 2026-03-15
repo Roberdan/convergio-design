@@ -27,6 +27,7 @@ token usage, and enforce inclusive design principles across all 4 themes.
 4. **Redundant cues** — Never rely on color alone to convey meaning
 5. **No static assumptions** — `--bianco-caldo` is white. On Avorio it's invisible as text
 6. **CI is truth** — `scripts/check-theme-semantics.sh` blocks violations at push
+7. **Responsive by default** — Every component must work from 320px to 4K; canvas = `autoResize`
 
 ## Design System Reference
 
@@ -120,13 +121,50 @@ buttons (forced bg → forced text ok), decorative rule lines.
 
 **Pattern: always pair signal color with an icon or text label.**
 
-## Responsive (v4.0.0)
+## Responsive (v4.0.0) — NaSra enforces this
 
-- **Canvas charts:** `autoResize(canvas, factory, data)` — ResizeObserver, redraws on width change
-- **Gauges:** `size: 'fluid'` option + `controller.destroy()` on cleanup
-- **Sidebar:** `initSidebarToggleAuto()` — auto mobile toggle, returns cleanup fn
-- **Utility classes:** `.mn-hide-mobile` · `.mn-show-mobile` · `.mn-stack-mobile` · `.mn-full-mobile`
+**Every component you touch must be verified responsive. Non-negotiable.**
+
+### Component status
+
+| Status | Components |
+|---|---|
+| ResizeObserver | Gantt, SocialGraph, NeuralNodes, MapView — already fluid |
+| SVG 100% width | Funnel — natively fluid |
+| CSS overflow scroll | DataTable — CSS-only, works |
+| **Needs `autoResize()`** | sparkline, donut, barChart, areaChart, liveGraph, radar, bubble, halfGauge |
+| **Needs `size:'fluid'`** | FerrariGauge, Speedometer (default: fixed 120/220/320px presets) |
+
+### Patterns
+
+```js
+// Canvas chart — wrap with autoResize
+autoResize(canvas, (c) => renderSparkline(c, data, opts), data);
+// cleanup: returned fn from autoResize
+
+// Gauge / Speedometer — fluid mode
+const g = speedometer(canvas, { size: 'fluid' });
+// cleanup: g.destroy()
+
+// Web Components — omit width/height, they self-resize
+<mn-chart type="donut"></mn-chart>
+<mn-speedometer size="fluid"></mn-speedometer>
+```
+
+### Layout utilities
+
+- `.mn-hide-mobile` · `.mn-show-mobile` · `.mn-stack-mobile` · `.mn-full-mobile`
 - **Breakpoints:** mobile ≤640px · tablet 641–1024px · desktop >1024px
+- **Sidebar:** `initSidebarToggleAuto()` — auto mobile toggle, returns cleanup fn
+
+### Responsive checklist (before shipping any component)
+
+- [ ] Resize browser window 320px → full width — no overflow, no clipping
+- [ ] Canvas charts redraw at each width (not fixed pixel size)
+- [ ] Gauges use fluid mode or responsive CSS container
+- [ ] Touch targets ≥44×44px on mobile (WCAG 2.5.3)
+- [ ] No horizontal scroll on body at any viewport
+- [ ] Tables: overflow-x scroll container wraps `<table>` on mobile
 
 ## Common Mistakes
 
@@ -139,6 +177,10 @@ buttons (forced bg → forced text ok), decorative rule lines.
 | Touch target 16×16px icon button | Wrap in `min-width:44px; min-height:44px` container |
 | Status dot (red/green only) | Add text label + icon alongside |
 | `font-size: 14px` fixed | `font-size: 0.875rem` — survives 200% zoom |
+| Canvas chart fixed px size | Wrap with `autoResize(canvas, factory, data)` |
+| `speedometer(canvas, {})` no fluid | Add `size: 'fluid'` option |
+| `<mn-chart width="400">` hardcoded | Remove width/height, let WC self-size |
+| Layout overflow on mobile | Add `.mn-full-mobile` or `overflow-x: auto` wrapper |
 
 ## CI Constitution
 
@@ -156,3 +198,4 @@ To add a legitimate exception, add comment `/* intentional: <reason> */` on the 
 3. Check `src/css/tokens.css` — token definitions with semantic vs primitive distinction
 4. Never guess token names — grep `src/css/themes-*.css` for the override you need
 5. Simulate colorblind: Chrome DevTools → Rendering → Emulate vision deficiency
+6. Responsive test: resize window 320px → 1920px, check canvas charts redraw, no overflow
