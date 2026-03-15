@@ -9327,6 +9327,7 @@ function initTagsField(el4, opts) {
   const onChange = opts?.onChange;
   const maxTags = opts?.maxTags ?? Infinity;
   const placeholder = opts?.placeholder ?? "Add tag...";
+  const suggestions = opts?.suggestions ?? [];
   el4.innerHTML = "";
   el4.classList.add("mn-tags-field");
   const chipsContainer = document.createElement("div");
@@ -9338,9 +9339,44 @@ function initTagsField(el4, opts) {
   input.placeholder = placeholder;
   input.setAttribute("aria-label", placeholder);
   el4.appendChild(input);
-  el4.addEventListener("click", () => input.focus());
+  const dropdown = document.createElement("div");
+  dropdown.className = "mn-tags-field__suggestions";
+  dropdown.style.display = "none";
+  el4.appendChild(dropdown);
+  el4.addEventListener("click", (e) => {
+    if (e.target !== dropdown) input.focus();
+  });
   function notify() {
     if (onChange) onChange(tags.slice());
+  }
+  function hideSuggestions() {
+    dropdown.style.display = "none";
+    dropdown.innerHTML = "";
+  }
+  function showSuggestions(query) {
+    if (!suggestions.length) return;
+    const q = query.toLowerCase();
+    const matches = suggestions.filter(
+      (s) => s.toLowerCase().includes(q) && !tags.includes(s)
+    );
+    if (!matches.length) {
+      hideSuggestions();
+      return;
+    }
+    dropdown.innerHTML = "";
+    matches.slice(0, 8).forEach((s) => {
+      const item = document.createElement("div");
+      item.className = "mn-tags-field__suggestion-item";
+      item.textContent = escapeHtml(s);
+      item.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        addTag(s);
+        input.value = "";
+        hideSuggestions();
+      });
+      dropdown.appendChild(item);
+    });
+    dropdown.style.display = "";
   }
   function createChip(value) {
     const chip = document.createElement("span");
@@ -9374,31 +9410,46 @@ function initTagsField(el4, opts) {
     tags.splice(idx, 1);
     const chips = chipsContainer.querySelectorAll(".mn-chip");
     chips.forEach((chip) => {
-      const text = chip.firstChild?.textContent ?? "";
-      if (text === value) chip.remove();
+      if (chip.firstChild?.textContent === value) chip.remove();
     });
     updatePlaceholder();
     notify();
+  }
+  function setValue(newTags) {
+    tags.length = 0;
+    chipsContainer.innerHTML = "";
+    newTags.forEach((t) => addTag(t));
   }
   function updatePlaceholder() {
     input.placeholder = tags.length > 0 ? "" : placeholder;
   }
   input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
-      addTag(input.value);
+      addTag(input.value.replace(/,/g, ""));
       input.value = "";
+      hideSuggestions();
+    } else if (e.key === "Backspace" && input.value === "" && tags.length > 0) {
+      removeTag(tags[tags.length - 1]);
+    } else if (e.key === "Escape") {
+      hideSuggestions();
     }
   });
-  if (opts?.initialTags) {
-    opts.initialTags.forEach((t) => addTag(t));
-  }
+  input.addEventListener("input", () => {
+    const q = input.value.trim();
+    if (q.length > 0) showSuggestions(q);
+    else hideSuggestions();
+  });
+  input.addEventListener("blur", () => {
+    setTimeout(hideSuggestions, 150);
+  });
+  if (opts?.value) opts.value.forEach((t) => addTag(t));
   function destroy() {
     el4.innerHTML = "";
     el4.classList.remove("mn-tags-field");
     tags.length = 0;
   }
-  return { addTag, removeTag, getTags: () => tags.slice(), destroy };
+  return { addTag, removeTag, getTags: () => tags.slice(), setValue, destroy };
 }
 
 // src/ts/forms-person-field.ts
@@ -12297,6 +12348,8 @@ M.editors = editors;
 M.openDrawer = openDrawer;
 M.closeDrawer = closeDrawer;
 M.initOrgTree = initOrgTree;
+M.openSearchDrawer = openSearchDrawer;
+M.initTagsField = initTagsField;
 M.cruiseLever = cruiseLever;
 M.toggleLever = toggleLever;
 M.manettino = manettino;

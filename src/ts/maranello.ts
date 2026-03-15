@@ -96,6 +96,8 @@ import { gridLayout } from './grid-layout';
 import { socialGraph } from './social-graph';
 import { networkMessages } from './network-messages';
 import { neuralNodes } from './neural-nodes';
+import { initTagsField } from './forms-tags-field';
+import { openSearchDrawer } from './search-drawer';
 import { registerExtras } from './maranello-exports';
 
 declare global {
@@ -195,6 +197,9 @@ M.editors = editors;
 M.openDrawer = openDrawer;
 M.closeDrawer = closeDrawer;
 M.initOrgTree = initOrgTree;
+M.openSearchDrawer = openSearchDrawer;
+// Forms
+M.initTagsField = initTagsField;
 
 // Ferrari controls
 M.cruiseLever = cruiseLever;

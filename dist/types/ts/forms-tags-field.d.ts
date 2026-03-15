@@ -1,17 +1,19 @@
 /**
  * Maranello Luce Design - Tags field widget
- * Standalone tag input with chip display, add/remove, and max limit.
+ * Standalone tag input with chip display, add/remove, autocomplete, and max limit.
  */
 export interface TagsFieldOptions {
-    initialTags?: string[];
+    value?: string[];
     onChange?: (tags: string[]) => void;
     placeholder?: string;
     maxTags?: number;
+    suggestions?: string[];
 }
 export interface TagsFieldApi {
-    addTag: (value: string) => void;
-    removeTag: (value: string) => void;
+    addTag: (tag: string) => void;
+    removeTag: (tag: string) => void;
     getTags: () => string[];
+    setValue: (newTags: string[]) => void;
     destroy: () => void;
 }
 /** Initialize a standalone tags field widget inside the given element. */
