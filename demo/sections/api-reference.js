@@ -54,16 +54,16 @@ function apiGroup(title, ns, apis) {
 function statsBar() {
   return `
     <div style="display:flex;flex-wrap:wrap;gap:var(--space-lg);justify-content:center;margin-bottom:var(--space-xl)">
-      <span class="mn-label" style="color:var(--bianco-caldo)">
+      <span class="mn-label" style="color:var(--mn-text)">
         <strong style="color:var(--mn-accent);font-size:var(--text-h3)">91</strong> exports
       </span>
-      <span class="mn-label" style="color:var(--bianco-caldo)">
+      <span class="mn-label" style="color:var(--mn-text)">
         <strong style="color:var(--mn-accent);font-size:var(--text-h3)">10</strong> chart types
       </span>
-      <span class="mn-label" style="color:var(--bianco-caldo)">
+      <span class="mn-label" style="color:var(--mn-text)">
         <strong style="color:var(--mn-accent);font-size:var(--text-h3)">23</strong> Web Components
       </span>
-      <span class="mn-label" style="color:var(--bianco-caldo)">
+      <span class="mn-label" style="color:var(--mn-text)">
         <strong style="color:var(--mn-accent);font-size:var(--text-h3)">4</strong> themes
       </span>
     </div>`;

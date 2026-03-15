@@ -77,9 +77,9 @@ Maranello.charts.donut(canvas, [{ label: 'A', value: 30 }, { label: 'B', value: 
       </div>
       <h3 class="mn-title-sub" style="margin-bottom:var(--space-md)">Flip Counters</h3>
       <div style="display:flex;gap:var(--space-2xl);flex-wrap:wrap;align-items:flex-end;margin-bottom:var(--space-lg)">
-        <div style="text-align:center"><div id="flip-1"></div><span class="mn-micro" style="color:var(--grigio-chiaro)">Tasks Completed</span></div>
-        <div style="text-align:center"><div id="flip-2"></div><span class="mn-micro" style="color:var(--grigio-chiaro)">Inference Runs</span></div>
-        <div style="text-align:center"><div id="flip-3"></div><span class="mn-micro" style="color:var(--grigio-chiaro)">Accuracy Score</span></div>
+        <div style="text-align:center"><div id="flip-1"></div><span class="mn-micro" style="color:var(--mn-text-muted)">Tasks Completed</span></div>
+        <div style="text-align:center"><div id="flip-2"></div><span class="mn-micro" style="color:var(--mn-text-muted)">Inference Runs</span></div>
+        <div style="text-align:center"><div id="flip-3"></div><span class="mn-micro" style="color:var(--mn-text-muted)">Accuracy Score</span></div>
       </div>
       <div style="display:flex;gap:var(--space-md)">
         <button class="mn-btn mn-btn--accent" id="flip-inc">Increment</button>
@@ -91,13 +91,13 @@ Maranello.charts.donut(canvas, [{ label: 'A', value: 30 }, { label: 'B', value: 
   return section;
 }
 
-function sparkWrap(id, label, size) { return `<div style="text-align:center"><canvas id="${id}" width="100" height="32"></canvas><div class="mn-micro" style="color:var(--grigio-chiaro);margin-top:4px">${size}<br>${label}</div></div>`; }
-function donutWrap(id, w, h, val, label) { return `<div style="text-align:center"><canvas id="${id}" width="${w}" height="${h}"></canvas><div class="mn-micro" style="color:var(--grigio-chiaro);margin-top:4px">${val} — ${label}</div></div>`; }
-function halfWrap(id, w, h, val, unit) { return `<div style="text-align:center"><canvas id="${id}" width="${w}" height="${h}"></canvas><div class="mn-micro" style="color:var(--mn-accent)">${val} <span style="color:var(--grigio-chiaro)">${unit}</span></div></div>`; }
-function ringWrap(id, sz, pct, label) { return `<div style="text-align:center"><div id="${id}" style="width:${sz}px;height:${sz}px;display:inline-block"></div><div class="mn-micro" style="color:var(--grigio-chiaro);margin-top:4px">${pct} ${label}</div></div>`; }
+function sparkWrap(id, label, size) { return `<div style="text-align:center"><canvas id="${id}" width="100" height="32"></canvas><div class="mn-micro" style="color:var(--mn-text-muted);margin-top:4px">${size}<br>${label}</div></div>`; }
+function donutWrap(id, w, h, val, label) { return `<div style="text-align:center"><canvas id="${id}" width="${w}" height="${h}"></canvas><div class="mn-micro" style="color:var(--mn-text-muted);margin-top:4px">${val} — ${label}</div></div>`; }
+function halfWrap(id, w, h, val, unit) { return `<div style="text-align:center"><canvas id="${id}" width="${w}" height="${h}"></canvas><div class="mn-micro" style="color:var(--mn-accent)">${val} <span style="color:var(--mn-text-muted)">${unit}</span></div></div>`; }
+function ringWrap(id, sz, pct, label) { return `<div style="text-align:center"><div id="${id}" style="width:${sz}px;height:${sz}px;display:inline-block"></div><div class="mn-micro" style="color:var(--mn-text-muted);margin-top:4px">${pct} ${label}</div></div>`; }
 function swatch(color, label) { return `<span class="mn-micro" style="display:inline-flex;align-items:center;gap:6px;color:var(--avorio);padding:2px 0"><span style="width:10px;height:10px;background:${color};border-radius:999px;box-shadow:0 0 0 1px rgba(255,255,255,0.12)"></span>${label}</span>`; }
 function legendRow(content, extra = '') { return `<div style="display:flex;flex-wrap:wrap;gap:var(--space-md);align-items:center;margin-top:var(--space-sm);padding-top:var(--space-xs);border-top:1px solid rgba(255,255,255,0.08);${extra}">${content}</div>`; }
-function axisLabel(kind = 'x') { return kind === 'y' ? 'min-width:18px;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;transform:rotate(180deg);color:var(--grigio-chiaro);font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase' : 'margin-top:var(--space-sm);text-align:center;color:var(--grigio-chiaro);font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase'; }
+function axisLabel(kind = 'x') { return kind === 'y' ? 'min-width:18px;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;transform:rotate(180deg);color:var(--mn-text-muted);font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase' : 'margin-top:var(--space-sm);text-align:center;color:var(--mn-text-muted);font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase'; }
 
 function initCharts(section) {
   const C = window.Maranello?.charts;

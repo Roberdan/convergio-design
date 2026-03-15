@@ -9,7 +9,7 @@ export function createControlsSection() {
   section.className = 'mn-section-dark';
   section.innerHTML = `
     <style>
-      #controls .mn-temp-badge{--temp-size:44px;display:inline-flex;align-items:center;justify-content:center;width:var(--temp-size);height:var(--temp-size);border-radius:50%;border:2px solid var(--temp-color);background:rgba(0,0,0,.55);color:var(--bianco-caldo);font-family:var(--font-display);font-size:.9rem;font-weight:700;line-height:1;text-align:center;box-shadow:0 0 0 1px rgba(255,255,255,.06) inset}
+      #controls .mn-temp-badge{--temp-size:44px;display:inline-flex;align-items:center;justify-content:center;width:var(--temp-size);height:var(--temp-size);border-radius:50%;border:2px solid var(--temp-color);background:rgba(0,0,0,.55);color:var(--mn-text);font-family:var(--font-display);font-size:.9rem;font-weight:700;line-height:1;text-align:center;box-shadow:0 0 0 1px rgba(255,255,255,.06) inset}
       #controls .mn-temp-badge--lg{--temp-size:56px;border-width:3px;font-size:1.1rem}
     </style>
     <div class="mn-container">
@@ -63,7 +63,7 @@ Maranello.initSlider(el);</code></pre>
             <div class="mn-rotary__notches"></div>
           </div>
           <div class="mn-rotary__value mn-micro" style="text-align:center;margin-top:var(--space-xs);color:var(--mn-accent);font-weight:600"></div>
-          <span class="mn-rotary__label mn-micro" style="display:block;text-align:center;margin-top:2px;color:var(--grigio-chiaro)">Drive Mode</span>
+          <span class="mn-rotary__label mn-micro" style="display:block;text-align:center;margin-top:2px;color:var(--mn-text-muted)">Drive Mode</span>
         </div>
       </div>
     </div>`;
@@ -96,6 +96,6 @@ function activate(section, selector, activeClass, onSet = () => {}, onUnset = ()
 }
 function toggle(label, checked) { return `<label class="mn-toggle${checked ? ' mn-toggle--on' : ''}"><input type="checkbox"${checked ? ' checked' : ''}><span class="mn-toggle__track"><span class="mn-toggle__thumb"></span></span><span class="mn-toggle__label">${label}</span></label>`; }
 function led(tone, text) { return `<span class="mn-led mn-led--${tone}"><span class="mn-led__housing"><span class="mn-led__bulb"></span></span><span class="mn-led__text">${text}</span></span>`; }
-function slider(id, label, value) { return `<div><span class="mn-micro" style="color:var(--grigio-chiaro);display:block;margin-bottom:var(--space-xs)">${label}</span><div id="${id}" class="mn-slider" style="height:8px;border-radius:4px;background:var(--grigio-scuro);cursor:pointer;position:relative"><div class="mn-slider__track" style="position:absolute;inset:0;border-radius:4px"></div></div><div class="mn-micro" style="color:var(--grigio-medio);margin-top:var(--space-xs)"><span id="${id.replace('ctrl-', '')}-val">${value}</span>%</div></div>`; }
+function slider(id, label, value) { return `<div><span class="mn-micro" style="color:var(--mn-text-muted);display:block;margin-bottom:var(--space-xs)">${label}</span><div id="${id}" class="mn-slider" style="height:8px;border-radius:4px;background:var(--grigio-scuro);cursor:pointer;position:relative"><div class="mn-slider__track" style="position:absolute;inset:0;border-radius:4px"></div></div><div class="mn-micro" style="color:var(--grigio-medio);margin-top:var(--space-xs)"><span id="${id.replace('ctrl-', '')}-val">${value}</span>%</div></div>`; }
 function controlSlot(label, id) { return `<div><div class="mn-demo-section-label mn-mb-sm">${label}</div><div id="${id}"></div></div>`; }
 function clusterButton(id, active = false) { return `<button class="mn-btn-cluster__item${active ? ' mn-btn-cluster__item--active' : ''}" aria-label="${id}"><span class="mn-icon mn-icon--sm" id="ic-cluster-${id}"></span></button>`; }

@@ -51,7 +51,7 @@ function serviceRow(s) {
         <div class="mn-micro" style="color:var(--grigio-medio)">${s.detail}</div>
       </div>
     </div>
-    <span class="mn-micro" style="color:var(--grigio-chiaro);text-transform:uppercase;letter-spacing:0.08em">${s.tone === 'off' ? 'IDLE' : s.tone.toUpperCase()}</span>
+    <span class="mn-micro" style="color:var(--mn-text-muted);text-transform:uppercase;letter-spacing:0.08em">${s.tone === 'off' ? 'IDLE' : s.tone.toUpperCase()}</span>
   </div>`;
 }
 

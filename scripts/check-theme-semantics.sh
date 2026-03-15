@@ -1,46 +1,44 @@
 #!/bin/bash
 set -euo pipefail
-# check-theme-semantics.sh — Catch the specific regression: var(--bianco-caldo) used as
-# text color in unscoped component CSS. This token is static (#fafafa white) and renders
-# invisible on the Avorio light theme. All text that adapts between themes must use
-# var(--mn-text) / var(--mn-text-muted) instead.
-#
-# SKIPPED (intentional or already theme-gated):
-#   themes-*, utilities.css, base.css, toast/tooltip overlays, ghost-light button
-#   Lines already scoped: body.mn-*, .mn-avorio, .mn-nero, .mn-section-*
-# Version: 1.1.0
+# check-theme-semantics.sh — Prevent var(--bianco-caldo) as text color in unscoped CSS
+# and demo JS inline styles. Invisible on Avorio (light) theme.
+# Use var(--mn-text) / var(--mn-text-muted) for adaptive text colors. v1.3.0
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-CSS_DIR="$ROOT/src/css"
 errors=0
 
-FILE_SKIP="themes-|utilities|base\.css|extended-toast|extended-tooltip|tokens"
+CSS_SKIP="themes-|utilities|base\.css|extended-toast|extended-tooltip|tokens"
 
-echo "Checking for var(--bianco-caldo) as unscoped text color..."
-
+echo "Checking CSS: unscoped var(--bianco-caldo) as text color..."
 while IFS= read -r match; do
-  file="${match%%:*}"
-  line="${match#*:*:}"
-
-  # Skip allowed files
-  if echo "$file" | grep -qE "$FILE_SKIP"; then continue; fi
-
-  # Skip lines already scoped to a theme, section, or containing explicit contrast bg
-  if echo "$line" | grep -qE "body\.mn-|grigio-scuro|ghost-light|\.mn-avorio|\.mn-nero|\.mn-colorblind|\.mn-section-|intentional:|bianco-caldo\b.*bianco-caldo"; then continue; fi
-
-  echo "FAIL: $file"
-  echo "  Line $(echo "$match" | cut -d: -f2): $line"
-  echo "  Fix : Replace with var(--mn-text) — white in Nero, black in Avorio"
+  file="${match%%:*}"; line="${match#*:*:}"
+  if echo "$file" | grep -qE "$CSS_SKIP"; then continue; fi
+  if echo "$line" | grep -qE "body\.mn-|\.mn-avorio|\.mn-nero|\.mn-colorblind|\.mn-section-|intentional:|grigio-scuro|ghost-light"; then continue; fi
+  echo "  FAIL: $file  line $(echo "$match" | cut -d: -f2)"
+  echo "        $line"
+  echo "  Fix : Replace with var(--mn-text)"
   ((errors++)) || true
-done < <(grep -rn "[^-]color[[:space:]]*:[[:space:]]*var(--bianco-caldo)" "$CSS_DIR" 2>/dev/null || true)
+done < <(grep -rn "[^-]color[[:space:]]*:[[:space:]]*var(--bianco-caldo" "$ROOT/src/css/" 2>/dev/null || true)
+
+echo "Checking demo JS/HTML: inline var(--bianco-caldo) as text color..."
+# Exclude generated bundles (*.bundle.js), test pages, and glass-test
+while IFS= read -r match; do
+  file="${match%%:*}"; line="${match#*:*:}"
+  if echo "$file" | grep -qE "bundle\.js|glass-test|responsive\.html|e2e\.html|tokens\.js"; then continue; fi
+  if echo "$line" | grep -qE "intentional|swatch\(|grigio-scuro|background:var(--bianco-caldo)|mn-section-dark|mn-section-"; then continue; fi
+  echo "  FAIL: $file  line $(echo "$match" | cut -d: -f2)"
+  echo "        $(echo "$line" | cut -c1-120)"
+  echo "  Fix : Replace with var(--mn-text)"
+  ((errors++)) || true
+done < <(grep -rn "color[[:space:]]*:[[:space:]]*var(--bianco-caldo" "$ROOT/demo/" 2>/dev/null || true)
 
 echo ""
 if [[ $errors -gt 0 ]]; then
-  echo "FAIL: $errors unscoped --bianco-caldo text violations."
-  echo "These will render invisible on light themes (Avorio). Use var(--mn-text)."
+  echo "FAIL: $errors theme-semantic violations. Text invisible on light/Avorio theme."
+  echo "Use var(--mn-text) / var(--mn-text-muted) for adaptive text colors."
   exit 1
 else
-  echo "OK: No unscoped --bianco-caldo text violations."
+  echo "OK: No theme-semantic violations."
   exit 0
 fi

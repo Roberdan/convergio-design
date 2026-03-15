@@ -114,7 +114,7 @@ export function createAnimationsSection() {
         <div style="flex:1;display:flex;justify-content:center">
           <div style="display:flex;align-items:center;gap:var(--space-sm);max-width:400px;width:100%;background:var(--superficie-1);border:1px solid var(--grigio-scuro);border-radius:var(--radius-md);padding:var(--space-xs) var(--space-md)">
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--grigio-medio)" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><line x1="10.4" y1="10.4" x2="14" y2="14"/></svg>
-            <input type="text" placeholder="Filter by name, program..." style="flex:1;background:none;border:none;color:var(--grigio-chiaro);font-family:var(--font-body);outline:none">
+            <input type="text" placeholder="Filter by name, program..." style="flex:1;background:none;border:none;color:var(--mn-text-muted);font-family:var(--font-body);outline:none">
           </div>
         </div>
         <div style="display:flex;gap:var(--space-sm);align-items:center">

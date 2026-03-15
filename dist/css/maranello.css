@@ -7315,7 +7315,7 @@
 
   .mn-detail-panel__cal-btn:hover {
     opacity: 1;
-    color: var(--bianco-caldo, #f5f5f5);
+    color: var(--mn-text);
   }
 
   .mn-detail-panel__person {
@@ -9996,7 +9996,7 @@
 
   .mn-sim-panel__title {
     font-family: var(--font-display, "Outfit",sans-serif);
-    color: var(--bianco-caldo, #fff);
+    color: var(--mn-text);
     font-size: .85rem;
     font-weight: 600;
   }
@@ -10018,7 +10018,7 @@
     border: 1px solid var(--bordo, #333);
     border-radius: var(--radius-sm, 6px);
     cursor: pointer;
-    color: var(--bianco-caldo, #fff);
+    color: var(--mn-text);
     text-align: center;
     flex-direction: column;
     align-items: center;
@@ -10080,7 +10080,7 @@
     background: var(--nero-2, #1a1a1a);
     border: 1px solid var(--bordo, #333);
     border-radius: var(--radius-sm, 4px);
-    color: var(--bianco-caldo, #fff);
+    color: var(--mn-text);
     outline: none;
     flex: 1;
     padding: 6px 10px;
@@ -10160,7 +10160,7 @@
     border: 1px solid var(--bordo, #333);
     border-radius: var(--radius-sm, 4px);
     width: 100%;
-    color: var(--bianco-caldo, #fff);
+    color: var(--mn-text);
     cursor: pointer;
     padding: 6px 10px;
     font-family: inherit;
@@ -16128,7 +16128,7 @@ body.mn-avorio .mn-panel__title {
 
 .mn-chat-agent-card:hover {
   border-color: var(--mn-accent);
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
 }
 
 .mn-chat-agent-card__icon {

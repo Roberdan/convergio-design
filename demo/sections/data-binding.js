@@ -17,7 +17,7 @@ export function createDataBindingSection() {
         <!-- Slider → Gauge binding demo -->
         <div class="mn-card-dark" style="padding:var(--space-xl)">
           <h4 class="mn-label" style="margin-bottom:var(--space-lg);color:var(--mn-accent)">Slider → Gauge Binding</h4>
-          <p class="mn-micro" style="color:var(--grigio-chiaro);margin-bottom:var(--space-lg)">Drag a slider — the gauge updates via <code>Maranello.emit</code> and <code>Maranello.updateGauge</code>.</p>
+          <p class="mn-micro" style="color:var(--mn-text-muted);margin-bottom:var(--space-lg)">Drag a slider — the gauge updates via <code>Maranello.emit</code> and <code>Maranello.updateGauge</code>.</p>
           <div style="display:flex;flex-direction:column;gap:var(--space-lg)">
             <div>
               <label class="mn-label" style="display:flex;justify-content:space-between;margin-bottom:var(--space-xs)">
@@ -49,7 +49,7 @@ export function createDataBindingSection() {
         <!-- Live event log -->
         <div class="mn-card-dark" style="padding:var(--space-xl)">
           <h4 class="mn-label" style="margin-bottom:var(--space-lg);color:var(--mn-accent)">Event Bus Log</h4>
-          <p class="mn-micro" style="color:var(--grigio-chiaro);margin-bottom:var(--space-lg)">Events emitted via <code>Maranello.emit</code> appear here in real time.</p>
+          <p class="mn-micro" style="color:var(--mn-text-muted);margin-bottom:var(--space-lg)">Events emitted via <code>Maranello.emit</code> appear here in real time.</p>
           <div id="db-event-log" style="font-family:var(--font-mono,monospace);font-size:11px;line-height:1.6;height:180px;overflow-y:auto;background:rgba(0,0,0,0.4);border:1px solid var(--grigio-scuro);border-radius:6px;padding:var(--space-sm)">
             <span style="color:var(--grigio-medio)">Move a slider to see events…</span>
           </div>
@@ -66,20 +66,20 @@ export function createDataBindingSection() {
         <div class="mn-grid-3" style="gap:var(--space-lg)">
           <div>
             <p class="mn-micro" style="color:var(--grigio-alluminio);margin-bottom:var(--space-xs);font-weight:600">emit / on / off</p>
-            <pre style="margin:0;font-size:11px;color:var(--grigio-chiaro);background:rgba(0,0,0,0.3);padding:var(--space-sm);border-radius:4px;overflow:auto">Maranello.emit('my:event', {v:42});
+            <pre style="margin:0;font-size:11px;color:var(--mn-text-muted);background:rgba(0,0,0,0.3);padding:var(--space-sm);border-radius:4px;overflow:auto">Maranello.emit('my:event', {v:42});
 const h = Maranello.on('my:event', d=>{});
 Maranello.off('my:event', h);</pre>
           </div>
           <div>
             <p class="mn-micro" style="color:var(--grigio-alluminio);margin-bottom:var(--space-xs);font-weight:600">bind() — manual wiring</p>
-            <pre style="margin:0;font-size:11px;color:var(--grigio-chiaro);background:rgba(0,0,0,0.3);padding:var(--space-sm);border-radius:4px;overflow:auto">Maranello.bind(sliderEl, {
+            <pre style="margin:0;font-size:11px;color:var(--mn-text-muted);background:rgba(0,0,0,0.3);padding:var(--space-sm);border-radius:4px;overflow:auto">Maranello.bind(sliderEl, {
   event: 'util:update',
   transform: v => Number(v)
 });</pre>
           </div>
           <div>
             <p class="mn-micro" style="color:var(--grigio-alluminio);margin-bottom:var(--space-xs);font-weight:600">autoBind — declarative</p>
-            <pre style="margin:0;font-size:11px;color:var(--grigio-chiaro);background:rgba(0,0,0,0.3);padding:var(--space-sm);border-radius:4px;overflow:auto">&lt;input data-bind-event="util:update"
+            <pre style="margin:0;font-size:11px;color:var(--mn-text-muted);background:rgba(0,0,0,0.3);padding:var(--space-sm);border-radius:4px;overflow:auto">&lt;input data-bind-event="util:update"
        data-bind-transform="number"&gt;
 Maranello.autoBind(container);</pre>
           </div>

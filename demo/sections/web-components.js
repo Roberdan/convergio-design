@@ -31,10 +31,10 @@ const GROUPS = [
   ] },
   { title: 'Controls', items: [
     { tag: 'mn-ferrari-control', desc: 'Cockpit-grade control wrapper for slider, rotary, and lever inputs.', preview: `<mn-ferrari-control type="slider" options='{"label":"Budget","min":0,"max":100,"value":72}'></mn-ferrari-control>` },
-    { tag: 'mn-theme-toggle', desc: 'Cycles the four demo themes with a compact branded switch.', preview: `<div class="mn-wc-theme-mock" style="display:flex;align-items:center;gap:8px;pointer-events:none" aria-hidden="true"><span style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--mn-accent,#FFC72C);color:#111;font-size:1rem">&#9680;</span><span class="mn-micro" style="color:var(--grigio-chiaro)">Theme Toggle</span></div>` },
+    { tag: 'mn-theme-toggle', desc: 'Cycles the four demo themes with a compact branded switch.', preview: `<div class="mn-wc-theme-mock" style="display:flex;align-items:center;gap:8px;pointer-events:none" aria-hidden="true"><span style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--mn-accent,#FFC72C);color:#111;font-size:1rem">&#9680;</span><span class="mn-micro" style="color:var(--mn-text-muted)">Theme Toggle</span></div>` },
     { tag: 'mn-date-picker', desc: 'Date selector with min/max rules and deployment windows.', preview: `<mn-date-picker value="2026-04-14" min="2026-04-01" max="2026-05-31"></mn-date-picker>` },
     { tag: 'mn-command-palette', desc: 'Keyboard-first action launcher for quick navigation and commands.', preview: `<button class="mn-btn mn-btn--ghost" data-open="wc-palette">Open palette</button><mn-command-palette id="wc-palette" items='${COMMAND_ITEMS}' placeholder="Type a command"></mn-command-palette>` },
-    { tag: 'mn-a11y', desc: 'Floating accessibility hub for contrast, motion, and focus settings.', preview: `<div class="mn-micro" style="color:var(--grigio-chiaro);text-align:center">Floating FAB preview</div><mn-a11y></mn-a11y>` },
+    { tag: 'mn-a11y', desc: 'Floating accessibility hub for contrast, motion, and focus settings.', preview: `<div class="mn-micro" style="color:var(--mn-text-muted);text-align:center">Floating FAB preview</div><mn-a11y></mn-a11y>` },
   ] },
   { title: 'Data', items: [
     { tag: 'mn-data-table', desc: 'Sortable data table for compact pipeline snapshots.', size: 'wide', preview: `<mn-data-table columns='${SMALL_TABLE_COLUMNS}' data='${SMALL_TABLE_ROWS}' page-size="2" compact></mn-data-table>` },

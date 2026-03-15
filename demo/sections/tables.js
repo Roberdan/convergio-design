@@ -36,7 +36,7 @@ export function createTablesSection() {
   section.innerHTML = `
     <style>
       #tables .mn-rich-table__headbtn{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:0;background:none;border:0;color:inherit;font:600 var(--text-caption)/1.2 var(--font-display);text-transform:uppercase;letter-spacing:.06em;cursor:pointer}
-      #tables .mn-rich-table__filter{width:100%;padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.03);color:var(--bianco-caldo);font-size:var(--text-micro)}
+      #tables .mn-rich-table__filter{width:100%;padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.03);color:var(--mn-text);font-size:var(--text-micro)}
       #tables .mn-rich-table__group td{padding:12px;background:rgba(255,199,44,.08);font:700 var(--text-caption)/1 var(--font-display);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
       #tables .mn-rich-table__row:hover{background:rgba(255,199,44,.08)}
       #tables .mn-rich-table__owner{display:flex;align-items:center;gap:10px}#tables .mn-rich-table__avatar{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:rgba(255,199,44,.16);color:var(--mn-accent);font:700 var(--text-micro)/1 var(--font-display)}
@@ -69,7 +69,7 @@ function initTable(section) {
     const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     state.page = Math.min(state.page, pages);
     const pageRows = filtered.slice((state.page - 1) * PAGE_SIZE, state.page * PAGE_SIZE);
-    host.innerHTML = `<div class="mn-table-wrap"><table class="mn-table"><thead><tr>${COLUMNS.map((col) => `<th><button type="button" class="mn-rich-table__headbtn" data-sort="${col.key}">${col.label}<span>${arrow(col.key, state)}</span></button></th>`).join('')}</tr><tr>${COLUMNS.map((col) => `<th><input class="mn-rich-table__filter" data-filter="${col.key}" value="${esc(state.filters[col.key])}" placeholder="Filter"></th>`).join('')}</tr></thead><tbody>${groupedRows(pageRows, state)}</tbody></table></div><div class="mn-rich-table__footer"><span class="mn-micro" style="color:var(--grigio-chiaro)">Showing ${pageRows.length} of ${filtered.length} deployments</span><div class="mn-dots">${Array.from({ length: pages }, (_, index) => `<button class="mn-dot ${index + 1 === state.page ? 'mn-dot--active' : ''}" data-page="${index + 1}" aria-label="Page ${index + 1}"></button>`).join('')}</div></div>`;
+    host.innerHTML = `<div class="mn-table-wrap"><table class="mn-table"><thead><tr>${COLUMNS.map((col) => `<th><button type="button" class="mn-rich-table__headbtn" data-sort="${col.key}">${col.label}<span>${arrow(col.key, state)}</span></button></th>`).join('')}</tr><tr>${COLUMNS.map((col) => `<th><input class="mn-rich-table__filter" data-filter="${col.key}" value="${esc(state.filters[col.key])}" placeholder="Filter"></th>`).join('')}</tr></thead><tbody>${groupedRows(pageRows, state)}</tbody></table></div><div class="mn-rich-table__footer"><span class="mn-micro" style="color:var(--mn-text-muted)">Showing ${pageRows.length} of ${filtered.length} deployments</span><div class="mn-dots">${Array.from({ length: pages }, (_, index) => `<button class="mn-dot ${index + 1 === state.page ? 'mn-dot--active' : ''}" data-page="${index + 1}" aria-label="Page ${index + 1}"></button>`).join('')}</div></div>`;
     bind(host, state, render);
   };
   render();

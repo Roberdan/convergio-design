@@ -18,7 +18,7 @@ export function createHeroSection() {
       <p class="mn-section-number" style="letter-spacing:0.2em;margin-bottom:var(--space-md)">MARANELLO LUCE DESIGN SYSTEM · FOR AI AGENTS</p>
 
       <h1 class="mn-title-hero" style="font-size:clamp(3rem,8vw,6rem);margin-bottom:var(--space-sm);line-height:0.95">
-        <span style="color:var(--mn-accent)">Maranello</span> <span style="color:var(--bianco-caldo,#f5f5f5)">Luce</span> <span style="color:var(--grigio-alluminio)">Design</span>
+        <span style="color:var(--mn-accent)">Maranello</span> <span style="color:var(--mn-text)">Luce</span> <span style="color:var(--grigio-alluminio)">Design</span>
       </h1>
 
       <div class="mn-divider-gold--accent mn-divider-gold" style="margin:var(--space-lg) auto"></div>
@@ -30,7 +30,7 @@ export function createHeroSection() {
       <p class="mn-body" style="max-width:640px;margin:0 auto var(--space-lg);color:var(--grigio-medio);line-height:1.7">
         Inspired by the <a href="https://www.ferrari.com/it-IT/auto/ferrari-luce" target="_blank" style="color:var(--mn-accent);text-decoration:none;border-bottom:1px solid rgba(255,199,44,0.4)">Ferrari Luce</a> interior design language —
         warm leather tones, precision instruments, and cockpit-grade controls.
-        90+ components, 4 themes, Canvas 2D engines for <strong style="color:var(--grigio-chiaro)">agentic AI operations</strong>.
+        90+ components, 4 themes, Canvas 2D engines for <strong style="color:var(--mn-text-muted)">agentic AI operations</strong>.
       </p>
       <p class="mn-micro" style="max-width:640px;margin:0 auto var(--space-lg);color:var(--grigio-medio);text-align:center">
         Part of <a href="https://github.com/Roberdan/MyConvergio" target="_blank" style="color:var(--mn-accent);text-decoration:none">Convergio</a> · Aligned with the <a href="https://github.com/Roberdan/MyConvergio/blob/master/AgenticManifesto.md" target="_blank" style="color:var(--mn-accent);text-decoration:none">Agentic Manifesto</a>
@@ -48,7 +48,7 @@ export function createHeroSection() {
 
       <div class="mn-card-dark" style="max-width:640px;margin:0 auto var(--space-2xl);padding:var(--space-lg) var(--space-xl);border-left:3px solid var(--mn-accent);text-align:left">
         <p class="mn-label" style="color:var(--mn-accent);margin-bottom:var(--space-sm);letter-spacing:0.1em">FROM THE AGENTIC MANIFESTO</p>
-        <p class="mn-body" style="color:var(--grigio-chiaro);font-style:italic;line-height:1.8;margin-bottom:var(--space-sm)">
+        <p class="mn-body" style="color:var(--mn-text-muted);font-style:italic;line-height:1.8;margin-bottom:var(--space-sm)">
           &ldquo;Intent is human, momentum is agent. Impact must reach every mind and body.
           We design from the edge first: disability, language, connectivity.&rdquo;
         </p>
