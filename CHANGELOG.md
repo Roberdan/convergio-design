@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.4.0] - 15 Mar 2026
+
+### Added
+- 9 new semantic CSS tokens: `--sfondo`, `--superficie-card`, `--superficie-input`, `--backdrop`, `--grigio-30`, `--signal-ok-dim`, `--signal-danger-bg`, `--mn-accent-bg`, `--mn-accent-border` — last 4 via `color-mix()` for automatic theme adaptation
+- `--shadow-heavy` shadow token (0 24px 80px rgba(0,0,0,0.5))
+- 5 nav icon aliases: `funnel`, `gantt`, `table`, `heatmap`, `grid`
+- DetailPanel: `tabRenderers` option for custom tab content renderers
+- DetailPanel: `parentLink` option renders `← back` button above title
+- DetailPanel: `externalLinks` option renders icon buttons in header
+- DetailPanel: `person` field type with async `searchFn`, avatar initials dropdown, XSS-safe
+- DetailPanel: `country` field type with 2-letter code badge
+- `initTagsField(el, opts)` — tag chip input widget with add/remove/getTags API
+- `initPersonField(el, opts)` — async person search input with debounce + dropdown
+- `openSearchDrawer(opts)` — search drawer template wrapping `openDrawer()` with results, loading, sections
+- Layout CSS: `mn-heatmap__cell/filter-bar/legend/header` + avorio/colorblind overrides
+- Layout CSS: `layouts-sim-panel-2.css` — guided simulator flow classes (`mn-sim-card`, `mn-sim-step-header`, `mn-sim-kpi-delta`, `mn-sim-stepper`, mutations, talent cards, insights)
+- Layout CSS: `patterns-strip-dashboard.css` — dashboard strip classes (`mn-strip-pipeline`, `mn-strip-gauge-wrap`, `mn-strip-kpi__spark`, `mn-strip-legend`, `mn-strip-board`) with container queries
+
+### Fixed
+- `--grigio-chiaro` avorio override to `#707070` (WCAG AA on ivory background, was #9e9e9e ~2.5:1)
+- FerrariGauge `arcBar` conic gradient: start angle aligned to arc start, colorStops scaled by `arcFrac` (totalSweep/360) — colors now map correctly to value range
+
 ## [4.3.0] - 15 Mar 2026
 
 ### Added

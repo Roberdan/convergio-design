@@ -12080,5 +12080,5 @@ M.charts = {
 registerExtras(M);
 
 // src/ts/index.ts
-var VERSION = "4.3.0";
+var VERSION = "4.4.0";
 //# sourceMappingURL=index.cjs.map
