@@ -43,11 +43,11 @@ body.mn-nero .mn-chart-panel {
   border-color: var(--grigio-scuro);
 }
 body.mn-nero .mn-chart-panel__header { border-bottom-color: var(--grigio-scuro); }
-body.mn-nero .mn-chart-panel__title { color: var(--bianco-caldo); }
+body.mn-nero .mn-chart-panel__title { color: var(--mn-text); }
 body.mn-nero .mn-chart-tooltip {
   background: rgba(0,0,0,0.95);
   border-color: rgba(255,199,44,0.3);
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
 }
 body.mn-nero .mn-chart-tooltip__label { color: var(--grigio-medio); }
 body.mn-nero .mn-live-panel {
@@ -59,17 +59,17 @@ body.mn-nero .mn-flip-counter__digit {
   background: linear-gradient(180deg, #1a1a1a 0%, #111 49.5%, #0a0a0a 50%, #111 100%);
   border-color: var(--grigio-scuro);
 }
-body.mn-nero .mn-flip-counter__digit-face { color: var(--bianco-caldo); }
+body.mn-nero .mn-flip-counter__digit-face { color: var(--mn-text); }
 body.mn-nero .mn-flip-counter__sep { color: var(--grigio-medio); }
-body.mn-nero .mn-donut__value { color: var(--bianco-caldo); }
-body.mn-nero .mn-half-gauge__value { color: var(--bianco-caldo); }
+body.mn-nero .mn-donut__value { color: var(--mn-text); }
+body.mn-nero .mn-half-gauge__value { color: var(--mn-text); }
 body.mn-nero .mn-temp-badge {
   background: rgba(0,0,0,0.8);
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
 }
 body.mn-nero .mn-chart-legend { color: var(--grigio-chiaro); }
-body.mn-nero .mn-progress-ring__label { color: var(--bianco-caldo); }
-body.mn-nero .mn-funnel__stage-label { color: var(--bianco-caldo); }
+body.mn-nero .mn-progress-ring__label { color: var(--mn-text); }
+body.mn-nero .mn-funnel__stage-label { color: var(--mn-text); }
 body.mn-nero .mn-gantt__label { color: var(--grigio-chiaro); }
 
 

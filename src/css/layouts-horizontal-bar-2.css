@@ -4,7 +4,7 @@
   font-size: var(--text-caption);
   font-weight: 600;
   letter-spacing: 0.06em;
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
 }
 .mn-okr__summary-threshold {
   font-size: var(--text-micro);

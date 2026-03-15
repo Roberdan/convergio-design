@@ -19,7 +19,7 @@
 .mn-heatmap__card--gap   { border-color:var(--mn-accent); }
 .mn-heatmap__card__number {
   font-family:var(--font-mono,'Barlow Condensed',sans-serif);
-  font-size:1.75rem; font-weight:700; line-height:1; color:var(--bianco-caldo);
+  font-size:1.75rem; font-weight:700; line-height:1; color:var(--mn-text);
 }
 .mn-heatmap__card--idle  .mn-heatmap__card__number { color:var(--status-warning); }
 .mn-heatmap__card--over  .mn-heatmap__card__number { color:var(--rosso-corsa); }
@@ -49,7 +49,7 @@
 
 /* ── Person info ── */
 .mn-heatmap__person { display:flex; flex-direction:column; min-width:140px; }
-.mn-heatmap__name { font-size:0.85rem; font-weight:500; color:var(--bianco-caldo); white-space:nowrap; }
+.mn-heatmap__name { font-size:0.85rem; font-weight:500; color:var(--mn-text); white-space:nowrap; }
 .mn-heatmap__role {
   font-family:var(--font-mono,'Barlow Condensed',sans-serif);
   font-size:0.7rem; color:var(--grigio-chiaro); white-space:nowrap;
@@ -71,7 +71,7 @@
 .mn-heatmap__value {
   position:absolute; right:6px; top:50%; transform:translateY(-50%);
   font-family:var(--font-mono,'Barlow Condensed',sans-serif);
-  font-size:0.7rem; font-weight:600; color:var(--bianco-caldo);
+  font-size:0.7rem; font-weight:600; color:var(--mn-text);
   text-shadow:0 1px 2px rgba(0,0,0,.6); pointer-events:none;
 }
 

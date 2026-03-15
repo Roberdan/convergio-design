@@ -45,7 +45,7 @@
 }
 .mn-btn-cluster__item:hover {
   background: linear-gradient(180deg, #4a4a48, #3a3a38);
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
   transform: translateY(-1px);
   box-shadow:
     0 3px 8px rgba(0,0,0,0.4),
@@ -135,7 +135,7 @@
 }
 .mn-color-picker__swatch:hover,
 .mn-color-picker__swatch--active {
-  border-color: var(--bianco-caldo);
+  border-color: var(--mn-text);
   transform: scale(1.2);
 }
 

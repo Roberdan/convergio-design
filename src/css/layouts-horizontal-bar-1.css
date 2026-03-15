@@ -142,7 +142,7 @@
   display: grid;
   gap: var(--space-lg);
   font-family: var(--font-body);
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
 }
 .mn-okr__header {
   display: flex;

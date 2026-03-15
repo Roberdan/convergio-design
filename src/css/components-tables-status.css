@@ -35,7 +35,7 @@
 }
 .mn-table thead {
   background: var(--nero-assoluto);
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
 }
 .mn-section-dark .mn-table thead { background: var(--mn-border); }
 .mn-table th {
@@ -141,7 +141,7 @@
   font-family: var(--font-display);
   font-size: var(--text-h3);
   font-weight: 700;
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   display: flex;
