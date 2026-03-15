@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.2] - 15 Mar 2026
+
+### Added
+- **NaSra agent** — built-in AI expert for the design system; covers adaptive token rules, WCAG 2.2, color blindness prevention, and responsive checklist. Auto-loads in Claude Code; one-line adoption for any consumer project.
+- `scripts/check-theme-semantics.sh` — CI gate blocking unscoped `var(--bianco-caldo)` as text color in CSS and JS inline styles
+
+### Fixed
+- Replaced 40+ instances of `var(--bianco-caldo)` / `var(--grigio-chiaro)` with adaptive `var(--mn-text)` / `var(--mn-text-muted)` in 19 CSS files and 23 demo section JS files
+- Dashboard KPI values invisible on Avorio theme (inline style fallback `var(--bianco-caldo,#f5f5f5)`)
+- Demo footer version auto-synced from `package.json` via `scripts/inject-version.mjs`
+
 ## [4.0.0] - 15 Mar 2026
 
 ### Added

@@ -281,3 +281,9 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 - TS: strict mode, no `any`, named exports only
 - Comments: explain WHY, not WHAT, <5% density
 - localStorage theme values: always whitelist `['nero', 'avorio', 'colorblind', 'editorial']` before applying
+
+## AI Agent
+
+NaSra — design system expert (tokens, themes, WCAG 2.2, responsive, CI).
+
+@.github/agents/NaSra.agent.md

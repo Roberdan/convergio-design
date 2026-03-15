@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-4.0.0-FFC72C?style=flat-square">
+  <img src="https://img.shields.io/badge/version-4.0.2-FFC72C?style=flat-square">
   <img src="https://img.shields.io/badge/license-MPL_2.0-green?style=flat-square">
   <img src="https://img.shields.io/badge/tests-354_passed-00A651?style=flat-square">
   <img src="https://img.shields.io/badge/zero_deps-vanilla_TS-4EA8DE?style=flat-square">
@@ -71,18 +71,38 @@
 ## Install
 
 ```bash
-npm install github:Roberdan/MaranelloLuceDesign#v4.0.0
+npm install github:Roberdan/MaranelloLuceDesign#v4.0.2
 ```
 
 Or CDN:
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Roberdan/MaranelloLuceDesign@v4.0.0/dist/css/index.css">
-<script src="https://cdn.jsdelivr.net/gh/Roberdan/MaranelloLuceDesign@v4.0.0/dist/iife/maranello.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Roberdan/MaranelloLuceDesign@v4.0.2/dist/css/index.css">
+<script src="https://cdn.jsdelivr.net/gh/Roberdan/MaranelloLuceDesign@v4.0.2/dist/iife/maranello.min.js"></script>
 ```
 
 > **Breaking change (v4.0.0):** Glass theme removed. Themes are now **editorial · nero · avorio · colorblind**. See [CHANGELOG.md](CHANGELOG.md).
 
 > **New in v4.0.0:** `Maranello.palette()` — reads all 20 semantic color tokens live from the active theme, no caching. Use it inside render functions instead of capturing CSS vars at load time.
+
+## NaSra — Built-in AI Design System Expert
+
+Maranello ships with **NaSra**, an AI agent that knows every token, theme, WCAG rule, and
+responsive pattern. She prevents regressions and guides correct usage across all 4 themes.
+
+**In this repo (Claude Code) — auto-loads:**
+```
+@NaSra what token should I use for a dashboard data label?
+@NaSra is this component responsive? does it work on Avorio?
+@NaSra check this component for WCAG 2.2 AA compliance
+```
+
+**In your project — one line in `CLAUDE.md`:**
+```
+@node_modules/maranello-luce-design-business/.github/agents/NaSra.agent.md
+```
+
+NaSra covers: adaptive token rules · all 4 themes · WCAG 2.2 AA · color blindness prevention ·
+responsive checklist · CI constitution. Full guide: [`.github/agents/README.md`](.github/agents/README.md)
 
 ## For AI Agents → [AGENT.md](AGENT.md)
 
