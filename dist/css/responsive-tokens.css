@@ -1,0 +1,39 @@
+/* MARANELLO DESIGN SYSTEM — Responsive Token Overrides v3.4.0 */
+
+@layer tokens {
+
+/* ── Mobile: compact spacing + full-width content ── */
+@media (max-width: 640px) {
+  :root {
+    --space-5xl: 3rem;
+    --space-4xl: 2rem;
+    --space-3xl: 1.5rem;
+    --space-2xl: 1.5rem;
+    --space-xxl: 1.5rem;
+    --space-xl:  1.25rem;
+    --space-lg:  1rem;
+
+    --content-width:  100%;
+    --content-narrow: 100%;
+
+    --text-hero: clamp(1.75rem, 6vw, 2.5rem);
+    --text-xxl:  clamp(1.25rem, 4vw, 1.75rem);
+    --text-h1:   clamp(1.25rem, 4vw, 1.75rem);
+  }
+}
+
+/* ── Tablet: intermediate spacing ── */
+@media (min-width: 641px) and (max-width: 1024px) {
+  :root {
+    --space-5xl: 5rem;
+    --space-4xl: 3.5rem;
+    --space-3xl: 2.5rem;
+    --space-2xl: 2rem;
+    --space-xxl: 2rem;
+
+    --content-width:  100%;
+    --content-narrow: 100%;
+  }
+}
+
+} /* end @layer tokens */

@@ -109,13 +109,20 @@ async function render(name) {
 // Hash navigation
 window.addEventListener('hashchange', () => render(currentSection()));
 
-// Theme label sync
+// Theme label sync — reads body class directly so it works before Maranello IIFE loads
+function getActiveTheme() {
+  const cl = document.body.classList;
+  if (cl.contains('mn-avorio')) return 'avorio';
+  if (cl.contains('mn-colorblind')) return 'colorblind';
+  if (cl.contains('mn-nero')) return 'nero';
+  return window.Maranello?.getTheme?.() ?? 'editorial';
+}
+
 function updateThemeLabel() {
   const label = document.getElementById('demo-theme-label');
   if (!label) return;
-  const theme = window.Maranello?.getTheme?.() ?? 'nero';
   const names = { nero: 'Nero', avorio: 'Avorio', colorblind: 'Colorblind', editorial: 'Editorial' };
-  label.textContent = `Current: ${names[theme] ?? theme}`;
+  label.textContent = `Current: ${names[getActiveTheme()] ?? getActiveTheme()}`;
 }
 
 document.addEventListener('mn-theme-change', (event) => {

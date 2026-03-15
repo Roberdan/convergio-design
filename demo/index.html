@@ -46,7 +46,16 @@
     }
   </style>
 </head>
-<body class="mn-nero mn-glass">
+<body class="mn-nero">
+  <script>/* Restore saved theme before first paint to prevent flash of wrong theme */
+    (function () {
+      const t = localStorage.getItem('mn-theme');
+      if (t && t !== 'editorial') {
+        document.body.classList.remove('mn-nero', 'mn-avorio', 'mn-colorblind');
+        document.body.classList.add('mn-' + t);
+      }
+    })();
+  </script>
   <a href="#demo-root" class="mn-skip-link">Skip to main content</a>
   <nav class="demo-nav" aria-label="Demo navigation">
     <a href="#hero" class="demo-nav__brand">Maranello Luce</a>
