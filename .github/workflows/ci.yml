@@ -128,3 +128,6 @@ jobs:
           grep -q 'skip' demo/index.html || { echo "FAIL: Missing skip navigation link"; exit 1; }
           # Check for aria-hidden on decorative SVGs
           echo "✓ Basic accessibility checks passed"
+
+      - name: Constitution — Theme semantic tokens
+        run: bash scripts/check-theme-semantics.sh

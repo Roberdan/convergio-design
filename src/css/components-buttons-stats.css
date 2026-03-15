@@ -50,7 +50,7 @@
 .mn-btn--ghost-light {
   background: transparent;
   border-color: rgba(255,255,255,0.4);
-  color: var(--bianco-caldo);
+  color: var(--bianco-caldo); /* intentional: white ghost btn for dark sections */
 }
 .mn-btn--ghost-light:hover {
   background: var(--bianco-puro);
