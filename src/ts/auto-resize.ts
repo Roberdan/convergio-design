@@ -76,8 +76,14 @@ export function autoResizeAll(
     if (!type) return;
     const factory = lib[type] as ChartFactory;
     if (typeof factory !== 'function') return;
-    const data = JSON.parse(canvas.dataset.chartData || '[]');
-    const opts = JSON.parse(canvas.dataset.chartOptions || '{}');
+    let data: unknown[], opts: Record<string, unknown>;
+    try {
+      data = JSON.parse(canvas.dataset.chartData || '[]');
+      opts = JSON.parse(canvas.dataset.chartOptions || '{}');
+    } catch {
+      data = [];
+      opts = {};
+    }
     cleanups.push(autoResize(canvas, factory, data, opts));
   });
 

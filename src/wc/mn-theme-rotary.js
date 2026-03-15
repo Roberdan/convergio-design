@@ -25,7 +25,8 @@ class MnThemeRotary extends HTMLElement {
 
   connectedCallback() {
     // Restore saved theme before rendering so the dial reflects correct position
-    const saved = localStorage.getItem('mn-theme');
+    let saved = null;
+    try { saved = localStorage.getItem('mn-theme'); } catch (_) { /* storage blocked */ }
     if (saved) {
       document.body.classList.remove('mn-nero', 'mn-avorio', 'mn-colorblind');
       if (saved !== 'editorial') document.body.classList.add('mn-' + saved);
@@ -140,7 +141,7 @@ class MnThemeRotary extends HTMLElement {
       const map = { nero: 'mn-nero', avorio: 'mn-avorio', colorblind: 'mn-colorblind' };
       if (map[mode]) document.body.classList.add(map[mode]);
     }
-    localStorage.setItem('mn-theme', mode);
+    try { localStorage.setItem('mn-theme', mode); } catch (_) { /* storage blocked */ }
     this._update();
     this.dispatchEvent(new CustomEvent('mn-theme-change', {
       detail: { theme: mode }, bubbles: true, composed: true,

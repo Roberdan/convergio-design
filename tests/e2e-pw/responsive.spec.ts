@@ -15,9 +15,9 @@ test.describe('Responsive — Mobile (375px)', () => {
   test('sidebar is off-canvas at 375px', async ({ page }) => {
     await page.goto('/demo/e2e.html');
     const sidebar = page.locator('[data-testid="sidebar"]');
-    await expect(sidebar).toBeVisible();
+    // Sidebar exists in DOM but is off-canvas (width 0 or translated off-screen)
+    await expect(sidebar).toHaveCount(1);
     const box = await sidebar.boundingBox();
-    // Sidebar should be translated off-screen or have zero width
     expect(box === null || box.width === 0 || box.x + box.width <= 0).toBeTruthy();
   });
 

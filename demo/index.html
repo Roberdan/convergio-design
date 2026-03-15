@@ -49,11 +49,13 @@
 <body class="mn-nero">
   <script>/* Restore saved theme before first paint to prevent flash of wrong theme */
     (function () {
-      const t = localStorage.getItem('mn-theme');
-      if (t && t !== 'editorial') {
-        document.body.classList.remove('mn-nero', 'mn-avorio', 'mn-colorblind');
-        document.body.classList.add('mn-' + t);
-      }
+      try {
+        const t = localStorage.getItem('mn-theme');
+        if (t && t !== 'editorial') {
+          document.body.classList.remove('mn-nero', 'mn-avorio', 'mn-colorblind');
+          document.body.classList.add('mn-' + t);
+        }
+      } catch (_) { /* storage blocked or unavailable */ }
     })();
   </script>
   <a href="#demo-root" class="mn-skip-link">Skip to main content</a>

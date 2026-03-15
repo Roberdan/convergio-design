@@ -2077,8 +2077,14 @@ function autoResizeAll(selector = "canvas[data-auto-resize]", chartLib) {
     if (!type) return;
     const factory = lib[type];
     if (typeof factory !== "function") return;
-    const data = JSON.parse(canvas.dataset.chartData || "[]");
-    const opts = JSON.parse(canvas.dataset.chartOptions || "{}");
+    let data, opts;
+    try {
+      data = JSON.parse(canvas.dataset.chartData || "[]");
+      opts = JSON.parse(canvas.dataset.chartOptions || "{}");
+    } catch {
+      data = [];
+      opts = {};
+    }
     cleanups.push(autoResize(canvas, factory, data, opts));
   });
   return () => cleanups.forEach((fn) => fn());
