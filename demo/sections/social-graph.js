@@ -114,105 +114,105 @@ function drawFallbackGraph(host, opts) {
   canvas.style.cssText = 'width:100%;height:100%;display:block;touch-action:none;cursor:default;';
   host.appendChild(canvas);
   const dpr = window.devicePixelRatio || 1;
-  const nodes = opts.nodes.map((n) => ({ ...n, vx: 0, vy: 0 }));
+  // Virtual coordinate space — matches buildSocialNetworkData (cx=450, cy=250)
+  const VW = 900, VH = 500;
+  const nodes = opts.nodes.map((n) => ({ ...n, ox: n.x, oy: n.y }));
   const nodeMap = new Map(nodes.map((n) => [n.id, n]));
   let drag = null;
+
   const resize = () => {
     const r = host.getBoundingClientRect();
-    canvas.width = Math.round(Math.max(320, r.width) * dpr);
-    canvas.height = Math.round(Math.max(260, r.height) * dpr);
+    const w = Math.max(320, r.width), h = Math.max(260, r.height);
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    const sx = w / VW, sy = h / VH;
+    // Scale positions from virtual space — skip dragged node
+    nodes.forEach((n) => { if (drag?.id === n.id) return; n.x = n.ox * sx; n.y = n.oy * sy; });
+    draw();
   };
+
   const point = (e) => { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
-  const hit = (x, y) => [...nodes].reverse().find((n) => Math.hypot(x - n.x, y - n.y) <= n.size + 3) || null;
-  const step = () => {
-    const w = canvas.width / dpr; const h = canvas.height / dpr;
-    nodes.forEach((n) => { n.fx = (w / 2 - n.x) * 0.004; n.fy = (h / 2 - n.y) * 0.004; });
-    for (let i = 0; i < nodes.length; i += 1) for (let j = i + 1; j < nodes.length; j += 1) {
-      const a = nodes[i], b = nodes[j], dx = a.x - b.x, dy = a.y - b.y, dist = Math.max(10, Math.hypot(dx, dy));
-      const rep = 3800 / (dist * dist), nx = dx / dist, ny = dy / dist;
-      a.fx += nx * rep; a.fy += ny * rep; b.fx -= nx * rep; b.fy -= ny * rep;
-      const overlap = (a.size + b.size + 10) - dist;
-      if (overlap > 0) { a.fx += nx * overlap * 0.12; a.fy += ny * overlap * 0.12; b.fx -= nx * overlap * 0.12; b.fy -= ny * overlap * 0.12; }
-    }
-    opts.edges.forEach((e) => {
-      const a = nodeMap.get(e.source), b = nodeMap.get(e.target);
-      if (!a || !b) return;
-      const dx = b.x - a.x, dy = b.y - a.y, dist = Math.max(12, Math.hypot(dx, dy));
-      const spring = (dist - 70) * 0.0026 * (e.weight / 1.5), nx = dx / dist, ny = dy / dist;
-      a.fx += nx * spring; a.fy += ny * spring; b.fx -= nx * spring; b.fy -= ny * spring;
-    });
-    nodes.forEach((n) => {
-      if (drag?.id === n.id) return;
-      n.vx = (n.vx + n.fx) * 0.9; n.vy = (n.vy + n.fy) * 0.9;
-      n.x = clamp(n.x + n.vx, n.size + 8, w - n.size - 8);
-      n.y = clamp(n.y + n.vy, n.size + 8, h - n.size - 8);
-    });
-  };
+  const hit = (x, y) => [...nodes].reverse().find((n) => Math.hypot(x - n.x, y - n.y) <= n.size + 4) ?? null;
+
   const draw = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const w = canvas.width / dpr; const h = canvas.height / dpr;
+    const w = canvas.width / dpr, h = canvas.height / dpr;
     ctx.clearRect(0, 0, w, h);
-    let edgeIdx = 0;
-    // Draw edges — straight lines with gradient, no blur (performance + clarity)
-    ctx.globalAlpha = 1;
-    ctx.lineCap = 'round';
+
+    // Team cluster halos — subtle ring around each team
+    const teams = new Map();
+    nodes.forEach((n) => { if (!teams.has(n.group)) teams.set(n.group, []); teams.get(n.group).push(n); });
+    teams.forEach((members, team) => {
+      const col = opts.groups[team] || '#FFC72C';
+      const tcx = members.reduce((s, n) => s + n.x, 0) / members.length;
+      const tcy = members.reduce((s, n) => s + n.y, 0) / members.length;
+      const rad = Math.max(...members.map((n) => Math.hypot(n.x - tcx, n.y - tcy) + n.size + 22));
+      ctx.globalAlpha = 0.04; ctx.fillStyle = col;
+      ctx.beginPath(); ctx.arc(tcx, tcy, rad, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 0.09; ctx.strokeStyle = col; ctx.lineWidth = 0.8;
+      ctx.setLineDash([3, 5]);
+      ctx.beginPath(); ctx.arc(tcx, tcy, rad, 0, Math.PI * 2); ctx.stroke();
+      ctx.setLineDash([]);
+    });
+
+    // Edges — quadratic bezier curves with gradient
+    ctx.globalAlpha = 1; ctx.lineCap = 'round';
     opts.edges.forEach((e) => {
       const a = nodeMap.get(e.source), b = nodeMap.get(e.target);
       if (!a || !b) return;
       const colA = opts.groups[a.group] || '#FFC72C';
       const colB = opts.groups[b.group] || '#FFC72C';
+      // Perpendicular control point gives gentle arc
+      const mx = (a.x + b.x) / 2 + (b.y - a.y) * 0.12;
+      const my = (a.y + b.y) / 2 - (b.x - a.x) * 0.12;
       const grad = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
-      grad.addColorStop(0, colA + '55'); grad.addColorStop(1, colB + '55');
-      ctx.strokeStyle = grad; ctx.lineWidth = Math.max(0.8, e.weight * 0.8);
-      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      grad.addColorStop(0, colA + '50'); grad.addColorStop(1, colB + '50');
+      ctx.strokeStyle = grad; ctx.lineWidth = Math.max(0.6, e.weight * 0.7);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y);
+      ctx.quadraticCurveTo(mx, my, b.x, b.y); ctx.stroke();
     });
-    // Draw nodes — ring glow via manual alpha ring, no blur filter
+
+    // Nodes — layered glow + fill + border + initials + label
     nodes.forEach((n) => {
       const col = opts.groups[n.group] || '#FFC72C';
       const r = n.size;
-      // Outer soft ring
-      ctx.globalAlpha = 0.18; ctx.fillStyle = col;
+      ctx.globalAlpha = 0.07; ctx.fillStyle = col;
+      ctx.beginPath(); ctx.arc(n.x, n.y, r + 12, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 0.15;
       ctx.beginPath(); ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2); ctx.fill();
-      // Solid node
       ctx.globalAlpha = 1; ctx.fillStyle = col;
       ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2); ctx.fill();
-      // White ring border
-      ctx.strokeStyle = 'rgba(255,255,255,0.45)'; ctx.lineWidth = 1.5;
+      ctx.strokeStyle = n.lead ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.4)';
+      ctx.lineWidth = n.lead ? 2 : 1;
       ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2); ctx.stroke();
-      // Initials inside
       ctx.fillStyle = '#0a0a0a';
-      ctx.font = `700 ${Math.max(9, Math.round(r * 0.72))}px 'Barlow Condensed',sans-serif`;
+      ctx.font = `700 ${Math.max(8, Math.round(r * 0.72))}px 'Barlow Condensed',sans-serif`;
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText(n.avatar, n.x, n.y + 0.5);
-      // Short label below node (first word only, leads get full first two words)
-      const shortLbl = n.lead
-        ? n.label.split(' ').slice(0, 2).join(' ')
-        : n.label.split(' ')[0];
-      ctx.fillStyle = n.lead ? col : 'rgba(200,200,200,0.55)';
+      const lbl = n.lead ? n.label.split(' ').slice(0, 2).join(' ') : n.label.split(' ')[0];
+      ctx.fillStyle = n.lead ? col : 'rgba(205,205,205,0.65)';
       ctx.font = `${n.lead ? '600' : '400'} ${n.lead ? 9 : 8}px 'Barlow Condensed',sans-serif`;
-      ctx.fillText(shortLbl, n.x, n.y + r + 10);
+      ctx.fillText(lbl, n.x, n.y + r + 11);
     });
   };
-  const animate = () => {
-    // Stop RAF when canvas is removed from DOM (prevents leak on section change)
-    if (!canvas.isConnected) return;
-    step(); draw(); requestAnimationFrame(animate);
-  };
+
   canvas.addEventListener('mousedown', (e) => { const p = point(e); drag = hit(p.x, p.y); });
   canvas.addEventListener('mousemove', (e) => {
     const p = point(e);
-    if (drag) { drag.x = p.x; drag.y = p.y; opts.onHover?.(drag); canvas.style.cursor = 'grabbing'; return; }
-    const node = hit(p.x, p.y); opts.onHover?.(node || null); canvas.style.cursor = node ? 'pointer' : 'default';
+    if (drag) { drag.x = p.x; drag.y = p.y; opts.onHover?.(drag); canvas.style.cursor = 'grabbing'; draw(); return; }
+    const node = hit(p.x, p.y); opts.onHover?.(node ?? null); canvas.style.cursor = node ? 'pointer' : 'default';
   });
   window.addEventListener('mouseup', () => { drag = null; });
   canvas.addEventListener('mouseleave', () => opts.onHover?.(null));
+  canvas.addEventListener('click', (e) => {
+    const p = point(e); const n = hit(p.x, p.y);
+    if (n) opts.onClick?.(n);
+  });
   resize();
   new ResizeObserver(resize).observe(host);
-  animate();
 }
 
-function toStroke(weight) { return clamp(0.5 + ((weight - 0.5) / 1.5) * 2.5, 0.5, 3); }
+function toStroke(weight) { return Math.min(3, Math.max(0.5, 0.5 + ((weight - 0.5) / 1.5) * 2.5)); }
 function initials(label) { return label.split(' ').filter(Boolean).slice(0, 2).map((s) => s[0]).join('').toUpperCase(); }
-function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
