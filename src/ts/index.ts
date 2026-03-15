@@ -1,7 +1,4 @@
-/**
- * Maranello Luce Design - Main ES module entry point
- * Re-exports the public API surface for library consumers.
- */
+/** Maranello Luce Design - Main ES module entry point. Public API surface. */
 
 export const VERSION = '4.3.0';
 
@@ -163,6 +160,10 @@ export {
   initCharCounter, initSearchClear,
 } from './forms-widgets';
 export type { TagInputApi, FileUploadApi, FormStepsApi } from './forms-widgets';
+export { initTagsField } from './forms-tags-field';
+export type { TagsFieldOptions, TagsFieldApi } from './forms-tags-field';
+export { initPersonField } from './forms-person-field';
+export type { PersonResult, PersonFieldOptions, PersonFieldApi } from './forms-person-field';
 
 // Progress ring
 export { progressRing } from './progress-ring';
@@ -237,6 +238,12 @@ export * from './map-view-helpers';
 
 export { gridLayout } from './grid-layout';
 export type { GridTemplateName, GridLayoutOptions, GridLayoutController } from './grid-layout';
+
+// Search drawer
+export { openSearchDrawer } from './search-drawer';
+export type {
+  SearchDrawerOptions, SearchDrawerResult, SearchDrawerController,
+} from './search-drawer';
 
 // Maranello facade (auto-init)
 export { Maranello } from './maranello';
