@@ -105,7 +105,7 @@
   color: var(--mn-accent, var(--giallo-ferrari, #FFC72C));
   transition: opacity 0.15s, color 0.15s;
 }
-.mn-detail-panel__cal-btn:hover { opacity: 1; color: var(--bianco-caldo, #f5f5f5); }
+.mn-detail-panel__cal-btn:hover { opacity: 1; color: var(--mn-text); }
 
 /* ── Person field ── */
 .mn-detail-panel__person {

@@ -3,7 +3,7 @@
 
   cursor: pointer;
 }
-.mn-chat-agent-card:hover { border-color: var(--mn-accent); color: var(--bianco-caldo); }
+.mn-chat-agent-card:hover { border-color: var(--mn-accent); color: var(--mn-text); }
 .mn-chat-agent-card__icon { font-size: 24px; line-height: 1; color: var(--mn-accent); display: inline-flex; align-items: center; justify-content: center; }
 .mn-chat-agent-card__icon svg { width: 28px; height: 28px; }
 .mn-chat-agent-card__label { line-height: 1.2; }

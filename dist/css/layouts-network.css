@@ -34,7 +34,7 @@ body.mn-avorio .mn-network__canvas { background:var(--bianco-1,#faf8f3); }
 .mn-detail-resource__section { margin-bottom:16px; }
 .mn-detail-resource__section-title {
   font-family:var(--font-display,'Outfit',sans-serif); font-size:0.75rem;
-  font-weight:600; color:var(--bianco-caldo); text-transform:uppercase;
+  font-weight:600; color:var(--mn-text); text-transform:uppercase;
   letter-spacing:0.04em; margin-bottom:8px; display:flex; align-items:center; gap:6px;
 }
 .mn-detail-resource__empty { font-size:0.7rem; color:var(--grigio-medio); font-style:italic; }
@@ -47,7 +47,7 @@ body.mn-avorio .mn-network__canvas { background:var(--bianco-1,#faf8f3); }
 }
 .mn-detail-resource__eng:hover { background:var(--nero-3,#222); }
 .mn-detail-resource__eng-title {
-  font-size:0.72rem; font-weight:600; color:var(--bianco-caldo); margin-bottom:2px;
+  font-size:0.72rem; font-weight:600; color:var(--mn-text); margin-bottom:2px;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .mn-detail-resource__eng-meta {
@@ -66,7 +66,7 @@ body.mn-avorio .mn-network__canvas { background:var(--bianco-1,#faf8f3); }
   font-size:0.6rem; font-weight:700; color:var(--nero-1); flex-shrink:0;
 }
 .mn-detail-resource__mate-info { display:flex; flex-direction:column; min-width:0; }
-.mn-detail-resource__mate-name { font-size:0.68rem; font-weight:600; color:var(--bianco-caldo); }
+.mn-detail-resource__mate-name { font-size:0.68rem; font-weight:600; color:var(--mn-text); }
 .mn-detail-resource__mate-shared {
   font-size:0.58rem; color:var(--grigio-medio);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px;

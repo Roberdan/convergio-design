@@ -96,7 +96,7 @@
 }
 .mn-field__clear:hover {
   background: var(--grigio-medio);
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
 }
 .mn-form-input:not(:placeholder-shown) ~ .mn-field__clear {
   display: flex;
@@ -219,7 +219,7 @@
 }
 .mn-form-select option {
   background: var(--nero-soft);
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
 }
 
 /* Multi-select */

@@ -48,7 +48,7 @@
 /* Secondary — ghost outline */
 .mn-form-btn--secondary {
   background: transparent;
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
   border-color: var(--grigio-scuro);
 }
 .mn-form-btn--secondary:hover {
@@ -76,7 +76,7 @@
 }
 .mn-form-btn--ghost:hover {
   background: rgba(255, 255, 255, 0.06);
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
 }
 
 /* Success — confirm */

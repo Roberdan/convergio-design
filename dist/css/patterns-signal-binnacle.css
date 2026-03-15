@@ -23,7 +23,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
 }
 
 /* Ivory section context */
@@ -52,7 +52,7 @@
     inset 0 -1px 0 rgba(0,0,0,0.4),
     inset 0 4px 20px rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.04);
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
 }
 
 .mn-binnacle__header {

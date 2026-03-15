@@ -21,7 +21,7 @@
   font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 700;
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
   line-height: 1;
 }
 .mn-climate__unit {
@@ -97,7 +97,7 @@ body.mn-nero .mn-climate {
   background: linear-gradient(180deg, var(--mn-surface-nero-2), var(--mn-surface-nero-3));
   border-color: var(--grigio-scuro);
 }
-body.mn-nero .mn-climate__temp { color: var(--bianco-caldo); }
+body.mn-nero .mn-climate__temp { color: var(--mn-text); }
 body.mn-nero .mn-btn-cluster {
   background: linear-gradient(180deg, var(--mn-surface-nero-2), var(--mn-surface-nero-3));
 }

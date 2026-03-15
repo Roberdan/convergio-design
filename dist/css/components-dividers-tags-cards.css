@@ -57,7 +57,7 @@
 }
 .mn-tag--light {
   border-color: rgba(255,255,255,0.3);
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
 }
 .mn-tag--light:hover,
 .mn-tag--light.mn-tag--active {

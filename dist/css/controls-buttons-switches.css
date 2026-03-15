@@ -23,7 +23,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--bianco-caldo);
+  color: var(--mn-text);
   background: linear-gradient(180deg, #4a4a48 0%, #3a3a38 40%, #2a2a28 100%);
   border: none;
   border-radius: var(--radius-md);
