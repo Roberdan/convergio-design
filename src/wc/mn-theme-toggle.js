@@ -53,7 +53,8 @@ class MnThemeToggle extends HTMLElement {
     this._btn = document.createElement('button');
     this._btn.className = 'mn-theme-btn';
     this._btn.setAttribute('aria-label', 'Toggle theme');
-    this._btn.addEventListener('click', () => this._cycle());
+    this._onBtnClick = () => this._cycle();
+    this._btn.addEventListener('click', this._onBtnClick);
 
     this.shadowRoot.append(tokens, style, this._btn);
   }
@@ -69,6 +70,10 @@ class MnThemeToggle extends HTMLElement {
       if (idx >= 0) this._idx = idx;
     }
     this._applyTheme(false);
+  }
+
+  disconnectedCallback() {
+    this._btn.removeEventListener('click', this._onBtnClick);
   }
 
   attributeChangedCallback(name, oldVal, newVal) {

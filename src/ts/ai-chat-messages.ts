@@ -103,7 +103,12 @@ export function initMessages(state: ChatUIState, els: ChatUIElements, opts: Requ
     inputEl.value = '';
     resetInputHeight();
     updateSendVisibility();
-    if (opts.onSend) { setTyping(true); handleResult(opts.onSend(text)); }
+    try {
+      if (opts.onSend) { setTyping(true); handleResult(opts.onSend(text)); }
+    } catch (err) {
+      setTyping(false);
+      addMessage('ai', `Error: ${(err as Error).message ?? String(err)}`);
+    }
   }
 
   function handleQuickAction(action: string): void {
