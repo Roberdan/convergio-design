@@ -1,0 +1,390 @@
+meta:
+  name: "Full Audit Fix v4.11.0"
+  project: MaranelloLuceDesign
+  description: >
+    Fix all issues from MaranelloLuceDesign-Assessment-2026-03-16.md:
+    5 critical (C1-C5), 9 high (A1-A9), 6 medium (M1-M6).
+    Strategy section rendering, XSS, colorblind theme, 22 unit tests,
+    WC lifecycle, API cleanup, documentation.
+  version: "4.11.0"
+  parallelization: wave-parallel
+  model_strategy: opus-execution
+  excluded: >
+    M1 (inline styles), M2 (API parameter tables), M3 (WC TypeScript defs),
+    M4 (CSS-only demo), M5 (responsive demo) — deferred to v4.12.0.
+    These are documentation/demo polish items, not functional bugs.
+
+requirements:
+  F-01: "Fix XSS in search-drawer.ts:147 — validate badgeColor with isValidColor()"
+  F-02: "Fix strategy section rendering — BCG is Canvas-only (no CSS needed), diagnose + fix all 5 empty components"
+  F-03: "Fix ai-chat sync error — wrap onSend() in try/catch (ai-chat-messages.ts:106)"
+  F-04: "Replace RGBA hardcoded in integration-status.css:14-18 with color-mix + signal tokens"
+  F-05: "Replace 7x rgba(220,0,0,...) in themes-avorio-layouts.css with color-mix + var(--rosso-corsa)"
+  F-06: "Fix forms-themes-misc.css:22 focus ring — color-mix instead of hardcoded RGBA"
+  F-07: "Create colorblind theme files (components + layouts) for WCAG 2.2 AA completeness"
+  F-08: "Fix mn-tab import missing in registerAll() — src/wc/index.ts"
+  F-09: "Add disconnectedCallback to mn-theme-toggle.js for event listener cleanup"
+  F-10: "Register mn-section-nav in WC_TAGS + registerAll() in src/wc/index.ts"
+  F-11: "Add destroy() return to initOrgTree() in src/ts/controls.ts for cleanup"
+  F-12: "Add @media (prefers-contrast: more) to src/css/accessibility.css"
+  F-13: "Unit tests: userTable, auditLog, agentCostBreakdown, costTimeline, businessModelCanvas, agentTrace"
+  F-14: "Unit tests: tokenMeter, streamingText, riskMatrix, kpiScorecard, cohortGrid, approvalChain"
+  F-15: "Unit tests: bcgMatrix, nineBoxMatrix, swotMatrix, decisionMatrix, waterfallChart, confidenceChart"
+  F-16: "Unit tests: activityFeed, bulletChart, notificationCenter, dateRangePicker"
+  F-17: "Update DATA_CONTRACTS.md from v3.1.0 to v4.11.0 — add 22 missing component APIs"
+  F-18: "Update components.json + components-detail.json to v4.11.0"
+
+waves:
+  - id: W1
+    name: "Security + Critical Rendering"
+    parallel: true
+    tasks:
+      - id: T1-1
+        title: "XSS fix: search-drawer badgeColor"
+        requirements: [F-01]
+        executor: task-executor
+        model: opus
+        effort: S
+        description: |
+          File: src/ts/search-drawer.ts line 147.
+          Current: if (result.badgeColor) badge.style.backgroundColor = result.badgeColor;
+          Fix: import { isValidColor } from './core/sanitize';
+               if (result.badgeColor && isValidColor(result.badgeColor)) badge.style.backgroundColor = result.badgeColor;
+          isValidColor() already exists in src/ts/core/sanitize.ts and is used in 31+ locations.
+        verify:
+          - "grep 'isValidColor' src/ts/search-drawer.ts shows import + usage"
+          - "npx tsc --noEmit passes"
+
+      - id: T1-2
+        title: "Strategy section: diagnose + fix all 5 empty components"
+        requirements: [F-02]
+        executor: task-executor
+        model: opus
+        effort: M
+        description: |
+          All 5 strategy components are in IIFE bundle + exported on window.Maranello.
+          BCG Matrix is CANVAS-ONLY (charts-bcg-matrix.ts, 250 lines, uses chartHiDpi).
+          No CSS file is needed for BCG — it renders directly to canvas.
+          Nine-Box, Decision Matrix, BMC, SWOT are DOM-based with existing CSS files.
+
+          DIAGNOSE why ALL 5 show empty cards in the demo:
+          1. Read demo/sections/strategy.js — check if const M = window.Maranello is captured
+             before the IIFE loads (timing issue). The rAF callback at line 176 uses M.
+          2. Serve the demo locally: npx serve . -l 3333 & then check browser console for JS errors.
+          3. If M.bcgMatrix exists but canvas doesn't render: check canvas width/height attributes
+             (CSS width:100% != canvas pixel buffer). chartHiDpi should handle this.
+          4. If M.nineBoxMatrix/decisionMatrix/etc exist but DOM is empty: check if the container
+             elements (#str-9box, #str-dm, #str-bmc, #str-swot) are found by querySelector.
+          5. The null guards added recently (if M.bcgMatrix, if M.nineBoxMatrix etc) may silently
+             skip rendering if M is undefined. Verify M is populated before rAF callback fires.
+
+          FIX whatever root cause is found. Common fixes:
+          - Move M capture inside rAF: const M = window.Maranello; inside the callback
+          - Add canvas.width/canvas.height attributes alongside CSS dimensions
+          - Add error logging: try { M.bcgMatrix(...) } catch(e) { console.error('BCG:', e); }
+        verify:
+          - "grep 'bcgMatrix\\|nineBoxMatrix\\|decisionMatrix\\|businessModelCanvas\\|swotMatrix' demo/sections/strategy.js shows all 5 called"
+          - "build-digest.sh exits 0"
+          - "Serve demo locally and verify strategy section renders all 5 components"
+
+      - id: T1-3
+        title: "Chat async error + RGBA src fixes"
+        requirements: [F-03, F-04, F-05, F-06]
+        executor: task-executor
+        model: opus
+        effort: M
+        description: |
+          A. src/ts/ai-chat-messages.ts line 106 — wrap onSend in try/catch:
+             try { if (opts.onSend) { setTyping(true); handleResult(opts.onSend(text)); } }
+             catch (err) { setTyping(false); addMessage('ai', 'Error: ' + ((err as Error).message ?? String(err))); }
+
+          B. src/css/integration-status.css lines 14-18 — replace 4 RGBA:
+             .mn-row-done { background: color-mix(in srgb, var(--signal-ok) 6%, transparent); }
+             .mn-row-in-progress { background: color-mix(in srgb, var(--signal-warning) 6%, transparent); }
+             .mn-row-blocked { background: color-mix(in srgb, var(--signal-danger) 6%, transparent); }
+             .mn-row-merging { background: color-mix(in srgb, var(--signal-info) 6%, transparent); }
+
+          C. src/css/themes-avorio-layouts.css — replace 7x rgba(220,0,0,...):
+             Lines 17,29,60,67,79,93,94 → color-mix(in srgb, var(--rosso-corsa) N%, transparent)
+             Preserve original opacity percentages: 8%,5%,15%,4%,5%,30%,30%
+
+          D. src/css/forms-themes-misc.css line 22:
+             --mn-form-focus-ring: color-mix(in srgb, var(--signal-info) 25%, transparent);
+        verify:
+          - "grep -c 'rgba(0,166,81' src/css/integration-status.css returns 0"
+          - "grep -c 'rgba(220, 0, 0' src/css/themes-avorio-layouts.css returns 0"
+          - "grep 'try' src/ts/ai-chat-messages.ts shows try/catch"
+          - "npx tsc --noEmit passes"
+          - "build-digest.sh exits 0"
+
+      - id: T1-4
+        title: "WC fixes: mn-tab + mn-theme-toggle + mn-section-nav"
+        requirements: [F-08, F-09, F-10]
+        executor: task-executor
+        model: opus
+        effort: M
+        description: |
+          1. src/wc/index.ts registerAll(): add import('./mn-tab.js') line.
+             mn-tab IS in WC_TAGS but has no corresponding import. mn-tabs.js defines mn-tab
+             internally but registerAll should import it explicitly for standalone usage.
+
+          2. src/wc/mn-theme-toggle.js: Add disconnectedCallback() method.
+             In connectedCallback, store event handler refs (this._handlers = {}).
+             In disconnectedCallback, removeEventListener for each stored handler.
+             Pattern: this._handleThemeChange = (e) => { ... };
+             connectedCallback: addEventListener('mn-theme-change', this._handleThemeChange);
+             disconnectedCallback: removeEventListener('mn-theme-change', this._handleThemeChange);
+
+          3. src/wc/index.ts: Add 'mn-section-nav' to WC_TAGS array.
+             Add import('./mn-section-nav.js') to registerAll() function.
+             mn-section-nav.js already self-registers but needs central registry.
+        verify:
+          - "grep 'mn-tab.js' src/wc/index.ts shows import"
+          - "grep 'disconnectedCallback' src/wc/mn-theme-toggle.js shows method"
+          - "grep 'mn-section-nav' src/wc/index.ts shows in WC_TAGS + registerAll"
+
+  - id: W2
+    name: "Theme + API + Tests Batch 1"
+    parallel: true
+    tasks:
+      - id: T2-1
+        title: "Colorblind theme override files"
+        requirements: [F-07]
+        executor: task-executor
+        model: opus
+        effort: L
+        description: |
+          Current state: 0 dedicated colorblind CSS files vs 4 Avorio + 4 Nero.
+          Scattered across 9 files with ~90 rules total. Needs consolidation + expansion.
+
+          Create 2 new files:
+
+          1. src/css/themes-colorblind-components.css (@layer themes):
+             Consolidate body.mn-colorblind rules from scattered files + add missing:
+             - Card/panel surfaces with --mn-cb-blue accent hints
+             - Button variants (ghost, secondary) with Okabe-Ito palette
+             - Badge/tag/tooltip colorblind overrides
+             - Chart tooltip vars: --mn-chart-tooltip-bg/border/text/shadow
+             - Severity tokens: critical=#D55E00, high=#E69F00, warning=#F0E442, info=#0072B2
+             - Status LED overrides (use shape+color, not color alone)
+             Okabe-Ito palette: #0072B2, #E69F00, #D55E00, #009E73, #F0E442, #56B4E9
+
+          2. src/css/themes-colorblind-layouts.css (@layer themes):
+             - Sidebar/drawer/panel backgrounds
+             - Focus ring: var(--mn-accent) not hardcoded --giallo-ferrari
+             - Section backgrounds adaptive
+             - Data table header/row hover
+             - Detail panel field labels/values
+             - Notification center unread highlight
+
+          3. Add both @import to src/css/maranello.css after other theme imports
+
+          Max 250 lines each. Use ONLY semantic tokens + Okabe-Ito palette.
+          Test: body.mn-colorblind should NOT show any yellow (#FFC72C) or red (#DC0000).
+        verify:
+          - "test -f src/css/themes-colorblind-components.css"
+          - "test -f src/css/themes-colorblind-layouts.css"
+          - "wc -l < src/css/themes-colorblind-components.css shows <= 250"
+          - "wc -l < src/css/themes-colorblind-layouts.css shows <= 250"
+          - "grep 'colorblind' src/css/maranello.css shows 2 new imports"
+          - "build-digest.sh exits 0"
+
+      - id: T2-2
+        title: "API fixes: initOrgTree destroy + prefers-contrast"
+        requirements: [F-11, F-12]
+        executor: task-executor
+        model: opus
+        effort: M
+        description: |
+          1. src/ts/controls.ts initOrgTree() (lines 94-149):
+             Current: returns void. Event listeners never removed.
+             Fix: Use AbortController pattern.
+             const ac = new AbortController();
+             toggle.addEventListener('click', handler, { signal: ac.signal });
+             node.addEventListener('click', handler, { signal: ac.signal });
+             node.addEventListener('keydown', handler, { signal: ac.signal });
+             return { destroy: () => ac.abort() };
+             Update return type signature.
+             Grep for ALL callers of initOrgTree in src/ and demo/ — update if they ignore return.
+
+          2. src/css/accessibility.css:
+             Add: @media (prefers-contrast: more) { ... }
+             Mirror the .mn-high-contrast rules that already exist in the file.
+             This auto-applies without JS when OS high-contrast is enabled.
+        verify:
+          - "grep 'destroy' src/ts/controls.ts shows return type"
+          - "grep 'AbortController\\|signal' src/ts/controls.ts shows cleanup pattern"
+          - "grep 'prefers-contrast' src/css/accessibility.css shows @media rule"
+          - "npx tsc --noEmit passes"
+
+      - id: T2-3
+        title: "Unit tests batch 1: data components"
+        requirements: [F-13]
+        executor: task-executor
+        model: opus
+        effort: L
+        description: |
+          Write unit tests for 6 components. Read source first, understand API.
+          Use vitest + jsdom. Follow existing test patterns in tests/unit/.
+          Max 250 lines each. AAA pattern. Real data names (not 'test' or 'foo').
+
+          1. tests/unit/user-table.test.ts — src/ts/user-table.ts
+          2. tests/unit/audit-log.test.ts — src/ts/audit-log.ts
+          3. tests/unit/agent-cost-breakdown.test.ts — src/ts/agent-cost-breakdown.ts
+          4. tests/unit/cost-timeline.test.ts — src/ts/charts-cost-timeline.ts
+          5. tests/unit/charts-bmc.test.ts — src/ts/charts-bmc.ts
+          6. tests/unit/agent-trace.test.ts — src/ts/agent-trace.ts
+
+          Each test file:
+          - describe('componentName', () => { ... })
+          - test create/render into container div
+          - test update with new data
+          - test destroy/cleanup
+          - test a11y attributes (role, aria-label)
+          - test edge cases (empty data, null container)
+        verify:
+          - "ls tests/unit/user-table.test.ts tests/unit/audit-log.test.ts tests/unit/agent-cost-breakdown.test.ts tests/unit/cost-timeline.test.ts tests/unit/charts-bmc.test.ts tests/unit/agent-trace.test.ts"
+          - "test-digest.sh --no-cache exits 0"
+
+      - id: T2-4
+        title: "Unit tests batch 2: runtime components"
+        requirements: [F-14]
+        executor: task-executor
+        model: opus
+        effort: L
+        description: |
+          Write unit tests for 6 components:
+          1. tests/unit/token-meter.test.ts — src/ts/token-meter.ts
+          2. tests/unit/streaming-text.test.ts — src/ts/streaming-text.ts
+          3. tests/unit/risk-matrix.test.ts — src/ts/charts-risk-matrix.ts
+          4. tests/unit/kpi-scorecard.test.ts — src/ts/kpi-scorecard.ts
+          5. tests/unit/cohort-grid.test.ts — src/ts/cohort-grid.ts
+          6. tests/unit/approval-chain.test.ts — src/ts/approval-chain.ts
+          Same patterns as T2-3. Max 250 lines each.
+        verify:
+          - "ls tests/unit/token-meter.test.ts tests/unit/streaming-text.test.ts tests/unit/risk-matrix.test.ts tests/unit/kpi-scorecard.test.ts tests/unit/cohort-grid.test.ts tests/unit/approval-chain.test.ts"
+          - "test-digest.sh --no-cache exits 0"
+
+  - id: W3
+    name: "Tests Batch 2 + Documentation"
+    parallel: true
+    tasks:
+      - id: T3-1
+        title: "Unit tests batch 3: strategy components"
+        requirements: [F-15]
+        executor: task-executor
+        model: opus
+        effort: L
+        description: |
+          Write unit tests for 6 components:
+          1. tests/unit/charts-bcg-matrix.test.ts — src/ts/charts-bcg-matrix.ts
+          2. tests/unit/nine-box-matrix.test.ts — src/ts/nine-box-matrix.ts
+          3. tests/unit/swot-matrix.test.ts — src/ts/swot-matrix.ts
+          4. tests/unit/decision-matrix.test.ts — src/ts/decision-matrix.ts
+          5. tests/unit/waterfall-chart.test.ts — src/ts/charts-waterfall.ts
+          6. tests/unit/confidence-chart.test.ts — src/ts/charts-confidence.ts
+          Same patterns. Canvas tests: mock getContext('2d'). DOM tests: check rendered elements.
+        verify:
+          - "ls tests/unit/charts-bcg-matrix.test.ts tests/unit/nine-box-matrix.test.ts tests/unit/swot-matrix.test.ts tests/unit/decision-matrix.test.ts tests/unit/waterfall-chart.test.ts tests/unit/confidence-chart.test.ts"
+          - "test-digest.sh --no-cache exits 0"
+
+      - id: T3-2
+        title: "Unit tests batch 4: remaining components"
+        requirements: [F-16]
+        executor: task-executor
+        model: opus
+        effort: L
+        description: |
+          Write unit tests for remaining 4 components:
+          1. tests/unit/activity-feed.test.ts — src/ts/activity-feed.ts
+          2. tests/unit/bullet-chart.test.ts — src/ts/charts-bullet.ts
+          3. tests/unit/notification-center.test.ts — src/ts/notification-center.ts
+          4. tests/unit/date-range-picker.test.ts — src/ts/date-range-picker.ts
+          Same patterns. Max 250 lines each.
+        verify:
+          - "ls tests/unit/activity-feed.test.ts tests/unit/bullet-chart.test.ts tests/unit/notification-center.test.ts tests/unit/date-range-picker.test.ts"
+          - "test-digest.sh --no-cache exits 0"
+
+      - id: T3-3
+        title: "DATA_CONTRACTS.md + components.json update"
+        requirements: [F-17, F-18]
+        executor: task-executor
+        model: opus
+        effort: L
+        description: |
+          1. DATA_CONTRACTS.md: Update version header to v4.11.0.
+             Read each of the 22 source .ts files and add API contract entries:
+             - Function signature + options interface
+             - Return type (controller with destroy/update methods)
+             - Events emitted
+             - CSS dependencies
+             Follow existing format in the file.
+             If file exceeds 250 lines, split into DATA_CONTRACTS.md (index) + docs/api-contracts-v4.md (detail).
+
+          2. components.json: Update version to v4.11.0.
+             Add entries for all 22 components with: name, category, path, description, version.
+
+          3. components-detail.json: Update version to v4.11.0.
+             Add detail entries for all 22 components.
+
+          Components to add:
+          userTable, auditLog, agentCostBreakdown, costTimeline, businessModelCanvas,
+          agentTrace, tokenMeter, streamingText, riskMatrix, kpiScorecard, cohortGrid,
+          approvalChain, bcgMatrix, nineBoxMatrix, swotMatrix, waterfallChart,
+          confidenceChart, decisionMatrix, dateRangePicker, activityFeed, bulletChart,
+          notificationCenter
+        verify:
+          - "grep '4.11.0' DATA_CONTRACTS.md"
+          - "grep 'bcgMatrix' DATA_CONTRACTS.md"
+          - "grep 'swotMatrix' DATA_CONTRACTS.md"
+          - "grep '4.11.0' components.json"
+
+  - id: W4
+    name: "Closure"
+    parallel: false
+    tasks:
+      - id: TF-tests
+        title: "Full test suite green"
+        requirements: [F-01, F-02, F-03, F-04, F-05, F-06, F-07, F-08, F-09, F-10, F-11, F-12, F-13, F-14, F-15, F-16]
+        executor: task-executor
+        model: opus
+        effort: S
+        description: "Run full test suite + type check + build. Fix any failures."
+        verify:
+          - "test-digest.sh --no-cache exits 0"
+          - "npx tsc --noEmit exits 0"
+          - "build-digest.sh exits 0"
+
+      - id: TF-doc
+        title: "CHANGELOG + version bump to v4.11.0"
+        requirements: [F-17, F-18]
+        executor: task-executor
+        model: opus
+        effort: S
+        description: |
+          1. Update CHANGELOG.md with v4.11.0 entry listing all fixes
+          2. Bump version in package.json to 4.11.0
+          3. Update NaSra agent version to v4.11.0
+        verify:
+          - "grep '4.11.0' CHANGELOG.md"
+          - "grep '4.11.0' package.json"
+
+      - id: TF-pr
+        title: "CI green + push"
+        executor: task-executor
+        model: opus
+        effort: S
+        description: "Push to main, verify CI passes all 17 gates."
+        verify:
+          - "CI workflow 'build-and-test' passes"
+          - "Deploy Pages workflow passes"
+
+      - id: TF-deploy-verify
+        title: "Production live verification"
+        executor: task-executor
+        model: opus
+        effort: S
+        description: "Verify roberdan.github.io/MaranelloLuceDesign loads, strategy section renders 5 components."
+        verify:
+          - "gh run list --limit 1 shows success for Deploy Pages"
+          - "Strategy section: BCG, Nine-Box, Decision Matrix, BMC, SWOT all visible"
