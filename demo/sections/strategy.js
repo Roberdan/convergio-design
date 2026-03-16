@@ -2,7 +2,6 @@
  * Strategy section — BCG Matrix, Nine-Box (GE-McKinsey), Business Model Canvas,
  * SWOT Matrix, Decision Matrix for vendor scoring.
  */
-
 const BCG_ITEMS = [
   { id: 'claude',   label: 'Claude API',   marketShare: 0.72, growthRate: 42,  size: 8 },
   { id: 'embed',    label: 'Embeddings',   marketShare: 0.58, growthRate: 28,  size: 5 },
@@ -178,7 +177,7 @@ export function createStrategySection() {
 
     /* ── BCG Matrix ── */
     if (M.bcgMatrix) {
-      const bcgCanvas = /** @type {HTMLCanvasElement|null} */ (section.querySelector('#str-bcg'));
+      const bcgCanvas = section.querySelector('#str-bcg');
       if (!bcgCanvas) return;
       if (bcgCanvas.clientWidth > 0) {
         bcgCanvas.width = bcgCanvas.clientWidth;
