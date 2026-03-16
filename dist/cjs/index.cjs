@@ -15373,9 +15373,7 @@ var COLOR_VARS = [
   ["--mn-text-muted", "#888888"]
 ];
 function resolveColor5(series, idx) {
-  if (series.color) {
-    return series.color.startsWith("--") ? cssVar(series.color, "#888") : series.color;
-  }
+  if (series.color) return series.color.startsWith("--") ? cssVar(series.color, "#888") : series.color;
   const [v, fb] = COLOR_VARS[idx % COLOR_VARS.length];
   return cssVar(v, fb);
 }

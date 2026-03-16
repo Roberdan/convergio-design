@@ -29,10 +29,7 @@ const COLOR_VARS: ReadonlyArray<readonly [string, string]> = [
 ];
 
 function resolveColor(series: CostSeries, idx: number): string {
-  if (series.color) {
-    return series.color.startsWith('--')
-      ? cssVar(series.color, '#888') : series.color;
-  }
+  if (series.color) return series.color.startsWith('--') ? cssVar(series.color, '#888') : series.color;
   const [v, fb] = COLOR_VARS[idx % COLOR_VARS.length];
   return cssVar(v, fb);
 }
