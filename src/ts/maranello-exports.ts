@@ -34,6 +34,9 @@ import {
   showTip as showMapTip, hideTip as hideMapTip, attachEvents,
 } from './map-view-events';
 import { activityFeed } from './activity-feed';
+import { bcgMatrix } from './charts-bcg-matrix';
+import { nineBoxMatrix } from './nine-box-matrix';
+import { swotMatrix } from './swot-matrix';
 import { dateRangePicker } from './date-range-picker';
 import { bulletChart } from './charts-bullet';
 import { notificationCenter } from './notification-center';
@@ -113,4 +116,9 @@ export function registerExtras(M: Record<string, unknown>): void {
   M.confidenceChart = confidenceChart;
   M.decisionMatrix = decisionMatrix;
   M.renderSourceCards = renderSourceCards;
+
+  // Strategy components (v4.8)
+  M.bcgMatrix = bcgMatrix;
+  M.nineBoxMatrix = nineBoxMatrix;
+  M.swotMatrix = swotMatrix;
 }

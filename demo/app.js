@@ -45,6 +45,7 @@ const SECTIONS = new Map([
   ['org-tree',       () => import('./sections/org-tree.js').then(m => m.createOrgTreeSection)],
   ['dashboard-widgets', () => import('./sections/dashboard-widgets.js').then(m => m.createDashboardWidgetsSection)],
   ['analytics',         () => import('./sections/analytics.js').then(m => m.createAnalyticsSection)],
+  ['strategy',          () => import('./sections/strategy.js').then(m => m.createStrategySection)],
 ]);
 
 const SECTION_KEYS = [...SECTIONS.keys()];
@@ -62,6 +63,7 @@ const SECTION_LABELS = {
   'org-tree': 'Org',
   'dashboard-widgets': 'Widgets',
   'analytics': 'Analytics',
+  'strategy': 'Strategy',
 };
 
 function safeErr(name, err) {

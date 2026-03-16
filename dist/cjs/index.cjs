@@ -62,6 +62,7 @@ __export(index_exports, {
   autoTextColor: () => autoTextColor,
   azIcons: () => azIcons,
   barChart: () => barChart,
+  bcgMatrix: () => bcgMatrix,
   bind: () => bind,
   bindChart: () => bindChart,
   bindControl: () => bindControl,
@@ -127,7 +128,7 @@ __export(index_exports, {
   hBarChart: () => hBarChart,
   halfGauge: () => halfGauge,
   hexLum: () => hexLum2,
-  hexToRgba: () => hexToRgba,
+  hexToRgba: () => hexToRgba2,
   hiDpiCanvas: () => hiDpiCanvas,
   hideTip: () => hideTip2,
   hitTest: () => hitTest2,
@@ -169,6 +170,7 @@ __export(index_exports, {
   navIcons: () => navIcons,
   networkMessages: () => networkMessages,
   neuralNodes: () => neuralNodes,
+  nineBoxMatrix: () => nineBoxMatrix,
   normalizeBars: () => normalizeBars,
   normalizeHex: () => normalizeHex2,
   notificationCenter: () => notificationCenter,
@@ -211,6 +213,7 @@ __export(index_exports, {
   speedometer: () => speedometer,
   statusIcons: () => statusIcons,
   steppedRotary: () => steppedRotary,
+  swotMatrix: () => swotMatrix,
   systemStatus: () => systemStatus,
   themeRotary: () => themeRotary,
   throttle: () => throttle,
@@ -2999,6 +3002,12 @@ function getCanvasSize(canvas, defaultW = 200, defaultH = 100) {
     }
   }
   return { width: defaultW, height: defaultH };
+}
+function hexToRgba(hex, alpha2) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${alpha2})`;
 }
 function hexFillGradient(ctx, hex, h, opacity) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -6494,7 +6503,7 @@ function project(lat, lon, w, h, pad2, vs) {
   const wx = (lon + 180) / 360 * worldW, wy = (90 - lat) / 180 * worldH;
   return { x: wx - cx + w * 0.5 + (vs.panX || 0), y: wy - cy + h * 0.5 + (vs.panY || 0) };
 }
-function hexToRgba(hex, a) {
+function hexToRgba2(hex, a) {
   const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
   return "rgba(" + r + "," + g + "," + b + "," + a + ")";
 }
@@ -6587,7 +6596,7 @@ function drawMarker(ctx, m, mc, pulse, highlighted, hovered) {
   const outerR = r * pScale * (isHl ? 1.6 : 1.3);
   ctx.beginPath();
   ctx.arc(x, y, outerR, 0, TAU);
-  ctx.fillStyle = hexToRgba(col, 0.15);
+  ctx.fillStyle = hexToRgba2(col, 0.15);
   ctx.fill();
   const coreR = showCount ? isHov ? r * 1.05 : r : isHov ? r * 1.2 : r * 0.5;
   ctx.beginPath();
@@ -12932,7 +12941,7 @@ function resolveColor(color) {
   }
   return color;
 }
-function hexToRgba2(hex, alpha2) {
+function hexToRgba3(hex, alpha2) {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
@@ -12983,7 +12992,7 @@ function confidenceChart(canvas, opts) {
     if (!ctx) return;
     ctx.clearRect(0, 0, logicalW, logicalH);
     const gridRows = 4;
-    ctx.strokeStyle = hexToRgba2(borderColor.startsWith("#") ? borderColor : "#888888", 0.5);
+    ctx.strokeStyle = hexToRgba3(borderColor.startsWith("#") ? borderColor : "#888888", 0.5);
     ctx.lineWidth = 0.5;
     ctx.font = "10px system-ui, sans-serif";
     ctx.fillStyle = mutedColor;
@@ -13004,7 +13013,7 @@ function confidenceChart(canvas, opts) {
     for (let i = 0; i < visible; i++) ctx.lineTo(xAt(i), yAt(opts.upper[i]));
     for (let i = visible - 1; i >= 0; i--) ctx.lineTo(xAt(i), yAt(opts.lower[i]));
     ctx.closePath();
-    ctx.fillStyle = hexToRgba2(lineColor.startsWith("#") ? lineColor : "#FFC72C", 0.15);
+    ctx.fillStyle = hexToRgba3(lineColor.startsWith("#") ? lineColor : "#FFC72C", 0.15);
     ctx.fill();
     ctx.beginPath();
     for (let i = 0; i < visible; i++) {
@@ -13344,6 +13353,613 @@ function renderSourceCards(container, cards, opts) {
   };
 }
 
+// src/ts/charts-bcg-matrix.ts
+var MARGIN = { top: 16, right: 16, bottom: 40, left: 48 };
+var FONT3 = "10px Inter, sans-serif";
+var QUADS = ["Stars", "Cash Cows", "? Marks", "Dogs"];
+function resolveColor2(raw, fb) {
+  if (!raw) return fb;
+  const m = raw.match(/^var\(--([\w-]+)/);
+  return m ? cssVar(`--${m[1]}`, fb) : raw;
+}
+function quadOf(it, sT, gT) {
+  const hs = it.marketShare >= sT, hg = it.growthRate >= gT;
+  if (hs && hg) return "Stars";
+  if (hs) return "Cash Cows";
+  if (hg) return "? Marks";
+  return "Dogs";
+}
+function quadHex(q) {
+  const m = {
+    "Stars": ["--signal-ok", "#00A651"],
+    "Cash Cows": ["--mn-accent", "#FFC72C"],
+    "? Marks": ["--signal-warning", "#FFC72C"],
+    "Dogs": ["--grigio-30", "#4d4d4d"]
+  };
+  const [v, fb] = m[q];
+  return cssVar(v, fb);
+}
+function qColor(q, a) {
+  const h = quadHex(q);
+  return h.startsWith("#") && h.length >= 7 ? hexToRgba(h, a) : h;
+}
+function trunc(s, n) {
+  return s.length > n ? s.slice(0, n - 1) + "\u2026" : s;
+}
+function bcgMatrix(canvas, opts) {
+  const sT = opts.shareThreshold ?? 0.5;
+  const gT = opts.growthThreshold ?? 10;
+  const doAnim = opts.animate !== false;
+  let items = [...opts.items];
+  let hovId = null;
+  let prog = doAnim ? 0 : 1;
+  let raf = 0;
+  let dead = false;
+  const rect = canvas.getBoundingClientRect();
+  const w = Math.max(rect.width, 200);
+  const h = opts.height ?? 320;
+  const ctx = chartHiDpi(canvas, w, h);
+  const pL = MARGIN.left, pT = MARGIN.top;
+  const pW = w - MARGIN.left - MARGIN.right;
+  const pH = h - MARGIN.top - MARGIN.bottom;
+  const gRange = () => {
+    const rs = items.map((i) => i.growthRate);
+    return { mn: Math.min(0, ...rs) - 5, mx: Math.max(20, ...rs) + 5 };
+  };
+  const toX = (s) => pL + (1 - s) * pW;
+  const toY = (g) => {
+    const { mn, mx } = gRange();
+    return pT + (1 - (g - mn) / (mx - mn)) * pH;
+  };
+  const bR = (sz) => 8 + sz * 3;
+  function draw(sc) {
+    ctx.clearRect(0, 0, w, h);
+    const tm = cssVar("--mn-text-muted", "#888");
+    const bd = cssVar("--mn-border", "#333");
+    const sf = cssVar("--mn-surface", "#111");
+    const tx = cssVar("--mn-text", "#ccc");
+    const midX = toX(sT), midY = toY(gT);
+    const qr = [
+      [pL, pT, midX - pL, midY - pT, "Stars"],
+      [pL, midY, midX - pL, pT + pH - midY, "Cash Cows"],
+      [midX, pT, pL + pW - midX, midY - pT, "? Marks"],
+      [midX, midY, pL + pW - midX, pT + pH - midY, "Dogs"]
+    ];
+    for (const [x, y, qw, qh, q] of qr) {
+      ctx.fillStyle = qColor(q, 0.1);
+      ctx.fillRect(x, y, qw, qh);
+    }
+    ctx.font = FONT3;
+    ctx.fillStyle = tm;
+    ctx.textAlign = "left";
+    ctx.fillText("Stars", pL + 6, pT + 14);
+    ctx.fillText("Cash Cows", pL + 6, pT + pH - 6);
+    ctx.textAlign = "right";
+    ctx.fillText("? Marks", pL + pW - 6, pT + 14);
+    ctx.fillText("Dogs", pL + pW - 6, pT + pH - 6);
+    ctx.strokeStyle = bd;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(midX, pT);
+    ctx.lineTo(midX, pT + pH);
+    ctx.moveTo(pL, midY);
+    ctx.lineTo(pL + pW, midY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = tm;
+    ctx.font = FONT3;
+    ctx.textAlign = "center";
+    ctx.fillText("\u2190 Relative Market Share \u2192", pL + pW / 2, h - 8);
+    ctx.save();
+    ctx.translate(12, pT + pH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText("Market Growth Rate %", 0, 0);
+    ctx.restore();
+    for (const it of items) {
+      const bx = toX(it.marketShare), by = toY(it.growthRate);
+      const r = bR(it.size ?? 5) * sc;
+      const q = quadOf(it, sT, gT);
+      ctx.beginPath();
+      ctx.arc(bx, by, r, 0, Math.PI * 2);
+      ctx.fillStyle = resolveColor2(it.color, qColor(q, 0.7));
+      ctx.fill();
+      ctx.strokeStyle = resolveColor2(it.color, qColor(q, 1));
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.fillStyle = tx;
+      ctx.font = FONT3;
+      ctx.textAlign = "center";
+      ctx.fillText(trunc(it.label, 12), bx, by + r + 12);
+      if (it.id === hovId) {
+        ctx.beginPath();
+        ctx.arc(bx, by, r + 4, 0, Math.PI * 2);
+        ctx.strokeStyle = cssVar("--mn-accent", "#FFC72C");
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        const l1 = it.label;
+        const l2 = `Share: ${(it.marketShare * 100).toFixed(0)}% | Growth: ${it.growthRate.toFixed(1)}%`;
+        ctx.font = FONT3;
+        const tw = Math.max(ctx.measureText(l1).width, ctx.measureText(l2).width) + 12;
+        const tbx = Math.min(Math.max(bx - tw / 2, pL), pL + pW - tw);
+        const tby = Math.max(by - r - 36, pT);
+        ctx.fillStyle = sf;
+        ctx.fillRect(tbx, tby, tw, 30);
+        ctx.strokeStyle = bd;
+        ctx.lineWidth = 1;
+        ctx.strokeRect(tbx, tby, tw, 30);
+        ctx.fillStyle = tx;
+        ctx.textAlign = "left";
+        ctx.fillText(l1, tbx + 6, tby + 12);
+        ctx.fillText(l2, tbx + 6, tby + 24);
+      }
+    }
+  }
+  function hitTest3(ex, ey) {
+    for (let i = items.length - 1; i >= 0; i--) {
+      const it = items[i];
+      const dx = ex - toX(it.marketShare), dy = ey - toY(it.growthRate);
+      if (Math.hypot(dx, dy) <= bR(it.size ?? 5)) return it;
+    }
+    return null;
+  }
+  const coords = (e) => {
+    const r = canvas.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  };
+  const onMove = (e) => {
+    const hit = hitTest3(coords(e).x, coords(e).y);
+    const nid = hit?.id ?? null;
+    if (nid !== hovId) {
+      hovId = nid;
+      draw(prog);
+      opts.onHover?.(hit);
+    }
+  };
+  const onDown = (e) => {
+    const hit = hitTest3(coords(e).x, coords(e).y);
+    if (hit) opts.onClick?.(hit);
+  };
+  const onLeave = () => {
+    if (hovId) {
+      hovId = null;
+      draw(prog);
+      opts.onHover?.(null);
+    }
+  };
+  canvas.addEventListener("mousemove", onMove);
+  canvas.addEventListener("mousedown", onDown);
+  canvas.addEventListener("mouseleave", onLeave);
+  function applyA11y() {
+    const grp = { "Stars": [], "Cash Cows": [], "? Marks": [], "Dogs": [] };
+    for (const it of items) grp[quadOf(it, sT, gT)].push(it.label);
+    const desc = QUADS.filter((q) => grp[q].length > 0).map((q) => `${q}: ${grp[q].join(", ")}`).join(". ");
+    const label = `BCG matrix with ${items.length} items. ${desc}`;
+    const rows = items.map((it) => ({
+      label: escapeHtml(it.label),
+      value: `Share ${(it.marketShare * 100).toFixed(0)}%, Growth ${it.growthRate.toFixed(1)}%, ${quadOf(it, sT, gT)}`
+    }));
+    applyChartA11y(canvas, label, rows);
+  }
+  if (doAnim) {
+    const t0 = performance.now();
+    const tick = (now) => {
+      if (dead) return;
+      prog = Math.min((now - t0) / 400, 1);
+      draw(1 - Math.pow(1 - prog, 3));
+      if (prog < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+  } else {
+    draw(1);
+  }
+  applyA11y();
+  return {
+    update(newItems) {
+      items = [...newItems];
+      prog = 1;
+      draw(1);
+      applyA11y();
+    },
+    destroy() {
+      dead = true;
+      if (raf) cancelAnimationFrame(raf);
+      canvas.removeEventListener("mousemove", onMove);
+      canvas.removeEventListener("mousedown", onDown);
+      canvas.removeEventListener("mouseleave", onLeave);
+      const sr = canvas.nextElementSibling;
+      if (sr?.classList.contains("mn-sr-only")) sr.remove();
+    }
+  };
+}
+
+// src/ts/nine-box-matrix.ts
+function getTier(x, y) {
+  const s = x + y;
+  if (s >= 6) return "invest";
+  if (s >= 5) return x === 3 && y === 2 || x === 2 && y === 3 ? "invest" : "selective";
+  if (s === 4) return "selective";
+  if (s === 3) return x === 1 && y === 2 || x === 2 && y === 1 ? "divest" : "selective";
+  return "divest";
+}
+function clampCoord(v) {
+  return Math.max(1, Math.min(3, v));
+}
+function makeDiv(cls, text) {
+  const d = document.createElement("div");
+  d.className = cls;
+  if (text) d.textContent = text;
+  return d;
+}
+function makeSpan(cls, text) {
+  const s = document.createElement("span");
+  s.className = cls;
+  s.textContent = text;
+  return s;
+}
+function nineBoxMatrix(el4, opts) {
+  const xLabel = opts.xLabel ?? "Business Strength";
+  const yLabel = opts.yLabel ?? "Industry Attractiveness";
+  const xAxis = opts.xAxisLabels ?? ["Low", "Medium", "High"];
+  const yAxis = opts.yAxisLabels ?? ["Low", "Medium", "High"];
+  let items = [...opts.items];
+  let selectedId = null;
+  const ac = new AbortController();
+  function render3() {
+    el4.innerHTML = "";
+    const root = makeDiv("mn-nine-box");
+    const yLabelEl = makeDiv("mn-nine-box__y-label", yLabel);
+    yLabelEl.setAttribute("aria-hidden", "true");
+    root.appendChild(yLabelEl);
+    const body = makeDiv("mn-nine-box__body");
+    const yTicks = makeDiv("mn-nine-box__y-ticks");
+    yTicks.setAttribute("aria-hidden", "true");
+    for (let r = 2; r >= 0; r--) yTicks.appendChild(makeSpan("", yAxis[r]));
+    const gridRow = makeDiv("mn-nine-box__grid-row");
+    gridRow.appendChild(yTicks);
+    const grid = makeDiv("mn-nine-box__grid");
+    grid.setAttribute("role", "grid");
+    grid.setAttribute("aria-label", `${yLabel} vs ${xLabel} matrix`);
+    for (let y = 3; y >= 1; y--) {
+      for (let x = 1; x <= 3; x++) {
+        const cx = x, cy = y;
+        const cell = makeDiv("mn-nine-box__cell");
+        cell.setAttribute("role", "gridcell");
+        cell.setAttribute("data-tier", getTier(cx, cy));
+        cell.setAttribute("data-x", String(cx));
+        cell.setAttribute("data-y", String(cy));
+        cell.tabIndex = 0;
+        cell.setAttribute(
+          "aria-label",
+          `${yLabel}: ${yAxis[cy - 1]}, ${xLabel}: ${xAxis[cx - 1]}`
+        );
+        for (const item of items.filter((i) => i.x === cx && i.y === cy)) {
+          cell.appendChild(buildItem2(item));
+        }
+        grid.appendChild(cell);
+      }
+    }
+    gridRow.appendChild(grid);
+    body.appendChild(gridRow);
+    const xLabelsRow = makeDiv("mn-nine-box__x-labels");
+    xLabelsRow.setAttribute("aria-hidden", "true");
+    for (const lbl of xAxis) xLabelsRow.appendChild(makeSpan("", lbl));
+    body.appendChild(xLabelsRow);
+    const xLabelEl = makeDiv("mn-nine-box__x-label", xLabel);
+    xLabelEl.setAttribute("aria-hidden", "true");
+    body.appendChild(xLabelEl);
+    root.appendChild(body);
+    el4.appendChild(root);
+    bindEvents();
+  }
+  function buildItem2(item) {
+    const div = makeDiv("mn-nine-box__item");
+    if (selectedId === item.id) div.classList.add("mn-nine-box__item--selected");
+    div.setAttribute("role", "button");
+    div.tabIndex = 0;
+    div.setAttribute("data-id", item.id);
+    div.setAttribute("aria-label", escapeHtml(item.label));
+    if (item.color) div.style.borderColor = item.color;
+    div.appendChild(makeSpan("mn-nine-box__item-label", item.label));
+    if (item.subtitle) div.appendChild(makeSpan("mn-nine-box__item-sub", item.subtitle));
+    return div;
+  }
+  function selectItem(id) {
+    selectedId = id;
+    for (const itemEl of el4.querySelectorAll(".mn-nine-box__item")) {
+      itemEl.classList.toggle(
+        "mn-nine-box__item--selected",
+        itemEl.getAttribute("data-id") === id
+      );
+    }
+    for (const cellEl of el4.querySelectorAll(".mn-nine-box__cell")) {
+      cellEl.classList.toggle("mn-nine-box__cell--drop-target", id !== null);
+    }
+    if (id) {
+      const item = items.find((i) => i.id === id);
+      if (item) opts.onSelect?.(item);
+    }
+  }
+  function doMove(id, x, y) {
+    const item = items.find((i) => i.id === id);
+    if (!item) return;
+    item.x = x;
+    item.y = y;
+    opts.onMove?.(item, x, y);
+    selectedId = null;
+    render3();
+  }
+  function handleClick(e) {
+    const target = e.target;
+    const itemEl = target.closest(".mn-nine-box__item");
+    if (itemEl) {
+      const id = itemEl.getAttribute("data-id");
+      if (id) selectItem(selectedId === id ? null : id);
+      return;
+    }
+    const cellEl = target.closest(".mn-nine-box__cell");
+    if (cellEl && selectedId) {
+      doMove(
+        selectedId,
+        Number(cellEl.getAttribute("data-x")),
+        Number(cellEl.getAttribute("data-y"))
+      );
+    }
+  }
+  function handleKey(e) {
+    const ke = e;
+    const target = ke.target;
+    if (target.classList.contains("mn-nine-box__item")) {
+      if (ke.key === "Enter" || ke.key === " ") {
+        ke.preventDefault();
+        const id = target.getAttribute("data-id");
+        if (id) selectItem(selectedId === id ? null : id);
+        return;
+      }
+      if (selectedId && target.getAttribute("data-id") === selectedId) {
+        const item = items.find((i) => i.id === selectedId);
+        if (!item) return;
+        let nx = item.x, ny = item.y;
+        if (ke.key === "ArrowRight") nx = clampCoord(nx + 1);
+        else if (ke.key === "ArrowLeft") nx = clampCoord(nx - 1);
+        else if (ke.key === "ArrowUp") ny = clampCoord(ny + 1);
+        else if (ke.key === "ArrowDown") ny = clampCoord(ny - 1);
+        else return;
+        ke.preventDefault();
+        if (nx !== item.x || ny !== item.y) doMove(selectedId, nx, ny);
+      }
+      return;
+    }
+    if (target.classList.contains("mn-nine-box__cell") && selectedId) {
+      if (ke.key === "Enter" || ke.key === " ") {
+        ke.preventDefault();
+        doMove(
+          selectedId,
+          Number(target.getAttribute("data-x")),
+          Number(target.getAttribute("data-y"))
+        );
+      }
+    }
+  }
+  function bindEvents() {
+    el4.addEventListener("click", handleClick, { signal: ac.signal });
+    el4.addEventListener("keydown", handleKey, { signal: ac.signal });
+  }
+  render3();
+  return {
+    update(newItems) {
+      items = [...newItems];
+      selectedId = null;
+      render3();
+    },
+    moveItem(id, x, y) {
+      doMove(id, x, y);
+    },
+    getItems() {
+      return items.map((i) => ({ ...i }));
+    },
+    destroy() {
+      ac.abort();
+      el4.innerHTML = "";
+    }
+  };
+}
+
+// src/ts/swot-matrix.ts
+var QUADRANTS = ["strengths", "weaknesses", "opportunities", "threats"];
+var ICONS2 = {
+  strengths: "S",
+  weaknesses: "W",
+  opportunities: "O",
+  threats: "T"
+};
+var DEFAULTS3 = {
+  strengths: "Strengths",
+  weaknesses: "Weaknesses",
+  opportunities: "Opportunities",
+  threats: "Threats"
+};
+function genId() {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+function buildQuadrant(q, label, uid, editable) {
+  const div = document.createElement("div");
+  div.className = `mn-swot__quadrant mn-swot__quadrant--${q}`;
+  div.setAttribute("role", "group");
+  const hdrId = `swot-${uid}-${q}-hdr`;
+  div.setAttribute("aria-labelledby", hdrId);
+  div.dataset.quadrant = q;
+  const hdr = document.createElement("div");
+  hdr.className = "mn-swot__header";
+  hdr.id = hdrId;
+  const icon = document.createElement("span");
+  icon.className = "mn-swot__icon";
+  icon.textContent = ICONS2[q];
+  const title = document.createElement("span");
+  title.className = "mn-swot__title";
+  title.textContent = label;
+  hdr.append(icon, title);
+  const list = document.createElement("ul");
+  list.className = "mn-swot__list";
+  list.setAttribute("role", "list");
+  list.setAttribute("aria-label", `${label} items`);
+  div.append(hdr, list);
+  if (editable) {
+    const addBtn = document.createElement("button");
+    addBtn.className = "mn-swot__add";
+    addBtn.type = "button";
+    addBtn.setAttribute("aria-label", `Add ${label.toLowerCase()}`);
+    addBtn.textContent = "+ Add";
+    const wrap = document.createElement("div");
+    wrap.className = "mn-swot__input-wrap";
+    wrap.hidden = true;
+    const input = document.createElement("input");
+    input.className = "mn-input mn-swot__input";
+    input.type = "text";
+    input.placeholder = "Enter item\u2026";
+    input.setAttribute("aria-label", `New ${label.toLowerCase()}`);
+    const confirm = document.createElement("button");
+    confirm.className = "mn-swot__confirm";
+    confirm.type = "button";
+    confirm.setAttribute("aria-label", "Confirm");
+    confirm.textContent = "\u21B5";
+    wrap.append(input, confirm);
+    div.append(addBtn, wrap);
+  }
+  return div;
+}
+function buildItemEl(item, editable) {
+  const li = document.createElement("li");
+  li.className = "mn-swot__item";
+  li.setAttribute("role", "listitem");
+  li.dataset.id = item.id;
+  const span = document.createElement("span");
+  span.className = "mn-swot__text";
+  span.textContent = item.text;
+  li.append(span);
+  if (editable) {
+    const btn = document.createElement("button");
+    btn.className = "mn-swot__remove";
+    btn.type = "button";
+    btn.setAttribute("aria-label", `Remove: ${escapeHtml(item.text)}`);
+    btn.textContent = "\xD7";
+    li.append(btn);
+  }
+  return li;
+}
+function swotMatrix(el4, opts) {
+  const editable = opts?.editable !== false;
+  const labels = { ...DEFAULTS3, ...opts?.quadrantLabels };
+  let items = [...opts?.items ?? []];
+  const uid = genId().slice(0, 8);
+  el4.classList.add("mn-swot");
+  el4.setAttribute("role", "region");
+  el4.setAttribute("aria-label", "SWOT Analysis");
+  const quadrantEls = /* @__PURE__ */ new Map();
+  for (const q of QUADRANTS) {
+    const qEl = buildQuadrant(q, labels[q], uid, editable);
+    quadrantEls.set(q, qEl);
+    el4.append(qEl);
+  }
+  function notify() {
+    opts?.onChange?.([...items]);
+  }
+  function renderItems() {
+    for (const q of QUADRANTS) {
+      const list = quadrantEls.get(q).querySelector(".mn-swot__list");
+      list.innerHTML = "";
+      for (const item of items.filter((i) => i.quadrant === q)) {
+        list.append(buildItemEl(item, editable));
+      }
+    }
+  }
+  function addItem(quadrant, text) {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    const item = { id: genId(), text: trimmed, quadrant };
+    items.push(item);
+    const list = quadrantEls.get(quadrant).querySelector(".mn-swot__list");
+    list.append(buildItemEl(item, editable));
+    notify();
+  }
+  function removeItem(id) {
+    const li = el4.querySelector(`[data-id="${CSS.escape(id)}"]`);
+    if (li) {
+      li.classList.add("mn-swot__item--removing");
+      setTimeout(() => li.remove(), 200);
+    }
+    items = items.filter((i) => i.id !== id);
+    notify();
+  }
+  function hideInput(qEl) {
+    const wrap = qEl.querySelector(".mn-swot__input-wrap");
+    const addBtn = qEl.querySelector(".mn-swot__add");
+    if (wrap) wrap.hidden = true;
+    if (addBtn) addBtn.hidden = false;
+  }
+  function handleClick(e) {
+    const target = e.target;
+    if (target.closest(".mn-swot__remove")) {
+      const li = target.closest(".mn-swot__item");
+      if (li?.dataset.id) removeItem(li.dataset.id);
+      return;
+    }
+    if (target.closest(".mn-swot__add")) {
+      const qEl = target.closest(".mn-swot__quadrant");
+      const wrap = qEl.querySelector(".mn-swot__input-wrap");
+      const addBtn = qEl.querySelector(".mn-swot__add");
+      wrap.hidden = false;
+      addBtn.hidden = true;
+      const input = wrap.querySelector("input");
+      input.value = "";
+      input.focus();
+      return;
+    }
+    if (target.closest(".mn-swot__confirm")) {
+      const qEl = target.closest(".mn-swot__quadrant");
+      const q = qEl.dataset.quadrant;
+      const input = qEl.querySelector(".mn-swot__input");
+      addItem(q, input.value);
+      hideInput(qEl);
+    }
+  }
+  function handleKeydown(e) {
+    const target = e.target;
+    if (!target.classList.contains("mn-swot__input")) return;
+    const qEl = target.closest(".mn-swot__quadrant");
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addItem(qEl.dataset.quadrant, target.value);
+      hideInput(qEl);
+    } else if (e.key === "Escape") {
+      hideInput(qEl);
+      qEl.querySelector(".mn-swot__add")?.focus();
+    }
+  }
+  el4.addEventListener("click", handleClick);
+  el4.addEventListener("keydown", handleKeydown);
+  renderItems();
+  return {
+    getItems: () => [...items],
+    addItem,
+    removeItem,
+    update(newItems) {
+      items = [...newItems];
+      renderItems();
+      notify();
+    },
+    destroy() {
+      el4.removeEventListener("click", handleClick);
+      el4.removeEventListener("keydown", handleKeydown);
+      el4.innerHTML = "";
+      el4.classList.remove("mn-swot");
+      el4.removeAttribute("role");
+      el4.removeAttribute("aria-label");
+    }
+  };
+}
+
 // src/ts/maranello-exports.ts
 function registerExtras(M2) {
   M2.SPEEDO_FONT = SPEEDO_FONT;
@@ -13386,7 +14002,7 @@ function registerExtras(M2) {
   M2.detectMapTheme = detectTheme;
   M2.getMarkerColors = getMarkerColors;
   M2.projectLatLon = project;
-  M2.hexToRgba = hexToRgba;
+  M2.hexToRgba = hexToRgba2;
   M2.getVisibleProjected = getVisibleProjected;
   M2.clusterMarkers = clusterMarkers;
   M2.markerRadius = markerRadius;
@@ -13404,6 +14020,9 @@ function registerExtras(M2) {
   M2.confidenceChart = confidenceChart;
   M2.decisionMatrix = decisionMatrix;
   M2.renderSourceCards = renderSourceCards;
+  M2.bcgMatrix = bcgMatrix;
+  M2.nineBoxMatrix = nineBoxMatrix;
+  M2.swotMatrix = swotMatrix;
 }
 
 // src/ts/maranello.ts
