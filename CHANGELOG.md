@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.6.0] - 16 Mar 2026
+
+### Added
+- `activityFeed(el, items?, opts?)` — vertical timeline/audit log widget with typed indicator dots, animate-on-add, maxItems trim, prepend/add/clear API; `M.activityFeed` on IIFE
+- `dateRangePicker(el, opts?)` — from/to calendar picker with single-month view, range highlight, disabled days, `getValue/setValue/open/close` API; `M.dateRangePicker` on IIFE
+- `bulletChart(canvas, opts)` — canvas target-vs-actual bar chart with qualitative background bands, animated value bar, target marker, label/unit; `M.bulletChart` on IIFE
+- `notificationCenter(triggerEl, opts?)` — persistent notification panel with unread badge, mark-all-read, type dots, action buttons, Escape/backdrop close; `M.notificationCenter` on IIFE
+- CSS: `patterns-activity-feed.css`, `forms-date-range.css`, `layouts-notification-center.css` — all in `@layer`, all `mn-` prefixed, theme-responsive
+
 ## [4.5.1] - 15 Mar 2026
 
 ### Added

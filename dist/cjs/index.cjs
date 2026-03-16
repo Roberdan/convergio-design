@@ -48,6 +48,7 @@ __export(index_exports, {
   Z_INDEX: () => Z_INDEX,
   a11yPanel: () => a11yPanel,
   actionIcons: () => actionIcons,
+  activityFeed: () => activityFeed,
   addListener: () => addListener,
   addValidator: () => addValidator,
   applySettings: () => applySettings,
@@ -71,6 +72,7 @@ __export(index_exports, {
   buildSeries: () => buildSeries,
   buildTicks: () => buildTicks2,
   buildUI: () => buildUI,
+  bulletChart: () => bulletChart,
   chartHiDpi: () => chartHiDpi,
   chartInteract: () => chartInteract,
   clamp: () => clamp,
@@ -92,6 +94,7 @@ __export(index_exports, {
   dataIcons: () => dataIcons,
   dataTable: () => dataTable,
   datePicker: () => datePicker,
+  dateRangePicker: () => dateRangePicker,
   debounce: () => debounce,
   defaultMessages: () => defaultMessages,
   detectTheme: () => detectTheme,
@@ -166,6 +169,7 @@ __export(index_exports, {
   neuralNodes: () => neuralNodes,
   normalizeBars: () => normalizeBars,
   normalizeHex: () => normalizeHex2,
+  notificationCenter: () => notificationCenter,
   objectIcons: () => objectIcons,
   off: () => off,
   okrPanel: () => okrPanel,
@@ -10626,7 +10630,7 @@ function formatDateSimple(s) {
   const str = String(s);
   const parts = str.split("-");
   if (parts.length < 3) return str;
-  const MONTHS2 = [
+  const MONTHS3 = [
     "January",
     "February",
     "March",
@@ -10640,7 +10644,7 @@ function formatDateSimple(s) {
     "November",
     "December"
   ];
-  return `${parseInt(parts[2], 10)} ${MONTHS2[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
+  return `${parseInt(parts[2], 10)} ${MONTHS3[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
 }
 function updateStatusSelectColor(sel, colors) {
   if (!colors) return;
@@ -12170,6 +12174,581 @@ function openSearchDrawer(opts) {
   };
 }
 
+// src/ts/activity-feed.ts
+function buildItemNode(item, animate) {
+  const type = item.type ?? "default";
+  const row = document.createElement("div");
+  row.className = `mn-feed__item mn-feed__item--${type}`;
+  row.dataset.id = item.id;
+  const indicator = document.createElement("div");
+  indicator.className = "mn-feed__indicator";
+  row.appendChild(indicator);
+  if (item.icon) {
+    const iconEl = document.createElement("div");
+    iconEl.className = "mn-feed__icon";
+    iconEl.innerHTML = item.icon;
+    row.appendChild(iconEl);
+  }
+  const content = document.createElement("div");
+  content.className = "mn-feed__content";
+  const titleEl = document.createElement("div");
+  titleEl.className = "mn-feed__title";
+  titleEl.textContent = escapeHtml(item.title);
+  content.appendChild(titleEl);
+  if (item.body) {
+    const bodyEl = document.createElement("div");
+    bodyEl.className = "mn-feed__body";
+    bodyEl.textContent = escapeHtml(item.body);
+    content.appendChild(bodyEl);
+  }
+  if (item.meta) {
+    const metaEl = document.createElement("div");
+    metaEl.className = "mn-feed__meta";
+    metaEl.textContent = escapeHtml(item.meta);
+    content.appendChild(metaEl);
+  }
+  row.appendChild(content);
+  if (animate) {
+    row.classList.add("mn-feed__item--entering");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        row.classList.remove("mn-feed__item--entering");
+      });
+    });
+  }
+  return row;
+}
+function enforceMax(el4, items, maxItems) {
+  if (maxItems === void 0 || maxItems <= 0) return;
+  while (items.length > maxItems) {
+    items.pop();
+    const last = el4.lastElementChild;
+    if (last) last.remove();
+  }
+}
+function enforceMaxPrepend(el4, items, maxItems) {
+  if (maxItems === void 0 || maxItems <= 0) return;
+  while (items.length > maxItems) {
+    items.pop();
+    const last = el4.lastElementChild;
+    if (last) last.remove();
+  }
+}
+function activityFeed(el4, items, opts) {
+  const animate = opts?.animate !== false;
+  const maxItems = opts?.maxItems;
+  const internal = [];
+  el4.classList.add("mn-feed");
+  el4.innerHTML = "";
+  if (items) {
+    for (const item of items) {
+      internal.push(item);
+      el4.appendChild(buildItemNode(item, false));
+    }
+    enforceMax(el4, internal, maxItems);
+  }
+  const controller = {
+    /** Append item to the bottom of the feed. */
+    add(item) {
+      internal.push(item);
+      el4.appendChild(buildItemNode(item, animate));
+      enforceMax(el4, internal, maxItems);
+    },
+    /** Insert item at the top of the feed. */
+    prepend(item) {
+      internal.unshift(item);
+      const node = buildItemNode(item, animate);
+      if (el4.firstChild) {
+        el4.insertBefore(node, el4.firstChild);
+      } else {
+        el4.appendChild(node);
+      }
+      enforceMaxPrepend(el4, internal, maxItems);
+    },
+    /** Remove all items from the feed. */
+    clear() {
+      internal.length = 0;
+      el4.innerHTML = "";
+    },
+    /** Tear down the feed and restore the container. */
+    destroy() {
+      internal.length = 0;
+      el4.classList.remove("mn-feed");
+      el4.innerHTML = "";
+    }
+  };
+  return controller;
+}
+
+// src/ts/date-range-picker.ts
+var MONTHS2 = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
+var DAYS2 = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+var SHORT_M = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function toISO(y, m, d) {
+  return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
+function todayISO() {
+  const d = /* @__PURE__ */ new Date();
+  return toISO(d.getFullYear(), d.getMonth(), d.getDate());
+}
+function formatDisplay(iso) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return `${d} ${SHORT_M[m - 1]} ${y}`;
+}
+function parseISO(iso) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+function mondayIdx(date) {
+  return (date.getDay() + 6) % 7;
+}
+function dateRangePicker(el4, opts) {
+  const o = opts ?? {};
+  let range = { from: o.value?.from ?? null, to: o.value?.to ?? null };
+  let viewYear, viewMonth;
+  let popup = null;
+  let picking = false;
+  const now = /* @__PURE__ */ new Date();
+  if (range.from) {
+    const d = parseISO(range.from);
+    viewYear = d.getFullYear();
+    viewMonth = d.getMonth();
+  } else {
+    viewYear = now.getFullYear();
+    viewMonth = now.getMonth();
+  }
+  const trigger = document.createElement("button");
+  trigger.type = "button";
+  trigger.className = "mn-drp__trigger mn-input";
+  el4.appendChild(trigger);
+  updateLabel();
+  function updateLabel() {
+    if (range.from && range.to) {
+      trigger.textContent = `${formatDisplay(range.from)} \u2013 ${formatDisplay(range.to)}`;
+    } else if (range.from) {
+      trigger.textContent = `${formatDisplay(range.from)} \u2013 \u2026`;
+    } else {
+      trigger.textContent = o.placeholder ?? "Select date range\u2026";
+    }
+  }
+  function isDisabled(iso) {
+    return !!o.min && iso < o.min || !!o.max && iso > o.max;
+  }
+  function buildCalendar() {
+    if (!popup) return;
+    const grid = popup.querySelector(".mn-drp__grid");
+    const lbl = popup.querySelector(".mn-drp__month-label");
+    lbl.textContent = `${MONTHS2[viewMonth]} ${viewYear}`;
+    grid.innerHTML = "";
+    for (const dn of DAYS2) {
+      const h = document.createElement("div");
+      h.className = "mn-drp__day-name";
+      h.textContent = dn;
+      grid.appendChild(h);
+    }
+    const offset = mondayIdx(new Date(viewYear, viewMonth, 1));
+    const total = new Date(viewYear, viewMonth + 1, 0).getDate();
+    const today = todayISO();
+    for (let i = 0; i < offset; i++) {
+      const e = document.createElement("div");
+      e.className = "mn-drp__day mn-drp__day--empty";
+      grid.appendChild(e);
+    }
+    for (let d = 1; d <= total; d++) {
+      const iso = toISO(viewYear, viewMonth, d);
+      const cell = document.createElement("div");
+      cell.className = "mn-drp__day";
+      cell.textContent = String(d);
+      cell.dataset.date = iso;
+      if (iso === today) cell.classList.add("mn-drp__day--today");
+      if (isDisabled(iso)) cell.classList.add("mn-drp__day--disabled");
+      if (range.from && (iso === range.from || iso === range.to)) {
+        cell.classList.add("mn-drp__day--selected");
+      }
+      if (range.from && range.to && iso > range.from && iso < range.to) {
+        cell.classList.add("mn-drp__day--in-range");
+      }
+      grid.appendChild(cell);
+    }
+  }
+  function positionPopup() {
+    if (!popup) return;
+    const r = el4.getBoundingClientRect();
+    popup.style.top = `${r.bottom + 4}px`;
+    popup.style.left = `${r.left}px`;
+  }
+  function onGridClick(e) {
+    const t = e.target;
+    if (!t.dataset.date || t.classList.contains("mn-drp__day--disabled")) return;
+    const iso = t.dataset.date;
+    if (!picking || !range.from) {
+      range = { from: iso, to: null };
+      picking = true;
+      buildCalendar();
+      updateLabel();
+      return;
+    }
+    if (iso < range.from) {
+      range = { from: iso, to: null };
+      buildCalendar();
+      updateLabel();
+      return;
+    }
+    range.to = iso;
+    picking = false;
+    updateLabel();
+    closePopup();
+    o.onChange?.(range);
+  }
+  function onKeydown(e) {
+    if (e.key === "Escape") closePopup();
+  }
+  function onClickOutside(e) {
+    if (!popup) return;
+    const t = e.target;
+    if (popup.contains(t) || el4.contains(t)) return;
+    closePopup();
+  }
+  function openPopup() {
+    if (popup) return;
+    popup = document.createElement("div");
+    popup.className = "mn-drp__popup";
+    popup.innerHTML = '<div class="mn-drp__header"><button type="button" class="mn-drp__nav mn-drp__nav--prev">\u2039</button><span class="mn-drp__month-label"></span><button type="button" class="mn-drp__nav mn-drp__nav--next">\u203A</button></div><div class="mn-drp__grid"></div>';
+    document.body.appendChild(popup);
+    positionPopup();
+    buildCalendar();
+    popup.querySelector(".mn-drp__nav--prev").addEventListener("click", () => {
+      if (--viewMonth < 0) {
+        viewMonth = 11;
+        viewYear--;
+      }
+      buildCalendar();
+    });
+    popup.querySelector(".mn-drp__nav--next").addEventListener("click", () => {
+      if (++viewMonth > 11) {
+        viewMonth = 0;
+        viewYear++;
+      }
+      buildCalendar();
+    });
+    popup.querySelector(".mn-drp__grid").addEventListener("click", onGridClick);
+    document.addEventListener("keydown", onKeydown);
+    document.addEventListener("mousedown", onClickOutside);
+    window.addEventListener("scroll", positionPopup, true);
+    window.addEventListener("resize", positionPopup);
+  }
+  function closePopup() {
+    if (!popup) return;
+    document.removeEventListener("keydown", onKeydown);
+    document.removeEventListener("mousedown", onClickOutside);
+    window.removeEventListener("scroll", positionPopup, true);
+    window.removeEventListener("resize", positionPopup);
+    popup.remove();
+    popup = null;
+  }
+  trigger.addEventListener("click", () => {
+    popup ? closePopup() : openPopup();
+  });
+  return {
+    getValue: () => ({ ...range }),
+    setValue(r) {
+      range = { from: r.from, to: r.to };
+      picking = false;
+      if (range.from) {
+        const d = parseISO(range.from);
+        viewYear = d.getFullYear();
+        viewMonth = d.getMonth();
+      }
+      updateLabel();
+      if (popup) buildCalendar();
+    },
+    open: openPopup,
+    close: closePopup,
+    destroy() {
+      closePopup();
+      trigger.remove();
+    }
+  };
+}
+
+// src/ts/charts-bullet.ts
+function resolveCssVar(varName) {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  return raw || "#888";
+}
+function resolveColor(color) {
+  if (color.startsWith("var(")) {
+    const varName = color.slice(4, color.indexOf(")")).split(",")[0].trim();
+    return resolveCssVar(varName);
+  }
+  return color;
+}
+function easeOutCubic3(t) {
+  return 1 - Math.pow(1 - t, 3);
+}
+function defaultRanges(max) {
+  return [
+    { max: max * 0.33, color: "var(--signal-danger)" },
+    { max: max * 0.67, color: "var(--signal-warning)" },
+    { max, color: "var(--signal-ok)" }
+  ];
+}
+function bulletChart(canvas, opts) {
+  const dpr2 = window.devicePixelRatio || 1;
+  const barH = opts.height ?? 40;
+  const hasLabel = Boolean(opts.label);
+  const labelH = hasLabel ? 20 : 0;
+  const totalH = barH + labelH;
+  canvas.width = canvas.offsetWidth * dpr2;
+  canvas.height = totalH * dpr2;
+  canvas.style.width = `${canvas.offsetWidth}px`;
+  canvas.style.height = `${totalH}px`;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  ctx.scale(dpr2, dpr2);
+  const w = canvas.offsetWidth;
+  const ranges = opts.ranges ?? defaultRanges(opts.max);
+  const animate = opts.animate !== false;
+  const duration = 600;
+  const textColor = resolveCssVar("--mn-text");
+  const mutedColor = resolveCssVar("--mn-text-muted");
+  const accentColor = resolveCssVar("--mn-accent");
+  const resolvedRanges = ranges.map((r) => ({
+    max: r.max,
+    color: r.color ? resolveColor(r.color) : "#888"
+  }));
+  function draw(currentValue) {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, w, totalH);
+    if (hasLabel && opts.label) {
+      ctx.font = "11px system-ui, sans-serif";
+      ctx.fillStyle = mutedColor;
+      ctx.textBaseline = "top";
+      ctx.fillText(opts.label, 0, 2);
+    }
+    const barTop = labelH;
+    const barW = w - 40;
+    let prevX = 0;
+    for (const r of resolvedRanges) {
+      const x = r.max / opts.max * barW;
+      ctx.globalAlpha = 0.15;
+      ctx.fillStyle = r.color;
+      ctx.fillRect(prevX, barTop, x - prevX, barH);
+      prevX = x;
+    }
+    ctx.globalAlpha = 1;
+    const valBarH = barH * 0.5;
+    const valBarTop = barTop + (barH - valBarH) / 2;
+    const valW = Math.min(currentValue / opts.max * barW, barW);
+    ctx.fillStyle = accentColor;
+    ctx.fillRect(0, valBarTop, valW, valBarH);
+    const targetX = opts.target / opts.max * barW;
+    ctx.fillStyle = textColor;
+    ctx.fillRect(targetX - 1, barTop, 2, barH);
+    const displayVal = Math.round(currentValue);
+    const valText = opts.unit ? `${displayVal}${opts.unit}` : `${displayVal}`;
+    ctx.font = "bold 12px system-ui, sans-serif";
+    ctx.fillStyle = textColor;
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "left";
+    ctx.fillText(valText, barW + 4, barTop + barH / 2);
+  }
+  if (!animate) {
+    draw(opts.value);
+    return;
+  }
+  let start = null;
+  function frame(ts) {
+    if (start === null) start = ts;
+    const elapsed = ts - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = easeOutCubic3(progress);
+    draw(eased * opts.value);
+    if (progress < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+// src/ts/notification-center.ts
+function buildItem(n, onRemove, onAction) {
+  const el4 = document.createElement("div");
+  const typeCls = `mn-notif-item--${n.type ?? "default"}`;
+  const unreadCls = n.read ? "" : " mn-notif-item--unread";
+  el4.className = `mn-notif-item ${typeCls}${unreadCls}`;
+  el4.dataset.notifId = n.id;
+  const dot = `<span class="mn-notif-item__dot mn-notif-item__dot--${n.type ?? "default"}"></span>`;
+  const title = `<span class="mn-notif-item__title">${escapeHtml(n.title)}</span>`;
+  const body = n.body ? `<span class="mn-notif-item__body">${escapeHtml(n.body)}</span>` : "";
+  const meta = n.timestamp ? `<span class="mn-notif-item__meta">${escapeHtml(n.timestamp)}</span>` : "";
+  const action = n.action ? `<button class="mn-notif-item__action">${escapeHtml(n.action.label)}</button>` : "";
+  const remove = '<button class="mn-notif-item__remove" aria-label="Remove">&times;</button>';
+  el4.innerHTML = `${dot}<div class="mn-notif-item__content">${title}${body}${meta}${action}</div>${remove}`;
+  el4.querySelector(".mn-notif-item__remove")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    onRemove(n.id);
+  });
+  if (n.action) {
+    el4.querySelector(".mn-notif-item__action")?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      n.action?.onClick();
+    });
+  }
+  el4.addEventListener("click", () => {
+    n.read = true;
+    el4.classList.remove("mn-notif-item--unread");
+    onAction?.(n);
+  });
+  return el4;
+}
+function notificationCenter(triggerEl, opts) {
+  const maxVisible = opts?.maxVisible ?? 50;
+  const position = opts?.position ?? "right";
+  const notifications = [];
+  const panel = document.createElement("div");
+  const posCls = position === "left" ? " mn-notif-panel--left" : "";
+  panel.className = `mn-notif-panel${posCls}`;
+  panel.setAttribute("role", "dialog");
+  panel.setAttribute("aria-label", "Notifications");
+  const header = document.createElement("div");
+  header.className = "mn-notif-panel__header";
+  header.innerHTML = '<span class="mn-notif-panel__title">Notifications <span class="mn-notif-panel__badge">0</span></span><button class="mn-notif-panel__mark-all">Mark all read</button>';
+  const list = document.createElement("div");
+  list.className = "mn-notif-panel__list";
+  const empty = document.createElement("div");
+  empty.className = "mn-notif-panel__empty";
+  empty.textContent = "No notifications";
+  const backdrop2 = document.createElement("div");
+  backdrop2.className = "mn-notif-backdrop";
+  panel.appendChild(header);
+  panel.appendChild(list);
+  panel.appendChild(empty);
+  document.body.appendChild(panel);
+  document.body.appendChild(backdrop2);
+  const badge = header.querySelector(".mn-notif-panel__badge");
+  const markAllBtn = header.querySelector(".mn-notif-panel__mark-all");
+  function getUnreadCount() {
+    return notifications.filter((n) => !n.read).length;
+  }
+  function updateBadge() {
+    const count = getUnreadCount();
+    badge.textContent = String(count);
+    badge.style.display = count > 0 ? "" : "none";
+    triggerEl.dataset.unreadCount = String(count);
+    triggerEl.classList.toggle("mn-notif-trigger--has-unread", count > 0);
+  }
+  function updateEmpty() {
+    empty.style.display = notifications.length === 0 ? "" : "none";
+  }
+  function removeItem(id) {
+    const idx = notifications.findIndex((n) => n.id === id);
+    if (idx === -1) return;
+    notifications.splice(idx, 1);
+    list.querySelector(`[data-notif-id="${id}"]`)?.remove();
+    updateBadge();
+    updateEmpty();
+  }
+  function renderAll() {
+    list.innerHTML = "";
+    for (const n of notifications) {
+      list.appendChild(buildItem(n, removeItem, opts?.onAction));
+    }
+    updateBadge();
+    updateEmpty();
+  }
+  let isOpen = false;
+  function openPanel() {
+    isOpen = true;
+    panel.classList.add("mn-notif-panel--open");
+    backdrop2.style.display = "block";
+  }
+  function closePanel() {
+    isOpen = false;
+    panel.classList.remove("mn-notif-panel--open");
+    backdrop2.style.display = "none";
+  }
+  function togglePanel() {
+    isOpen ? closePanel() : openPanel();
+  }
+  const onTriggerClick = () => togglePanel();
+  triggerEl.addEventListener("click", onTriggerClick);
+  const onKeydown = (e) => {
+    if (e.key === "Escape" && isOpen) closePanel();
+  };
+  document.addEventListener("keydown", onKeydown);
+  const onBackdropClick = () => closePanel();
+  backdrop2.addEventListener("click", onBackdropClick);
+  markAllBtn.addEventListener("click", () => {
+    for (const n of notifications) n.read = true;
+    list.querySelectorAll(".mn-notif-item--unread").forEach(
+      (el4) => el4.classList.remove("mn-notif-item--unread")
+    );
+    updateBadge();
+  });
+  renderAll();
+  return {
+    add(n) {
+      notifications.unshift(n);
+      if (notifications.length > maxVisible) {
+        const removed = notifications.pop();
+        if (removed) {
+          list.querySelector(`[data-notif-id="${removed.id}"]`)?.remove();
+        }
+      }
+      const el4 = buildItem(n, removeItem, opts?.onAction);
+      list.prepend(el4);
+      updateBadge();
+      updateEmpty();
+    },
+    markRead(id) {
+      const n = notifications.find((x) => x.id === id);
+      if (!n) return;
+      n.read = true;
+      list.querySelector(`[data-notif-id="${id}"]`)?.classList.remove("mn-notif-item--unread");
+      updateBadge();
+    },
+    markAllRead() {
+      for (const n of notifications) n.read = true;
+      list.querySelectorAll(".mn-notif-item--unread").forEach(
+        (el4) => el4.classList.remove("mn-notif-item--unread")
+      );
+      updateBadge();
+    },
+    remove: removeItem,
+    clear() {
+      notifications.length = 0;
+      list.innerHTML = "";
+      updateBadge();
+      updateEmpty();
+    },
+    getUnreadCount,
+    open: openPanel,
+    close: closePanel,
+    toggle: togglePanel,
+    destroy() {
+      triggerEl.removeEventListener("click", onTriggerClick);
+      document.removeEventListener("keydown", onKeydown);
+      backdrop2.removeEventListener("click", onBackdropClick);
+      panel.remove();
+      backdrop2.remove();
+      triggerEl.classList.remove("mn-notif-trigger--has-unread");
+      delete triggerEl.dataset.unreadCount;
+    }
+  };
+}
+
 // src/ts/maranello-exports.ts
 function registerExtras(M2) {
   M2.SPEEDO_FONT = SPEEDO_FONT;
@@ -12222,6 +12801,10 @@ function registerExtras(M2) {
   M2.showMapTip = showTip3;
   M2.hideMapTip = hideTip3;
   M2.attachMapEvents = attachEvents;
+  M2.activityFeed = activityFeed;
+  M2.dateRangePicker = dateRangePicker;
+  M2.bulletChart = bulletChart;
+  M2.notificationCenter = notificationCenter;
 }
 
 // src/ts/maranello.ts

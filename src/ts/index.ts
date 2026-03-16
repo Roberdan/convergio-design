@@ -10,22 +10,7 @@ export { EventBus, eventBus } from './core/events';
 export type { EventCallback } from './core/events';
 
 // Utilities
-export {
-  cssVar,
-  palette,
-  getTheme,
-  setTheme,
-  cycleTheme,
-  getAccent,
-  debounce,
-  throttle,
-  createElement,
-  formatNumber,
-  formatDate,
-  clamp,
-  lerp,
-  hiDpiCanvas,
-} from './core/utils';
+export { cssVar, palette, getTheme, setTheme, cycleTheme, getAccent, debounce, throttle, createElement, formatNumber, formatDate, clamp, lerp, hiDpiCanvas } from './core/utils';
 
 export { networkMessages } from './network-messages';
 export { neuralNodes } from './neural-nodes';
@@ -245,6 +230,19 @@ export { openSearchDrawer } from './search-drawer';
 export type {
   SearchDrawerOptions, SearchDrawerResult, SearchDrawerController,
 } from './search-drawer';
+
+// Activity feed
+export { activityFeed } from './activity-feed';
+export type { ActivityItem, ActivityFeedOptions, ActivityFeedController } from './activity-feed';
+// Date range picker
+export { dateRangePicker } from './date-range-picker';
+export type { DateRange, DateRangePickerOptions, DateRangePickerController } from './date-range-picker';
+// Bullet chart
+export { bulletChart } from './charts-bullet';
+export type { BulletRange, BulletChartOptions } from './charts-bullet';
+// Notification center
+export { notificationCenter } from './notification-center';
+export type { MnNotification, NotificationCenterOptions, NotificationCenterController } from './notification-center';
 
 // Maranello facade (auto-init)
 export { Maranello } from './maranello';

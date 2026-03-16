@@ -33,6 +33,10 @@ import {
 import {
   showTip as showMapTip, hideTip as hideMapTip, attachEvents,
 } from './map-view-events';
+import { activityFeed } from './activity-feed';
+import { dateRangePicker } from './date-range-picker';
+import { bulletChart } from './charts-bullet';
+import { notificationCenter } from './notification-center';
 
 /** Register W3/W4 primitives on the window.Maranello namespace object. */
 export function registerExtras(M: Record<string, unknown>): void {
@@ -95,4 +99,10 @@ export function registerExtras(M: Record<string, unknown>): void {
   M.showMapTip = showMapTip;
   M.hideMapTip = hideMapTip;
   M.attachMapEvents = attachEvents;
+
+  // New dashboard components (v4.6)
+  M.activityFeed = activityFeed;
+  M.dateRangePicker = dateRangePicker;
+  M.bulletChart = bulletChart;
+  M.notificationCenter = notificationCenter;
 }
