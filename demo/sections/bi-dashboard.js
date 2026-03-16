@@ -67,21 +67,21 @@ export function createBiDashboardSection() {
       <p class="mn-body mn-mb-2xl">Risk matrix, KPI scorecard, budget waterfall, approval workflow, and cohort retention — all interactive.</p>
 
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-md);margin-bottom:var(--space-2xl)">
-        <div class="mn-card-dark" style="padding:var(--space-lg);border-left:3px solid var(--signal-danger)">
-          <div class="mn-title-md" style="color:var(--signal-danger);font-variant-numeric:tabular-nums" id="bi-kpi-risk">${highRisk}</div>
-          <div class="mn-micro" style="color:var(--mn-text-muted);margin-top:4px">High-risk items</div>
+        <div class="mn-card-dark" style="padding:var(--space-md) var(--space-lg);display:flex;align-items:center;gap:var(--space-md)">
+          <div id="bi-ring-risk" style="position:relative;flex-shrink:0;width:52px;height:52px"><span id="bi-kpi-risk" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.7rem;font-weight:700;color:var(--signal-danger)">${highRisk}</span></div>
+          <div><div class="mn-body" style="color:var(--signal-danger);font-weight:700;font-variant-numeric:tabular-nums">${highRisk} of ${RISK_ITEMS.length}</div><div class="mn-micro" style="color:var(--mn-text-muted);margin-top:2px">High-risk items</div></div>
         </div>
-        <div class="mn-card-dark" style="padding:var(--space-lg);border-left:3px solid var(--signal-ok)">
-          <div class="mn-title-md" id="bi-kpi-ontrack" style="color:var(--signal-ok);font-variant-numeric:tabular-nums">3 / 5</div>
-          <div class="mn-micro" style="color:var(--mn-text-muted);margin-top:4px">KPIs on target</div>
+        <div class="mn-card-dark" style="padding:var(--space-md) var(--space-lg);display:flex;align-items:center;gap:var(--space-md)">
+          <div id="bi-ring-ontrack" style="position:relative;flex-shrink:0;width:52px;height:52px"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.7rem;font-weight:700;color:var(--signal-ok)">3/5</span></div>
+          <div><div class="mn-body" id="bi-kpi-ontrack" style="color:var(--signal-ok);font-weight:700;font-variant-numeric:tabular-nums">3 / 5</div><div class="mn-micro" style="color:var(--mn-text-muted);margin-top:2px">KPIs on target</div></div>
         </div>
-        <div class="mn-card-dark" style="padding:var(--space-lg);border-left:3px solid var(--signal-warning)">
-          <div class="mn-title-md" id="bi-kpi-approval" style="color:var(--signal-warning);font-variant-numeric:tabular-nums">40%</div>
-          <div class="mn-micro" style="color:var(--mn-text-muted);margin-top:4px">Approval progress</div>
+        <div class="mn-card-dark" style="padding:var(--space-md) var(--space-lg);display:flex;align-items:center;gap:var(--space-md)">
+          <div id="bi-ring-approval" style="position:relative;flex-shrink:0;width:52px;height:52px"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.7rem;font-weight:700;color:var(--signal-warning)">40%</span></div>
+          <div><div class="mn-body" id="bi-kpi-approval" style="color:var(--signal-warning);font-weight:700;font-variant-numeric:tabular-nums">40%</div><div class="mn-micro" style="color:var(--mn-text-muted);margin-top:2px">Approval progress</div></div>
         </div>
-        <div class="mn-card-dark" style="padding:var(--space-lg);border-left:3px solid var(--signal-info)">
-          <div class="mn-title-md" style="color:var(--signal-info);font-variant-numeric:tabular-nums">${avgM1}%</div>
-          <div class="mn-micro" style="color:var(--mn-text-muted);margin-top:4px">Avg M1 retention</div>
+        <div class="mn-card-dark" style="padding:var(--space-md) var(--space-lg);display:flex;align-items:center;gap:var(--space-md)">
+          <div id="bi-ring-ret" style="position:relative;flex-shrink:0;width:52px;height:52px"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.7rem;font-weight:700;color:var(--signal-info)">${avgM1}%</span></div>
+          <div><div class="mn-body" style="color:var(--signal-info);font-weight:700;font-variant-numeric:tabular-nums">${avgM1}%</div><div class="mn-micro" style="color:var(--mn-text-muted);margin-top:2px">Avg M1 retention</div></div>
         </div>
       </div>
 
@@ -158,6 +158,12 @@ ctrl.setStatus(id, 'approved', '10:30');</pre>
     </div>`;
 
   requestAnimationFrame(() => {
+    /* ── KPI rings ── */
+    M.progressRing(section.querySelector('#bi-ring-risk'), { value: highRisk, max: RISK_ITEMS.length, size: 52, thickness: 4, color: '#DC0000' });
+    M.progressRing(section.querySelector('#bi-ring-ontrack'), { value: 3, max: 5, size: 52, thickness: 4, color: '#00A651' });
+    const biRingApproval = M.progressRing(section.querySelector('#bi-ring-approval'), { value: 40, max: 100, size: 52, thickness: 4, color: '#FFC72C' });
+    M.progressRing(section.querySelector('#bi-ring-ret'), { value: avgM1, max: 100, size: 52, thickness: 4, color: '#3B82F6' });
+
     /* ── Risk Matrix ── */
     const riskBadge = section.querySelector('#bi-risk-badge');
     M.riskMatrix(section.querySelector('#bi-risk'), {
@@ -201,7 +207,9 @@ ctrl.setStatus(id, 'approved', '10:30');</pre>
       if (next) { next.status = 'current'; approvalCtrl.setStatus(next.id, 'current'); }
       const done = steps.filter(s => s.status === 'approved' || s.status === 'rejected').length;
       approvalStatus.textContent = `${approvedCount} approved · ${done < steps.length ? '1 in review' : 'complete'} · ${steps.length - done - 1} pending`;
-      section.querySelector('#bi-kpi-approval').textContent = Math.round(approvedCount / steps.length * 100) + '%';
+      const pct = Math.round(approvedCount / steps.length * 100);
+      section.querySelector('#bi-kpi-approval').textContent = pct + '%';
+      biRingApproval.setValue(pct);
     }
     section.querySelector('#bi-approval-approve').addEventListener('click', () => advanceApproval('approved'));
     section.querySelector('#bi-approval-reject').addEventListener('click',  () => advanceApproval('rejected'));

@@ -80,17 +80,17 @@ function buildEntry(entry: AuditEntry, ac: AbortController, onSelect?: (e: Audit
   expand.className = 'mn-audit__expand';
   expand.setAttribute('aria-hidden', 'true');
   if (entry.metadata || entry.ipAddress) {
-    const dl = document.createElement('dl');
-    dl.className = 'mn-audit__meta-table';
-    if (entry.ipAddress) {
-      dl.innerHTML += `<dt>IP</dt><dd class="mn-audit__ip">${escapeHtml(entry.ipAddress)}</dd>`;
-    }
-    if (entry.metadata) {
-      for (const [k, v] of Object.entries(entry.metadata)) {
-        dl.innerHTML += `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`;
-      }
-    }
-    expand.appendChild(dl);
+    const chips = document.createElement('div');
+    chips.className = 'mn-audit__chips';
+    const mkChip = (key: string, val: string) => {
+      const c = document.createElement('span');
+      c.className = 'mn-audit__chip';
+      c.innerHTML = `<span class="mn-audit__chip-key">${escapeHtml(key)}</span> ${escapeHtml(val)}`;
+      chips.appendChild(c);
+    };
+    if (entry.ipAddress) mkChip('IP', entry.ipAddress);
+    if (entry.metadata) for (const [k, v] of Object.entries(entry.metadata)) mkChip(k, v);
+    expand.appendChild(chips);
   }
   body.appendChild(expand);
   li.append(dot, body);
@@ -145,12 +145,9 @@ export function auditLog(
   el.setAttribute('aria-label', 'Audit log');
   el.innerHTML = '';
 
-  /* Header with title + filter tabs */
+  /* Header with filter tabs */
   const header = document.createElement('div');
   header.className = 'mn-audit__header';
-  const title = document.createElement('h3');
-  title.className = 'mn-audit__title';
-  title.textContent = 'Audit Log';
 
   const tabBar = document.createElement('div');
   tabBar.className = 'mn-audit__tabs';
@@ -167,7 +164,7 @@ export function auditLog(
       tabBar.appendChild(btn);
     }
   }
-  header.append(title, tabBar);
+  header.appendChild(tabBar);
   el.appendChild(header);
 
   /* Live region for screen readers */

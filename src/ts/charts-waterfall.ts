@@ -110,7 +110,7 @@ export function waterfallChart(
   const maxVal = Math.max(...allVals);
   const range = maxVal - minVal || 1;
 
-  const pad = { top: 24, bottom: 30, left: 12, right: 12 };
+  const pad = { top: 24, bottom: 30, left: 52, right: 12 };
   const chartW = logicalW - pad.left - pad.right;
   const chartH = logicalH - pad.top - pad.bottom;
   const n = segments.length;
@@ -126,6 +126,26 @@ export function waterfallChart(
   function drawBars(progress: number): void {
     if (!ctx) return;
     ctx.clearRect(0, 0, logicalW, logicalH);
+
+    // Y-axis gridlines + scale labels
+    const gridCount = 5;
+    ctx.font = '9px system-ui, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.setLineDash([3, 3]);
+    ctx.lineWidth = 0.5;
+    for (let g = 0; g <= gridCount; g++) {
+      const v = minVal + (range / gridCount) * g;
+      const yy = yScale(v);
+      ctx.strokeStyle = hexToRgba(colorBorder, 0.2);
+      ctx.beginPath(); ctx.moveTo(pad.left, yy); ctx.lineTo(logicalW - pad.right, yy); ctx.stroke();
+      const abs = Math.abs(v);
+      const lbl = abs >= 1_000_000 ? (v / 1_000_000).toFixed(1) + 'M'
+        : abs >= 1_000 ? (v / 1_000).toFixed(1) + 'k' : String(Math.round(v));
+      ctx.fillStyle = colorMuted;
+      ctx.fillText(lbl, pad.left - 4, yy);
+    }
+    ctx.setLineDash([]);
 
     // Zero baseline
     const zeroY = yScale(0);

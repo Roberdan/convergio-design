@@ -44,21 +44,21 @@ export function createAgenticSection() {
       <p class="mn-body mn-mb-2xl">Agent execution trace, token budget, streaming output, and human-in-the-loop approval — built for production AI pipelines.</p>
 
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-md);margin-bottom:var(--space-2xl)">
-        <div class="mn-card-dark" style="padding:var(--space-lg);border-left:3px solid var(--mn-accent)">
-          <div class="mn-title-md" id="ag-kpi-steps" style="font-variant-numeric:tabular-nums;color:var(--mn-text)">5</div>
-          <div class="mn-micro" style="color:var(--mn-text-muted);margin-top:4px">Steps traced</div>
+        <div class="mn-card-dark" style="padding:var(--space-md) var(--space-lg);display:flex;align-items:center;gap:var(--space-md)">
+          <div id="ag-ring-steps" style="position:relative;flex-shrink:0;width:52px;height:52px"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.7rem;font-weight:700;color:var(--mn-accent)">5</span></div>
+          <div><div class="mn-body" id="ag-kpi-steps" style="font-variant-numeric:tabular-nums;color:var(--mn-accent);font-weight:700">5</div><div class="mn-micro" style="color:var(--mn-text-muted);margin-top:2px">Steps traced</div></div>
         </div>
-        <div class="mn-card-dark" style="padding:var(--space-lg);border-left:3px solid var(--signal-info)">
-          <div class="mn-title-md" id="ag-kpi-tokens" style="font-variant-numeric:tabular-nums;color:var(--signal-info)">8,344</div>
-          <div class="mn-micro" style="color:var(--mn-text-muted);margin-top:4px">Tokens used</div>
+        <div class="mn-card-dark" style="padding:var(--space-md) var(--space-lg);display:flex;align-items:center;gap:var(--space-md)">
+          <div id="ag-ring-tokens" style="position:relative;flex-shrink:0;width:52px;height:52px"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.65rem;font-weight:700;color:var(--signal-info)">8.3k</span></div>
+          <div><div class="mn-body" id="ag-kpi-tokens" style="font-variant-numeric:tabular-nums;color:var(--signal-info);font-weight:700">8,344</div><div class="mn-micro" style="color:var(--mn-text-muted);margin-top:2px">Tokens used</div></div>
         </div>
-        <div class="mn-card-dark" style="padding:var(--space-lg);border-left:3px solid var(--signal-ok)">
-          <div class="mn-title-md" id="ag-kpi-cost" style="font-variant-numeric:tabular-nums;color:var(--signal-ok)">$0.025</div>
-          <div class="mn-micro" style="color:var(--mn-text-muted);margin-top:4px">Estimated cost</div>
+        <div class="mn-card-dark" style="padding:var(--space-md) var(--space-lg);display:flex;align-items:center;gap:var(--space-md)">
+          <div id="ag-ring-cost" style="position:relative;flex-shrink:0;width:52px;height:52px"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.65rem;font-weight:700;color:var(--signal-ok)">$0.02</span></div>
+          <div><div class="mn-body" id="ag-kpi-cost" style="font-variant-numeric:tabular-nums;color:var(--signal-ok);font-weight:700">$0.025</div><div class="mn-micro" style="color:var(--mn-text-muted);margin-top:2px">Estimated cost</div></div>
         </div>
-        <div class="mn-card-dark" style="padding:var(--space-lg);border-left:3px solid var(--signal-warning)">
-          <div class="mn-title-md" id="ag-kpi-cache" style="font-variant-numeric:tabular-nums;color:var(--signal-warning)">38.7%</div>
-          <div class="mn-micro" style="color:var(--mn-text-muted);margin-top:4px">Cache hit ratio</div>
+        <div class="mn-card-dark" style="padding:var(--space-md) var(--space-lg);display:flex;align-items:center;gap:var(--space-md)">
+          <div id="ag-ring-cache" style="position:relative;flex-shrink:0;width:52px;height:52px"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.7rem;font-weight:700;color:var(--signal-warning)">39%</span></div>
+          <div><div class="mn-body" id="ag-kpi-cache" style="font-variant-numeric:tabular-nums;color:var(--signal-warning);font-weight:700">38.7%</div><div class="mn-micro" style="color:var(--mn-text-muted);margin-top:2px">Cache hit ratio</div></div>
         </div>
       </div>
 
@@ -150,6 +150,7 @@ chain.setStatus(id, 'approved', timestamp);</pre>
   requestAnimationFrame(() => {
     let latencyData = LATENCY_VALS.slice();
     let extraStep = DEMO_STEPS.length;
+    let agRingTokens, agRingCache;
 
     /* KPI helpers */
     function refreshKpis(usage) {
@@ -159,6 +160,8 @@ chain.setStatus(id, 'approved', timestamp);</pre>
       section.querySelector('#ag-kpi-tokens').textContent = totalTok.toLocaleString();
       section.querySelector('#ag-kpi-cost').textContent = '$' + cost.toFixed(3);
       section.querySelector('#ag-kpi-cache').textContent = cacheRatio + '%';
+      if (agRingTokens) agRingTokens.setValue(totalTok);
+      if (agRingCache) agRingCache.setValue(parseFloat(cacheRatio));
     }
 
     /* Agent Trace */
@@ -187,6 +190,8 @@ chain.setStatus(id, 'approved', timestamp);</pre>
 
     /* Token Meter */
     const meterCtrl = M.tokenMeter(section.querySelector('#ag-token'), TOKEN_USAGE, { showCost: true, showBreakdown: true });
+    agRingTokens = M.progressRing(section.querySelector('#ag-ring-tokens'), { value: TOKEN_USAGE.prompt + TOKEN_USAGE.completion, max: TOKEN_USAGE.budget, size: 52, thickness: 4, color: '#3B82F6' });
+    agRingCache = M.progressRing(section.querySelector('#ag-ring-cache'), { value: 38.7, max: 100, size: 52, thickness: 4, color: '#FFC72C' });
     section.querySelector('#ag-token-sim').addEventListener('click', () => {
       const u = { prompt: Math.round(Math.random() * 6000 + 1000), completion: Math.round(Math.random() * 1000 + 200),
         cached: Math.round(Math.random() * 3000), budget: 8000, costPerMToken: 3.0 };
