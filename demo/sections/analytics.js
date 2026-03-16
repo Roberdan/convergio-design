@@ -1,6 +1,6 @@
 /**
  * Analytics section — waterfallChart, confidenceChart, decisionMatrix, renderSourceCards
- * Realistic VirtualBPM / RAG data: scenario analysis, forecast, decision scoring.
+ * Realistic business RAG data: scenario analysis, forecast, decision scoring.
  */
 
 const WATERFALL_DATA = [
@@ -39,7 +39,7 @@ const MATRIX_OPTS = {
 const SOURCE_CARDS = [
   { id: 's1', title: 'Q4 2025 Infrastructure Cost Analysis', excerpt: 'Inference costs grew 23% QoQ driven by increased embedding workloads. Recommend tiered caching strategy to reduce redundant API calls by an estimated 40%.', source: 'FinOps Report Q4-2025.pdf', score: 0.96, date: 'Dec 2025', badge: 'Report' },
   { id: 's2', title: 'Agent Model Selection Guidelines', excerpt: 'Selection criteria for production agents: latency requirements, accuracy benchmarks, and total cost of ownership analysis across major providers.', source: 'Internal Policy v3.2', score: 0.88, date: 'Feb 2026', badge: 'Policy' },
-  { id: 's3', title: 'VirtualBPM SLA Contract — Clause 4.2', excerpt: 'Response time guarantees: P95 latency must not exceed 450ms for synchronous agent calls. Penalty clause applies above 1.2× threshold.', source: 'Contract MSA-2024-087', score: 0.81, date: 'Jan 2024', badge: 'Contract' },
+  { id: 's3', title: 'Platform SLA Contract — Clause 4.2', excerpt: 'Response time guarantees: P95 latency must not exceed 450ms for synchronous agent calls. Penalty clause applies above 1.2× threshold.', source: 'Contract MSA-2024-087', score: 0.81, date: 'Jan 2024', badge: 'Contract' },
   { id: 's4', title: 'Prompt Caching ROI Study', excerpt: 'A 3-month study across 6 enterprise deployments showed prompt caching reduces token spend by 28-41% with negligible accuracy degradation.', source: 'Research Paper arXiv:2501.xxxxx', score: 0.74, date: 'Jan 2026', badge: 'Research' },
 ];
 
