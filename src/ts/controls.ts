@@ -91,7 +91,10 @@ export function closeDrawer(id: string, triggerEl?: HTMLElement | null): void {
 }
 
 /** Initialize org tree expand/collapse, node selection, and keyboard nav. */
-export function initOrgTree(container: HTMLElement): void {
+export function initOrgTree(container: HTMLElement): { destroy: () => void } {
+  const ac = new AbortController();
+  const sig = { signal: ac.signal };
+
   container.querySelectorAll<HTMLElement>('.mn-org-tree__toggle').forEach((toggle) => {
     if (toggle.classList.contains('mn-org-tree__toggle--leaf')) return;
     const item = toggle.closest('.mn-org-tree__item');
@@ -105,7 +108,7 @@ export function initOrgTree(container: HTMLElement): void {
       children.classList.toggle('mn-org-tree__children--collapsed');
       toggle.classList.toggle('mn-org-tree__toggle--expanded', collapsed);
       toggle.setAttribute('aria-expanded', String(collapsed));
-    });
+    }, sig);
   });
 
   const nodes = container.querySelectorAll<HTMLElement>('.mn-org-tree__node');
@@ -121,7 +124,7 @@ export function initOrgTree(container: HTMLElement): void {
         label: label ? label.textContent ?? '' : '',
         node,
       });
-    });
+    }, sig);
     node.addEventListener('keydown', (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown') {
         e.preventDefault();
@@ -144,8 +147,10 @@ export function initOrgTree(container: HTMLElement): void {
           ?.querySelector<HTMLElement>('.mn-org-tree__toggle');
         if (toggle && toggle.getAttribute('aria-expanded') === 'true') toggle.click();
       }
-    });
+    }, sig);
   });
+
+  return { destroy: () => ac.abort() };
 }
 
 /** Toggle notification center visibility. */
