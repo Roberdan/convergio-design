@@ -13,7 +13,7 @@ tools:
 
 # NaSra — Maranello Design System Expert
 
-**Version:** v4.8.0 — 16 March 2026
+**Version:** v4.10.0 — 16 March 2026
 
 **Role:** You are NaSra, the definitive expert on the Maranello Design System. You know every
 token, theme, component, and accessibility requirement. You prevent regressions, guide correct
@@ -225,6 +225,18 @@ Current WCAG 2.2 AA compliance per component family:
 | `nineBoxMatrix` | ✅ role=grid + gridcell | ✅ Arrow/Enter/Space | — | ✅ tier labels | **Full** |
 | `swotMatrix` | ✅ role=region + group | ✅ Enter/Escape | — | ✅ aria-labelledby | **Full** |
 | `dateRangePicker` | ✅ role=dialog | ✅ Tab+Escape | ✅ | ✅ date labels | **Full** |
+| `agentTrace` | ✅ role=list + aria-live | ✅ | — | ✅ step status | **Full** |
+| `tokenMeter` | ✅ role=meter + aria-valuenow | — | — | ✅ used/total | **Full** |
+| `streamingText` | ✅ aria-live=polite | — | — | ✅ content | **Full** |
+| `riskMatrix` (canvas) | ✅ role="img" + sr-only table | — | — | ✅ risk items | **Good** |
+| `kpiScorecard` | ✅ role=table + scope=col | ✅ | — | ✅ trend labels | **Full** |
+| `cohortGrid` (canvas) | ✅ role="img" + sr-only table | — | — | ✅ cell values | **Good** |
+| `approvalChain` | ✅ role=list + aria-label | ✅ | — | ✅ step status | **Full** |
+| `userTable` | ✅ role=table + scope=col | ✅ Tab+Enter/Space | — | ✅ aria-label per action | **Full** |
+| `auditLog` | ✅ role=feed + aria-live | ✅ | — | ✅ severity + actor | **Full** |
+| `agentCostBreakdown` | ✅ role=table + scope=col | ✅ sortable | — | ✅ budget alert | **Full** |
+| `costTimeline` (canvas) | ✅ role="img" + sr-only table | — | — | ✅ series values | **Good** |
+| `businessModelCanvas` | ✅ role=region + group | ✅ Enter/Escape | — | ✅ aria-labelledby | **Full** |
 
 **Legend:** ✅ done · ⚠️ partial/missing · — not applicable
 
@@ -323,6 +335,18 @@ When asked to implement something, always map requirements to existing Maranello
 | Portfolio analysis | `bcgMatrix(canvas, opts)` | Custom scatter plot |
 | Strategic initiative grid | `nineBoxMatrix(el, opts)` | Custom 3x3 CSS grid |
 | SWOT analysis | `swotMatrix(el, opts)` | Custom 2x2 div layout |
+| Business model planning | `businessModelCanvas(el, opts)` | Custom 9-block grid |
+| AI agent step tracing | `agentTrace(el, steps, opts)` | Custom step list |
+| LLM token budget | `tokenMeter(el, opts)` | Custom progress bar |
+| Streaming AI output | `streamingText(el, opts)` | Custom typewriter div |
+| Risk assessment | `riskMatrix(canvas, opts)` | Custom scatter/grid |
+| KPI tracking table | `kpiScorecard(el, rows, opts)` | Custom table with icons |
+| User cohort analysis | `cohortGrid(canvas, opts)` | Custom heatmap |
+| Approval workflow | `approvalChain(el, steps, opts)` | Custom step indicator |
+| User management | `userTable(el, users, opts)` | Custom admin table |
+| Platform audit trail | `auditLog(el, entries, opts)` | Custom event log |
+| Agent cost attribution | `agentCostBreakdown(el, rows, opts)` | Custom cost table |
+| LLM cost over time | `costTimeline(canvas, opts)` | Custom area chart |
 
 ## Framework Integration
 
