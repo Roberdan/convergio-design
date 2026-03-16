@@ -65,8 +65,7 @@ export async function registerAll(): Promise<void> {
     import('./mn-profile.js'),
     import('./mn-speedometer.js'),
     import('./mn-system-status.js'),
-    import('./mn-tab.js'),
-    import('./mn-tabs.js'),
+    import('./mn-tabs.js'), // also registers mn-tab
     import('./mn-section-nav.js'),
     import('./mn-theme-rotary.js'),
     import('./mn-theme-toggle.js'),
