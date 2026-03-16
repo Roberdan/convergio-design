@@ -43,6 +43,7 @@ const SECTIONS = new Map([
   ['data-binding',   () => import('./sections/data-binding.js').then(m => m.createDataBindingSection)],
   ['overlays',       () => import('./sections/overlays.js').then(m => m.createOverlaysSection)],
   ['org-tree',       () => import('./sections/org-tree.js').then(m => m.createOrgTreeSection)],
+  ['dashboard-widgets', () => import('./sections/dashboard-widgets.js').then(m => m.createDashboardWidgetsSection)],
 ]);
 
 const SECTION_KEYS = [...SECTIONS.keys()];
@@ -58,6 +59,7 @@ const SECTION_LABELS = {
   'web-components': 'WC', 'launch': 'Launch', 'accessibility': 'A11y',
   'api-reference': 'API', 'data-binding': 'Binding', 'overlays': 'Overlays',
   'org-tree': 'Org',
+  'dashboard-widgets': 'Widgets',
 };
 
 function safeErr(name, err) {
