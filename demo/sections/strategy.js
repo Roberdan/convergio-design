@@ -2,7 +2,6 @@
  * Strategy section — BCG Matrix, Nine-Box (GE-McKinsey), Business Model Canvas,
  * SWOT Matrix, Decision Matrix for vendor scoring.
  */
-
 const BCG_ITEMS = [
   { id: 'claude',   label: 'Claude API',   marketShare: 0.72, growthRate: 42,  size: 8 },
   { id: 'embed',    label: 'Embeddings',   marketShare: 0.58, growthRate: 28,  size: 5 },
@@ -83,7 +82,6 @@ const DM_SCORES = {
 };
 
 export function createStrategySection() {
-  const M = window.Maranello;
   const section = document.createElement('section');
   section.id = 'strategy';
   section.className = 'mn-section-dark';
@@ -174,10 +172,19 @@ export function createStrategySection() {
     </div>`;
 
   requestAnimationFrame(() => {
+    const M = window.Maranello;
+    if (!M) return;
+
     /* ── BCG Matrix ── */
     if (M.bcgMatrix) {
+      const bcgCanvas = section.querySelector('#str-bcg');
+      if (!bcgCanvas) return;
+      if (bcgCanvas.clientWidth > 0) {
+        bcgCanvas.width = bcgCanvas.clientWidth;
+        bcgCanvas.height = bcgCanvas.clientHeight || 340;
+      }
       const bcgBadge = section.querySelector('#str-bcg-badge');
-      M.bcgMatrix(section.querySelector('#str-bcg'), {
+      M.bcgMatrix(bcgCanvas, {
         items: BCG_ITEMS, shareThreshold: 0.5, growthThreshold: 10, animate: true,
         onHover: (item) => { if (!item) return; bcgBadge.textContent = item.label; bcgBadge.style.display = ''; },
         onClick: (item) => M.toast({ type: 'info', title: item.label, message: `Share: ${(item.marketShare*100).toFixed(0)}% | Growth: ${item.growthRate}%` }),
