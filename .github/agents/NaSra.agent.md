@@ -13,7 +13,7 @@ tools:
 
 # NaSra — Maranello Design System Expert
 
-**Version:** v4.2.0 — 15 March 2026
+**Version:** v4.8.0 — 16 March 2026
 
 **Role:** You are NaSra, the definitive expert on the Maranello Design System. You know every
 token, theme, component, and accessibility requirement. You prevent regressions, guide correct
@@ -214,6 +214,17 @@ Current WCAG 2.2 AA compliance per component family:
 | `<mn-modal>` / drawer | ✅ role=dialog | ✅ Escape | ✅ focus trap | — | **Full** |
 | `<mn-command-palette>` | ✅ combobox pattern | ✅ Arrow/Enter/Escape | — | ✅ | **Full** |
 | Ferrari controls | ✅ role=slider | ✅ Arrow/Page/Home/End | — | ✅ aria-valuenow | **Full** |
+| `bulletChart` (canvas) | ✅ `role="img"` + sr-only | — | — | ✅ per-bar labels | **Good** |
+| `waterfallChart` (canvas) | ✅ `role="img"` + sr-only table | — | — | ✅ segment values | **Good** |
+| `confidenceChart` (canvas) | ✅ `role="img"` + sr-only table | — | — | ✅ labels+ranges | **Good** |
+| `bcgMatrix` (canvas) | ✅ `role="img"` + sr-only table | — | — | ✅ quadrant+share+growth | **Good** |
+| `activityFeed` | ✅ `role="feed"` + `aria-label` | ✅ | — | ✅ timestamps | **Full** |
+| `notificationCenter` | ✅ role=dialog + aria-live | ✅ Escape | ✅ | ✅ unread count | **Full** |
+| `decisionMatrix` | ✅ role=grid + scope=col | ✅ Tab+Enter | — | ✅ scores | **Full** |
+| `renderSourceCards` | ✅ role=list + article | ✅ | — | ✅ relevance score | **Full** |
+| `nineBoxMatrix` | ✅ role=grid + gridcell | ✅ Arrow/Enter/Space | — | ✅ tier labels | **Full** |
+| `swotMatrix` | ✅ role=region + group | ✅ Enter/Escape | — | ✅ aria-labelledby | **Full** |
+| `dateRangePicker` | ✅ role=dialog | ✅ Tab+Escape | ✅ | ✅ date labels | **Full** |
 
 **Legend:** ✅ done · ⚠️ partial/missing · — not applicable
 
@@ -301,6 +312,17 @@ When asked to implement something, always map requirements to existing Maranello
 | Multi-step form | `mn-wizard-*` + `initFormSteps(el)` | Custom step state machine |
 | AI chat panel | `<mn-chat>` | Custom chat bubble layout |
 | Color from theme | `Maranello.palette()` — live read | Hardcoded hex in JS |
+| Activity stream | `activityFeed(el, items, opts)` | Custom list with timestamps |
+| Date range input | `dateRangePicker(el, opts)` | Custom two-input range |
+| KPI bullet chart | `bulletChart(canvas, opts)` (Stephen Few) | Custom bars with hardcoded colors |
+| Notification bell | `notificationCenter(triggerEl, opts)` | Custom dropdown with badge |
+| Budget variance | `waterfallChart(canvas, opts)` | Custom canvas bars |
+| Forecast + CI band | `confidenceChart(canvas, opts)` | Custom SVG paths |
+| Model/option scoring | `decisionMatrix(el, opts)` | Custom weighted table |
+| RAG citations | `renderSourceCards(el, cards, opts)` | Custom citation list |
+| Portfolio analysis | `bcgMatrix(canvas, opts)` | Custom scatter plot |
+| Strategic initiative grid | `nineBoxMatrix(el, opts)` | Custom 3x3 CSS grid |
+| SWOT analysis | `swotMatrix(el, opts)` | Custom 2x2 div layout |
 
 ## Framework Integration
 
