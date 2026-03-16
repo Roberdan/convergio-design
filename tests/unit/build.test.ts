@@ -38,7 +38,7 @@ describe('dist output files exist', () => {
 });
 
 describe('IIFE bundle size', () => {
-  const IIFE_MAX_BYTES = 300 * 1024; // 300 KB (v3.2.1 includes mesh, social-graph, convergio modules)
+  const IIFE_MAX_BYTES = 360 * 1024; // 360 KB (v4.7.0 adds 8 new dashboard/analytics components)
 
   it(`IIFE bundle is under ${IIFE_MAX_BYTES / 1024} KB`, () => {
     const path = join(DIST, 'iife/maranello.min.js');
