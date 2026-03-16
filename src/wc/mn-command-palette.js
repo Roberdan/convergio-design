@@ -39,32 +39,32 @@ class MnCommandPalette extends HTMLElement {
         padding-top: 20vh; background: rgba(0,0,0,.5);
         opacity: 0; pointer-events: none; transition: opacity .2s }
       .mn-command-palette--open { opacity: 1; pointer-events: auto }
-      .mn-cp__box { background: var(--nero-soft, #1a1a1a);
-        border: 1px solid var(--grigio-scuro, #444); border-radius: 12px;
+      .mn-cp__box { background: var(--mn-surface-raised);
+        border: 1px solid var(--mn-border); border-radius: 12px;
         width: 520px; max-width: 90vw; max-height: 60vh; overflow: hidden;
         box-shadow: 0 24px 48px rgba(0,0,0,.6); display: flex;
         flex-direction: column }
       .mn-cp__input { width: 100%; padding: 14px 16px; border: none;
-        background: transparent; color: var(--bianco-caldo, #f5f0e8);
+        background: transparent; color: var(--mn-text);
         font-family: var(--font-body, sans-serif); font-size: 1rem;
-        border-bottom: 1px solid var(--grigio-scuro, #333); outline: none }
-      .mn-cp__input::placeholder { color: var(--grigio-medio, #777) }
+        border-bottom: 1px solid var(--mn-border); outline: none }
+      .mn-cp__input::placeholder { color: var(--mn-text-muted) }
       .mn-cp__list { overflow-y: auto; padding: 8px 0; flex: 1 }
       .mn-cp__item { display: flex; align-items: center; gap: 10px;
-        padding: 10px 16px; cursor: pointer; color: var(--grigio-chiaro, #ccc);
+        padding: 10px 16px; cursor: pointer; color: var(--mn-text-tertiary);
         font-family: var(--font-body, sans-serif); font-size: .9rem;
         transition: background .1s }
       .mn-cp__item:hover, .mn-cp__item--focused {
-        background: var(--grigio-scuro, #333) }
+        background: var(--mn-border) }
       .mn-cp__item-icon { flex-shrink: 0; width: 18px; text-align: center }
       .mn-cp__item-text { flex: 1 }
       .mn-cp__item-shortcut { font-size: .75rem;
-        color: var(--grigio-medio, #777); font-family: monospace }
+        color: var(--mn-text-muted); font-family: monospace }
       .mn-cp__empty { padding: 20px 16px; text-align: center;
-        color: var(--grigio-medio, #777); font-size: .9rem }
+        color: var(--mn-text-muted); font-size: .9rem }
       .mn-cp__group { padding: 6px 16px 4px; font-size: .7rem;
         text-transform: uppercase; letter-spacing: .08em;
-        color: var(--grigio-medio, #666) }
+        color: var(--mn-text-muted) }
     `;
 
     this._backdrop = document.createElement('div');

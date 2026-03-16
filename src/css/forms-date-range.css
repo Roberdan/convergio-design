@@ -75,7 +75,7 @@
   }
 
   .mn-drp__nav:hover {
-    background: var(--grigio-30);
+    background: var(--mn-border-subtle);
   }
 
   .mn-drp__nav:focus-visible {
@@ -111,7 +111,7 @@
   }
 
   .mn-drp__day:hover:not(.mn-drp__day--disabled):not(.mn-drp__day--empty) {
-    background: var(--grigio-30);
+    background: var(--mn-border-subtle);
   }
 
   .mn-drp__day--empty {

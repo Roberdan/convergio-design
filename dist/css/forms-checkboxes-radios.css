@@ -34,7 +34,7 @@
 .mn-checkbox__box svg {
   width: 14px;
   height: 14px;
-  stroke: var(--nero-assoluto);
+  stroke: var(--mn-text-inverse);
   stroke-width: 3;
   fill: none;
   opacity: 0;
@@ -42,7 +42,7 @@
   transition: all 0.15s;
 }
 .mn-checkbox:hover .mn-checkbox__box {
-  border-color: var(--grigio-medio);
+  border-color: var(--mn-text-muted);
 }
 .mn-checkbox input:checked + .mn-checkbox__box {
   background: var(--giallo-ferrari);
@@ -122,7 +122,7 @@
   transition: all 0.15s;
 }
 .mn-radio:hover .mn-radio__circle {
-  border-color: var(--grigio-medio);
+  border-color: var(--mn-text-muted);
 }
 .mn-radio input:checked + .mn-radio__circle {
   border-color: var(--giallo-ferrari);
@@ -179,7 +179,7 @@
   width: 40px;
   height: 22px;
   border-radius: var(--radius-pill);
-  background: var(--grigio-scuro);
+  background: var(--mn-border);
   position: relative;
   transition: background var(--mn-form-transition);
   flex-shrink: 0;
@@ -191,7 +191,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: var(--grigio-chiaro);
+  background: var(--mn-text-tertiary);
   transition: all var(--mn-form-transition);
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
@@ -200,7 +200,7 @@
 }
 .mn-form-toggle input:checked + .mn-form-toggle__track .mn-form-toggle__thumb {
   left: 20px;
-  background: var(--nero-assoluto);
+  background: var(--mn-text-inverse);
 }
 .mn-form-toggle input:focus-visible + .mn-form-toggle__track {
   box-shadow: 0 0 0 3px var(--mn-form-focus-ring);

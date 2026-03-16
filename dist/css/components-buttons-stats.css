@@ -13,17 +13,17 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  border: 1.5px solid var(--nero-assoluto);
+  border: 1.5px solid var(--mn-text-inverse);
   border-radius: 0;
-  background: var(--nero-assoluto);
-  color: var(--bianco-puro);
+  background: var(--mn-text-inverse);
+  color: var(--mn-text);
   cursor: pointer;
   transition: all var(--duration-sm) var(--ease-out);
   text-decoration: none;
 }
 .mn-btn:hover {
-  background: var(--grigio-scuro);
-  border-color: var(--grigio-scuro);
+  background: var(--mn-border);
+  border-color: var(--mn-border);
   transform: translateY(-1px);
 }
 .mn-btn:active {
@@ -38,33 +38,33 @@
 }
 .mn-btn--ghost {
   background: transparent;
-  color: var(--nero-assoluto);
+  color: var(--mn-text-inverse);
 }
 .mn-btn--ghost:hover {
-  background: var(--nero-assoluto);
-  color: var(--bianco-puro);
+  background: var(--mn-text-inverse);
+  color: var(--mn-text);
 }
 .mn-btn--ghost:active {
-  background: var(--nero-carbon);
+  background: var(--mn-surface);
 }
 .mn-btn--ghost-light {
   background: transparent;
-  border-color: rgba(255,255,255,0.4);
-  color: var(--bianco-caldo); /* intentional: white ghost btn for dark sections */
+  border-color: var(--mn-hover-bg);
+  color: var(--mn-text); /* intentional: white ghost btn for dark sections */
 }
 .mn-btn--ghost-light:hover {
-  background: var(--bianco-puro);
-  color: var(--nero-assoluto);
-  border-color: var(--bianco-puro);
+  background: var(--mn-text);
+  color: var(--mn-text-inverse);
+  border-color: var(--mn-text);
 }
 .mn-btn--ghost-light:active {
-  background: var(--grigio-ghost);
+  background: var(--mn-border-subtle);
   transform: translateY(1px);
 }
 .mn-btn--accent {
   background: var(--mn-accent);
   border-color: var(--mn-accent);
-  color: var(--nero-assoluto);
+  color: var(--mn-text-inverse);
 }
 .mn-btn--accent:hover {
   background: var(--giallo-hover);
@@ -78,16 +78,16 @@
 
 /* White button (on accent backgrounds) */
 .mn-btn--white {
-  background: var(--bianco-puro);
-  border-color: var(--bianco-puro);
-  color: var(--nero-assoluto);
+  background: var(--mn-text);
+  border-color: var(--mn-text);
+  color: var(--mn-text-inverse);
 }
 .mn-btn--white:hover {
-  background: var(--bianco-ghiaccio);
-  border-color: var(--bianco-ghiaccio);
+  background: var(--mn-text);
+  border-color: var(--mn-text);
 }
 .mn-btn--white:active {
-  background: var(--grigio-ghost);
+  background: var(--mn-border-subtle);
   transform: translateY(1px);
 }
 .mn-btn--sm {
@@ -116,7 +116,7 @@
   font-family: var(--font-body);
   font-size: var(--text-caption);
   font-weight: 400;
-  color: var(--grigio-chiaro);
+  color: var(--mn-text-tertiary);
   margin-top: var(--space-xs);
 }
 .mn-stat__label {
@@ -125,10 +125,10 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--grigio-medio);
+  color: var(--mn-text-muted);
   margin-top: var(--space-sm);
 }
-.mn-section-dark .mn-stat__label { color: var(--grigio-chiaro); }
+.mn-section-dark .mn-stat__label { color: var(--mn-text-tertiary); }
 
 
 /* ── VIDEO CARD ── */
@@ -147,7 +147,7 @@
 .mn-video-card__play {
   width: 64px;
   height: 64px;
-  background: rgba(255,255,255,0.1);
+  background: var(--mn-hover-bg);
   backdrop-filter: blur(20px);
   border-radius: 50%;
   display: flex;
@@ -160,11 +160,11 @@
   width: 0; height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-left: 16px solid var(--bianco-puro);
+  border-left: 16px solid var(--mn-text);
   margin-left: 3px;
 }
 .mn-video-card:hover .mn-video-card__play {
-  background: rgba(255,255,255,0.2);
+  background: var(--mn-hover-bg);
   transform: scale(1.1);
 }
 .mn-video-card__label {

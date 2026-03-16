@@ -28,13 +28,13 @@ class MnDatePicker extends HTMLElement {
       :host{display:inline-block;position:relative}
       .mn-wc-trigger{display:flex;align-items:center;gap:8px;
         padding:8px 12px;border-radius:8px;cursor:pointer;
-        background:var(--nero-soft,#1a1a1a);
-        border:1px solid var(--grigio-scuro,#444);
-        color:var(--grigio-chiaro,#ccc);
+        background:var(--mn-surface-raised);
+        border:1px solid var(--mn-border);
+        color:var(--mn-text-tertiary);
         font-family:var(--font-body,sans-serif);font-size:.9rem;
         transition:border-color var(--duration-sm,.15s)}
-      .mn-wc-trigger:hover{border-color:var(--grigio-medio,#777)}
-      .mn-wc-trigger:focus{outline:2px solid var(--rosso-corsa,#DC0000);outline-offset:2px}
+      .mn-wc-trigger:hover{border-color:var(--mn-text-muted)}
+      .mn-wc-trigger:focus{outline:2px solid var(--mn-error);outline-offset:2px}
       .mn-wc-icon{font-size:1rem}
     `;
     this._trigger = document.createElement("button");

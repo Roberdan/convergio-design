@@ -31,8 +31,8 @@
     0 16px 60px rgba(0,0,0,0.75),
     0 6px 24px rgba(0,0,0,0.6),
     0 2px 6px rgba(0,0,0,0.4),
-    inset 3px 4px 2px rgba(255,255,255,0.15),
-    inset 1px 1px 0 rgba(255,255,255,0.08),
+    inset 3px 4px 2px var(--mn-hover-bg),
+    inset 1px 1px 0 var(--mn-hover-bg),
     inset -2px -3px 4px rgba(0,0,0,0.35),
     0 0 0 1px rgba(0,0,0,0.5);
   padding: 12px;
@@ -77,9 +77,9 @@
     inset 4px 4px 16px rgba(0,0,0,0.6),
     inset -4px -4px 16px rgba(0,0,0,0.4),
     inset 0 0 30px rgba(0,0,0,0.9),
-    inset 0 -1px 1px rgba(255,255,255,0.03),
-    inset 0 1px 1px rgba(255,255,255,0.02),
-    0 1px 0 rgba(255,255,255,0.06),
+    inset 0 -1px 1px var(--mn-hover-bg),
+    inset 0 1px 1px var(--mn-hover-bg),
+    0 1px 0 var(--mn-hover-bg),
     0 -1px 0 rgba(0,0,0,0.3);
   overflow: hidden;
 }
@@ -92,19 +92,19 @@
   background:
     radial-gradient(
       ellipse 60% 50% at 35% 25%,
-      rgba(255,255,255,0.10) 0%,
-      rgba(255,255,255,0.04) 40%,
+      var(--mn-hover-bg) 0%,
+      var(--mn-hover-bg) 40%,
       transparent 70%
     ),
     linear-gradient(
       155deg,
-      rgba(255,255,255,0.04) 0%,
+      var(--mn-hover-bg) 0%,
       transparent 40%,
       transparent 100%
     ),
     radial-gradient(
       ellipse 80% 30% at 50% 95%,
-      rgba(255,255,255,0.02) 0%,
+      var(--mn-hover-bg) 0%,
       transparent 60%
     );
   pointer-events: none;
@@ -137,7 +137,7 @@
   color: var(--mn-text);
   line-height: 1;
   letter-spacing: -0.02em;
-  text-shadow: 0 0 20px rgba(255,255,255,0.15);
+  text-shadow: 0 0 20px var(--mn-hover-bg);
 }
 .mn-gauge__instrument--sm .mn-gauge__value { font-size: 2.2rem; }
 .mn-gauge__unit {
@@ -153,7 +153,7 @@
   font-family: var(--font-display);
   font-size: 0.55rem;
   font-weight: 500;
-  color: var(--grigio-medio);
+  color: var(--mn-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-top: 8px;
@@ -197,8 +197,8 @@
   z-index: 5;
 }
 .mn-gauge__counter-digit {
-  background: var(--nero-soft);
-  border: 1px solid var(--bordo);
+  background: var(--mn-surface-raised);
+  border: 1px solid var(--mn-border);
   padding: 1px 3px;
   font-family: var(--font-display);
   font-size: 0.6rem;
@@ -208,8 +208,8 @@
   text-align: center;
 }
 .mn-gauge__counter-digit--highlight {
-  background: var(--rosso-corsa);
-  border-color: var(--rosso-corsa);
+  background: var(--mn-error);
+  border-color: var(--mn-error);
 }
 
 /* Gauge warning animation */

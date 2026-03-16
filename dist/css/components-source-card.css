@@ -151,7 +151,7 @@
   }
 
   .mn-source-cards__show-more:hover {
-    background: var(--superficie-1);
+    background: var(--mn-surface);
   }
 
   .mn-source-cards__show-more:focus-visible {
@@ -161,7 +161,7 @@
 
   /* Theme: Avorio */
   body.mn-avorio .mn-source-card {
-    background: var(--superficie-card);
+    background: var(--mn-surface-raised);
   }
 
   /* Theme: Nero — deeper shadow on hover */

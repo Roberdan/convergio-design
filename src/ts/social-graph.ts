@@ -67,7 +67,7 @@ export function socialGraph(
   const showLabels = opts.showLabels !== false;
   const showTip = (node: GraphNode, x: number, y: number) => {
     tip.innerHTML = '<div class="mn-chart-tooltip__label">' + escapeHtml(node.label) + '</div>' +
-      (node.detail ? '<div style="font-size:.68rem;color:var(--chart-label,#9e9e9e)">' + escapeHtml(node.detail) + '</div>' : '');
+      (node.detail ? '<div style="font-size:.68rem;color:var(--mn-text-tertiary)">' + escapeHtml(node.detail) + '</div>' : '');
     tip.style.opacity = '1';
     const tw = tip.offsetWidth || 140, th = tip.offsetHeight || 44;
     tip.style.left = Math.max(6, Math.min(width - tw - 6, x - tw / 2)) + 'px';

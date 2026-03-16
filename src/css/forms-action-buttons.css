@@ -32,7 +32,7 @@
 /* Primary — Ferrari yellow */
 .mn-form-btn--primary {
   background: var(--giallo-ferrari);
-  color: var(--nero-assoluto);
+  color: var(--mn-text-inverse);
   border-color: var(--giallo-ferrari);
 }
 .mn-form-btn--primary:hover {
@@ -49,18 +49,18 @@
 .mn-form-btn--secondary {
   background: transparent;
   color: var(--mn-text);
-  border-color: var(--grigio-scuro);
+  border-color: var(--mn-border);
 }
 .mn-form-btn--secondary:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: var(--grigio-medio);
+  background: var(--mn-hover-bg);
+  border-color: var(--mn-text-muted);
 }
 
 /* Danger — destructive actions */
 .mn-form-btn--danger {
-  background: var(--rosso-corsa);
-  color: var(--bianco-puro);
-  border-color: var(--rosso-corsa);
+  background: var(--mn-error);
+  color: var(--mn-text);
+  border-color: var(--mn-error);
 }
 .mn-form-btn--danger:hover {
   background: var(--rosso-hover);
@@ -70,19 +70,19 @@
 /* Ghost — minimal */
 .mn-form-btn--ghost {
   background: transparent;
-  color: var(--grigio-chiaro);
+  color: var(--mn-text-tertiary);
   border-color: transparent;
   padding: 10px 16px;
 }
 .mn-form-btn--ghost:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--mn-hover-bg);
   color: var(--mn-text);
 }
 
 /* Success — confirm */
 .mn-form-btn--success {
   background: var(--verde-racing);
-  color: var(--bianco-puro);
+  color: var(--mn-text);
   border-color: var(--verde-racing);
 }
 .mn-form-btn--success:hover {
@@ -122,14 +122,14 @@
   position: absolute;
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255,255,255,0.3);
+  border: 2px solid var(--mn-hover-bg);
   border-top-color: currentColor;
   border-radius: 50%;
   animation: mn-spin 0.6s linear infinite;
 }
 .mn-form-btn--primary.mn-form-btn--loading::after {
   border-color: rgba(0,0,0,0.2);
-  border-top-color: var(--nero-assoluto);
+  border-top-color: var(--mn-text-inverse);
 }
 
 @keyframes mn-spin {

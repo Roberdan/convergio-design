@@ -4,7 +4,7 @@
 /* ── Org Tree ────────────────────────────────────────────── */
 .mn-org-tree {
   font-size: 0.8rem;
-  color: var(--bianco-2);
+  color: var(--mn-text);
 }
 .mn-org-tree__list {
   list-style: none;
@@ -27,7 +27,7 @@
   transition: background 0.15s;
 }
 .mn-org-tree__node:hover {
-  background: var(--nero-3);
+  background: var(--mn-surface);
 }
 .mn-org-tree__toggle {
   width: 16px;
@@ -35,7 +35,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--grigio-2);
+  color: var(--mn-text-muted);
   transition: transform 0.2s;
   flex-shrink: 0;
 }
@@ -59,7 +59,7 @@
 .mn-org-tree__meta {
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  color: var(--grigio-2);
+  color: var(--mn-text-muted);
   margin-left: auto;
   padding-left: var(--space-sm);
 }
@@ -75,7 +75,7 @@
   left: -8px;
   width: 1px;
   height: 100%;
-  background: var(--grigio-4);
+  background: var(--mn-border);
 }
 .mn-org-tree__list .mn-org-tree__list .mn-org-tree__item:last-child::before {
   height: 16px;
@@ -87,7 +87,7 @@
   left: -8px;
   width: 8px;
   height: 1px;
-  background: var(--grigio-4);
+  background: var(--mn-border);
 }
 
 /* ── Collapsed children ── */

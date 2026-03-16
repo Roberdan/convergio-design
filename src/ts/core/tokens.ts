@@ -5,22 +5,51 @@
 
 // --- Color tokens ---
 
+export const SEMANTIC_COLOR = {
+  ACCENT: '--mn-accent',
+  ACCENT_HOVER: '--mn-accent-hover',
+  ERROR: '--mn-error',
+  WARNING: '--mn-warning',
+  SUCCESS: '--mn-success',
+  INFO: '--mn-info',
+  SURFACE: '--mn-surface',
+  SURFACE_RAISED: '--mn-surface-raised',
+  SURFACE_SUNKEN: '--mn-surface-sunken',
+  TEXT: '--mn-text',
+  TEXT_MUTED: '--mn-text-muted',
+  TEXT_TERTIARY: '--mn-text-tertiary',
+  BORDER: '--mn-border',
+  BORDER_SUBTLE: '--mn-border-subtle',
+  FOCUS_RING: '--mn-focus-ring',
+} as const;
+
+/** @deprecated Use `SEMANTIC_COLOR` keys instead. */
 export const COLOR = {
-  ROSSO_CORSA: '--rosso-corsa',
-  GIALLO_FERRARI: '--giallo-ferrari',
+  /** @deprecated Use `SEMANTIC_COLOR.ERROR`. */
+  ROSSO_CORSA: '--mn-error',
+  /** @deprecated Use `SEMANTIC_COLOR.ACCENT`. */
+  GIALLO_FERRARI: '--mn-accent',
   VERDE_BANDIERA: '--verde-bandiera',
-  NERO_ASSOLUTO: '--nero-assoluto',
-  NERO_SOFT: '--nero-soft',
-  BIANCO_PURO: '--bianco-puro',
-  BIANCO_CALDO: '--bianco-caldo',
-  GRIGIO_CHIARO: '--grigio-chiaro',
-  GRIGIO_MEDIO: '--grigio-medio',
-  GRIGIO_SCURO: '--grigio-scuro',
+  /** @deprecated Use `SEMANTIC_COLOR.TEXT`. */
+  NERO_ASSOLUTO: '--mn-text-inverse',
+  /** @deprecated Use `SEMANTIC_COLOR.SURFACE_RAISED`. */
+  NERO_SOFT: '--mn-surface-raised',
+  /** @deprecated Use `SEMANTIC_COLOR.TEXT`. */
+  BIANCO_PURO: '--mn-text',
+  /** @deprecated Use `SEMANTIC_COLOR.TEXT`. */
+  BIANCO_CALDO: '--mn-text',
+  /** @deprecated Use `SEMANTIC_COLOR.TEXT_TERTIARY`. */
+  GRIGIO_CHIARO: '--mn-text-tertiary',
+  /** @deprecated Use `SEMANTIC_COLOR.TEXT_MUTED`. */
+  GRIGIO_MEDIO: '--mn-text-muted',
+  /** @deprecated Use `SEMANTIC_COLOR.BORDER`. */
+  GRIGIO_SCURO: '--mn-border',
   SIGNAL_DANGER: '--signal-danger',
   SIGNAL_WARNING: '--signal-warning',
   SIGNAL_SUCCESS: '--signal-success',
   SIGNAL_INFO: '--signal-info',
-  CHART_DEFAULT: '--chart-default',
+  /** @deprecated Use `SEMANTIC_COLOR.ACCENT`. */
+  CHART_DEFAULT: '--mn-accent',
 } as const;
 
 // --- Typography tokens ---

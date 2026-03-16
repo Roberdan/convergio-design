@@ -1,10 +1,4 @@
 /* themes.css — Maranello Design System v1.4.0 (aggregator) */
-@import "./themes-avorio-components.css";
-@import "./themes-avorio-layouts.css";
-@import "./themes-avorio-sections.css";
-@import "./themes-avorio-v4.css";
 @import "./themes-base.css";
-@import "./themes-nero-components.css";
-@import "./themes-nero-layouts.css";
-@import "./themes-nero-layouts-2.css";
-@import "./themes-nero-patterns.css";
+@import "./themes-colorblind-components.css";
+@import "./themes-colorblind-layouts.css";

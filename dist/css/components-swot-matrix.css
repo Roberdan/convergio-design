@@ -205,7 +205,7 @@
 
   /* Avorio theme override */
   body.mn-avorio .mn-swot__quadrant {
-    background: var(--superficie-card, var(--bianco-puro));
+    background: var(--mn-surface-raised));
   }
 
   /* Mobile: single column */

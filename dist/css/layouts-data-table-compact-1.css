@@ -19,7 +19,7 @@
   height: 48px;
   border-radius: 50%;
   background: var(--mn-accent);
-  color: var(--nero-assoluto);
+  color: var(--mn-text-inverse);
   border: none;
   cursor: pointer;
   z-index: 9000;
@@ -128,14 +128,14 @@
 }
 .mn-a11y-panel__size-btn--active {
   background: var(--mn-accent);
-  color: var(--nero-assoluto);
+  color: var(--mn-text-inverse);
   border-color: var(--mn-accent);
 }
 
 
 .mn-a11y-panel__divider {
   height: 1px;
-  background: var(--mn-accent, var(--giallo-ferrari));
+  background: var(--mn-accent));
   margin: var(--space-sm) 0;
 }
 
@@ -154,8 +154,8 @@
   transition: all 0.2s;
 }
 .mn-a11y-panel__reset:hover {
-  background: var(--mn-accent, var(--giallo-ferrari));
-  color: var(--bianco-puro);
+  background: var(--mn-accent));
+  color: var(--mn-text);
 }
 
 
@@ -180,8 +180,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--mn-accent, var(--giallo-ferrari));
-  color: var(--mn-accent-text, #111);
+  background: var(--mn-accent));
+  color: var(--mn-accent-text);
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.75rem;

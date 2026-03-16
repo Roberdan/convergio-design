@@ -493,7 +493,7 @@ function cssVar(name, fallback = "") {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
 }
 function getAccent(fallback = "#FFC72C") {
-  return cssVar("--giallo-ferrari", fallback);
+  return cssVar("--mn-accent", fallback);
 }
 function debounce(fn, ms) {
   let timer = null;
@@ -614,7 +614,7 @@ function drawCrosshair(ctx, ch, cx, cy, radius, size, progress, P, cfg) {
     ctx.textBaseline = "bottom";
     ctx.fillText(ch.title, cx, cy - gridR - lfs - 6);
   }
-  const dotCol = ch.dotColor || cssVar("--chart-default", "#FFC72C");
+  const dotCol = ch.dotColor || cssVar("--mn-accent");
   const dotX = cx + ch.x * gridR * progress;
   const dotY = cy + ch.y * gridR * progress;
   ctx.setLineDash([3, 3]);
@@ -673,7 +673,7 @@ function drawCrosshair(ctx, ch, cx, cy, radius, size, progress, P, cfg) {
     ctx.globalAlpha = 0.25;
     ctx.fillStyle = P.axisLabel;
     ctx.fillText(qc.tl, cx - off, cy - off);
-    ctx.fillStyle = cssVar("--chart-default", "#FFC72C");
+    ctx.fillStyle = cssVar("--mn-accent");
     ctx.fillText(qc.tr, cx + off, cy - off);
     ctx.fillStyle = P.dimmed;
     ctx.fillText(qc.bl, cx - off, cy + off);
@@ -1094,7 +1094,7 @@ function speedometer(canvas, opts) {
     ticks: [0, 25, 50, 75, 100],
     minorTicks: 4,
     needleColor: cssVar("--signal-danger", "#DC0000"),
-    arcColor: cssVar("--chart-default", "#FFC72C"),
+    arcColor: cssVar("--mn-accent"),
     arcStart: 0,
     arcEnd: null,
     bar: null,

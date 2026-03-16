@@ -28,7 +28,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--grigio-medio);
+  background: var(--mn-text-muted);
   flex-shrink: 0;
 }
 .mn-dt__group-dot--active { background: var(--status-active); }
@@ -99,7 +99,7 @@
 .mn-dt__empty-cell {
   padding: var(--space-2xl) var(--space-md);
   text-align: center;
-  color: var(--grigio-medio);
+  color: var(--mn-text-muted);
   font-style: italic;
 }
 } /* end @layer layouts */

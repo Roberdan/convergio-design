@@ -35,7 +35,7 @@ function arc(cx: number, cy: number, r: number, sa: number, ea: number): string 
 
 export function miniGaugeSVG(status: LoginServiceStatus, latencyMs: number | null, label: string): string {
   let color = STATUS_COLORS[status] ?? cssVar('--stage-completed', '#6B7280');
-  if (!isValidColor(color)) color = 'var(--grigio-alluminio)';
+  if (!isValidColor(color)) color = 'var(--mn-border-strong)';
   const pct = status === 'healthy' ? 95 : status === 'degraded' ? 55 : 10;
   const sz = 56, cx = sz / 2, cy = sz - 4, r = 22;
   const startAngle = Math.PI, needleAngle = startAngle + (clamp(pct, 0, 100) / 100) * Math.PI;

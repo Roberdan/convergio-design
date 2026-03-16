@@ -104,7 +104,7 @@ test.describe('Demo page', () => {
   });
 
   // ── 7. CSS tokens loaded ───────────────────────────────────────────────────
-  test('--giallo-ferrari CSS token is present in source', async ({ page }) => {
+  test('--mn-accent CSS token is available through theme stylesheet', async ({ page }) => {
     await page.goto('/demo/e2e.html');
     // Verify the stylesheet <link> tag referencing maranello.css is in the DOM.
     const linkPresent = await page.evaluate(() =>

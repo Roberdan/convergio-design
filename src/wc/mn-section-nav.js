@@ -33,15 +33,15 @@ const CSS = `
   font-family: var(--font-display, 'Space Grotesk', sans-serif);
   font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
   font-weight: 500; gap: 1rem;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid var(--mn-hover-bg);
+  border-bottom: 1px solid var(--mn-hover-bg);
   box-shadow: 0 2px 12px rgba(0,0,0,0.55);
 }
 
 /* Accent stripe */
 :host([data-pos="top"]) .nav {
   border-bottom: 2px solid rgba(255,199,44,0.5);
-  border-top: 1px solid rgba(255,255,255,0.12);
+  border-top: 1px solid var(--mn-hover-bg);
 }
 :host([data-pos="bottom"]) .nav {
   border-top: 2px solid rgba(255,199,44,0.5);
@@ -57,9 +57,9 @@ const CSS = `
   padding: 0.5rem 0; transition: color 0.18s;
   min-width: 0; flex: 1;
 }
-.btn:hover:not([disabled]) { color: var(--mn-accent, #FFC72C); }
+.btn:hover:not([disabled]) { color: var(--mn-accent); }
 .btn:focus-visible {
-  outline: 2px solid var(--mn-accent, #FFC72C);
+  outline: 2px solid var(--mn-accent);
   outline-offset: 3px; border-radius: 2px;
 }
 /* keep flex space but make invisible — so center stays centered */
@@ -69,7 +69,7 @@ const CSS = `
 
 .arrow {
   flex-shrink: 0; font-size: 0.8rem;
-  color: var(--mn-accent, #FFC72C);
+  color: var(--mn-accent);
   transition: color 0.18s;
 }
 .btn:hover:not([disabled]) .arrow { color: inherit; }
@@ -81,7 +81,7 @@ const CSS = `
   color: rgba(220,220,220,0.55); font-size: 0.68rem;
   padding: 0 0.5rem; line-height: 1; user-select: none;
 }
-.pos { color: var(--mn-accent, #FFC72C); font-weight: 700; font-size: 0.85rem; }
+.pos { color: var(--mn-accent); font-weight: 700; font-size: 0.85rem; }
 .sep { opacity: 0.35; margin: 0 0.3em; }
 .cur { color: rgba(220,220,220,0.8); }
 

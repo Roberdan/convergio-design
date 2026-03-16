@@ -580,7 +580,7 @@ function renderToday(ctx, s) {
   if (!s.o.showToday) return;
   const tx = s.lw + s.dateToX(s.today) - s.scrollX;
   if (tx >= s.lw && tx <= s.vw) {
-    ctx.strokeStyle = cssVar("--today-line", "#4EA8DE");
+    ctx.strokeStyle = cssVar("--mn-info");
     ctx.lineWidth = 1.5;
     ctx.setLineDash([]);
     ctx.beginPath();
@@ -657,7 +657,7 @@ function renderHeader(ctx, s) {
   if (s.o.showToday) {
     const tbx = lw + s.dateToX(s.today) - scrollX;
     if (tbx >= lw - 24 && tbx <= vw + 24) {
-      ctx.fillStyle = cssVar("--today-line", "#4EA8DE");
+      ctx.fillStyle = cssVar("--mn-info");
       roundRect(ctx, tbx - 24, tierH + (tierH - 18) / 2, 48, 18, 3);
       ctx.fill();
       ctx.fillStyle = "#111";
@@ -881,17 +881,17 @@ function showTip(s, hit, clientX, clientY) {
   const sd = parseDate(task.start), ed = parseDate(task.end);
   const dur = sd && ed ? Math.round(daysBetween(sd, ed)) : null;
   let h = '<div class="mn-chart-tooltip__label">' + escapeHtml(String(task.title ?? "")) + "</div>";
-  if (task.account) h += '<div style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">' + escapeHtml(String(task.account)) + "</div>";
+  if (task.account) h += '<div style="color:var(--mn-text-tertiary);font-size:0.6rem;">' + escapeHtml(String(task.account)) + "</div>";
   h += '<div style="display:flex;flex-direction:column;gap:2px;margin-top:4px;">';
-  h += '<span style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">Start: <b style="color:var(--grigio-alluminio,#c8c8c8);">' + fmtDateFull(sd) + "</b></span>";
-  h += '<span style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">End: <b style="color:var(--grigio-alluminio,#c8c8c8);">' + fmtDateFull(ed) + "</b></span>";
-  if (dur !== null) h += '<span style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">Duration: ' + dur + " days</span>";
+  h += '<span style="color:var(--mn-text-tertiary);font-size:0.6rem;">Start: <b style="color:var(--mn-border-strong);">' + fmtDateFull(sd) + "</b></span>";
+  h += '<span style="color:var(--mn-text-tertiary);font-size:0.6rem;">End: <b style="color:var(--mn-border-strong);">' + fmtDateFull(ed) + "</b></span>";
+  if (dur !== null) h += '<span style="color:var(--mn-text-tertiary);font-size:0.6rem;">Duration: ' + dur + " days</span>";
   h += '</div><div style="display:flex;align-items:center;gap:4px;margin-top:3px;">';
   h += '<span class="mn-chart-tooltip__dot" style="background:' + col + ';"></span>';
   h += '<span style="color:' + col + ';font-size:0.65rem;">' + escapeHtml(String(task.state ?? "Unknown")) + "</span></div>";
-  if (task.progress !== void 0 && !isChild) h += '<div style="color:var(--chart-default,#FFC72C);font-size:0.65rem;margin-top:2px;">' + Math.round(task.progress * 100) + "% complete</div>";
-  if (isChild && task.owner) h += '<div style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;margin-top:2px;">Owner: ' + escapeHtml(String(task.owner)) + "</div>";
-  if (isChild && task.type) h += '<div style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">Type: ' + escapeHtml(String(task.type)) + "</div>";
+  if (task.progress !== void 0 && !isChild) h += '<div style="color:var(--mn-accent);font-size:0.65rem;margin-top:2px;">' + Math.round(task.progress * 100) + "% complete</div>";
+  if (isChild && task.owner) h += '<div style="color:var(--mn-text-tertiary);font-size:0.6rem;margin-top:2px;">Owner: ' + escapeHtml(String(task.owner)) + "</div>";
+  if (isChild && task.type) h += '<div style="color:var(--mn-text-tertiary);font-size:0.6rem;">Type: ' + escapeHtml(String(task.type)) + "</div>";
   const tip = s.tip;
   tip.innerHTML = h;
   tip.classList.add("mn-chart-tooltip--visible");
@@ -1139,13 +1139,13 @@ function gantt(container, tasks, userOpts) {
   Object.keys(pal).forEach((st) => {
     const span = document.createElement("span");
     span.className = "mn-gantt-timeline__legend-item";
-    const safeCol = isValidColor(pal[st]) ? pal[st] : "var(--grigio-alluminio)";
+    const safeCol = isValidColor(pal[st]) ? pal[st] : "var(--mn-border-strong)";
     span.innerHTML = '<span class="mn-gantt-timeline__legend-swatch" style="background:' + safeCol + ';"></span>' + escapeHtml(st);
     leg.appendChild(span);
   });
   const todayLeg = document.createElement("span");
   todayLeg.className = "mn-gantt-timeline__legend-item";
-  todayLeg.innerHTML = '<span class="mn-gantt-timeline__legend-swatch" style="background:var(--today-line,#4EA8DE);"></span>TODAY';
+  todayLeg.innerHTML = '<span class="mn-gantt-timeline__legend-swatch" style="background:var(--mn-info);"></span>TODAY';
   leg.appendChild(todayLeg);
   ctrlBar.appendChild(zoomGrp);
   ctrlBar.appendChild(leg);

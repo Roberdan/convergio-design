@@ -28,15 +28,15 @@ class MnThemeToggle extends HTMLElement {
     style.textContent = `
       :host { display: inline-block }
       .mn-theme-btn { width: 40px; height: 40px; border-radius: 50%;
-        border: 1px solid var(--grigio-scuro, #444);
-        background: var(--nero-soft, #1a1a1a); cursor: pointer;
-        font-size: 1.3rem; color: var(--grigio-chiaro, #ccc);
+        border: 1px solid var(--mn-border);
+        background: var(--mn-surface-raised); cursor: pointer;
+        font-size: 1.3rem; color: var(--mn-text-tertiary);
         display: flex; align-items: center; justify-content: center;
         transition: background .15s, transform .15s, border-color .15s;
         box-shadow: 0 2px 8px rgba(0,0,0,.3) }
-      .mn-theme-btn:hover { background: var(--grigio-scuro, #333);
+      .mn-theme-btn:hover { background: var(--mn-border);
         transform: scale(1.08) }
-      .mn-theme-btn:focus-visible { outline: 2px solid var(--rosso-corsa, #DC0000);
+      .mn-theme-btn:focus-visible { outline: 2px solid var(--mn-error);
         outline-offset: 2px }
     `;
     this._btn = document.createElement("button");
@@ -47,6 +47,7 @@ class MnThemeToggle extends HTMLElement {
     this.shadowRoot.append(tokens, style, this._btn);
   }
   connectedCallback() {
+    this._btn.addEventListener("click", this._onBtnClick);
     const attr = this.getAttribute("mode");
     let saved = null;
     try {
@@ -74,23 +75,24 @@ class MnThemeToggle extends HTMLElement {
   }
   /* ── Private ────────────────────────────────────────────── */
   _cycle() {
-    document.body.classList.remove("mn-nero", "mn-avorio", "mn-colorblind");
     this._idx = (this._idx + 1) % this._modes.length;
     this._applyTheme(true);
   }
   _applyTheme(emit) {
     const mode = this._modes[this._idx];
-    document.body.classList.remove("mn-nero", "mn-avorio", "mn-colorblind");
-    if (mode !== "editorial") {
-      document.body.classList.add(`mn-${mode}`);
-    }
-    this._btn.textContent = this._icons[this._idx];
-    this._btn.title = this._labels[this._idx];
-    if (emit) {
+    const setTheme = resolve("setTheme");
+    if (typeof setTheme === "function") setTheme(mode);
+    else {
+      document.body.classList.remove("mn-nero", "mn-avorio", "mn-colorblind");
+      if (mode !== "editorial") document.body.classList.add(`mn-${mode}`);
       try {
         localStorage.setItem("mn-theme", mode);
       } catch (_) {
       }
+    }
+    this._btn.textContent = this._icons[this._idx];
+    this._btn.title = this._labels[this._idx];
+    if (emit) {
       this.dispatchEvent(new CustomEvent("mn-theme-change", {
         detail: { theme: mode },
         bubbles: true,

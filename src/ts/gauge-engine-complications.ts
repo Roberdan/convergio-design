@@ -81,7 +81,7 @@ function drawCrosshair(
   }
 
   // Crosshair dot
-  const dotCol = (ch.dotColor as string) || cssVar('--chart-default', '#FFC72C');
+  const dotCol = (ch.dotColor as string) || cssVar('--mn-accent');
   const dotX = cx + (ch.x as number) * gridR * progress;
   const dotY = cy + (ch.y as number) * gridR * progress;
   ctx.setLineDash([3, 3]); ctx.strokeStyle = dotCol; ctx.lineWidth = 0.8; ctx.globalAlpha = 0.5;
@@ -117,7 +117,7 @@ function drawCrosshair(
     ctx.font = `700 ${qfs}px 'Barlow Condensed', 'Outfit', sans-serif`;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.globalAlpha = 0.25;
     ctx.fillStyle = P.axisLabel; ctx.fillText(qc.tl, cx - off, cy - off);
-    ctx.fillStyle = cssVar('--chart-default', '#FFC72C'); ctx.fillText(qc.tr, cx + off, cy - off);
+    ctx.fillStyle = cssVar('--mn-accent'); ctx.fillText(qc.tr, cx + off, cy - off);
     ctx.fillStyle = P.dimmed; ctx.fillText(qc.bl, cx - off, cy + off);
     ctx.fillStyle = P.axisLabel; ctx.fillText(qc.br, cx + off, cy + off);
     ctx.globalAlpha = 1.0;

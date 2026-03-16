@@ -30,9 +30,9 @@
   min-width: 240px;
   flex-shrink: 0;
   overflow-y: auto;
-  border-right: 1px solid var(--bordo, #333);
+  border-right: 1px solid var(--mn-border);
 }
-body.mn-avorio .mn-layout__left { border-right-color: var(--grigio-alluminio); }
+body.mn-avorio .mn-layout__left { border-right-color: var(--mn-border-strong); }
 
 /* ── CENTER: Stacked Views (flex-grow) ───────────────────── */
 .mn-layout__center {
@@ -68,9 +68,9 @@ body.mn-avorio .mn-layout__left { border-right-color: var(--grigio-alluminio); }
   min-width: 280px;
   flex-shrink: 0;
   overflow-y: auto;
-  border-left: 1px solid var(--bordo, #333);
+  border-left: 1px solid var(--mn-border);
 }
-body.mn-avorio .mn-layout__right { border-left-color: var(--grigio-alluminio); }
+body.mn-avorio .mn-layout__right { border-left-color: var(--mn-border-strong); }
 
 /* ── BOTTOM: Simulator Zone ──────────────────────────────── */
 .mn-layout__simulator {
@@ -83,11 +83,11 @@ body.mn-avorio .mn-layout__right { border-left-color: var(--grigio-alluminio); }
   min-height: 280px;
   max-height: 50vh;
   overflow-y: auto;
-  border-top: 2px solid var(--grigio-4, #444);
+  border-top: 2px solid var(--mn-border);
 }
 body.mn-avorio .mn-layout__simulator.mn-sim-active {
-  border-top-color: var(--rosso-corsa, #dc0000);
-  background: var(--bianco-1, #fff);
+  border-top-color: var(--mn-error);
+  background: var(--mn-text);
 }
 
 /* ── Responsive: medium screens ──────────────────────────── */
@@ -116,7 +116,7 @@ body.mn-avorio .mn-layout__simulator.mn-sim-active {
     min-width: 0;
     border-left: none;
     border-right: none;
-    border-bottom: 1px solid var(--bordo, #333);
+    border-bottom: 1px solid var(--mn-border);
     overflow-y: visible;
   }
   .mn-layout__center {

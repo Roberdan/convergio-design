@@ -23,23 +23,23 @@ class MnModal extends HTMLElement {
         justify-content: center; opacity: 0; pointer-events: none;
         transition: opacity var(--duration-md, .25s) }
       .mn-modal-backdrop--open { opacity: 1; pointer-events: auto }
-      .mn-modal { background: var(--nero-soft, #1a1a1a);
-        border: 1px solid var(--grigio-scuro, #444); border-radius: 12px;
+      .mn-modal { background: var(--mn-surface-raised);
+        border: 1px solid var(--mn-border); border-radius: 12px;
         min-width: 320px; max-width: 90vw; max-height: 85vh;
         display: flex; flex-direction: column; overflow: hidden;
         box-shadow: 0 24px 48px rgba(0,0,0,.5) }
       .mn-modal__header { display: flex; align-items: center;
         justify-content: space-between; padding: 16px 20px;
-        border-bottom: 1px solid var(--grigio-scuro, #333) }
+        border-bottom: 1px solid var(--mn-border) }
       .mn-modal__title { font-family: var(--font-heading, sans-serif);
         font-size: 1.1rem; font-weight: 600;
-        color: var(--bianco-caldo, #f5f0e8) }
+        color: var(--mn-text) }
       .mn-modal__close { background: none; border: none; cursor: pointer;
-        color: var(--grigio-chiaro, #aaa); font-size: 1.2rem; padding: 4px 8px;
+        color: var(--mn-text-tertiary); font-size: 1.2rem; padding: 4px 8px;
         border-radius: 6px; transition: background .15s }
-      .mn-modal__close:hover { background: var(--grigio-scuro, #333) }
+      .mn-modal__close:hover { background: var(--mn-border) }
       .mn-modal__body { padding: 20px; overflow-y: auto; flex: 1;
-        color: var(--grigio-chiaro, #ccc) }
+        color: var(--mn-text-tertiary) }
     `;
     this._backdrop = document.createElement("div");
     this._backdrop.className = "mn-modal-backdrop";

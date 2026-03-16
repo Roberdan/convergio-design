@@ -8,8 +8,8 @@
   right: 0;
   width: 360px;
   max-height: 70vh;
-  background: var(--nero-1);
-  border-left: 1px solid var(--grigio-4);
+  background: var(--mn-surface-sunken);
+  border-left: 1px solid var(--mn-border);
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4);
   z-index: 180;
   transform: translateX(100%);
@@ -23,14 +23,14 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-sm) var(--space-md);
-  border-bottom: 1px solid var(--grigio-4);
+  border-bottom: 1px solid var(--mn-border);
 }
 .mn-notification-center__title {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--grigio-1);
+  color: var(--mn-text-tertiary);
 }
 .mn-notification-center__list {
   flex: 1;
@@ -40,11 +40,11 @@
   display: flex;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  border-bottom: 1px solid var(--grigio-4);
+  border-bottom: 1px solid var(--mn-border);
   cursor: pointer;
   transition: background 0.15s;
 }
-.mn-notification-center__item:hover { background: var(--nero-3); }
+.mn-notification-center__item:hover { background: var(--mn-surface); }
 .mn-notification-center__item--unread { background: rgba(255, 199, 44, 0.04); }
 .mn-notification-center__item-icon {
   width: 20px;
@@ -55,13 +55,13 @@
 .mn-notification-center__item-body { flex: 1; }
 .mn-notification-center__item-title {
   font-size: 0.8rem;
-  color: var(--bianco-2);
+  color: var(--mn-text);
   margin-bottom: 2px;
 }
 .mn-notification-center__item-time {
   font-family: var(--font-mono);
   font-size: 0.6rem;
-  color: var(--grigio-2);
+  color: var(--mn-text-muted);
 }
 
 } /* end @layer layouts */

@@ -56,7 +56,7 @@
 .mn-sys-status__service-ms {
   font-family: var(--font-mono);
   font-size: var(--text-micro);
-  color: var(--grigio-medio);
+  color: var(--mn-text-muted);
   min-width: 48px;
   text-align: right;
 }

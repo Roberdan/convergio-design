@@ -9,10 +9,18 @@ const dpr = window.devicePixelRatio || 1;
 /** Build the default chart color series from CSS custom properties. */
 export function buildSeries(): string[] {
   return [
-    cssVar('--chart-default', '#FFC72C'), cssVar('--signal-danger', '#DC0000'),
-    cssVar('--signal-ok', '#00A651'), cssVar('--arancio', '#D4622B'),
-    cssVar('--chart-bar', '#4EA8DE'), cssVar('--grigio-alluminio', '#c8c8c8'),
-    '#E8A838', '#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#6366F1',
+    cssVar('--mn-accent', 'var(--mn-accent)'),
+    cssVar('--signal-danger', 'var(--signal-danger)'),
+    cssVar('--signal-ok', 'var(--signal-ok)'),
+    cssVar('--mn-warning', 'var(--mn-warning)'),
+    cssVar('--mn-info', 'var(--mn-info)'),
+    cssVar('--mn-border-strong', 'var(--mn-border-strong)'),
+    cssVar('--mn-error', 'var(--mn-error)'),
+    cssVar('--mn-success', 'var(--mn-success)'),
+    cssVar('--signal-warning', 'var(--signal-warning)'),
+    cssVar('--signal-info', 'var(--signal-info)'),
+    cssVar('--mn-text-tertiary', 'var(--mn-text-tertiary)'),
+    cssVar('--mn-accent-hover', 'var(--mn-accent-hover)'),
   ];
 }
 

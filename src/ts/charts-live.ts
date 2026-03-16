@@ -12,11 +12,11 @@ export function liveGraph(
   opts?: LiveGraphOptions,
 ): HTMLCanvasElement | undefined {
   const o = {
-    color: cssVar('--chart-default', '#FFC72C'),
+    color: cssVar('--mn-accent'),
     lineWidth: 1.5,
     gridColor: 'rgba(200,200,200,0.06)',
     gridRows: 4,
-    axisColor: cssVar('--chart-axis', '#616161'),
+    axisColor: cssVar('--mn-text-muted'),
     showRedLine: true,
     redLineValue: null as number | null,
     smooth: true,

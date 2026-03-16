@@ -23,7 +23,7 @@
   box-shadow:
     0 6px 24px rgba(0,0,0,0.5),
     0 2px 6px rgba(0,0,0,0.3),
-    inset 0 2px 1px rgba(255,255,255,0.12),
+    inset 0 2px 1px var(--mn-hover-bg),
     inset 0 -2px 3px rgba(0,0,0,0.3),
     0 0 0 1px rgba(0,0,0,0.4);
   cursor: pointer;
@@ -33,7 +33,7 @@
   inset: 10px;
   border-radius: 50%;
   background: radial-gradient(circle at 45% 40%, var(--mn-metal-dial-hi) 0%, var(--mn-metal-dial-lo) 100%);
-  box-shadow: inset 0 2px 8px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.06);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.8), 0 1px 0 var(--mn-hover-bg);
 }
 .mn-rotary__pointer {
   position: absolute;
@@ -57,7 +57,7 @@
   position: absolute;
   width: 2px;
   height: 6px;
-  background: var(--grigio-medio);
+  background: var(--mn-text-muted);
   top: 4px;
   left: 50%;
   margin-left: -1px;
@@ -82,7 +82,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--grigio-chiaro);
+  color: var(--mn-text-tertiary);
 }
 
 
@@ -110,7 +110,7 @@
   transition: width var(--duration-sm) var(--ease-out);
 }
 .mn-slider__fill--warm {
-  background: linear-gradient(90deg, var(--status-info), var(--mn-accent), var(--rosso-corsa));
+  background: linear-gradient(90deg, var(--status-info), var(--mn-accent), var(--mn-error));
 }
 .mn-slider__fill--cool {
   background: linear-gradient(90deg, var(--status-info), var(--verde-racing));
@@ -125,10 +125,10 @@
   height: 20px;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle at 40% 35%, var(--grigio-alluminio) 0%, var(--grigio-medio) 40%, var(--mn-metal-2) 100%);
+  background: radial-gradient(circle at 40% 35%, var(--mn-border-strong) 0%, var(--mn-text-muted) 40%, var(--mn-metal-2) 100%);
   box-shadow:
     0 2px 6px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.3),
+    inset 0 1px 0 var(--mn-hover-bg),
     0 0 0 1px rgba(0,0,0,0.3);
   cursor: grab;
   transition: transform var(--duration-sm) var(--ease-out);
@@ -146,7 +146,7 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--grigio-medio);
+  color: var(--mn-text-muted);
 }
 .mn-slider__label--active { color: var(--mn-accent); }
 } /* end @layer controls */

@@ -237,28 +237,31 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 
 ## Token System
 
-| Token | Hex | Meaning |
+| Token | Default (Editorial/Nero) | Meaning |
 |---|---|---|
-| `--nero-profondo` | `#0a0a0a` | Dark background |
-| `--nero-carbon` | `#111111` | Surface |
-| `--grigio-alluminio` | `#c8c8c8` | Border |
-| `--avorio-chiaro` | `#faf3e6` | Warm light bg |
-| `--giallo-ferrari` | `#FFC72C` | Primary accent |
-| `--rosso-corsa` | `#DC0000` | Danger / Avorio accent |
-| `--verde-racing` | `#00A651` | Success |
+| `--mn-surface` | `#111111` | Primary surface |
+| `--mn-surface-raised` | `#1a1a1a` | Elevated cards/modals |
+| `--mn-surface-sunken` | `#0a0a0a` | Inset/deep surface |
+| `--mn-text` | `#fafafa` | Primary text |
+| `--mn-text-muted` | `#9e9e9e` | Secondary text |
+| `--mn-border` | `#2a2a2a` | Default border |
+| `--mn-accent` | `#FFC72C` | Primary accent |
+| `--mn-error` | `#DC0000` | Error/danger |
+| `--mn-success` | `#00A651` | Success |
+| `--mn-info` | `#448AFF` | Info/interactive |
 
 ## Themes
 
 | Theme | Body class | Accent |
 |---|---|---|
-| Editorial | (none) | `--giallo-ferrari` |
-| Nero | `mn-nero` | `--giallo-ferrari` |
-| Avorio | `mn-avorio` | `--rosso-corsa` |
-| Colorblind | `mn-colorblind` | `#0072B2` |
+| Editorial | (none) | `--mn-accent` |
+| Nero | `mn-nero` | `--mn-accent` |
+| Avorio | `mn-avorio` | `--mn-accent` |
+| Colorblind | `mn-colorblind` | `--mn-accent` (Okabe-Ito blue) |
 
 ## API Notes
 
-- `Maranello.palette()` returns `{ signalOk, signalWarning, signalDanger, signalInfo, ... }` — uses `--signal-*` CSS var names
+- `Maranello.palette()` returns semantic tokens by default (`surface`, `text`, `accent`, `signal*`, `hoverBg`, `focusRing`, etc.); pass `{ includePrimitives: true }` for legacy keys
 - `loginScreen(el, { showStatus: false })` — pure login form; use `mn-system-status` WC separately for health panel
 - `speedometer(canvas, { size: 'fluid' })` — fluid mode with ResizeObserver; call `controller.destroy()` to clean up observer + sr-only span
 - `autoResize(canvas, factory, data)` — ResizeObserver wrapper; factory is called with `(canvas, data, { width, height })`

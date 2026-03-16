@@ -158,7 +158,7 @@ export function speedometer(
     value: 0, max: 100, unit: '', size: 'md',
     ticks: [0, 25, 50, 75, 100], minorTicks: 4,
     needleColor: cssVar('--signal-danger', '#DC0000'),
-    arcColor: cssVar('--chart-default', '#FFC72C'),
+    arcColor: cssVar('--mn-accent'),
     arcStart: 0, arcEnd: null, bar: null, subLabel: null, animate: true,
     ...opts,
   };

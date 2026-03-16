@@ -135,7 +135,7 @@
 
 .mn-nine-box__item--selected {
   background: var(--mn-accent);
-  color: var(--mn-accent-text, var(--nero-assoluto));
+  color: var(--mn-accent-text));
   border-color: var(--mn-accent);
 }
 
@@ -179,7 +179,7 @@
 
 /* --- Avorio theme override --- */
 body.mn-avorio .mn-nine-box__item {
-  background: var(--superficie-card, var(--mn-surface));
+  background: var(--mn-surface-raised));
 }
 
 body.mn-avorio .mn-nine-box__item--selected {

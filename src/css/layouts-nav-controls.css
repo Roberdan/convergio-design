@@ -6,10 +6,10 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  background: var(--nero-2, #1a1a1a);
+  background: var(--mn-surface-raised);
   border-radius: 8px;
   padding: 2px;
-  border: 1px solid var(--bordo, #333);
+  border: 1px solid var(--mn-border);
 }
 
 /* Individual button in group */
@@ -22,21 +22,21 @@
   border-radius: 6px;
   border: none;
   background: transparent;
-  color: var(--grigio-1, #888);
+  color: var(--mn-text-tertiary);
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
   position: relative;
 }
 .mn-nav-group__btn:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--bianco-1, #f5f0e8);
+  background: var(--mn-hover-bg);
+  color: var(--mn-text);
 }
 .mn-nav-group__btn--active {
-  background: var(--mn-accent, #FFC72C);
-  color: var(--nero-assoluto, #0a0a0a);
+  background: var(--mn-accent);
+  color: var(--mn-text-inverse);
 }
 .mn-nav-group__btn--active:hover {
-  background: var(--mn-accent, #FFC72C);
+  background: var(--mn-accent);
   opacity: 0.9;
 }
 
@@ -51,8 +51,8 @@
   bottom: -28px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--superficie-2, #252525);
-  color: var(--grigio-chiaro, #bbb);
+  background: var(--mn-surface-raised);
+  color: var(--mn-text-tertiary);
   font-size: 0.65rem;
   font-family: var(--font-mono, 'Barlow Condensed', sans-serif);
   padding: 3px 8px;
@@ -62,7 +62,7 @@
   opacity: 0;
   transition: opacity 0.15s;
   z-index: 1001;
-  border: 1px solid var(--bordo, #333);
+  border: 1px solid var(--mn-border);
 }
 .mn-nav-group__btn[data-tooltip]:hover::after { opacity: 1; }
 
@@ -78,9 +78,9 @@
   gap: 6px;
   padding: 6px 12px;
   border-radius: 20px;
-  border: 1px solid var(--bordo, #333);
+  border: 1px solid var(--mn-border);
   background: transparent;
-  color: var(--grigio-1, #888);
+  color: var(--mn-text-tertiary);
   cursor: pointer;
   font-size: 0.75rem;
   font-family: var(--font-mono, 'Barlow Condensed', sans-serif);
@@ -89,13 +89,13 @@
   transition: all 0.2s;
 }
 .mn-nav-pill:hover {
-  border-color: var(--grigio-medio, #555);
-  color: var(--bianco-1, #f5f0e8);
+  border-color: var(--mn-text-muted);
+  color: var(--mn-text);
 }
 .mn-nav-pill--active {
-  background: var(--mn-accent, #FFC72C);
-  color: var(--nero-assoluto, #0a0a0a);
-  border-color: var(--mn-accent, #FFC72C);
+  background: var(--mn-accent);
+  color: var(--mn-text-inverse);
+  border-color: var(--mn-accent);
 }
 .mn-nav-pill .mn-icon { width: 14px; height: 14px; display: flex; }
 .mn-nav-pill .mn-icon svg { width: 14px; height: 14px; }
@@ -108,8 +108,8 @@
   bottom: -28px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--superficie-2, #252525);
-  color: var(--grigio-chiaro, #bbb);
+  background: var(--mn-surface-raised);
+  color: var(--mn-text-tertiary);
   font-size: 0.65rem;
   font-family: var(--font-mono, 'Barlow Condensed', sans-serif);
   padding: 3px 8px;
@@ -119,7 +119,7 @@
   opacity: 0;
   transition: opacity 0.15s;
   z-index: 1001;
-  border: 1px solid var(--bordo, #333);
+  border: 1px solid var(--mn-border);
 }
 .mn-nav-pill[data-tooltip]:hover::after { opacity: 1; }
 
@@ -127,21 +127,21 @@
 .mn-nav__separator {
   width: 1px;
   height: 24px;
-  background: var(--bordo, #333);
+  background: var(--mn-border);
   margin: 0 4px;
 }
 
 /* Avorio theme overrides */
 body.mn-avorio .mn-nav-group {
   background: var(--avorio-medio, #f0e6d0);
-  border-color: var(--grigio-alluminio, #ccc);
+  border-color: var(--mn-border-strong);
 }
 body.mn-avorio .mn-nav-group__btn:hover {
   background: rgba(0, 0, 0, 0.06);
 }
 body.mn-avorio .mn-nav-group__btn--active { background: var(--mn-accent); }
 body.mn-avorio .mn-nav-pill {
-  border-color: var(--grigio-alluminio, #ccc);
+  border-color: var(--mn-border-strong);
 }
 body.mn-avorio .mn-nav-pill--active {
   background: var(--mn-accent);
@@ -150,7 +150,7 @@ body.mn-avorio .mn-nav-pill--active {
 body.mn-avorio .mn-nav-group__btn[data-tooltip]::after,
 body.mn-avorio .mn-nav-pill[data-tooltip]::after {
   background: var(--avorio-chiaro);
-  border-color: var(--grigio-alluminio);
-  color: var(--nero-assoluto);
+  border-color: var(--mn-border-strong);
+  color: var(--mn-text-inverse);
 }
 } /* end @layer layouts */

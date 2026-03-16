@@ -14,8 +14,8 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-md) var(--space-xl);
-  background: var(--nero-2);
-  border-bottom: 1px solid var(--grigio-4);
+  background: var(--mn-surface-raised);
+  border-bottom: 1px solid var(--mn-border);
   min-height: 56px;
   position: sticky;
   top: 0;
@@ -31,12 +31,12 @@
   font-size: 1.1rem;
   font-weight: 300;
   letter-spacing: 0.06em;
-  color: var(--bianco-1);
+  color: var(--mn-text);
 }
 .mn-page-header__subtitle {
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: var(--grigio-1);
+  color: var(--mn-text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -48,7 +48,7 @@
 .mn-page-header__action {
   background: none;
   border: none;
-  color: var(--grigio-1);
+  color: var(--mn-text-tertiary);
   cursor: pointer;
   padding: 6px;
   border-radius: 4px;
@@ -58,8 +58,8 @@
   justify-content: center;
 }
 .mn-page-header__action:hover {
-  background: var(--nero-3);
-  color: var(--bianco-1);
+  background: var(--mn-surface);
+  color: var(--mn-text);
 }
 .mn-page-header__action--active {
   color: var(--giallo);
@@ -67,7 +67,7 @@
 }
 .mn-page-header__badge {
   background: var(--rosso);
-  color: var(--bianco-puro);
+  color: var(--mn-text);
   font-size: 0.55rem;
   padding: 1px 5px;
   border-radius: 8px;

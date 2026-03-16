@@ -158,10 +158,10 @@
   }
 
   /* Avorio theme */
-  body.mn-avorio .mn-bmc__block { background: var(--superficie-card, var(--bianco-puro)); }
+  body.mn-avorio .mn-bmc__block { background: var(--mn-surface-raised)); }
 
   body.mn-avorio .mn-bmc__block--vp {
-    background: color-mix(in srgb, var(--mn-accent) 5%, var(--superficie-card, var(--bianco-puro)));
+    background: color-mix(in srgb, var(--mn-accent) 5%, var(--mn-surface-raised)));
   }
 
   /* Tablet: 2-column fallback */

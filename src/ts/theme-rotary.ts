@@ -35,10 +35,10 @@ function ensureStyles(): void {
   s.textContent = `
 .mn-theme-rotary{display:inline-flex;flex-direction:column;align-items:center;user-select:none;gap:8px}
 .mn-theme-rotary__dial{position:relative;border-radius:50%}
-.mn-theme-rotary__ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--grigio-scuro,#444);pointer-events:none}
-.mn-theme-rotary__pointer{position:absolute;top:8px;left:50%;width:2px;border-radius:1px;background:var(--mn-accent,#FFC72C);transform:translateX(-50%) rotate(0deg);transform-origin:50% calc(var(--rotary-center) - 8px);pointer-events:none;transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.mn-theme-rotary__pos{position:absolute;font-family:var(--font-body,sans-serif);font-size:.55rem;color:var(--grigio-medio,#777);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transform:translate(-50%,-50%);white-space:nowrap;transition:color .15s}
-.mn-theme-rotary__pos--active{color:var(--bianco-caldo,#f5f0e8);font-weight:700}
+.mn-theme-rotary__ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--mn-border);pointer-events:none}
+.mn-theme-rotary__pointer{position:absolute;top:8px;left:50%;width:2px;border-radius:1px;background:var(--mn-accent);transform:translateX(-50%) rotate(0deg);transform-origin:50% calc(var(--rotary-center) - 8px);pointer-events:none;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.mn-theme-rotary__pos{position:absolute;font-family:var(--font-body,sans-serif);font-size:.55rem;color:var(--mn-text-muted);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transform:translate(-50%,-50%);white-space:nowrap;transition:color .15s}
+.mn-theme-rotary__pos--active{color:var(--mn-text);font-weight:700}
 .mn-theme-rotary__center{position:absolute;top:50%;left:50%;border-radius:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center}
 `;
   document.head.appendChild(s);
@@ -92,9 +92,9 @@ export function themeRotary(opts: ThemeRotaryOptions): ThemeRotaryController {
   // decorative center hub
   const centerBtn = createElement('div', 'mn-theme-rotary__center');
   centerBtn.style.width = centerBtn.style.height = centerSize + 'px';
-  centerBtn.style.background = 'radial-gradient(circle at 40% 35%, var(--grigio-scuro, #444), var(--nero-soft, #1a1a1a))';
+  centerBtn.style.background = 'radial-gradient(circle at 40% 35%, var(--mn-border), var(--mn-surface-raised))';
   centerBtn.style.boxShadow = '0 3px 8px rgba(0,0,0,.55), inset 0 1px 1px rgba(255,255,255,.15)';
-  centerBtn.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="var(--mn-accent,#FFC72C)" opacity="0.7"/></svg>';
+  centerBtn.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="var(--mn-accent)" opacity="0.7"/></svg>';
   dial.appendChild(centerBtn);
 
   container.appendChild(root);

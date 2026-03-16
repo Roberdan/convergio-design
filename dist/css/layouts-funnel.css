@@ -22,7 +22,7 @@
 }
 
 .mn-funnel__bar--active {
-  stroke: var(--mn-accent, #FFC72C);
+  stroke: var(--mn-accent);
   stroke-width: 2;
 }
 
@@ -30,7 +30,7 @@
   text-align: center;
   padding: var(--space-xl, 2rem);
   font-family: var(--font-body, sans-serif);
-  color: var(--grigio-medio, #616161);
+  color: var(--mn-text-muted);
 }
 
 @media (max-width: 640px) {

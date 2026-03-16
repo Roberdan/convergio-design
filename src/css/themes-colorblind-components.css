@@ -45,9 +45,9 @@ body.mn-colorblind .mn-tooltip { border-color: var(--mn-accent); }
    Chart tooltip vars
    ============================================================ */
 body.mn-colorblind {
-  --mn-chart-tooltip-bg: var(--mn-surface, #1a1a1a);
+  --mn-chart-tooltip-bg: var(--mn-surface);
   --mn-chart-tooltip-border: var(--mn-cb-blue);
-  --mn-chart-tooltip-text: var(--mn-text, #fafafa);
+  --mn-chart-tooltip-text: var(--mn-text);
   --mn-chart-tooltip-shadow: 0 4px 16px rgba(0,114,178,0.2), 0 0 0 1px rgba(0,114,178,0.1);
 }
 
@@ -112,7 +112,7 @@ body.mn-colorblind .mn-ctrl-cruise__mark--active { color: var(--mn-cb-blue); }
 body.mn-colorblind .mn-ctrl-manettino__pos--active { color: var(--mn-cb-orange); }
 body.mn-colorblind .mn-ctrl-lever--on .mn-ctrl-lever__track {
   border-color: var(--mn-cb-blue);
-  background: linear-gradient(180deg, var(--nero-carbon) 0%, rgba(0,114,178,0.3) 100%);
+  background: linear-gradient(180deg, var(--mn-surface) 0%, rgba(0,114,178,0.3) 100%);
 }
 body.mn-colorblind .mn-ctrl-stepped__mark--active { color: #E69F00; }
 
@@ -165,7 +165,7 @@ body.mn-colorblind .mn-cap-grid__cell--over { background: var(--mn-cb-orange); }
    Treemap
    ============================================================ */
 body.mn-colorblind .mn-treemap__cell {
-  color: var(--bianco-puro); text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  color: var(--mn-text); text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 /* ============================================================
@@ -178,7 +178,7 @@ body.mn-colorblind .mn-a11y-toggle--on { background: var(--mn-accent); }
    Forms (checkbox, radio, toggle, range, primary btn)
    ============================================================ */
 body.mn-colorblind .mn-form-btn--primary {
-  background: var(--mn-cb-blue); border-color: var(--mn-cb-blue); color: var(--bianco-puro);
+  background: var(--mn-cb-blue); border-color: var(--mn-cb-blue); color: var(--mn-text);
 }
 body.mn-colorblind .mn-checkbox input:checked + .mn-checkbox__box {
   background: var(--mn-cb-blue); border-color: var(--mn-cb-blue);
@@ -213,12 +213,12 @@ body.mn-colorblind .mn-toggle__track--on {
   background: var(--mn-cb-blue); border-color: var(--mn-cb-blue-dark);
 }
 body.mn-colorblind .mn-segmented__item--active {
-  background: var(--mn-cb-blue); color: var(--bianco-puro);
+  background: var(--mn-cb-blue); color: var(--mn-text);
 }
 body.mn-colorblind .mn-climate { border: 1px solid rgba(0,114,178,0.25); }
 body.mn-colorblind .mn-btn-cluster__item[aria-pressed="true"],
 body.mn-colorblind .mn-btn-cluster__item--active {
-  background: var(--mn-cb-blue); color: var(--bianco-puro);
+  background: var(--mn-cb-blue); color: var(--mn-text);
   border-color: var(--mn-cb-blue-dark);
 }
 
@@ -245,5 +245,5 @@ body.mn-colorblind .mn-temp-badge:hover { box-shadow: 0 0 12px rgba(213,94,0,0.3
 body.mn-colorblind .mn-temp-badge--cool { border-color: var(--mn-cb-blue); }
 body.mn-colorblind .mn-temp-badge--cool:hover { box-shadow: 0 0 12px rgba(0,114,178,0.3); }
 body.mn-colorblind .mn-temp-badge--warm { border-color: var(--mn-cb-orange); }
-body.mn-colorblind .mn-temp-badge--neutral { border-color: var(--grigio-chiaro); }
+body.mn-colorblind .mn-temp-badge--neutral { border-color: var(--mn-text-tertiary); }
 } /* end @layer themes */

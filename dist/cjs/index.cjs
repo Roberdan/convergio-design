@@ -579,6 +579,10 @@ function setTheme(mode) {
   }
   const cls = BODY_CLASSES[mode];
   if (cls) document.body.classList.add(cls);
+  try {
+    localStorage.setItem("mn-theme", mode);
+  } catch (_err) {
+  }
 }
 function cycleTheme() {
   const current = getTheme();
@@ -588,33 +592,41 @@ function cycleTheme() {
   return next;
 }
 function getAccent(fallback = "#FFC72C") {
-  return cssVar("--giallo-ferrari", fallback);
+  return cssVar("--mn-accent", fallback);
 }
-function palette(el4 = document.documentElement) {
+function palette(el4 = document.documentElement, opts) {
   const read = (name) => getComputedStyle(el4).getPropertyValue(name).trim();
-  return {
-    // Semantic (theme-aware) — use these for UI surfaces
+  const semantic = {
     surface: read("--mn-surface"),
     surfaceRaised: read("--mn-surface-raised"),
     surfaceSunken: read("--mn-surface-sunken"),
+    surfaceInput: read("--mn-surface-input"),
+    surfaceOverlay: read("--mn-surface-overlay"),
     text: read("--mn-text"),
     textMuted: read("--mn-text-muted"),
+    textTertiary: read("--mn-text-tertiary"),
     border: read("--mn-border"),
+    borderSubtle: read("--mn-border-subtle"),
     accent: read("--mn-accent"),
-    // Brand primitives — fixed across themes
-    giallo: read("--giallo-ferrari"),
-    rosso: read("--rosso-corsa"),
-    verde: read("--verde-racing"),
-    azzurro: read("--status-info"),
-    biancoCaldo: read("--bianco-caldo"),
-    grigioChiaro: read("--grigio-chiaro"),
-    grigioMedio: read("--grigio-medio"),
-    neroAssoluto: read("--nero-assoluto"),
-    // Status — use in charts, badges, gauges
+    accentHover: read("--mn-accent-hover"),
     signalOk: read("--signal-ok"),
     signalWarning: read("--signal-warning"),
     signalDanger: read("--signal-danger"),
-    signalInfo: read("--signal-info")
+    signalInfo: read("--signal-info"),
+    hoverBg: read("--mn-hover-bg"),
+    focusRing: read("--mn-focus-ring")
+  };
+  if (!opts?.includePrimitives) return semantic;
+  return {
+    ...semantic,
+    giallo: read("--mn-accent"),
+    rosso: read("--mn-error"),
+    verde: read("--signal-ok"),
+    azzurro: read("--signal-info"),
+    biancoCaldo: read("--mn-text"),
+    grigioChiaro: read("--mn-text-tertiary"),
+    grigioMedio: read("--mn-text-muted"),
+    neroAssoluto: read("--mn-text-inverse")
   };
 }
 function debounce(fn, ms) {
@@ -1408,21 +1420,31 @@ function neuralNodes(container, opts = {}) {
 
 // src/ts/core/tokens.ts
 var COLOR = {
-  ROSSO_CORSA: "--rosso-corsa",
-  GIALLO_FERRARI: "--giallo-ferrari",
+  /** @deprecated Use `SEMANTIC_COLOR.ERROR`. */
+  ROSSO_CORSA: "--mn-error",
+  /** @deprecated Use `SEMANTIC_COLOR.ACCENT`. */
+  GIALLO_FERRARI: "--mn-accent",
   VERDE_BANDIERA: "--verde-bandiera",
-  NERO_ASSOLUTO: "--nero-assoluto",
-  NERO_SOFT: "--nero-soft",
-  BIANCO_PURO: "--bianco-puro",
-  BIANCO_CALDO: "--bianco-caldo",
-  GRIGIO_CHIARO: "--grigio-chiaro",
-  GRIGIO_MEDIO: "--grigio-medio",
-  GRIGIO_SCURO: "--grigio-scuro",
+  /** @deprecated Use `SEMANTIC_COLOR.TEXT`. */
+  NERO_ASSOLUTO: "--mn-text-inverse",
+  /** @deprecated Use `SEMANTIC_COLOR.SURFACE_RAISED`. */
+  NERO_SOFT: "--mn-surface-raised",
+  /** @deprecated Use `SEMANTIC_COLOR.TEXT`. */
+  BIANCO_PURO: "--mn-text",
+  /** @deprecated Use `SEMANTIC_COLOR.TEXT`. */
+  BIANCO_CALDO: "--mn-text",
+  /** @deprecated Use `SEMANTIC_COLOR.TEXT_TERTIARY`. */
+  GRIGIO_CHIARO: "--mn-text-tertiary",
+  /** @deprecated Use `SEMANTIC_COLOR.TEXT_MUTED`. */
+  GRIGIO_MEDIO: "--mn-text-muted",
+  /** @deprecated Use `SEMANTIC_COLOR.BORDER`. */
+  GRIGIO_SCURO: "--mn-border",
   SIGNAL_DANGER: "--signal-danger",
   SIGNAL_WARNING: "--signal-warning",
   SIGNAL_SUCCESS: "--signal-success",
   SIGNAL_INFO: "--signal-info",
-  CHART_DEFAULT: "--chart-default"
+  /** @deprecated Use `SEMANTIC_COLOR.ACCENT`. */
+  CHART_DEFAULT: "--mn-accent"
 };
 var FONT = {
   BODY: "--font-body",
@@ -1742,10 +1764,10 @@ function ensureStyles() {
   s.textContent = `
 .mn-theme-rotary{display:inline-flex;flex-direction:column;align-items:center;user-select:none;gap:8px}
 .mn-theme-rotary__dial{position:relative;border-radius:50%}
-.mn-theme-rotary__ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--grigio-scuro,#444);pointer-events:none}
-.mn-theme-rotary__pointer{position:absolute;top:8px;left:50%;width:2px;border-radius:1px;background:var(--mn-accent,#FFC72C);transform:translateX(-50%) rotate(0deg);transform-origin:50% calc(var(--rotary-center) - 8px);pointer-events:none;transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.mn-theme-rotary__pos{position:absolute;font-family:var(--font-body,sans-serif);font-size:.55rem;color:var(--grigio-medio,#777);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transform:translate(-50%,-50%);white-space:nowrap;transition:color .15s}
-.mn-theme-rotary__pos--active{color:var(--bianco-caldo,#f5f0e8);font-weight:700}
+.mn-theme-rotary__ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--mn-border);pointer-events:none}
+.mn-theme-rotary__pointer{position:absolute;top:8px;left:50%;width:2px;border-radius:1px;background:var(--mn-accent);transform:translateX(-50%) rotate(0deg);transform-origin:50% calc(var(--rotary-center) - 8px);pointer-events:none;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.mn-theme-rotary__pos{position:absolute;font-family:var(--font-body,sans-serif);font-size:.55rem;color:var(--mn-text-muted);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transform:translate(-50%,-50%);white-space:nowrap;transition:color .15s}
+.mn-theme-rotary__pos--active{color:var(--mn-text);font-weight:700}
 .mn-theme-rotary__center{position:absolute;top:50%;left:50%;border-radius:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center}
 `;
   document.head.appendChild(s);
@@ -1786,9 +1808,9 @@ function themeRotary(opts) {
   }
   const centerBtn = createElement("div", "mn-theme-rotary__center");
   centerBtn.style.width = centerBtn.style.height = centerSize + "px";
-  centerBtn.style.background = "radial-gradient(circle at 40% 35%, var(--grigio-scuro, #444), var(--nero-soft, #1a1a1a))";
+  centerBtn.style.background = "radial-gradient(circle at 40% 35%, var(--mn-border), var(--mn-surface-raised))";
   centerBtn.style.boxShadow = "0 3px 8px rgba(0,0,0,.55), inset 0 1px 1px rgba(255,255,255,.15)";
-  centerBtn.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="var(--mn-accent,#FFC72C)" opacity="0.7"/></svg>';
+  centerBtn.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="var(--mn-accent)" opacity="0.7"/></svg>';
   dial.appendChild(centerBtn);
   container.appendChild(root);
   const rotaryId = "mn-rotary-" + Math.random().toString(36).slice(2, 7);
@@ -2103,7 +2125,7 @@ function arc(cx, cy, r, sa, ea) {
 }
 function miniGaugeSVG(status, latencyMs, label) {
   let color = STATUS_COLORS[status] ?? cssVar("--stage-completed", "#6B7280");
-  if (!isValidColor(color)) color = "var(--grigio-alluminio)";
+  if (!isValidColor(color)) color = "var(--mn-border-strong)";
   const pct3 = status === "healthy" ? 95 : status === "degraded" ? 55 : 10;
   const sz = 56, cx = sz / 2, cy = sz - 4, r = 22;
   const startAngle = Math.PI, needleAngle = startAngle + clamp(pct3, 0, 100) / 100 * Math.PI;
@@ -2985,18 +3007,18 @@ function profileMenu(trigger, options) {
 var dpr = window.devicePixelRatio || 1;
 function buildSeries() {
   return [
-    cssVar("--chart-default", "#FFC72C"),
-    cssVar("--signal-danger", "#DC0000"),
-    cssVar("--signal-ok", "#00A651"),
-    cssVar("--arancio", "#D4622B"),
-    cssVar("--chart-bar", "#4EA8DE"),
-    cssVar("--grigio-alluminio", "#c8c8c8"),
-    "#E8A838",
-    "#8B5CF6",
-    "#EF4444",
-    "#10B981",
-    "#F59E0B",
-    "#6366F1"
+    cssVar("--mn-accent", "var(--mn-accent)"),
+    cssVar("--signal-danger", "var(--signal-danger)"),
+    cssVar("--signal-ok", "var(--signal-ok)"),
+    cssVar("--mn-warning", "var(--mn-warning)"),
+    cssVar("--mn-info", "var(--mn-info)"),
+    cssVar("--mn-border-strong", "var(--mn-border-strong)"),
+    cssVar("--mn-error", "var(--mn-error)"),
+    cssVar("--mn-success", "var(--mn-success)"),
+    cssVar("--signal-warning", "var(--signal-warning)"),
+    cssVar("--signal-info", "var(--signal-info)"),
+    cssVar("--mn-text-tertiary", "var(--mn-text-tertiary)"),
+    cssVar("--mn-accent-hover", "var(--mn-accent-hover)")
   ];
 }
 var SERIES = buildSeries();
@@ -3082,7 +3104,7 @@ function drawSmoothLine(ctx, data, getX, getY, smooth) {
 // src/ts/charts-sparkline.ts
 function sparkline(canvas, data, opts) {
   const o = {
-    color: cssVar("--chart-default", "#FFC72C"),
+    color: cssVar("--mn-accent"),
     fillOpacity: 0.15,
     lineWidth: 1.5,
     smooth: true,
@@ -3321,11 +3343,11 @@ function barChart(canvas, data, opts) {
 // src/ts/charts-live.ts
 function liveGraph(canvas, data, opts) {
   const o = {
-    color: cssVar("--chart-default", "#FFC72C"),
+    color: cssVar("--mn-accent"),
     lineWidth: 1.5,
     gridColor: "rgba(200,200,200,0.06)",
     gridRows: 4,
-    axisColor: cssVar("--chart-axis", "#616161"),
+    axisColor: cssVar("--mn-text-muted"),
     showRedLine: true,
     redLineValue: null,
     smooth: true,
@@ -3475,12 +3497,12 @@ function progressRing(container, opts) {
     max: 100,
     size: 80,
     thickness: 6,
-    color: cssVar("--chart-default", "#FFC72C"),
+    color: cssVar("--mn-accent"),
     trackColor: "rgba(200,200,200,0.08)",
     animate: true,
     ...opts
   };
-  const safeColor3 = isValidColor(o.color) ? o.color : "var(--giallo-ferrari)";
+  const safeColor3 = isValidColor(o.color) ? o.color : "var(--mn-accent)";
   const radius = (o.size - o.thickness) / 2;
   const circumference = 2 * Math.PI * radius;
   const pct3 = Math.max(0, Math.min(1, o.value / o.max));
@@ -3603,8 +3625,8 @@ function radar(canvas, data, opts) {
     max: 100,
     levels: 4,
     gridColor: "rgba(200,200,200,0.1)",
-    labelColor: cssVar("--chart-label", "#9e9e9e"),
-    color: cssVar("--chart-default", "#FFC72C"),
+    labelColor: cssVar("--mn-text-tertiary"),
+    color: cssVar("--mn-accent"),
     fillOpacity: 0.15,
     lineWidth: 1.5,
     dotRadius: 3,
@@ -3979,7 +4001,7 @@ function buildTooltipHTML(meta, index, series) {
     datasets.forEach((ds, i) => {
       if (index < ds.data.length) {
         const color = safeColor(ds.color || series[i % series.length], "#999");
-        html += '<div style="display:flex;align-items:center;gap:6px;margin-top:3px;"><span class="mn-chart-tooltip__dot" style="background:' + color + ';"></span><span style="color:var(--chart-label,#9e9e9e);font-size:0.65rem;">' + esc(ds.label || "Series " + (i + 1)) + '</span><span class="mn-chart-tooltip__value" style="margin-left:auto;color:' + color + ';">' + ds.data[index].toFixed(1) + "</span></div>";
+        html += '<div style="display:flex;align-items:center;gap:6px;margin-top:3px;"><span class="mn-chart-tooltip__dot" style="background:' + color + ';"></span><span style="color:var(--mn-text-tertiary);font-size:0.65rem;">' + esc(ds.label || "Series " + (i + 1)) + '</span><span class="mn-chart-tooltip__value" style="margin-left:auto;color:' + color + ';">' + ds.data[index].toFixed(1) + "</span></div>";
       }
     });
     return html;
@@ -3991,16 +4013,16 @@ function buildTooltipHTML(meta, index, series) {
   }
   if (meta.type === "donut") {
     const seg = meta.segments[index];
-    return '<div style="display:flex;align-items:center;gap:6px;"><span class="mn-chart-tooltip__dot" style="background:' + seg.color + ';"></span><span class="mn-chart-tooltip__value">' + seg.value + "</span></div>" + (seg.label ? '<div class="mn-chart-tooltip__label">' + esc(seg.label) + "</div>" : "") + '<div style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">' + seg.pct + "%</div>";
+    return '<div style="display:flex;align-items:center;gap:6px;"><span class="mn-chart-tooltip__dot" style="background:' + seg.color + ';"></span><span class="mn-chart-tooltip__value">' + seg.value + "</span></div>" + (seg.label ? '<div class="mn-chart-tooltip__label">' + esc(seg.label) + "</div>" : "") + '<div style="color:var(--mn-text-tertiary);font-size:0.6rem;">' + seg.pct + "%</div>";
   }
   if (meta.type === "bubble") {
     const b = meta.data[index];
     const size = b.z ?? b.r;
-    return '<div class="mn-chart-tooltip__label">' + esc(b.label || "Point") + '</div><div style="font-size:0.65rem;color:var(--chart-label,#9e9e9e);">x: ' + b.x + " \xB7 y: " + b.y + (size ? " \xB7 size: " + size : "") + "</div>";
+    return '<div class="mn-chart-tooltip__label">' + esc(b.label || "Point") + '</div><div style="font-size:0.65rem;color:var(--mn-text-tertiary);">x: ' + b.x + " \xB7 y: " + b.y + (size ? " \xB7 size: " + size : "") + "</div>";
   }
   if (meta.type === "radar") {
     const r = meta.data[index];
-    return '<div class="mn-chart-tooltip__label">' + esc(r.label) + '</div><div class="mn-chart-tooltip__value" style="color:var(--chart-default,#FFC72C);">' + r.value + '<span style="color:var(--chart-axis,#616161);font-size:0.6rem;">/' + meta.max + "</span></div>";
+    return '<div class="mn-chart-tooltip__label">' + esc(r.label) + '</div><div class="mn-chart-tooltip__value" style="color:var(--mn-accent);">' + r.value + '<span style="color:var(--mn-text-muted);font-size:0.6rem;">/' + meta.max + "</span></div>";
   }
   return "";
 }
@@ -4190,7 +4212,7 @@ function sparklineInteract(canvas, data, opts) {
     ctx.clearRect(0, 0, overlay.width, overlay.height);
     ctx.save();
     ctx.scale(DPR, DPR);
-    const color = opts.color || cssVar("--chart-default", "#FFC72C");
+    const color = opts.color || cssVar("--mn-accent");
     const cr = parseInt(color.slice(1, 3), 16), cg = parseInt(color.slice(3, 5), 16), cb = parseInt(color.slice(5, 7), 16);
     ctx.beginPath();
     ctx.arc(px, py, 10, 0, Math.PI * 2);
@@ -4843,7 +4865,7 @@ function drawCrosshair2(ctx, ch, cx, cy, radius, size, progress, P, cfg) {
     ctx.textBaseline = "bottom";
     ctx.fillText(ch.title, cx, cy - gridR - lfs - 6);
   }
-  const dotCol = ch.dotColor || cssVar("--chart-default", "#FFC72C");
+  const dotCol = ch.dotColor || cssVar("--mn-accent");
   const dotX = cx + ch.x * gridR * progress;
   const dotY = cy + ch.y * gridR * progress;
   ctx.setLineDash([3, 3]);
@@ -4902,7 +4924,7 @@ function drawCrosshair2(ctx, ch, cx, cy, radius, size, progress, P, cfg) {
     ctx.globalAlpha = 0.25;
     ctx.fillStyle = P.axisLabel;
     ctx.fillText(qc.tl, cx - off2, cy - off2);
-    ctx.fillStyle = cssVar("--chart-default", "#FFC72C");
+    ctx.fillStyle = cssVar("--mn-accent");
     ctx.fillText(qc.tr, cx + off2, cy - off2);
     ctx.fillStyle = P.dimmed;
     ctx.fillText(qc.bl, cx - off2, cy + off2);
@@ -5323,7 +5345,7 @@ function speedometer(canvas, opts) {
     ticks: [0, 25, 50, 75, 100],
     minorTicks: 4,
     needleColor: cssVar("--signal-danger", "#DC0000"),
-    arcColor: cssVar("--chart-default", "#FFC72C"),
+    arcColor: cssVar("--mn-accent"),
     arcStart: 0,
     arcEnd: null,
     bar: null,
@@ -5806,7 +5828,7 @@ function renderToday(ctx, s) {
   if (!s.o.showToday) return;
   const tx = s.lw + s.dateToX(s.today) - s.scrollX;
   if (tx >= s.lw && tx <= s.vw) {
-    ctx.strokeStyle = cssVar("--today-line", "#4EA8DE");
+    ctx.strokeStyle = cssVar("--mn-info");
     ctx.lineWidth = 1.5;
     ctx.setLineDash([]);
     ctx.beginPath();
@@ -5883,7 +5905,7 @@ function renderHeader(ctx, s) {
   if (s.o.showToday) {
     const tbx = lw + s.dateToX(s.today) - scrollX;
     if (tbx >= lw - 24 && tbx <= vw + 24) {
-      ctx.fillStyle = cssVar("--today-line", "#4EA8DE");
+      ctx.fillStyle = cssVar("--mn-info");
       roundRect2(ctx, tbx - 24, tierH + (tierH - 18) / 2, 48, 18, 3);
       ctx.fill();
       ctx.fillStyle = "#111";
@@ -6107,17 +6129,17 @@ function showTip(s, hit, clientX, clientY) {
   const sd = parseDate(task.start), ed = parseDate(task.end);
   const dur = sd && ed ? Math.round(daysBetween(sd, ed)) : null;
   let h = '<div class="mn-chart-tooltip__label">' + escapeHtml(String(task.title ?? "")) + "</div>";
-  if (task.account) h += '<div style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">' + escapeHtml(String(task.account)) + "</div>";
+  if (task.account) h += '<div style="color:var(--mn-text-tertiary);font-size:0.6rem;">' + escapeHtml(String(task.account)) + "</div>";
   h += '<div style="display:flex;flex-direction:column;gap:2px;margin-top:4px;">';
-  h += '<span style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">Start: <b style="color:var(--grigio-alluminio,#c8c8c8);">' + fmtDateFull(sd) + "</b></span>";
-  h += '<span style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">End: <b style="color:var(--grigio-alluminio,#c8c8c8);">' + fmtDateFull(ed) + "</b></span>";
-  if (dur !== null) h += '<span style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">Duration: ' + dur + " days</span>";
+  h += '<span style="color:var(--mn-text-tertiary);font-size:0.6rem;">Start: <b style="color:var(--mn-border-strong);">' + fmtDateFull(sd) + "</b></span>";
+  h += '<span style="color:var(--mn-text-tertiary);font-size:0.6rem;">End: <b style="color:var(--mn-border-strong);">' + fmtDateFull(ed) + "</b></span>";
+  if (dur !== null) h += '<span style="color:var(--mn-text-tertiary);font-size:0.6rem;">Duration: ' + dur + " days</span>";
   h += '</div><div style="display:flex;align-items:center;gap:4px;margin-top:3px;">';
   h += '<span class="mn-chart-tooltip__dot" style="background:' + col + ';"></span>';
   h += '<span style="color:' + col + ';font-size:0.65rem;">' + escapeHtml(String(task.state ?? "Unknown")) + "</span></div>";
-  if (task.progress !== void 0 && !isChild) h += '<div style="color:var(--chart-default,#FFC72C);font-size:0.65rem;margin-top:2px;">' + Math.round(task.progress * 100) + "% complete</div>";
-  if (isChild && task.owner) h += '<div style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;margin-top:2px;">Owner: ' + escapeHtml(String(task.owner)) + "</div>";
-  if (isChild && task.type) h += '<div style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">Type: ' + escapeHtml(String(task.type)) + "</div>";
+  if (task.progress !== void 0 && !isChild) h += '<div style="color:var(--mn-accent);font-size:0.65rem;margin-top:2px;">' + Math.round(task.progress * 100) + "% complete</div>";
+  if (isChild && task.owner) h += '<div style="color:var(--mn-text-tertiary);font-size:0.6rem;margin-top:2px;">Owner: ' + escapeHtml(String(task.owner)) + "</div>";
+  if (isChild && task.type) h += '<div style="color:var(--mn-text-tertiary);font-size:0.6rem;">Type: ' + escapeHtml(String(task.type)) + "</div>";
   const tip = s.tip;
   tip.innerHTML = h;
   tip.classList.add("mn-chart-tooltip--visible");
@@ -6365,13 +6387,13 @@ function gantt(container, tasks, userOpts) {
   Object.keys(pal).forEach((st) => {
     const span = document.createElement("span");
     span.className = "mn-gantt-timeline__legend-item";
-    const safeCol = isValidColor(pal[st]) ? pal[st] : "var(--grigio-alluminio)";
+    const safeCol = isValidColor(pal[st]) ? pal[st] : "var(--mn-border-strong)";
     span.innerHTML = '<span class="mn-gantt-timeline__legend-swatch" style="background:' + safeCol + ';"></span>' + escapeHtml(st);
     leg.appendChild(span);
   });
   const todayLeg = document.createElement("span");
   todayLeg.className = "mn-gantt-timeline__legend-item";
-  todayLeg.innerHTML = '<span class="mn-gantt-timeline__legend-swatch" style="background:var(--today-line,#4EA8DE);"></span>TODAY';
+  todayLeg.innerHTML = '<span class="mn-gantt-timeline__legend-swatch" style="background:var(--mn-info);"></span>TODAY';
   leg.appendChild(todayLeg);
   ctrlBar.appendChild(zoomGrp);
   ctrlBar.appendChild(leg);
@@ -6790,7 +6812,7 @@ function mapView(container, opts) {
     tip.classList.remove("mn-chart-tooltip--visible");
   });
   function showTip4(m) {
-    tip.innerHTML = '<div class="mn-chart-tooltip__label">' + escapeHtml(String(m.label || "Marker")) + "</div>" + (m.detail ? '<div style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">' + escapeHtml(String(m.detail)) + "</div>" : "");
+    tip.innerHTML = '<div class="mn-chart-tooltip__label">' + escapeHtml(String(m.label || "Marker")) + "</div>" + (m.detail ? '<div style="color:var(--mn-text-tertiary);font-size:0.6rem;">' + escapeHtml(String(m.detail)) + "</div>" : "");
     tip.classList.add("mn-chart-tooltip--visible");
     const tipW = tip.offsetWidth || 120;
     let left = m._x - tipW / 2;
@@ -7025,7 +7047,7 @@ function socialGraph(container, opts = { nodes: [], edges: [] }) {
   const activeId = () => hoveredId ?? highlightedId;
   const showLabels = opts.showLabels !== false;
   const showTip4 = (node, x, y) => {
-    tip.innerHTML = '<div class="mn-chart-tooltip__label">' + escapeHtml(node.label) + "</div>" + (node.detail ? '<div style="font-size:.68rem;color:var(--chart-label,#9e9e9e)">' + escapeHtml(node.detail) + "</div>" : "");
+    tip.innerHTML = '<div class="mn-chart-tooltip__label">' + escapeHtml(node.label) + "</div>" + (node.detail ? '<div style="font-size:.68rem;color:var(--mn-text-tertiary)">' + escapeHtml(node.detail) + "</div>" : "");
     tip.style.opacity = "1";
     const tw = tip.offsetWidth || 140, th = tip.offsetHeight || 44;
     tip.style.left = Math.max(6, Math.min(width - tw - 6, x - tw / 2)) + "px";
@@ -7504,21 +7526,21 @@ function ensureStyles2() {
   const sheet = document.createElement("style");
   sheet.id = STYLE_ID2;
   sheet.textContent = [
-    ".mn-ctrl-label{font-family:var(--font-body,sans-serif);font-size:var(--text-micro,.65rem);color:var(--grigio-chiaro,#aaa);text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--space-xs,4px);display:block;text-align:center}",
+    ".mn-ctrl-label{font-family:var(--font-body,sans-serif);font-size:var(--text-micro,.65rem);color:var(--mn-text-tertiary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--space-xs,4px);display:block;text-align:center}",
     ".mn-ctrl-lever{display:inline-flex;flex-direction:column;align-items:center;user-select:none}",
     ".mn-ctrl-lever__body{display:flex;align-items:stretch;gap:var(--space-sm,8px);height:120px;position:relative}",
-    ".mn-ctrl-lever__track{width:14px;border-radius:7px;background:linear-gradient(180deg,var(--nero-soft,#1a1a1a),var(--nero-assoluto,#000));box-shadow:inset 0 1px 3px rgba(0,0,0,.6);position:relative;cursor:pointer}",
-    ".mn-ctrl-lever__knob{position:absolute;left:50%;width:30px;height:18px;border-radius:4px;background:linear-gradient(180deg,var(--grigio-chiaro,#bbb),var(--grigio-scuro,#555));box-shadow:0 2px 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3);transform:translate(-50%,-50%);cursor:pointer;transition:top var(--duration-sm,.15s) var(--ease-out,ease-out)}",
+    ".mn-ctrl-lever__track{width:14px;border-radius:7px;background:linear-gradient(180deg,var(--mn-surface-raised),var(--mn-text-inverse));box-shadow:inset 0 1px 3px rgba(0,0,0,.6);position:relative;cursor:pointer}",
+    ".mn-ctrl-lever__knob{position:absolute;left:50%;width:30px;height:18px;border-radius:4px;background:linear-gradient(180deg,var(--mn-text-tertiary),var(--mn-border));box-shadow:0 2px 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3);transform:translate(-50%,-50%);cursor:pointer;transition:top var(--duration-sm,.15s) var(--ease-out,ease-out)}",
     ".mn-ctrl-lever__positions{display:flex;flex-direction:column;justify-content:space-between;height:100%}",
-    ".mn-ctrl-lever__pos{font-family:var(--font-body,sans-serif);font-size:var(--text-nano,.55rem);color:var(--grigio-medio,#777);text-transform:uppercase;letter-spacing:.06em;cursor:pointer;transition:color var(--duration-sm,.15s)}",
-    ".mn-ctrl-lever__pos--active{color:var(--giallo-ferrari,#FFC72C);font-weight:700}",
+    ".mn-ctrl-lever__pos{font-family:var(--font-body,sans-serif);font-size:var(--text-nano,.55rem);color:var(--mn-text-muted);text-transform:uppercase;letter-spacing:.06em;cursor:pointer;transition:color var(--duration-sm,.15s)}",
+    ".mn-ctrl-lever__pos--active{color:var(--mn-accent);font-weight:700}",
     ".mn-ctrl-toggle{display:inline-flex;flex-direction:column;align-items:center;user-select:none}",
-    ".mn-ctrl-toggle__body{position:relative;width:52px;height:28px;border-radius:14px;background:linear-gradient(180deg,var(--nero-assoluto,#000),var(--nero-soft,#1a1a1a));box-shadow:inset 0 2px 4px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.05);cursor:pointer}",
-    ".mn-ctrl-toggle__lever{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--grigio-chiaro,#bbb),var(--grigio-scuro,#555));box-shadow:0 2px 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.35);transition:left var(--duration-sm,.15s) var(--ease-out,ease-out)}",
+    ".mn-ctrl-toggle__body{position:relative;width:52px;height:28px;border-radius:14px;background:linear-gradient(180deg,var(--mn-text-inverse),var(--mn-surface-raised));box-shadow:inset 0 2px 4px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.05);cursor:pointer}",
+    ".mn-ctrl-toggle__lever{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--mn-text-tertiary),var(--mn-border));box-shadow:0 2px 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.35);transition:left var(--duration-sm,.15s) var(--ease-out,ease-out)}",
     ".mn-ctrl-toggle--on .mn-ctrl-toggle__lever{left:27px}",
     ".mn-ctrl-toggle--on .mn-ctrl-toggle__body{box-shadow:inset 0 2px 4px rgba(0,0,0,.6),0 0 8px rgba(255,199,44,.25)}",
-    ".mn-ctrl-toggle__indicator{position:absolute;top:50%;right:8px;width:5px;height:5px;border-radius:50%;background:var(--grigio-scuro,#444);transform:translateY(-50%);transition:background var(--duration-sm,.15s),box-shadow var(--duration-sm,.15s)}",
-    ".mn-ctrl-toggle--on .mn-ctrl-toggle__indicator{background:var(--giallo-ferrari,#FFC72C);box-shadow:0 0 4px var(--giallo-ferrari,#FFC72C)}"
+    ".mn-ctrl-toggle__indicator{position:absolute;top:50%;right:8px;width:5px;height:5px;border-radius:50%;background:var(--mn-border);transform:translateY(-50%);transition:background var(--duration-sm,.15s),box-shadow var(--duration-sm,.15s)}",
+    ".mn-ctrl-toggle--on .mn-ctrl-toggle__indicator{background:var(--mn-accent);box-shadow:0 0 4px var(--mn-accent)}"
   ].join("\n");
   document.head.appendChild(sheet);
 }
@@ -7655,12 +7677,12 @@ function ensureManettinoStyles() {
   s.textContent = [
     ".mn-ctrl-manettino{display:inline-flex;flex-direction:column;align-items:center;user-select:none}",
     ".mn-ctrl-manettino__dial{position:relative;width:160px;height:160px}",
-    ".mn-ctrl-manettino__knob{position:absolute;top:50%;left:50%;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--mn-ctrl-manettino-tint,var(--rosso-corsa,#DC0000)),var(--nero-soft,#1a1a1a));box-shadow:0 3px 8px rgba(0,0,0,.55),inset 0 1px 1px rgba(255,255,255,.2);transform:translate(-50%,-50%);cursor:grab;transition:box-shadow var(--duration-sm,.15s)}",
+    ".mn-ctrl-manettino__knob{position:absolute;top:50%;left:50%;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--mn-ctrl-manettino-tint)),var(--mn-surface-raised));box-shadow:0 3px 8px rgba(0,0,0,.55),inset 0 1px 1px rgba(255,255,255,.2);transform:translate(-50%,-50%);cursor:grab;transition:box-shadow var(--duration-sm,.15s)}",
     ".mn-ctrl-manettino__knob:active{cursor:grabbing;box-shadow:0 1px 4px rgba(0,0,0,.7),inset 0 1px 1px rgba(255,255,255,.15)}",
-    ".mn-ctrl-manettino__pointer{position:absolute;top:6px;left:50%;width:2px;height:18px;background:var(--bianco-puro,#fff);border-radius:1px;transform:translateX(-50%);pointer-events:none}",
-    ".mn-ctrl-manettino__ring{position:absolute;top:50%;left:50%;width:80px;height:80px;border-radius:50%;border:2px solid var(--grigio-scuro,#444);transform:translate(-50%,-50%);pointer-events:none}",
-    ".mn-ctrl-manettino__pos{position:absolute;font-family:var(--font-body,sans-serif);font-size:var(--text-nano,.55rem);color:var(--grigio-medio,#777);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transform:translate(-50%,-50%);white-space:nowrap;transition:color var(--duration-sm,.15s)}",
-    ".mn-ctrl-manettino__pos--active{color:var(--bianco-caldo,#f5f0e8);font-weight:700}"
+    ".mn-ctrl-manettino__pointer{position:absolute;top:6px;left:50%;width:2px;height:18px;background:var(--mn-text);border-radius:1px;transform:translateX(-50%);pointer-events:none}",
+    ".mn-ctrl-manettino__ring{position:absolute;top:50%;left:50%;width:80px;height:80px;border-radius:50%;border:2px solid var(--mn-border);transform:translate(-50%,-50%);pointer-events:none}",
+    ".mn-ctrl-manettino__pos{position:absolute;font-family:var(--font-body,sans-serif);font-size:var(--text-nano,.55rem);color:var(--mn-text-muted);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transform:translate(-50%,-50%);white-space:nowrap;transition:color var(--duration-sm,.15s)}",
+    ".mn-ctrl-manettino__pos--active{color:var(--mn-text);font-weight:700}"
   ].join("\n");
   document.head.appendChild(s);
 }
@@ -7671,13 +7693,13 @@ function ensureSteppedStyles() {
   s.textContent = [
     ".mn-ctrl-stepped{display:inline-flex;flex-direction:column;align-items:center;user-select:none}",
     ".mn-ctrl-stepped__dial{position:relative;width:100px;height:100px}",
-    ".mn-ctrl-stepped__knob{position:absolute;top:50%;left:50%;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--grigio-scuro,#555),var(--nero-soft,#1a1a1a));box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.15);transform:translate(-50%,-50%);cursor:grab;transition:box-shadow var(--duration-sm,.15s)}",
+    ".mn-ctrl-stepped__knob{position:absolute;top:50%;left:50%;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--mn-border),var(--mn-surface-raised));box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.15);transform:translate(-50%,-50%);cursor:grab;transition:box-shadow var(--duration-sm,.15s)}",
     ".mn-ctrl-stepped__knob:active{cursor:grabbing}",
-    ".mn-ctrl-stepped__pointer{position:absolute;top:4px;left:50%;width:2px;height:12px;background:var(--bianco-puro,#fff);border-radius:1px;transform:translateX(-50%);pointer-events:none}",
-    ".mn-ctrl-stepped__tick{position:absolute;width:2px;height:8px;border-radius:1px;background:var(--grigio-scuro,#444);pointer-events:none;transition:background var(--duration-sm,.15s)}",
-    ".mn-ctrl-stepped__tick--active{background:var(--giallo-ferrari,#FFC72C)}",
-    ".mn-ctrl-stepped__pos{position:absolute;font-family:var(--font-body,sans-serif);font-size:var(--text-nano,.55rem);color:var(--grigio-medio,#777);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transform:translate(-50%,-50%);transition:color var(--duration-sm,.15s)}",
-    ".mn-ctrl-stepped__pos--active{color:var(--giallo-ferrari,#FFC72C);font-weight:700}"
+    ".mn-ctrl-stepped__pointer{position:absolute;top:4px;left:50%;width:2px;height:12px;background:var(--mn-text);border-radius:1px;transform:translateX(-50%);pointer-events:none}",
+    ".mn-ctrl-stepped__tick{position:absolute;width:2px;height:8px;border-radius:1px;background:var(--mn-border);pointer-events:none;transition:background var(--duration-sm,.15s)}",
+    ".mn-ctrl-stepped__tick--active{background:var(--mn-accent)}",
+    ".mn-ctrl-stepped__pos{position:absolute;font-family:var(--font-body,sans-serif);font-size:var(--text-nano,.55rem);color:var(--mn-text-muted);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transform:translate(-50%,-50%);transition:color var(--duration-sm,.15s)}",
+    ".mn-ctrl-stepped__pos--active{color:var(--mn-accent);font-weight:700}"
   ].join("\n");
   document.head.appendChild(s);
 }
@@ -9715,7 +9737,7 @@ function funnel(container, options) {
     svg.style.width = "100%";
     svg.style.height = dynH > 0 ? "100%" : "auto";
     pipe.forEach((stageRaw, i) => {
-      const stage = isValidColor(stageRaw.color) ? stageRaw : { ...stageRaw, color: "var(--grigio-alluminio)" };
+      const stage = isValidColor(stageRaw.color) ? stageRaw : { ...stageRaw, color: "var(--mn-border-strong)" };
       const barW = Math.max(PIPE_W * MIN_BAR, stage.count / maxC * PIPE_W);
       const barX = PIPE_L + (PIPE_W - barW) / 2;
       const y = PAD + i * (barH + gap);
@@ -9725,7 +9747,7 @@ function funnel(container, options) {
         const nX = PIPE_L + (PIPE_W - nW) / 2;
         svg.appendChild(svgEl("path", { d: trapPath(barX, barW, nX, nW, y + barH, y + barH + gap), fill: stage.color, opacity: "0.12" }));
         const rate = reach[i] > 0 ? Math.round(reach[i + 1] / reach[i] * 100) : 0;
-        svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + barH + gap / 2 + 1, "text-anchor": "middle", "dominant-baseline": "middle", "font-size": 9, style: "font-family:var(--font-display,'Barlow Condensed',sans-serif)", fill: "var(--grigio-medio,#777)", "font-weight": "500" }, "\u2193 " + rate + "%"));
+        svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + barH + gap / 2 + 1, "text-anchor": "middle", "dominant-baseline": "middle", "font-size": 9, style: "font-family:var(--font-display,'Barlow Condensed',sans-serif)", fill: "var(--mn-text-muted)", "font-weight": "500" }, "\u2193 " + rate + "%"));
       }
       const bar = svgEl("rect", { x: barX, y, width: barW, height: barH, rx: RAD, fill: stage.color });
       bar.classList.add("mn-funnel__bar");
@@ -9771,12 +9793,12 @@ function funnel(container, options) {
     if (data.onHold && data.onHold.count > 0) {
       const ohLegClr = isValidColor(data.onHold.color) ? data.onHold.color : "#ea580c";
       svg.appendChild(svgEl("circle", { cx: PIPE_L, cy: legendY, r: 4, fill: ohLegClr, opacity: "0.8" }));
-      svg.appendChild(svgText({ x: PIPE_L + 8, y: legendY + 3, "font-size": 9, style: "font-family:var(--font-body,'Inter',sans-serif)", fill: "var(--grigio-medio,#999)", "font-weight": "500" }, "\u23F8 On Hold: " + data.onHold.count));
+      svg.appendChild(svgText({ x: PIPE_L + 8, y: legendY + 3, "font-size": 9, style: "font-family:var(--font-body,'Inter',sans-serif)", fill: "var(--mn-text-muted)", "font-weight": "500" }, "\u23F8 On Hold: " + data.onHold.count));
     }
     if (data.withdrawn && data.withdrawn.count > 0) {
       const wdLegClr = isValidColor(data.withdrawn.color) ? data.withdrawn.color : "#666";
       svg.appendChild(svgEl("circle", { cx: PIPE_L + PIPE_W / 2 + 20, cy: legendY, r: 4, fill: wdLegClr, opacity: "0.8" }));
-      svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2 + 28, y: legendY + 3, "font-size": 9, style: "font-family:var(--font-body,'Inter',sans-serif)", fill: "var(--grigio-medio,#999)", "font-weight": "500" }, "\u2715 Withdrawn: " + data.withdrawn.count));
+      svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2 + 28, y: legendY + 3, "font-size": 9, style: "font-family:var(--font-body,'Inter',sans-serif)", fill: "var(--mn-text-muted)", "font-weight": "500" }, "\u2715 Withdrawn: " + data.withdrawn.count));
     }
     root.appendChild(svg);
   }
@@ -12184,18 +12206,18 @@ function openSearchDrawer(opts) {
       item.setAttribute("role", "option");
       const titleSpan = document.createElement("div");
       titleSpan.className = "mn-search-drawer__item-title";
-      titleSpan.textContent = escapeHtml(result.title);
+      titleSpan.textContent = result.title;
       item.appendChild(titleSpan);
       if (result.subtitle) {
         const sub = document.createElement("div");
         sub.className = "mn-search-drawer__item-sub";
-        sub.textContent = escapeHtml(result.subtitle);
+        sub.textContent = result.subtitle;
         item.appendChild(sub);
       }
       if (result.badge) {
         const badge = document.createElement("span");
         badge.className = "mn-badge";
-        badge.textContent = escapeHtml(result.badge);
+        badge.textContent = result.badge;
         if (result.badgeColor && isValidColor(result.badgeColor)) badge.style.backgroundColor = result.badgeColor;
         item.appendChild(badge);
       }
@@ -13456,7 +13478,7 @@ function quadHex(q) {
     "Stars": ["--signal-ok", "#00A651"],
     "Cash Cows": ["--mn-accent", "#FFC72C"],
     "? Marks": ["--signal-warning", "#FFC72C"],
-    "Dogs": ["--grigio-30", "#4d4d4d"]
+    "Dogs": ["--mn-border-subtle", "#4d4d4d"]
   };
   const [v, fb] = m[q];
   return cssVar(v, fb);
@@ -13498,10 +13520,10 @@ function bcgMatrix(canvas, opts) {
   const bR = (sz) => 8 + sz * 3;
   function draw(sc) {
     ctx.clearRect(0, 0, w, h);
-    const tm = cssVar("--mn-text-muted", "#888");
-    const bd = cssVar("--mn-border", "#333");
-    const sf = cssVar("--mn-surface", "#111");
-    const tx = cssVar("--mn-text", "#ccc");
+    const tm = cssVar("--mn-text-muted");
+    const bd = cssVar("--mn-border");
+    const sf = cssVar("--mn-surface");
+    const tx = cssVar("--mn-text");
     const midX = toX(sT), midY = toY(gT);
     const qr = [
       [pL, pT, midX - pL, midY - pT, "Stars"],
@@ -13558,7 +13580,7 @@ function bcgMatrix(canvas, opts) {
       if (it.id === hovId) {
         ctx.beginPath();
         ctx.arc(bx, by, r + 4, 0, Math.PI * 2);
-        ctx.strokeStyle = cssVar("--mn-accent", "#FFC72C");
+        ctx.strokeStyle = cssVar("--mn-accent");
         ctx.lineWidth = 2;
         ctx.stroke();
         const l1 = it.label;
@@ -14677,7 +14699,7 @@ function riskMatrix(canvas, opts) {
     if (tx < 2) tx = 2;
     if (tx + tw > w - 2) tx = w - tw - 2;
     if (ty < 2) ty = cy + CIRCLE_R + 6;
-    ctx.fillStyle = cssVar("--mn-surface-raised", "#222");
+    ctx.fillStyle = cssVar("--mn-surface-raised");
     ctx.strokeStyle = border;
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -14691,10 +14713,10 @@ function riskMatrix(canvas, opts) {
   }
   function draw(scale) {
     ctx.clearRect(0, 0, w, h);
-    const border = cssVar("--mn-border", "#333");
-    const textMuted = cssVar("--mn-text-muted", "#888");
-    const textColor = cssVar("--mn-text", "#ccc");
-    const accent = cssVar("--mn-accent", "#FFC72C");
+    const border = cssVar("--mn-border");
+    const textMuted = cssVar("--mn-text-muted");
+    const textColor = cssVar("--mn-text");
+    const accent = cssVar("--mn-accent");
     drawGrid(border, textMuted, textColor);
     drawItems(scale, accent, textColor, border);
   }
@@ -14930,7 +14952,7 @@ function lerpColor(low, high, t) {
 }
 function contrastText(r, g, b) {
   const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return lum > 0.5 ? "var(--nero-assoluto, #050505)" : "var(--bianco-caldo, #fafafa)";
+  return lum > 0.5 ? "var(--mn-text-inverse)" : "var(--mn-text)";
 }
 function formatCellValue(retention, initialSize, showAbsolute) {
   if (showAbsolute) return formatNumber(Math.round(initialSize * retention));
@@ -15451,11 +15473,11 @@ function costTimeline(canvas, opts) {
     ctx.beginPath();
     ctx.rect(0, 0, PAD2.left + plotW * clipFrac + PAD2.right, h);
     ctx.clip();
-    const borderColor = cssVar("--mn-border", "#333");
+    const borderColor = cssVar("--mn-border");
     ctx.strokeStyle = hexToRgba(borderColor.startsWith("#") ? borderColor : "#333333", 0.3);
     ctx.setLineDash([4, 4]);
     ctx.lineWidth = 0.5;
-    const mutedColor = cssVar("--mn-text-muted", "#888");
+    const mutedColor = cssVar("--mn-text-muted");
     for (let g = 0; g <= GRID_LINES; g++) {
       const val = maxVal / GRID_LINES * g;
       const yy = gy(val);
@@ -15517,7 +15539,7 @@ function costTimeline(canvas, opts) {
       const idx = Math.round((hoverX - PAD2.left) / xStep);
       const ci = Math.max(0, Math.min(n - 1, idx));
       const rx = gx(ci);
-      ctx.strokeStyle = hexToRgba(cssVar("--mn-text", "#fff").startsWith("#") ? cssVar("--mn-text", "#fff") : "#ffffff", 0.4);
+      ctx.strokeStyle = hexToRgba(cssVar("--mn-text").startsWith("#") ? cssVar("--mn-text") : "#ffffff", 0.4);
       ctx.lineWidth = 1;
       ctx.setLineDash([2, 2]);
       ctx.beginPath();
@@ -15543,8 +15565,8 @@ function costTimeline(canvas, opts) {
     const th = lines.length * 14 + 10;
     const tx = rx + 12 + tw > w ? rx - tw - 8 : rx + 12;
     const ty = PAD2.top + 4;
-    const bg = cssVar("--mn-surface", "#1a1a1a");
-    const border = cssVar("--mn-border", "#333");
+    const bg = cssVar("--mn-surface");
+    const border = cssVar("--mn-border");
     ctx.fillStyle = bg.startsWith("#") ? bg : "#1a1a1a";
     ctx.strokeStyle = border.startsWith("#") ? border : "#333333";
     ctx.lineWidth = 1;
@@ -15552,7 +15574,7 @@ function costTimeline(canvas, opts) {
     ctx.roundRect(tx, ty, tw, th, 4);
     ctx.fill();
     ctx.stroke();
-    ctx.fillStyle = cssVar("--mn-text", "#eee");
+    ctx.fillStyle = cssVar("--mn-text");
     lines.forEach((l, i) => {
       ctx.font = i === 0 ? "bold 10px sans-serif" : "10px sans-serif";
       ctx.fillText(l, tx + 8, ty + 14 + i * 14);

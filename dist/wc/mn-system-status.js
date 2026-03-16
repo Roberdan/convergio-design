@@ -24,33 +24,33 @@ class MnSystemStatus extends HTMLElement {
       .mn-ss { position: relative; font-family: var(--font-body, sans-serif) }
       .mn-ss__pill { display: inline-flex; align-items: center; gap: 8px;
         padding: 6px 14px; border-radius: 20px; cursor: pointer;
-        background: var(--nero-soft, #1a1a1a);
-        border: 1px solid var(--grigio-scuro, #444);
-        color: var(--grigio-chiaro, #ccc); font-size: .8rem;
+        background: var(--mn-surface-raised);
+        border: 1px solid var(--mn-border);
+        color: var(--mn-text-tertiary); font-size: .8rem;
         transition: border-color .15s }
-      .mn-ss__pill:hover { border-color: var(--grigio-medio, #777) }
+      .mn-ss__pill:hover { border-color: var(--mn-text-muted) }
       .mn-ss__dot { width: 8px; height: 8px; border-radius: 50%;
         flex-shrink: 0; transition: background .3s }
-      .mn-ss__dot--active  { background: var(--verde-racing, #00C853) }
-      .mn-ss__dot--warning { background: var(--giallo-ferrari, #FFC72C) }
-      .mn-ss__dot--danger  { background: var(--rosso-corsa, #DC0000) }
+      .mn-ss__dot--active  { background: var(--signal-ok) }
+      .mn-ss__dot--warning { background: var(--mn-accent) }
+      .mn-ss__dot--danger  { background: var(--mn-error) }
       .mn-ss__panel { position: absolute; top: 100%; right: 0;
-        margin-top: 8px; width: 300px; background: var(--nero-soft, #1a1a1a);
-        border: 1px solid var(--grigio-scuro, #444); border-radius: 10px;
+        margin-top: 8px; width: 300px; background: var(--mn-surface-raised);
+        border: 1px solid var(--mn-border); border-radius: 10px;
         padding: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.5);
         opacity: 0; transform: translateY(-4px); pointer-events: none;
         transition: opacity .2s, transform .2s; z-index: 9000 }
       .mn-ss__panel--open { opacity: 1; transform: translateY(0); pointer-events: auto }
       .mn-ss__header { display: flex; align-items: center; gap: 8px;
         margin-bottom: 10px; font-weight: 600; font-size: .85rem;
-        color: var(--bianco-caldo, #f5f0e8) }
+        color: var(--mn-text) }
       .mn-ss__row { display: flex; align-items: center; gap: 8px;
         padding: 6px 4px; border-radius: 6px; cursor: default;
         transition: background .1s; font-size: .85rem }
-      .mn-ss__row:hover { background: var(--grigio-scuro, #222) }
+      .mn-ss__row:hover { background: var(--mn-border) }
       .mn-ss__row-name { flex: 1 }
-      .mn-ss__row-ms { font-size: .75rem; color: var(--grigio-medio, #777); font-family: monospace }
-      .mn-ss__row-ms--down { color: var(--rosso-corsa, #DC0000); font-weight: 600 }
+      .mn-ss__row-ms { font-size: .75rem; color: var(--mn-text-muted); font-family: monospace }
+      .mn-ss__row-ms--down { color: var(--mn-error); font-weight: 600 }
     `;
     const root = document.createElement("div");
     root.className = "mn-ss";

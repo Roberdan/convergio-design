@@ -46,24 +46,24 @@
   cursor: default;
 }
 .mn-tag:hover {
-  background: var(--nero-assoluto);
-  color: var(--bianco-puro);
-  border-color: var(--nero-assoluto);
+  background: var(--mn-text-inverse);
+  color: var(--mn-text);
+  border-color: var(--mn-text-inverse);
 }
 .mn-tag--active {
-  background: var(--nero-assoluto);
-  color: var(--bianco-puro);
-  border-color: var(--nero-assoluto);
+  background: var(--mn-text-inverse);
+  color: var(--mn-text);
+  border-color: var(--mn-text-inverse);
 }
 .mn-tag--light {
-  border-color: rgba(255,255,255,0.3);
+  border-color: var(--mn-hover-bg);
   color: var(--mn-text);
 }
 .mn-tag--light:hover,
 .mn-tag--light.mn-tag--active {
-  background: var(--bianco-puro);
-  color: var(--nero-assoluto);
-  border-color: var(--bianco-puro);
+  background: var(--mn-text);
+  color: var(--mn-text-inverse);
+  border-color: var(--mn-text);
 }
 .mn-tag--sm { font-size: 0.6rem; }
 .mn-tag--xs { font-size: 0.55rem; padding: 2px 8px; }
@@ -76,7 +76,7 @@
 
 /* ── CARDS ── */
 .mn-card {
-  background: var(--bianco-puro);
+  background: var(--mn-text);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-card);
@@ -96,7 +96,7 @@
   box-shadow:
     0 4px 16px rgba(0,0,0,0.3),
     0 1px 4px rgba(0,0,0,0.2),
-    inset 0 1px 0 rgba(255,255,255,0.04);
+    inset 0 1px 0 var(--mn-hover-bg);
   transition: transform var(--duration-md) var(--ease-out),
               box-shadow var(--duration-md) var(--ease-out);
 }
@@ -105,13 +105,13 @@
   box-shadow:
     0 16px 48px rgba(0,0,0,0.5),
     0 6px 16px rgba(0,0,0,0.3),
-    inset 0 1px 0 rgba(255,255,255,0.06);
+    inset 0 1px 0 var(--mn-hover-bg);
 }
 
 .mn-card__image {
   width: 100%;
   aspect-ratio: 16/10;
-  background: var(--nero-profondo);
+  background: var(--mn-surface-sunken);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -129,10 +129,10 @@
 }
 .mn-card__text {
   font-size: var(--text-caption);
-  color: var(--grigio-medio);
+  color: var(--mn-text-muted);
   line-height: 1.6;
 }
-.mn-card-dark .mn-card__text { color: var(--grigio-chiaro); }
+.mn-card-dark .mn-card__text { color: var(--mn-text-tertiary); }
 
 
 /* ── GRIDS ── */

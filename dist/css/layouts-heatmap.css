@@ -12,29 +12,29 @@
 .mn-heatmap__card {
   flex:1 1 120px; display:flex; flex-direction:column; align-items:center; gap:var(--space-2xs);
   padding:var(--space-sm) var(--space-md); border-radius:var(--radius-sm);
-  background:var(--superficie-2); border:1px solid var(--bordo);
+  background:var(--mn-surface-raised); border:1px solid var(--mn-border);
 }
 .mn-heatmap__card--idle  { border-color:var(--status-warning); }
-.mn-heatmap__card--over  { border-color:var(--rosso-corsa); }
+.mn-heatmap__card--over  { border-color:var(--mn-error); }
 .mn-heatmap__card--gap   { border-color:var(--mn-accent); }
 .mn-heatmap__card__number {
   font-family:var(--font-mono,'Barlow Condensed',sans-serif);
   font-size:1.75rem; font-weight:700; line-height:1; color:var(--mn-text);
 }
 .mn-heatmap__card--idle  .mn-heatmap__card__number { color:var(--status-warning); }
-.mn-heatmap__card--over  .mn-heatmap__card__number { color:var(--rosso-corsa); }
+.mn-heatmap__card--over  .mn-heatmap__card__number { color:var(--mn-error); }
 .mn-heatmap__card--gap   .mn-heatmap__card__number { color:var(--mn-accent); }
 .mn-heatmap__card__label {
   font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em;
-  color:var(--grigio-chiaro);
+  color:var(--mn-text-tertiary);
 }
 
 /* ── Title ── */
 .mn-heatmap__title {
   font-family:var(--font-mono,'Barlow Condensed',sans-serif);
   font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em;
-  color:var(--grigio-medio); padding-bottom:var(--space-2xs);
-  border-bottom:1px solid var(--bordo);
+  color:var(--mn-text-muted); padding-bottom:var(--space-2xs);
+  border-bottom:1px solid var(--mn-border);
 }
 
 /* ── Row ── */
@@ -43,7 +43,7 @@
   height:44px; padding:0 var(--space-sm); border-radius:var(--radius-sm);
   transition:background .15s ease;
 }
-.mn-heatmap__row:hover { background:var(--superficie-2); }
+.mn-heatmap__row:hover { background:var(--mn-surface-raised); }
 .mn-heatmap__row--idle { background:rgba(255,179,0,.06); }
 .mn-heatmap__row--over { background:rgba(220,0,0,.08); }
 
@@ -52,7 +52,7 @@
 .mn-heatmap__name { font-size:0.85rem; font-weight:500; color:var(--mn-text); white-space:nowrap; }
 .mn-heatmap__role {
   font-family:var(--font-mono,'Barlow Condensed',sans-serif);
-  font-size:0.7rem; color:var(--grigio-chiaro); white-space:nowrap;
+  font-size:0.7rem; color:var(--mn-text-tertiary); white-space:nowrap;
 }
 
 /* ── FTE Bars ── */
@@ -62,12 +62,12 @@
   transition:width .3s ease, background .2s ease;
 }
 .mn-heatmap__bar--before {
-  background:transparent; border:1.5px dashed var(--grigio-medio); opacity:.5;
+  background:transparent; border:1.5px dashed var(--mn-text-muted); opacity:.5;
 }
 .mn-heatmap__bar--after  { opacity:.9; }
 .mn-heatmap__bar--ok     { background:var(--verde-racing); }
 .mn-heatmap__bar--warn   { background:var(--status-warning); }
-.mn-heatmap__bar--danger { background:var(--rosso-corsa); }
+.mn-heatmap__bar--danger { background:var(--mn-error); }
 .mn-heatmap__value {
   position:absolute; right:6px; top:50%; transform:translateY(-50%);
   font-family:var(--font-mono,'Barlow Condensed',sans-serif);
@@ -81,7 +81,7 @@
   font-size:0.75rem; font-weight:600; min-width:44px; text-align:right;
 }
 .mn-heatmap__delta--positive { color:var(--verde-racing); }
-.mn-heatmap__delta--negative { color:var(--rosso-corsa); }
+.mn-heatmap__delta--negative { color:var(--mn-error); }
 
 /* ── Staffing gap ── */
 .mn-heatmap__gap {
@@ -93,26 +93,26 @@
   font-family:var(--font-mono,'Barlow Condensed',sans-serif);
   font-size:0.8rem; font-weight:600; color:var(--mn-accent);
 }
-.mn-heatmap__gap-suggestion { font-size:0.75rem; color:var(--grigio-chiaro); }
+.mn-heatmap__gap-suggestion { font-size:0.75rem; color:var(--mn-text-tertiary); }
 
 /* ═══ Theme: Avorio ═══ */
-body.mn-avorio .mn-heatmap__card { background:var(--superficie-1); border-color:var(--bordo); }
-body.mn-avorio .mn-heatmap__row:hover { background:var(--superficie-1); }
+body.mn-avorio .mn-heatmap__card { background:var(--mn-surface); border-color:var(--mn-border); }
+body.mn-avorio .mn-heatmap__row:hover { background:var(--mn-surface); }
 body.mn-avorio .mn-heatmap__row--idle { background:rgba(255,179,0,.08); }
 body.mn-avorio .mn-heatmap__row--over { background:rgba(220,0,0,.06); }
-body.mn-avorio .mn-heatmap__name { color:var(--nero-assoluto); }
-body.mn-avorio .mn-heatmap__card__number { color:var(--nero-assoluto); }
+body.mn-avorio .mn-heatmap__name { color:var(--mn-text-inverse); }
+body.mn-avorio .mn-heatmap__card__number { color:var(--mn-text-inverse); }
 body.mn-avorio .mn-heatmap__card--idle .mn-heatmap__card__number { color:var(--arancio-ambra); }
-body.mn-avorio .mn-heatmap__card--over .mn-heatmap__card__number { color:var(--rosso-corsa); }
-body.mn-avorio .mn-heatmap__value { color:var(--nero-assoluto); text-shadow:0 1px 2px rgba(255,255,255,.5); }
-body.mn-avorio .mn-heatmap__bar--before { border-color:var(--grigio-chiaro); }
+body.mn-avorio .mn-heatmap__card--over .mn-heatmap__card__number { color:var(--mn-error); }
+body.mn-avorio .mn-heatmap__value { color:var(--mn-text-inverse); text-shadow:0 1px 2px rgba(255,255,255,.5); }
+body.mn-avorio .mn-heatmap__bar--before { border-color:var(--mn-text-tertiary); }
 
 /* ═══ Theme: Colorblind ═══ */
 body.mn-colorblind .mn-heatmap__bar--ok { background:var(--verde-racing); background-image:
   repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(255,255,255,.15) 3px,rgba(255,255,255,.15) 5px); }
 body.mn-colorblind .mn-heatmap__bar--warn { background:var(--status-warning); background-image:
   repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.12) 3px,rgba(0,0,0,.12) 5px); }
-body.mn-colorblind .mn-heatmap__bar--danger { background:var(--rosso-corsa); background-image:
+body.mn-colorblind .mn-heatmap__bar--danger { background:var(--mn-error); background-image:
   repeating-linear-gradient(-45deg,transparent,transparent 3px,rgba(255,255,255,.2) 3px,rgba(255,255,255,.2) 5px); }
 body.mn-colorblind .mn-heatmap__delta--positive::before { content:"▲ "; }
 body.mn-colorblind .mn-heatmap__delta--negative::before { content:"▼ "; }
@@ -129,7 +129,7 @@ body.mn-colorblind .mn-heatmap__delta--negative::before { content:"▼ "; }
 .mn-heatmap__cell[data-tooltip]:hover::after {
   content:attr(data-tooltip); position:absolute; bottom:calc(100% + 6px); left:50%;
   transform:translateX(-50%); padding:4px 8px; border-radius:var(--radius-sm);
-  background:var(--superficie-3,#222); border:1px solid var(--bordo,#333);
+  background:var(--mn-surface-sunken); border:1px solid var(--mn-border);
   color:var(--mn-text); font-size:0.6rem; white-space:nowrap; z-index:10;
   pointer-events:none;
 }
@@ -146,7 +146,7 @@ body.mn-colorblind .mn-heatmap__delta--negative::before { content:"▼ "; }
 }
 .mn-heatmap__legend-bar {
   width:100px; height:8px; border-radius:4px;
-  background:linear-gradient(90deg, var(--mn-surface-sunken) 0%, var(--verde-racing) 40%, var(--mn-accent) 65%, var(--rosso-corsa) 100%);
+  background:linear-gradient(90deg, var(--mn-surface-sunken) 0%, var(--verde-racing) 40%, var(--mn-accent) 65%, var(--mn-error) 100%);
 }
 
 /* ═══ Header with month columns ═══ */
@@ -159,10 +159,10 @@ body.mn-colorblind .mn-heatmap__delta--negative::before { content:"▼ "; }
 }
 
 /* ═══ Avorio: new elements ═══ */
-body.mn-avorio .mn-heatmap__cell { color:var(--nero-assoluto); }
-body.mn-avorio .mn-heatmap__cell[data-tooltip]:hover::after { background:var(--bianco-caldo); border-color:var(--grigio-alluminio); color:var(--nero-assoluto); }
-body.mn-avorio .mn-heatmap__filter-bar { border-bottom-color:var(--grigio-alluminio); }
-body.mn-avorio .mn-heatmap__legend { color:var(--grigio-medio); }
+body.mn-avorio .mn-heatmap__cell { color:var(--mn-text-inverse); }
+body.mn-avorio .mn-heatmap__cell[data-tooltip]:hover::after { background:var(--mn-text); border-color:var(--mn-border-strong); color:var(--mn-text-inverse); }
+body.mn-avorio .mn-heatmap__filter-bar { border-bottom-color:var(--mn-border-strong); }
+body.mn-avorio .mn-heatmap__legend { color:var(--mn-text-muted); }
 
 /* ═══ Colorblind: new elements ═══ */
 body.mn-colorblind .mn-heatmap__legend-bar {

@@ -5,16 +5,16 @@
 .mn-activities-gantt {
   padding: 12px;
   margin-bottom: 12px;
-  border: 1px solid var(--bordo, #333);
+  border: 1px solid var(--mn-border);
   border-radius: 8px;
-  background: var(--nero-2, #1a1a1a);
+  background: var(--mn-surface-raised);
 }
 .mn-activities-gantt__title {
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--grigio-medio, #888);
+  color: var(--mn-text-muted);
   margin-bottom: 8px;
 }
 .mn-activities-gantt__axis {
@@ -22,7 +22,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.6rem;
-  color: var(--grigio-medio, #666);
+  color: var(--mn-text-muted);
   margin-bottom: 6px;
   padding: 0 2px;
 }
@@ -30,7 +30,7 @@
   position: absolute;
   bottom: 0;
   font-size: 0.55rem;
-  color: var(--grigio-medio, #555);
+  color: var(--mn-text-muted);
   transform: translateX(-50%);
 }
 .mn-activities-gantt__row {
@@ -44,11 +44,11 @@
   transition: background 0.15s;
 }
 .mn-activities-gantt__row:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--mn-hover-bg);
 }
 .mn-activities-gantt__label {
   font-size: 0.65rem;
-  color: var(--grigio-chiaro, #ccc);
+  color: var(--mn-text-tertiary);
   width: 100px;
   flex-shrink: 0;
   overflow: hidden;
@@ -59,7 +59,7 @@
   flex: 1;
   position: relative;
   height: 14px;
-  background: var(--nero-3, #111);
+  background: var(--mn-surface);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -98,14 +98,14 @@
   gap: 10px;
   margin-top: 10px;
   padding-top: 8px;
-  border-top: 1px solid var(--bordo, #222);
+  border-top: 1px solid var(--mn-border);
 }
 .mn-activities-gantt__legend-item {
   display: flex;
   align-items: center;
   gap: 4px;
   font-size: 0.6rem;
-  color: var(--grigio-medio, #888);
+  color: var(--mn-text-muted);
 }
 .mn-activities-gantt__legend-dot {
   width: 8px;
@@ -121,7 +121,7 @@
 /* ── Expandable Description ──────────────────────────────── */
 .mn-description-block {
   padding: 10px 0;
-  border-bottom: 1px solid var(--grigio-4, #333);
+  border-bottom: 1px solid var(--mn-border);
   margin-bottom: 8px;
 }
 .mn-description-block__label {
@@ -129,12 +129,12 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--grigio-medio, #888);
+  color: var(--mn-text-muted);
   margin-bottom: 6px;
 }
 .mn-description-block__text {
   font-size: 0.8rem;
-  color: var(--bianco-1, #f5f5f5);
+  color: var(--mn-text);
   line-height: 1.5;
   overflow: hidden;
   transition: max-height 0.3s ease;
@@ -144,7 +144,7 @@
 }
 .mn-description-block__toggle {
   font-size: 0.7rem;
-  color: var(--mn-accent, #FFC72C);
+  color: var(--mn-accent);
   background: none;
   border: none;
   cursor: pointer;

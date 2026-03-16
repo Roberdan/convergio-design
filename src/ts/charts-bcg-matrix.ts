@@ -51,7 +51,7 @@ function quadHex(q: Quad): string {
     'Stars': ['--signal-ok', '#00A651'],
     'Cash Cows': ['--mn-accent', '#FFC72C'],
     '? Marks': ['--signal-warning', '#FFC72C'],
-    'Dogs': ['--grigio-30', '#4d4d4d'],
+    'Dogs': ['--mn-border-subtle', '#4d4d4d'],
   };
   const [v, fb] = m[q];
   return cssVar(v, fb);
@@ -102,10 +102,10 @@ export function bcgMatrix(
 
   function draw(sc: number): void {
     ctx.clearRect(0, 0, w, h);
-    const tm = cssVar('--mn-text-muted', '#888');
-    const bd = cssVar('--mn-border', '#333');
-    const sf = cssVar('--mn-surface', '#111');
-    const tx = cssVar('--mn-text', '#ccc');
+    const tm = cssVar('--mn-text-muted');
+    const bd = cssVar('--mn-border');
+    const sf = cssVar('--mn-surface');
+    const tx = cssVar('--mn-text');
     const midX = toX(sT), midY = toY(gT);
 
     /* Quadrant fills */
@@ -159,7 +159,7 @@ export function bcgMatrix(
 
       if (it.id === hovId) {
         ctx.beginPath(); ctx.arc(bx, by, r + 4, 0, Math.PI * 2);
-        ctx.strokeStyle = cssVar('--mn-accent', '#FFC72C');
+        ctx.strokeStyle = cssVar('--mn-accent');
         ctx.lineWidth = 2; ctx.stroke();
         /* Tooltip */
         const l1 = it.label;

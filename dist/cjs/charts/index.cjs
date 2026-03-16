@@ -234,18 +234,18 @@ function cssVar(name, fallback = "") {
 var dpr = window.devicePixelRatio || 1;
 function buildSeries() {
   return [
-    cssVar("--chart-default", "#FFC72C"),
-    cssVar("--signal-danger", "#DC0000"),
-    cssVar("--signal-ok", "#00A651"),
-    cssVar("--arancio", "#D4622B"),
-    cssVar("--chart-bar", "#4EA8DE"),
-    cssVar("--grigio-alluminio", "#c8c8c8"),
-    "#E8A838",
-    "#8B5CF6",
-    "#EF4444",
-    "#10B981",
-    "#F59E0B",
-    "#6366F1"
+    cssVar("--mn-accent", "var(--mn-accent)"),
+    cssVar("--signal-danger", "var(--signal-danger)"),
+    cssVar("--signal-ok", "var(--signal-ok)"),
+    cssVar("--mn-warning", "var(--mn-warning)"),
+    cssVar("--mn-info", "var(--mn-info)"),
+    cssVar("--mn-border-strong", "var(--mn-border-strong)"),
+    cssVar("--mn-error", "var(--mn-error)"),
+    cssVar("--mn-success", "var(--mn-success)"),
+    cssVar("--signal-warning", "var(--signal-warning)"),
+    cssVar("--signal-info", "var(--signal-info)"),
+    cssVar("--mn-text-tertiary", "var(--mn-text-tertiary)"),
+    cssVar("--mn-accent-hover", "var(--mn-accent-hover)")
   ];
 }
 var SERIES = buildSeries();
@@ -325,7 +325,7 @@ function drawSmoothLine(ctx, data, getX, getY, smooth) {
 // src/ts/charts-sparkline.ts
 function sparkline(canvas, data, opts) {
   const o = {
-    color: cssVar("--chart-default", "#FFC72C"),
+    color: cssVar("--mn-accent"),
     fillOpacity: 0.15,
     lineWidth: 1.5,
     smooth: true,
@@ -564,11 +564,11 @@ function barChart(canvas, data, opts) {
 // src/ts/charts-live.ts
 function liveGraph(canvas, data, opts) {
   const o = {
-    color: cssVar("--chart-default", "#FFC72C"),
+    color: cssVar("--mn-accent"),
     lineWidth: 1.5,
     gridColor: "rgba(200,200,200,0.06)",
     gridRows: 4,
-    axisColor: cssVar("--chart-axis", "#616161"),
+    axisColor: cssVar("--mn-text-muted"),
     showRedLine: true,
     redLineValue: null,
     smooth: true,
@@ -718,12 +718,12 @@ function progressRing(container, opts) {
     max: 100,
     size: 80,
     thickness: 6,
-    color: cssVar("--chart-default", "#FFC72C"),
+    color: cssVar("--mn-accent"),
     trackColor: "rgba(200,200,200,0.08)",
     animate: true,
     ...opts
   };
-  const safeColor2 = isValidColor(o.color) ? o.color : "var(--giallo-ferrari)";
+  const safeColor2 = isValidColor(o.color) ? o.color : "var(--mn-accent)";
   const radius = (o.size - o.thickness) / 2;
   const circumference = 2 * Math.PI * radius;
   const pct = Math.max(0, Math.min(1, o.value / o.max));
@@ -846,8 +846,8 @@ function radar(canvas, data, opts) {
     max: 100,
     levels: 4,
     gridColor: "rgba(200,200,200,0.1)",
-    labelColor: cssVar("--chart-label", "#9e9e9e"),
-    color: cssVar("--chart-default", "#FFC72C"),
+    labelColor: cssVar("--mn-text-tertiary"),
+    color: cssVar("--mn-accent"),
     fillOpacity: 0.15,
     lineWidth: 1.5,
     dotRadius: 3,
@@ -1222,7 +1222,7 @@ function buildTooltipHTML(meta, index, series) {
     datasets.forEach((ds, i) => {
       if (index < ds.data.length) {
         const color = safeColor(ds.color || series[i % series.length], "#999");
-        html += '<div style="display:flex;align-items:center;gap:6px;margin-top:3px;"><span class="mn-chart-tooltip__dot" style="background:' + color + ';"></span><span style="color:var(--chart-label,#9e9e9e);font-size:0.65rem;">' + esc(ds.label || "Series " + (i + 1)) + '</span><span class="mn-chart-tooltip__value" style="margin-left:auto;color:' + color + ';">' + ds.data[index].toFixed(1) + "</span></div>";
+        html += '<div style="display:flex;align-items:center;gap:6px;margin-top:3px;"><span class="mn-chart-tooltip__dot" style="background:' + color + ';"></span><span style="color:var(--mn-text-tertiary);font-size:0.65rem;">' + esc(ds.label || "Series " + (i + 1)) + '</span><span class="mn-chart-tooltip__value" style="margin-left:auto;color:' + color + ';">' + ds.data[index].toFixed(1) + "</span></div>";
       }
     });
     return html;
@@ -1234,16 +1234,16 @@ function buildTooltipHTML(meta, index, series) {
   }
   if (meta.type === "donut") {
     const seg = meta.segments[index];
-    return '<div style="display:flex;align-items:center;gap:6px;"><span class="mn-chart-tooltip__dot" style="background:' + seg.color + ';"></span><span class="mn-chart-tooltip__value">' + seg.value + "</span></div>" + (seg.label ? '<div class="mn-chart-tooltip__label">' + esc(seg.label) + "</div>" : "") + '<div style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">' + seg.pct + "%</div>";
+    return '<div style="display:flex;align-items:center;gap:6px;"><span class="mn-chart-tooltip__dot" style="background:' + seg.color + ';"></span><span class="mn-chart-tooltip__value">' + seg.value + "</span></div>" + (seg.label ? '<div class="mn-chart-tooltip__label">' + esc(seg.label) + "</div>" : "") + '<div style="color:var(--mn-text-tertiary);font-size:0.6rem;">' + seg.pct + "%</div>";
   }
   if (meta.type === "bubble") {
     const b = meta.data[index];
     const size = b.z ?? b.r;
-    return '<div class="mn-chart-tooltip__label">' + esc(b.label || "Point") + '</div><div style="font-size:0.65rem;color:var(--chart-label,#9e9e9e);">x: ' + b.x + " \xB7 y: " + b.y + (size ? " \xB7 size: " + size : "") + "</div>";
+    return '<div class="mn-chart-tooltip__label">' + esc(b.label || "Point") + '</div><div style="font-size:0.65rem;color:var(--mn-text-tertiary);">x: ' + b.x + " \xB7 y: " + b.y + (size ? " \xB7 size: " + size : "") + "</div>";
   }
   if (meta.type === "radar") {
     const r = meta.data[index];
-    return '<div class="mn-chart-tooltip__label">' + esc(r.label) + '</div><div class="mn-chart-tooltip__value" style="color:var(--chart-default,#FFC72C);">' + r.value + '<span style="color:var(--chart-axis,#616161);font-size:0.6rem;">/' + meta.max + "</span></div>";
+    return '<div class="mn-chart-tooltip__label">' + esc(r.label) + '</div><div class="mn-chart-tooltip__value" style="color:var(--mn-accent);">' + r.value + '<span style="color:var(--mn-text-muted);font-size:0.6rem;">/' + meta.max + "</span></div>";
   }
   return "";
 }
@@ -1433,7 +1433,7 @@ function sparklineInteract(canvas, data, opts) {
     ctx.clearRect(0, 0, overlay.width, overlay.height);
     ctx.save();
     ctx.scale(DPR, DPR);
-    const color = opts.color || cssVar("--chart-default", "#FFC72C");
+    const color = opts.color || cssVar("--mn-accent");
     const cr = parseInt(color.slice(1, 3), 16), cg = parseInt(color.slice(3, 5), 16), cb = parseInt(color.slice(5, 7), 16);
     ctx.beginPath();
     ctx.arc(px, py, 10, 0, Math.PI * 2);

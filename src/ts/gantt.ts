@@ -63,13 +63,13 @@ export function gantt(
   Object.keys(pal).forEach((st) => {
     const span = document.createElement('span');
     span.className = 'mn-gantt-timeline__legend-item';
-    const safeCol = isValidColor(pal[st]) ? pal[st] : 'var(--grigio-alluminio)';
+    const safeCol = isValidColor(pal[st]) ? pal[st] : 'var(--mn-border-strong)';
     span.innerHTML = '<span class="mn-gantt-timeline__legend-swatch" style="background:' + safeCol + ';"></span>' + escapeHtml(st);
     leg.appendChild(span);
   });
   const todayLeg = document.createElement('span');
   todayLeg.className = 'mn-gantt-timeline__legend-item';
-  todayLeg.innerHTML = '<span class="mn-gantt-timeline__legend-swatch" style="background:var(--today-line,#4EA8DE);"></span>TODAY';
+  todayLeg.innerHTML = '<span class="mn-gantt-timeline__legend-swatch" style="background:var(--mn-info);"></span>TODAY';
   leg.appendChild(todayLeg);
   ctrlBar.appendChild(zoomGrp); ctrlBar.appendChild(leg);
   container.appendChild(ctrlBar);

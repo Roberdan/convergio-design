@@ -58,7 +58,7 @@ class MnGauge extends HTMLElement {
         border-radius: 50%;
         background: radial-gradient(
           ellipse 70% 50% at 50% 35%,
-          rgba(255,255,255,0.12) 0%,
+          var(--mn-hover-bg) 0%,
           transparent 100%
         );
         pointer-events: none;

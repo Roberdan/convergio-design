@@ -37,15 +37,15 @@ class MnTabs extends HTMLElement {
     style.textContent = `
       :host { display: block }
       .mn-tabs__bar { display: flex; gap: 0;
-        border-bottom: 2px solid var(--grigio-scuro, #333); margin-bottom: 16px }
+        border-bottom: 2px solid var(--mn-border); margin-bottom: 16px }
       .mn-tabs__tab { padding: 10px 20px; cursor: pointer;
         font-family: var(--font-body, sans-serif); font-size: .9rem;
-        color: var(--grigio-medio, #777); border: none; background: none;
+        color: var(--mn-text-muted); border: none; background: none;
         border-bottom: 2px solid transparent; margin-bottom: -2px;
         transition: color var(--duration-sm, .15s), border-color var(--duration-sm, .15s) }
-      .mn-tabs__tab:hover { color: var(--grigio-chiaro, #ccc) }
-      .mn-tabs__tab--active { color: var(--bianco-caldo, #f5f0e8);
-        border-bottom-color: var(--rosso-corsa, #DC0000); font-weight: 600 }
+      .mn-tabs__tab:hover { color: var(--mn-text-tertiary) }
+      .mn-tabs__tab--active { color: var(--mn-text);
+        border-bottom-color: var(--mn-error); font-weight: 600 }
       .mn-tabs__panel { display: none }
       .mn-tabs__panel--active { display: block }
     `;

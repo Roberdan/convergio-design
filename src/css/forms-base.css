@@ -11,21 +11,21 @@
 
 /* ── CSS Custom Properties for Forms ─────────────────────── */
 :root {
-  --mn-form-bg: var(--nero-carbon);
-  --mn-form-border: var(--grigio-scuro);
-  --mn-form-text: var(--bianco-caldo);
-  --mn-form-placeholder: var(--grigio-medio);
-  --mn-form-label: var(--grigio-alluminio);
+  --mn-form-bg: var(--mn-surface);
+  --mn-form-border: var(--mn-border);
+  --mn-form-text: var(--mn-text);
+  --mn-form-placeholder: var(--mn-text-muted);
+  --mn-form-label: var(--mn-border-strong);
   --mn-form-focus: var(--giallo-ferrari);
   --mn-form-focus-ring: rgba(255, 199, 44, 0.25);
-  --mn-form-error: var(--rosso-corsa);
+  --mn-form-error: var(--mn-error);
   --mn-form-error-bg: rgba(220, 0, 0, 0.06);
   --mn-form-success: var(--verde-racing);
   --mn-form-success-bg: rgba(0, 166, 81, 0.06);
   --mn-form-warning: var(--status-warning);
   --mn-form-warning-bg: rgba(255, 179, 0, 0.06);
-  --mn-form-disabled-bg: rgba(255, 255, 255, 0.02);
-  --mn-form-disabled-text: var(--grigio-scuro);
+  --mn-form-disabled-bg: var(--mn-hover-bg);
+  --mn-form-disabled-text: var(--mn-border);
   --mn-form-radius: var(--radius-sm);
   --mn-form-transition: var(--duration-sm) var(--ease-out);
 }
@@ -135,7 +135,7 @@
 .mn-field__hint {
   font-family: var(--font-body);
   font-size: var(--text-micro);
-  color: var(--grigio-medio);
+  color: var(--mn-text-muted);
   line-height: 1.4;
 }
 
@@ -169,7 +169,7 @@
 .mn-field__counter {
   font-family: var(--font-mono, monospace);
   font-size: var(--text-nano);
-  color: var(--grigio-medio);
+  color: var(--mn-text-muted);
   text-align: right;
 }
 

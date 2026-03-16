@@ -5,6 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   COLOR,
+  SEMANTIC_COLOR,
   FONT,
   TEXT_SIZE,
   SPACE,
@@ -24,11 +25,11 @@ describe('COLOR tokens', () => {
   });
 
   it('ROSSO_CORSA maps to correct CSS var', () => {
-    expect(COLOR.ROSSO_CORSA).toBe('--rosso-corsa');
+    expect(COLOR.ROSSO_CORSA).toBe('--mn-error');
   });
 
   it('GIALLO_FERRARI maps to correct CSS var', () => {
-    expect(COLOR.GIALLO_FERRARI).toBe('--giallo-ferrari');
+    expect(COLOR.GIALLO_FERRARI).toBe('--mn-accent');
   });
 
   it('VERDE_BANDIERA maps to correct CSS var', () => {
@@ -43,11 +44,18 @@ describe('COLOR tokens', () => {
   });
 
   it('CHART_DEFAULT token exists', () => {
-    expect(COLOR.CHART_DEFAULT).toBe('--chart-default');
+    expect(COLOR.CHART_DEFAULT).toBe('--mn-accent');
   });
 
   it('has exactly 15 color tokens', () => {
     expect(Object.keys(COLOR)).toHaveLength(15);
+  });
+
+  it('semantic color tokens are exported', () => {
+    expect(SEMANTIC_COLOR.ACCENT).toBe('--mn-accent');
+    expect(SEMANTIC_COLOR.TEXT).toBe('--mn-text');
+    expect(SEMANTIC_COLOR.BORDER).toBe('--mn-border');
+    expect(SEMANTIC_COLOR.FOCUS_RING).toBe('--mn-focus-ring');
   });
 });
 

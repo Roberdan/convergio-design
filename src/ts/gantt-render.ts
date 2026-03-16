@@ -110,7 +110,7 @@ export function renderToday(ctx: CanvasRenderingContext2D, s: Snap): void {
   if (!(s.o as Snap).showToday) return;
   const tx = (s.lw as number) + (s.dateToX as (d: Date) => number)(s.today as Date) - (s.scrollX as number);
   if (tx >= (s.lw as number) && tx <= (s.vw as number)) {
-    ctx.strokeStyle = cssVar('--today-line', '#4EA8DE'); ctx.lineWidth = 1.5; ctx.setLineDash([]);
+    ctx.strokeStyle = cssVar('--mn-info'); ctx.lineWidth = 1.5; ctx.setLineDash([]);
     ctx.beginPath(); ctx.moveTo(tx, s.hh as number); ctx.lineTo(tx, s.vh as number); ctx.stroke();
   }
 }
@@ -152,7 +152,7 @@ export function renderHeader(ctx: CanvasRenderingContext2D, s: Snap): void {
   if ((s.o as Snap).showToday) {
     const tbx = lw + (s.dateToX as (d: Date) => number)(s.today as Date) - scrollX;
     if (tbx >= lw - 24 && tbx <= vw + 24) {
-      ctx.fillStyle = cssVar('--today-line', '#4EA8DE'); roundRect(ctx, tbx - 24, tierH + (tierH - 18) / 2, 48, 18, 3); ctx.fill();
+      ctx.fillStyle = cssVar('--mn-info'); roundRect(ctx, tbx - 24, tierH + (tierH - 18) / 2, 48, 18, 3); ctx.fill();
       ctx.fillStyle = '#111'; ctx.font = 'bold 9px "Barlow Condensed",sans-serif'; ctx.textAlign = 'center'; ctx.fillText('TODAY', tbx, tierH + tierH / 2);
       ctx.textAlign = 'left';
     }

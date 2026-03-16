@@ -39,6 +39,11 @@ export function setTheme(mode: ThemeMode): void {
   }
   const cls = BODY_CLASSES[mode];
   if (cls) document.body.classList.add(cls);
+  try {
+    localStorage.setItem('mn-theme', mode);
+  } catch (_err) {
+    /* Storage can be blocked in privacy modes; class-based theme still applies. */
+  }
 }
 
 /** Cycle to the next theme in order. */
@@ -52,43 +57,49 @@ export function cycleTheme(): ThemeMode {
 
 /** Read the accent color from CSS custom properties. */
 export function getAccent(fallback: string = '#FFC72C'): string {
-  return cssVar('--giallo-ferrari', fallback);
+  return cssVar('--mn-accent', fallback);
 }
 
 /**
- * Read all design token colors live from CSS custom properties.
- * Call this inside render functions — never cache the result — so colors
- * automatically reflect the current theme (avorio ↔ nero ↔ colorblind).
- * Resolves against `el` if provided (useful for shadow DOM contexts).
- *
- * @example
- * const { giallo, rosso, verde, accent } = Maranello.palette();
+ * Read live token colors from CSS custom properties.
+ * Use includePrimitives only for legacy consumers during migration.
  */
-export function palette(el: Element = document.documentElement): Record<string, string> {
+export function palette(
+  el: Element = document.documentElement,
+  opts?: { includePrimitives?: boolean },
+): Record<string, string> {
   const read = (name: string) => getComputedStyle(el).getPropertyValue(name).trim();
-  return {
-    // Semantic (theme-aware) — use these for UI surfaces
+  const semantic = {
     surface:        read('--mn-surface'),
     surfaceRaised:  read('--mn-surface-raised'),
     surfaceSunken:  read('--mn-surface-sunken'),
+    surfaceInput:   read('--mn-surface-input'),
+    surfaceOverlay: read('--mn-surface-overlay'),
     text:           read('--mn-text'),
     textMuted:      read('--mn-text-muted'),
+    textTertiary:   read('--mn-text-tertiary'),
     border:         read('--mn-border'),
+    borderSubtle:   read('--mn-border-subtle'),
     accent:         read('--mn-accent'),
-    // Brand primitives — fixed across themes
-    giallo:         read('--giallo-ferrari'),
-    rosso:          read('--rosso-corsa'),
-    verde:          read('--verde-racing'),
-    azzurro:        read('--status-info'),
-    biancoCaldo:    read('--bianco-caldo'),
-    grigioChiaro:   read('--grigio-chiaro'),
-    grigioMedio:    read('--grigio-medio'),
-    neroAssoluto:   read('--nero-assoluto'),
-    // Status — use in charts, badges, gauges
+    accentHover:    read('--mn-accent-hover'),
     signalOk:       read('--signal-ok'),
     signalWarning:  read('--signal-warning'),
     signalDanger:   read('--signal-danger'),
     signalInfo:     read('--signal-info'),
+    hoverBg:        read('--mn-hover-bg'),
+    focusRing:      read('--mn-focus-ring'),
+  };
+  if (!opts?.includePrimitives) return semantic;
+  return {
+    ...semantic,
+    giallo:       read('--mn-accent'),
+    rosso:        read('--mn-error'),
+    verde:        read('--signal-ok'),
+    azzurro:      read('--signal-info'),
+    biancoCaldo:  read('--mn-text'),
+    grigioChiaro: read('--mn-text-tertiary'),
+    grigioMedio:  read('--mn-text-muted'),
+    neroAssoluto: read('--mn-text-inverse'),
   };
 }
 

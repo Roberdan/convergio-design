@@ -24,7 +24,7 @@
   color: var(--mn-form-placeholder);
 }
 .mn-form-input:hover {
-  border-color: var(--grigio-medio);
+  border-color: var(--mn-text-muted);
 }
 .mn-form-input:focus {
   border-color: var(--mn-form-focus);
@@ -66,7 +66,7 @@
   left: 12px;
   width: 18px;
   height: 18px;
-  color: var(--grigio-medio);
+  color: var(--mn-text-muted);
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -84,9 +84,9 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: var(--grigio-scuro);
+  background: var(--mn-border);
   border: none;
-  color: var(--grigio-chiaro);
+  color: var(--mn-text-tertiary);
   cursor: pointer;
   display: none;
   align-items: center;
@@ -95,7 +95,7 @@
   transition: background 0.15s;
 }
 .mn-field__clear:hover {
-  background: var(--grigio-medio);
+  background: var(--mn-text-muted);
   color: var(--mn-text);
 }
 .mn-form-input:not(:placeholder-shown) ~ .mn-field__clear {
@@ -166,7 +166,7 @@
   line-height: 1.6;
 }
 .mn-form-textarea::placeholder { color: var(--mn-form-placeholder); }
-.mn-form-textarea:hover { border-color: var(--grigio-medio); }
+.mn-form-textarea:hover { border-color: var(--mn-text-muted); }
 .mn-form-textarea:focus {
   border-color: var(--mn-form-focus);
   box-shadow: 0 0 0 3px var(--mn-form-focus-ring);
@@ -206,7 +206,7 @@
   transition: border-color var(--mn-form-transition),
               box-shadow var(--mn-form-transition);
 }
-.mn-form-select:hover { border-color: var(--grigio-medio); }
+.mn-form-select:hover { border-color: var(--mn-text-muted); }
 .mn-form-select:focus {
   border-color: var(--mn-form-focus);
   box-shadow: 0 0 0 3px var(--mn-form-focus-ring);
@@ -218,7 +218,7 @@
   opacity: 0.6;
 }
 .mn-form-select option {
-  background: var(--nero-soft);
+  background: var(--mn-surface-raised);
   color: var(--mn-text);
 }
 

@@ -19,7 +19,7 @@
 
 /* --- Header --- */
 .mn-decision-matrix th {
-  background: var(--mn-surface-raised, var(--nero-soft));
+  background: var(--mn-surface-raised));
   color: var(--mn-text);
   padding: 0.5rem 0.75rem;
   text-align: left;
@@ -103,7 +103,7 @@
 
 /* --- Row hover --- */
 .mn-decision-matrix tbody tr:hover {
-  background: var(--grigio-30);
+  background: var(--mn-border-subtle);
 }
 
 /* --- Keyboard focus on editable cells --- */
@@ -114,7 +114,7 @@
 
 /* --- Avorio theme override --- */
 body.mn-avorio .mn-decision-matrix th {
-  background: var(--avorio-medio, var(--superficie-2));
+  background: var(--avorio-medio, var(--mn-surface-raised));
 }
 
 /* --- Mobile --- */

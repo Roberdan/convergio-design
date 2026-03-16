@@ -13,19 +13,19 @@
 
 
 /* ── Text Color Utilities (replaces all inline color styles) ── */
-.mn-text-muted   { color: var(--grigio-chiaro); }
-.mn-text-subtle  { color: var(--grigio-medio); }
-.mn-text-dim     { color: var(--grigio-medio); }
-.mn-text-giallo  { color: var(--giallo-ferrari); }
-.mn-text-verde   { color: var(--verde-racing); }
-.mn-text-rosso   { color: var(--rosso-corsa); }
-.mn-text-bianco  { color: var(--bianco-caldo); }
+.mn-text-muted   { color: var(--mn-text-tertiary); }
+.mn-text-subtle  { color: var(--mn-text-muted); }
+.mn-text-dim     { color: var(--mn-text-muted); }
+.mn-text-giallo  { color: var(--mn-accent); }
+.mn-text-verde   { color: var(--mn-success); }
+.mn-text-rosso   { color: var(--mn-error); }
+.mn-text-bianco  { color: var(--mn-text); }
 .mn-text-avorio  { color: var(--avorio-scuro); }
 
 /* Avorio overrides for text utilities */
-body.mn-avorio .mn-section-dark .mn-text-muted { color: var(--grigio-medio); }
-body.mn-avorio .mn-section-dark .mn-text-bianco { color: var(--nero-assoluto); }
-body.mn-avorio .mn-section-dark .mn-text-dim { color: var(--grigio-medio); }
+body.mn-avorio .mn-section-dark .mn-text-muted { color: var(--mn-text-muted); }
+body.mn-avorio .mn-section-dark .mn-text-bianco { color: var(--mn-text-inverse); }
+body.mn-avorio .mn-section-dark .mn-text-dim { color: var(--mn-text-muted); }
 
 
 /* ── Spacing: Margin Top ── */
@@ -73,10 +73,10 @@ body.mn-avorio .mn-section-dark .mn-text-dim { color: var(--grigio-medio); }
 
 
 /* ── Legacy color utilities (backward compat) ── */
-.mn-color-gold    { color: var(--giallo-ferrari); }
-.mn-color-red     { color: var(--rosso-corsa); }
-.mn-color-green   { color: var(--verde-racing); }
-.mn-color-muted   { color: var(--grigio-medio); }
+.mn-color-gold    { color: var(--mn-accent); }
+.mn-color-red     { color: var(--mn-error); }
+.mn-color-green   { color: var(--mn-success); }
+.mn-color-muted   { color: var(--mn-text-muted); }
 
 
 /* ── Screen Reader Only ── */
@@ -140,9 +140,9 @@ body.mn-avorio .mn-section-dark .mn-text-dim { color: var(--grigio-medio); }
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  border: 1px solid var(--grigio-ghost);
+  border: 1px solid var(--mn-border-subtle);
 }
-.mn-demo-swatch--dark { color: var(--bianco-caldo); border-color: transparent; }
+.mn-demo-swatch--dark { color: var(--mn-text); border-color: transparent; }
 
 .mn-demo-spacer { height: 56px; }
 
@@ -152,7 +152,7 @@ body.mn-avorio .mn-section-dark .mn-text-dim { color: var(--grigio-medio); }
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--giallo-ferrari);
+  color: var(--mn-accent);
   margin-bottom: var(--space-sm);
 }
 
@@ -161,7 +161,7 @@ body.mn-avorio .mn-section-dark .mn-text-dim { color: var(--grigio-medio); }
   width: 32px;
   height: 32px;
   border-color: rgba(255,255,255,0.15);
-  color: var(--grigio-chiaro);
+  color: var(--mn-text-tertiary);
   font-size: 0.85rem;
 }
 

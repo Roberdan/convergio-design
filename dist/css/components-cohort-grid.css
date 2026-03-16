@@ -91,7 +91,7 @@
   /* Avorio theme: ensure sticky label bg matches the card surface */
   body.mn-avorio .mn-cohort__cell-label,
   body.mn-avorio .mn-cohort__th {
-    background: var(--superficie-card, var(--mn-surface));
+    background: var(--mn-surface-raised));
   }
 
   /* High-contrast mode: reinforce cell borders for visibility */

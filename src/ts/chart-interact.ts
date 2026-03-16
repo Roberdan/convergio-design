@@ -44,15 +44,15 @@ function buildTooltipHTML(meta: ChartMeta, index: number, series: string[]): str
     datasets.forEach((ds, i) => {
       if (index < ds.data.length) {
         const color = safeColor(ds.color || series[i % series.length], '#999');
-        html += '<div style="display:flex;align-items:center;gap:6px;margin-top:3px;"><span class="mn-chart-tooltip__dot" style="background:' + color + ';"></span><span style="color:var(--chart-label,#9e9e9e);font-size:0.65rem;">' + esc(ds.label || 'Series ' + (i + 1)) + '</span><span class="mn-chart-tooltip__value" style="margin-left:auto;color:' + color + ';">' + ds.data[index].toFixed(1) + '</span></div>';
+        html += '<div style="display:flex;align-items:center;gap:6px;margin-top:3px;"><span class="mn-chart-tooltip__dot" style="background:' + color + ';"></span><span style="color:var(--mn-text-tertiary);font-size:0.65rem;">' + esc(ds.label || 'Series ' + (i + 1)) + '</span><span class="mn-chart-tooltip__value" style="margin-left:auto;color:' + color + ';">' + ds.data[index].toFixed(1) + '</span></div>';
       }
     });
     return html;
   }
   if (meta.type === 'bar') { const d = (meta.data as Array<{ label?: string; value: number; color?: string }>)[index]; const color = safeColor(d.color || series[index % series.length], '#999'); return '<div class="mn-chart-tooltip__label">' + esc(d.label || 'Bar ' + (index + 1)) + '</div><div class="mn-chart-tooltip__value" style="color:' + color + ';">' + d.value + '</div>'; }
-  if (meta.type === 'donut') { const seg = (meta.segments as Array<{ color: string; value: number; label?: string; pct: number }>)[index]; return '<div style="display:flex;align-items:center;gap:6px;"><span class="mn-chart-tooltip__dot" style="background:' + seg.color + ';"></span><span class="mn-chart-tooltip__value">' + seg.value + '</span></div>' + (seg.label ? '<div class="mn-chart-tooltip__label">' + esc(seg.label) + '</div>' : '') + '<div style="color:var(--chart-label,#9e9e9e);font-size:0.6rem;">' + seg.pct + '%</div>'; }
-  if (meta.type === 'bubble') { const b = (meta.data as Array<{ label?: string; x: number; y: number; z?: number; r?: number }>)[index]; const size = b.z ?? b.r; return '<div class="mn-chart-tooltip__label">' + esc(b.label || 'Point') + '</div><div style="font-size:0.65rem;color:var(--chart-label,#9e9e9e);">x: ' + b.x + ' \u00B7 y: ' + b.y + (size ? ' \u00B7 size: ' + size : '') + '</div>'; }
-  if (meta.type === 'radar') { const r = (meta.data as Array<{ label: string; value: number }>)[index]; return '<div class="mn-chart-tooltip__label">' + esc(r.label) + '</div><div class="mn-chart-tooltip__value" style="color:var(--chart-default,#FFC72C);">' + r.value + '<span style="color:var(--chart-axis,#616161);font-size:0.6rem;">/' + meta.max + '</span></div>'; }
+  if (meta.type === 'donut') { const seg = (meta.segments as Array<{ color: string; value: number; label?: string; pct: number }>)[index]; return '<div style="display:flex;align-items:center;gap:6px;"><span class="mn-chart-tooltip__dot" style="background:' + seg.color + ';"></span><span class="mn-chart-tooltip__value">' + seg.value + '</span></div>' + (seg.label ? '<div class="mn-chart-tooltip__label">' + esc(seg.label) + '</div>' : '') + '<div style="color:var(--mn-text-tertiary);font-size:0.6rem;">' + seg.pct + '%</div>'; }
+  if (meta.type === 'bubble') { const b = (meta.data as Array<{ label?: string; x: number; y: number; z?: number; r?: number }>)[index]; const size = b.z ?? b.r; return '<div class="mn-chart-tooltip__label">' + esc(b.label || 'Point') + '</div><div style="font-size:0.65rem;color:var(--mn-text-tertiary);">x: ' + b.x + ' \u00B7 y: ' + b.y + (size ? ' \u00B7 size: ' + size : '') + '</div>'; }
+  if (meta.type === 'radar') { const r = (meta.data as Array<{ label: string; value: number }>)[index]; return '<div class="mn-chart-tooltip__label">' + esc(r.label) + '</div><div class="mn-chart-tooltip__value" style="color:var(--mn-accent);">' + r.value + '<span style="color:var(--mn-text-muted);font-size:0.6rem;">/' + meta.max + '</span></div>'; }
   return '';
 }
 
@@ -204,7 +204,7 @@ export function sparklineInteract(
     const ctx = overlay.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, overlay.width, overlay.height); ctx.save(); ctx.scale(DPR, DPR);
-    const color = (opts!.color as string) || cssVar('--chart-default', '#FFC72C');
+    const color = (opts!.color as string) || cssVar('--mn-accent');
     const cr = parseInt(color.slice(1, 3), 16), cg = parseInt(color.slice(3, 5), 16), cb = parseInt(color.slice(5, 7), 16);
     ctx.beginPath(); ctx.arc(px, py, 10, 0, Math.PI * 2); ctx.fillStyle = `rgba(${cr},${cg},${cb},0.25)`; ctx.fill();
     ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();

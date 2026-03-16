@@ -86,11 +86,11 @@ export function costTimeline(
     ctx.clip();
 
     // Y-axis gridlines
-    const borderColor = cssVar('--mn-border', '#333');
+    const borderColor = cssVar('--mn-border');
     ctx.strokeStyle = hexToRgba(borderColor.startsWith('#') ? borderColor : '#333333', 0.3);
     ctx.setLineDash([4, 4]);
     ctx.lineWidth = 0.5;
-    const mutedColor = cssVar('--mn-text-muted', '#888');
+    const mutedColor = cssVar('--mn-text-muted');
     for (let g = 0; g <= GRID_LINES; g++) {
       const val = (maxVal / GRID_LINES) * g;
       const yy = gy(val);
@@ -156,8 +156,8 @@ export function costTimeline(
       const idx = Math.round((hoverX - PAD.left) / xStep);
       const ci = Math.max(0, Math.min(n - 1, idx));
       const rx = gx(ci);
-      ctx.strokeStyle = hexToRgba(cssVar('--mn-text', '#fff').startsWith('#')
-        ? cssVar('--mn-text', '#fff') : '#ffffff', 0.4);
+      ctx.strokeStyle = hexToRgba(cssVar('--mn-text').startsWith('#')
+        ? cssVar('--mn-text') : '#ffffff', 0.4);
       ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
       ctx.beginPath(); ctx.moveTo(rx, PAD.top); ctx.lineTo(rx, h - PAD.bottom); ctx.stroke();
       ctx.setLineDash([]);
@@ -181,13 +181,13 @@ export function costTimeline(
     const th = lines.length * 14 + 10;
     const tx = rx + 12 + tw > w ? rx - tw - 8 : rx + 12;
     const ty = PAD.top + 4;
-    const bg = cssVar('--mn-surface', '#1a1a1a');
-    const border = cssVar('--mn-border', '#333');
+    const bg = cssVar('--mn-surface');
+    const border = cssVar('--mn-border');
     ctx.fillStyle = bg.startsWith('#') ? bg : '#1a1a1a';
     ctx.strokeStyle = border.startsWith('#') ? border : '#333333';
     ctx.lineWidth = 1;
     ctx.beginPath(); ctx.roundRect(tx, ty, tw, th, 4); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = cssVar('--mn-text', '#eee');
+    ctx.fillStyle = cssVar('--mn-text');
     lines.forEach((l, i) => {
       ctx.font = i === 0 ? 'bold 10px sans-serif' : '10px sans-serif';
       ctx.fillText(l, tx + 8, ty + 14 + i * 14);

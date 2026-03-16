@@ -19,13 +19,13 @@ export function progressRing(
     max: 100,
     size: 80,
     thickness: 6,
-    color: cssVar('--chart-default', '#FFC72C'),
+    color: cssVar('--mn-accent'),
     trackColor: 'rgba(200,200,200,0.08)',
     animate: true,
     ...opts,
   };
 
-  const safeColor = isValidColor(o.color) ? o.color : 'var(--giallo-ferrari)';
+  const safeColor = isValidColor(o.color) ? o.color : 'var(--mn-accent)';
   const radius = (o.size - o.thickness) / 2;
   const circumference = 2 * Math.PI * radius;
   const pct = Math.max(0, Math.min(1, o.value / o.max));

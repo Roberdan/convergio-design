@@ -109,12 +109,12 @@
 }
 
 body.mn-avorio .mn-panel {
-  background: var(--bianco-puro);
-  color: var(--nero-assoluto);
-  border: 1px solid var(--grigio-ghost);
+  background: var(--mn-text);
+  color: var(--mn-text-inverse);
+  border: 1px solid var(--mn-border-subtle);
 }
-body.mn-avorio .mn-panel__header { border-color: var(--grigio-ghost); }
-body.mn-avorio .mn-panel__title { color: var(--grigio-medio); }
+body.mn-avorio .mn-panel__header { border-color: var(--mn-border-subtle); }
+body.mn-avorio .mn-panel__title { color: var(--mn-text-muted); }
 
 
 /* ── ASPECT RATIO HELPERS ── */

@@ -20,7 +20,7 @@
   font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 600;
-  color: var(--bianco);
+  color: var(--mn-text);
   line-height: 1;
 }
 .mn-half-gauge__unit {
@@ -43,11 +43,11 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 2.5px solid var(--rosso-corsa);
+  border: 2.5px solid var(--mn-error);
   font-family: var(--font-display);
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--bianco);
+  color: var(--mn-text);
   background: rgba(0,0,0,0.6);
   cursor: pointer;
   transition: border-color 0.3s, transform 0.15s, box-shadow 0.3s;
@@ -66,7 +66,7 @@
   border-color: var(--status-warning, #E8A838);
 }
 .mn-temp-badge--neutral {
-  border-color: var(--grigio-medio, #616161);
+  border-color: var(--mn-text-muted);
 }
 .mn-temp-badge--lg {
   width: 56px;
@@ -105,7 +105,7 @@
   font-family: var(--font-display);
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--bianco);
+  color: var(--mn-text);
 }
 
 
@@ -135,7 +135,7 @@ body.mn-colorblind .mn-temp-badge--warm {
   border-color: var(--mn-cb-orange);
 }
 body.mn-colorblind .mn-temp-badge--neutral {
-  border-color: var(--grigio-chiaro);
+  border-color: var(--mn-text-tertiary);
 }
 body.mn-colorblind .mn-progress-ring__fill {
   stroke: var(--mn-cb-blue);

@@ -65,7 +65,7 @@ function lerpColor(
 /** Determine text contrast: light or dark based on background luminance. */
 function contrastText(r: number, g: number, b: number): string {
   const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return lum > 0.5 ? 'var(--nero-assoluto, #050505)' : 'var(--bianco-caldo, #fafafa)';
+  return lum > 0.5 ? 'var(--mn-text-inverse)' : 'var(--mn-text)';
 }
 
 /** Format a cell value for display. */

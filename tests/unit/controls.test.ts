@@ -4,6 +4,20 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+beforeEach(() => {
+  if (typeof localStorage.clear === 'function' && typeof localStorage.setItem === 'function') return;
+  const mem = new Map<string, string>();
+  Object.defineProperty(globalThis, 'localStorage', {
+    value: {
+      getItem: (k: string) => mem.get(k) ?? null,
+      setItem: (k: string, v: string) => { mem.set(k, String(v)); },
+      removeItem: (k: string) => { mem.delete(k); },
+      clear: () => { mem.clear(); },
+    },
+    configurable: true,
+  });
+});
+
 // --- initDropdown ---
 describe('initDropdown', () => {
   function makeDropdown() {

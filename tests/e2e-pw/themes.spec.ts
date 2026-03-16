@@ -10,9 +10,9 @@ import { test, expect } from '@playwright/test';
 
 // Theme definitions: body class and expected accent token value
 const THEMES = [
-  { name: 'Editorial', bodyClass: null,           accentVar: '--giallo-ferrari' },
-  { name: 'Nero',      bodyClass: 'mn-nero',       accentVar: '--giallo-ferrari' },
-  { name: 'Avorio',    bodyClass: 'mn-avorio',     accentVar: '--rosso-corsa'    },
+  { name: 'Editorial', bodyClass: null,            accentVar: '--mn-accent' },
+  { name: 'Nero',      bodyClass: 'mn-nero',       accentVar: '--mn-accent' },
+  { name: 'Avorio',    bodyClass: 'mn-avorio',     accentVar: '--mn-accent' },
   { name: 'Colorblind', bodyClass: 'mn-colorblind', accentVar: null              },
 ] as const;
 
@@ -44,13 +44,13 @@ test.describe('Theme switching', () => {
     });
   }
 
-  // ── 2. Nero theme — giallo-ferrari accent token resolves ──────────────────
-  test('Nero theme: --giallo-ferrari token resolves to a non-empty value', async ({ page }) => {
+  // ── 2. Nero theme — semantic accent token resolves ─────────────────────────
+  test('Nero theme: --mn-accent token resolves to a non-empty value', async ({ page }) => {
     await page.goto('/demo/e2e.html');
     await applyTheme(page, 'mn-nero');
 
     const value = await page.evaluate(() =>
-      getComputedStyle(document.body).getPropertyValue('--giallo-ferrari').trim(),
+      getComputedStyle(document.body).getPropertyValue('--mn-accent').trim(),
     );
 
     // CSS may not be loaded in serve-demo mode (404 on ../src/css/)
@@ -58,13 +58,13 @@ test.describe('Theme switching', () => {
     expect(value).not.toBe('');
   });
 
-  // ── 3. Avorio theme — rosso-corsa is used as accent ───────────────────────
-  test('Avorio theme: --rosso-corsa token resolves', async ({ page }) => {
+  // ── 3. Avorio theme — semantic accent token resolves ───────────────────────
+  test('Avorio theme: --mn-accent token resolves', async ({ page }) => {
     await page.goto('/demo/e2e.html');
     await applyTheme(page, 'mn-avorio');
 
     const value = await page.evaluate(() =>
-      getComputedStyle(document.body).getPropertyValue('--rosso-corsa').trim(),
+      getComputedStyle(document.body).getPropertyValue('--mn-accent').trim(),
     );
 
     // CSS may not be loaded in serve-demo mode (404 on ../src/css/)
@@ -158,8 +158,7 @@ test.describe('Theme switching', () => {
     for (const theme of THEMES) {
       await applyTheme(page, theme.bodyClass);
       const val = await page.evaluate(() =>
-        getComputedStyle(document.body).getPropertyValue('--mn-accent').trim() ||
-        getComputedStyle(document.body).getPropertyValue('--giallo-ferrari').trim(),
+        getComputedStyle(document.body).getPropertyValue('--mn-accent').trim(),
       );
       accents.push(val);
     }

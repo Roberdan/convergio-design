@@ -2,22 +2,50 @@
  * Maranello Luce Design - Design token name constants
  * Maps to CSS custom properties defined in the theme stylesheets.
  */
+export declare const SEMANTIC_COLOR: {
+    readonly ACCENT: "--mn-accent";
+    readonly ACCENT_HOVER: "--mn-accent-hover";
+    readonly ERROR: "--mn-error";
+    readonly WARNING: "--mn-warning";
+    readonly SUCCESS: "--mn-success";
+    readonly INFO: "--mn-info";
+    readonly SURFACE: "--mn-surface";
+    readonly SURFACE_RAISED: "--mn-surface-raised";
+    readonly SURFACE_SUNKEN: "--mn-surface-sunken";
+    readonly TEXT: "--mn-text";
+    readonly TEXT_MUTED: "--mn-text-muted";
+    readonly TEXT_TERTIARY: "--mn-text-tertiary";
+    readonly BORDER: "--mn-border";
+    readonly BORDER_SUBTLE: "--mn-border-subtle";
+    readonly FOCUS_RING: "--mn-focus-ring";
+};
+/** @deprecated Use `SEMANTIC_COLOR` keys instead. */
 export declare const COLOR: {
-    readonly ROSSO_CORSA: "--rosso-corsa";
-    readonly GIALLO_FERRARI: "--giallo-ferrari";
+    /** @deprecated Use `SEMANTIC_COLOR.ERROR`. */
+    readonly ROSSO_CORSA: "--mn-error";
+    /** @deprecated Use `SEMANTIC_COLOR.ACCENT`. */
+    readonly GIALLO_FERRARI: "--mn-accent";
     readonly VERDE_BANDIERA: "--verde-bandiera";
-    readonly NERO_ASSOLUTO: "--nero-assoluto";
-    readonly NERO_SOFT: "--nero-soft";
-    readonly BIANCO_PURO: "--bianco-puro";
-    readonly BIANCO_CALDO: "--bianco-caldo";
-    readonly GRIGIO_CHIARO: "--grigio-chiaro";
-    readonly GRIGIO_MEDIO: "--grigio-medio";
-    readonly GRIGIO_SCURO: "--grigio-scuro";
+    /** @deprecated Use `SEMANTIC_COLOR.TEXT`. */
+    readonly NERO_ASSOLUTO: "--mn-text-inverse";
+    /** @deprecated Use `SEMANTIC_COLOR.SURFACE_RAISED`. */
+    readonly NERO_SOFT: "--mn-surface-raised";
+    /** @deprecated Use `SEMANTIC_COLOR.TEXT`. */
+    readonly BIANCO_PURO: "--mn-text";
+    /** @deprecated Use `SEMANTIC_COLOR.TEXT`. */
+    readonly BIANCO_CALDO: "--mn-text";
+    /** @deprecated Use `SEMANTIC_COLOR.TEXT_TERTIARY`. */
+    readonly GRIGIO_CHIARO: "--mn-text-tertiary";
+    /** @deprecated Use `SEMANTIC_COLOR.TEXT_MUTED`. */
+    readonly GRIGIO_MEDIO: "--mn-text-muted";
+    /** @deprecated Use `SEMANTIC_COLOR.BORDER`. */
+    readonly GRIGIO_SCURO: "--mn-border";
     readonly SIGNAL_DANGER: "--signal-danger";
     readonly SIGNAL_WARNING: "--signal-warning";
     readonly SIGNAL_SUCCESS: "--signal-success";
     readonly SIGNAL_INFO: "--signal-info";
-    readonly CHART_DEFAULT: "--chart-default";
+    /** @deprecated Use `SEMANTIC_COLOR.ACCENT`. */
+    readonly CHART_DEFAULT: "--mn-accent";
 };
 export declare const FONT: {
     readonly BODY: "--font-body";

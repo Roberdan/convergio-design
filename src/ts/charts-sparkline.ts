@@ -12,7 +12,7 @@ export function sparkline(
   opts?: SparklineOptions,
 ): HTMLCanvasElement | undefined {
   const o = {
-    color: cssVar('--chart-default', '#FFC72C'),
+    color: cssVar('--mn-accent'),
     fillOpacity: 0.15,
     lineWidth: 1.5,
     smooth: true,

@@ -8,8 +8,8 @@
 body.mn-nero .mn-form-input,
 body.mn-nero .mn-form-select,
 body.mn-nero .mn-form-textarea {
-  background: var(--nero-profondo);
-  border-color: var(--grigio-scuro);
+  background: var(--mn-surface-sunken);
+  border-color: var(--mn-border);
 }
 
 
@@ -43,7 +43,7 @@ body.mn-colorblind .mn-form-range::-webkit-slider-thumb {
 body.mn-colorblind .mn-form-btn--primary {
   background: var(--mn-cb-blue);
   border-color: var(--mn-cb-blue);
-  color: var(--bianco-puro);
+  color: var(--mn-text);
 }
 
 

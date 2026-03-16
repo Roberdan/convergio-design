@@ -125,6 +125,6 @@
 
   /* Avorio theme: ensure default dot is visible on light background */
   body.mn-avorio .mn-feed__item--default .mn-feed__indicator {
-    background: var(--grigio-alluminio);
+    background: var(--mn-border-strong);
   }
 }

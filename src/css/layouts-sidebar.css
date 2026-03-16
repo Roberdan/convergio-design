@@ -5,8 +5,8 @@
 .mn-sidebar {
   width: 260px;
   min-height: 100%;
-  background: var(--nero-1);
-  border-right: 1px solid var(--grigio-4);
+  background: var(--mn-surface-sunken);
+  border-right: 1px solid var(--mn-border);
   display: flex;
   flex-direction: column;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -20,13 +20,13 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-md) var(--space-sm);
-  border-bottom: 1px solid var(--grigio-4);
+  border-bottom: 1px solid var(--mn-border);
 }
 .mn-sidebar__brand {
   font-family: var(--font-display);
   font-size: 0.9rem;
   letter-spacing: 0.08em;
-  color: var(--bianco-1);
+  color: var(--mn-text);
   white-space: nowrap;
   overflow: hidden;
 }
@@ -34,13 +34,13 @@
 .mn-sidebar__toggle {
   background: none;
   border: none;
-  color: var(--grigio-1);
+  color: var(--mn-text-tertiary);
   cursor: pointer;
   padding: 6px;
   border-radius: 4px;
   flex-shrink: 0;
 }
-.mn-sidebar__toggle:hover { background: var(--nero-3); color: var(--bianco-1); }
+.mn-sidebar__toggle:hover { background: var(--mn-surface); color: var(--mn-text); }
 
 .mn-sidebar__nav { flex: 1; padding: var(--space-sm) 0; overflow-y: auto; }
 .mn-sidebar__group { margin-bottom: var(--space-sm); }
@@ -49,7 +49,7 @@
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--grigio-2);
+  color: var(--mn-text-muted);
   padding: var(--space-xs) var(--space-md);
   white-space: nowrap;
   overflow: hidden;
@@ -61,7 +61,7 @@
   align-items: center;
   gap: var(--space-sm);
   padding: 8px var(--space-md);
-  color: var(--grigio-1);
+  color: var(--mn-text-tertiary);
   text-decoration: none;
   font-size: 0.8rem;
   cursor: pointer;
@@ -70,8 +70,8 @@
   white-space: nowrap;
 }
 .mn-sidebar__item:hover {
-  background: var(--nero-3);
-  color: var(--bianco-1);
+  background: var(--mn-surface);
+  color: var(--mn-text);
 }
 .mn-sidebar__item--active {
   color: var(--giallo);
@@ -95,7 +95,7 @@
 
 .mn-sidebar__footer {
   padding: var(--space-sm) var(--space-md);
-  border-top: 1px solid var(--grigio-4);
+  border-top: 1px solid var(--mn-border);
 }
 
 } /* end @layer layouts */

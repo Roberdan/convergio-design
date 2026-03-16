@@ -30,7 +30,7 @@ class MnFerrariControl extends HTMLElement {
     style.textContent = `
       :host { display: inline-block }
       .mn-fc { display: inline-flex; flex-direction: column; align-items: center }
-      .mn-fc--empty { padding: 20px; color: var(--grigio-medio, #777);
+      .mn-fc--empty { padding: 20px; color: var(--mn-text-muted);
         font-family: var(--font-body, sans-serif); font-size: .85rem }
     `;
     this._container = document.createElement("div");
@@ -178,10 +178,10 @@ class MnFerrariControl extends HTMLElement {
     input.max = String(max);
     input.step = String(step);
     input.value = String(initial);
-    input.style.cssText = "width:140px;accent-color:var(--rosso-corsa,#DC0000)";
+    input.style.cssText = "width:140px;accent-color:var(--mn-error)";
     input.addEventListener("input", () => onChange(Number(input.value)));
     const valEl = document.createElement("span");
-    valEl.style.cssText = "font-family:var(--font-body,sans-serif);font-size:var(--text-micro,.65rem);color:var(--grigio-chiaro,#aaa)";
+    valEl.style.cssText = "font-family:var(--font-body,sans-serif);font-size:var(--text-micro,.65rem);color:var(--mn-text-tertiary)";
     valEl.textContent = String(initial);
     input.addEventListener("input", () => {
       valEl.textContent = input.value;

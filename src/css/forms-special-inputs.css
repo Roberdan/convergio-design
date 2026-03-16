@@ -87,7 +87,7 @@
   left: 12px;
   width: 18px;
   height: 18px;
-  color: var(--grigio-medio);
+  color: var(--mn-text-muted);
   pointer-events: none;
 }
 .mn-search-input__clear {
@@ -96,9 +96,9 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: var(--grigio-scuro);
+  background: var(--mn-border);
   border: none;
-  color: var(--grigio-chiaro);
+  color: var(--mn-text-tertiary);
   cursor: pointer;
   display: none;
   align-items: center;
@@ -126,7 +126,7 @@
   height: 24px;
   background: none;
   border: none;
-  color: var(--grigio-medio);
+  color: var(--mn-text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -148,7 +148,7 @@
   border: 1px solid var(--mn-border);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--mn-hover-bg);
 }
 .mn-form-card__title {
   font-family: var(--font-display);
@@ -183,13 +183,13 @@
   color: var(--mn-form-text);
 }
 .mn-inline-edit:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--mn-hover-bg);
   border-color: var(--mn-border);
 }
 .mn-inline-edit__icon {
   width: 14px;
   height: 14px;
-  color: var(--grigio-medio);
+  color: var(--mn-text-muted);
   opacity: 0;
   transition: opacity 0.15s;
 }

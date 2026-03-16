@@ -142,7 +142,7 @@ export function riskMatrix(
     if (tx < 2) tx = 2;
     if (tx + tw > w - 2) tx = w - tw - 2;
     if (ty < 2) ty = cy + CIRCLE_R + 6;
-    ctx.fillStyle = cssVar('--mn-surface-raised', '#222');
+    ctx.fillStyle = cssVar('--mn-surface-raised');
     ctx.strokeStyle = border; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.roundRect(tx, ty, tw, th, 4); ctx.fill(); ctx.stroke();
     ctx.fillStyle = textColor; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
@@ -151,10 +151,10 @@ export function riskMatrix(
 
   function draw(scale: number): void {
     ctx.clearRect(0, 0, w, h);
-    const border = cssVar('--mn-border', '#333');
-    const textMuted = cssVar('--mn-text-muted', '#888');
-    const textColor = cssVar('--mn-text', '#ccc');
-    const accent = cssVar('--mn-accent', '#FFC72C');
+    const border = cssVar('--mn-border');
+    const textMuted = cssVar('--mn-text-muted');
+    const textColor = cssVar('--mn-text');
+    const accent = cssVar('--mn-accent');
     drawGrid(border, textMuted, textColor);
     drawItems(scale, accent, textColor, border);
   }
