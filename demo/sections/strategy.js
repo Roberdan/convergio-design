@@ -178,8 +178,9 @@ export function createStrategySection() {
 
     /* ── BCG Matrix ── */
     if (M.bcgMatrix) {
-      const bcgCanvas = section.querySelector('#str-bcg');
-      if (bcgCanvas && bcgCanvas.clientWidth > 0) {
+      const bcgCanvas = /** @type {HTMLCanvasElement|null} */ (section.querySelector('#str-bcg'));
+      if (!bcgCanvas) return;
+      if (bcgCanvas.clientWidth > 0) {
         bcgCanvas.width = bcgCanvas.clientWidth;
         bcgCanvas.height = bcgCanvas.clientHeight || 340;
       }

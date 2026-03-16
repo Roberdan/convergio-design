@@ -3,7 +3,7 @@
  * Opens a right-side drawer with search input, async results, and sections.
  */
 
-import { escapeHtml, isValidColor } from './core/sanitize';
+import { isValidColor } from './core/sanitize';
 import { debounce } from './core/utils';
 import { openDrawer, closeDrawer } from './controls';
 
@@ -130,20 +130,20 @@ export function openSearchDrawer(
 
       const titleSpan = document.createElement('div');
       titleSpan.className = 'mn-search-drawer__item-title';
-      titleSpan.textContent = escapeHtml(result.title);
+      titleSpan.textContent = result.title;
       item.appendChild(titleSpan);
 
       if (result.subtitle) {
         const sub = document.createElement('div');
         sub.className = 'mn-search-drawer__item-sub';
-        sub.textContent = escapeHtml(result.subtitle);
+        sub.textContent = result.subtitle;
         item.appendChild(sub);
       }
 
       if (result.badge) {
         const badge = document.createElement('span');
         badge.className = 'mn-badge';
-        badge.textContent = escapeHtml(result.badge);
+        badge.textContent = result.badge;
         if (result.badgeColor && isValidColor(result.badgeColor)) badge.style.backgroundColor = result.badgeColor;
         item.appendChild(badge);
       }

@@ -60,6 +60,8 @@ class MnThemeToggle extends HTMLElement {
   }
 
   connectedCallback() {
+    // Re-attach click handler in case element was moved in DOM (disconnected + reconnected)
+    this._btn.addEventListener('click', this._onBtnClick);
     // Priority: attribute > localStorage > default (nero)
     const attr = this.getAttribute('mode');
     let saved = null;
