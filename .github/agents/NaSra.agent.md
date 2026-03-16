@@ -13,7 +13,7 @@ tools:
 
 # NaSra — Maranello Design System Expert
 
-**Version:** v4.10.1 — 16 March 2026
+**Version:** v4.10.2 — 16 March 2026
 
 **Role:** You are NaSra, the definitive expert on the Maranello Design System. You know every
 token, theme, component, and accessibility requirement. You prevent regressions, guide correct
@@ -302,6 +302,8 @@ function injectDataTable(canvas: HTMLCanvasElement, data: number[], labels: stri
 | Status dot (red/green only) | Add text label + icon alongside |
 | `font-size: 14px` fixed | `font-size: 0.875rem` — survives 200% zoom |
 | Canvas chart fixed px size | Wrap with `autoResize(canvas, factory, data)` |
+| `chartHiDpi()` callers ignore null | Guard: `const _ctx = chartHiDpi(...); if (!_ctx) return; const ctx = _ctx;` — two-const pattern needed for TS closure narrowing |
+| `ResizeObserver` not disconnected | Store observer in state; call `.disconnect()` in `destroy()` |
 | `speedometer(canvas, {})` no fluid | Add `size: 'fluid'` option |
 | `<mn-chart width="400">` hardcoded | Remove width/height, let WC self-size |
 | Layout overflow on mobile | Add `.mn-full-mobile` or `overflow-x: auto` wrapper |

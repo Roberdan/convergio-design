@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.10.2] - 16 Mar 2026
+
+### Fixed
+- P2-A: `chartHiDpi` return type is `CanvasRenderingContext2D | null`; all 12 chart factories + speedometer + neural-nodes + network-messages + gantt + chart-interact guard the returned context
+- P2-B: `gantt-events` stores `ResizeObserver` in state for cleanup; `gantt.destroy()` calls `.disconnect()`
+- P2-C: Replaced unscoped `var(--bianco-caldo)` / `var(--nero-carbon)` with semantic tokens (`--mn-text`, `--mn-text-muted`, `--mn-surface`, `--mn-border`) in toast, dropdown and chat-fab CSS — Avorio theme now renders correctly
+
 ## [4.10.1] - 16 Mar 2026
 
 ### Fixed
