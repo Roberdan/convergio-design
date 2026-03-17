@@ -1,4 +1,4 @@
-<!-- v4.0.0 | 2026-03-15 -->
+<!-- v4.13.2 | 2026-03-17 -->
 # MaranelloLuceDesign
 
 Ferrari Luce-inspired design system for business dashboards. Part of Convergio.
@@ -23,9 +23,9 @@ Ferrari Luce-inspired design system for business dashboards. Part of Convergio.
 
 | Layer | Path | Purpose | Import |
 |---|---|---|---|
-| CSS-only | `src/css/` (80 files) | Tokens, themes, components, layouts — zero JS | `./css` |
+| CSS-only | `src/css/` (123 files) | Tokens, themes, components, layouts — zero JS | `./css` |
 | Headless JS | `src/ts/` | Charts, gauge, controls, forms — framework-agnostic | `./charts` `./gantt` `./gauge` `./controls` `./forms` |
-| Web Components | `src/wc/` (25 elements) | `mn-*` custom elements wrapping headless JS | `./wc` |
+| Web Components | `src/wc/` (26 tags, 25 components) | `mn-*` custom elements wrapping headless JS | `./wc` |
 
 ## File Tree
 
@@ -34,7 +34,7 @@ Ferrari Luce-inspired design system for business dashboards. Part of Convergio.
 | `src/css/tokens.css` | Design tokens (colors, spacing, type) |
 | `src/css/themes.css` | Theme barrel |
 | `src/css/themes-*.css` | Per-theme overrides |
-| `src/ts/index.ts` | Main public API (72+ exports) |
+| `src/ts/index.ts` | Main public API (95+ exports) |
 | `src/ts/charts.ts` | Chart sub-package entry |
 | `src/ts/gantt.ts` | Gantt sub-package entry |
 | `src/ts/gauge-engine*.ts` | Gauge sub-package |
@@ -181,7 +181,7 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 ### Map (2)
 `mapView` · `attachEvents`
 
-## Web Components (25)
+## Web Components (26 tags, 25 components)
 
 | Tag | Attrs |
 |---|---|
@@ -207,7 +207,9 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 | `mn-mapbox` | `markers`, `zoom`, `center`, `theme`, `style` |
 | `mn-theme-toggle` | `mode` |
 | `mn-tabs` / `mn-tab` | `active` / `label` |
-| `mn-a11y` | (FAB + settings panel) |
+| `mn-section-nav` | `sections`, `current`, `data-theme`, `data-pos` |
+| `mn-theme-rotary` | `size` |
+| `mn-a11y` | (FAB + settings panel, auto-mounts by default) |
 
 ## CSS Class Families
 
