@@ -16236,6 +16236,16 @@ M.initTabs = initTabs;
 M.initDragRotary = initRotary;
 M.initSlider = initSlider;
 M.a11yPanel = a11yPanel;
+M._a11yDom = true;
+function _mountA11y() {
+  if (document.querySelector(".mn-a11y-fab") || document.querySelector("mn-a11y")) return;
+  M._a11yCtrl = a11yPanel();
+}
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", _mountA11y, { once: true });
+} else {
+  requestAnimationFrame(_mountA11y);
+}
 M.bind = bind;
 M.autoBind = autoBind;
 M.onDrillDown = onDrillDown;
@@ -16266,5 +16276,5 @@ M.charts = {
 registerExtras(M);
 
 // src/ts/index.ts
-var VERSION = "4.10.2";
+var VERSION = "4.13.0";
 //# sourceMappingURL=index.cjs.map

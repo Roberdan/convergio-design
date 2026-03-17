@@ -8,7 +8,7 @@
 
 /* ── FOCUS VISIBLE (keyboard-only focus ring) ── */
 :focus-visible {
-  outline: 2px solid var(--giallo-ferrari);
+  outline: 2px solid var(--mn-accent);
   outline-offset: 2px;
 }
 
@@ -22,40 +22,40 @@
 .mn-machined-btn:focus-visible,
 .mn-segmented__item:focus-visible,
 .mn-btn-cluster__item:focus-visible {
-  outline: 2px solid var(--giallo-ferrari);
+  outline: 2px solid var(--mn-accent);
   outline-offset: 2px;
 }
 
 .mn-tag:focus-visible,
 .mn-dot:focus-visible {
-  outline: 2px solid var(--giallo-ferrari);
+  outline: 2px solid var(--mn-accent);
   outline-offset: 2px;
 }
 
 .mn-input:focus-visible {
   outline: none;
-  border-color: var(--giallo-ferrari);
+  border-color: var(--mn-accent);
   box-shadow: 0 0 0 2px rgba(255,199,44,0.3);
 }
 
 .mn-icon-btn:focus-visible {
-  outline: 2px solid var(--giallo-ferrari);
+  outline: 2px solid var(--mn-accent);
   outline-offset: 2px;
 }
 
 /* Toggle focus */
 .mn-toggle:focus-within .mn-toggle__track {
-  outline: 2px solid var(--giallo-ferrari);
+  outline: 2px solid var(--mn-accent);
   outline-offset: 2px;
 }
 .mn-a11y-toggle:focus-visible {
-  outline: 2px solid var(--giallo-ferrari);
+  outline: 2px solid var(--mn-accent);
   outline-offset: 2px;
 }
 
 /* Accordion focus */
 .mn-accordion__header:focus-visible {
-  outline: 2px solid var(--giallo-ferrari);
+  outline: 2px solid var(--mn-accent);
   outline-offset: -2px;
 }
 
@@ -66,7 +66,7 @@
   top: -100%;
   left: var(--space-md);
   padding: var(--space-sm) var(--space-lg);
-  background: var(--giallo-ferrari);
+  background: var(--mn-accent);
   color: var(--mn-text-inverse);
   font-family: var(--font-display);
   font-size: var(--text-caption);
@@ -92,7 +92,7 @@
 
 /* Ensure gold text passes on dark */
 .mn-text-giallo {
-  color: var(--giallo-ferrari); /* #FFC72C on #000000 = 12.2:1 ✓ */
+  color: var(--mn-accent); /* #FFC72C on #000000 = 12.2:1 ✓ */
 }
 
 /* Avorio text adjustments for contrast */

@@ -33,7 +33,7 @@
   border-radius: var(--radius-pill);
   font-family: var(--font-body);
   font-size: var(--text-micro);
-  color: var(--giallo-ferrari);
+  color: var(--mn-accent);
   white-space: nowrap;
 }
 .mn-tag-input__chip-remove {
@@ -42,7 +42,7 @@
   border-radius: 50%;
   background: transparent;
   border: none;
-  color: var(--giallo-ferrari);
+  color: var(--mn-accent);
   cursor: pointer;
   display: flex;
   align-items: center;

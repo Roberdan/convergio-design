@@ -8,42 +8,29 @@
    */
 
 
-/* ── DASHBOARD STRIP (machined aluminum nacelle) ── */
+/* ── DASHBOARD STRIP ── */
 .mn-strip {
   position: relative;
-  background: linear-gradient(
-    180deg,
-    #e0dcd5 0%, #cec9c0 3%, #b8b2a8 6%, #a8a298 8%,
-    #b8b2a8 10%, #cec9c0 15%, #d8d4cc 20%, #e0dcd5 50%,
-    #d8d4cc 80%, #cec9c0 85%, #b8b2a8 90%, #a8a298 92%,
-    #b8b2a8 94%, #cec9c0 97%, #e0dcd5 100%
-  );
-  border-radius: var(--radius-xl);
-  padding: 12px;
-  box-shadow:
-    0 12px 48px rgba(0,0,0,0.25),
-    0 4px 16px rgba(0,0,0,0.15),
-    inset 0 1px 0 var(--mn-hover-bg),
-    inset 0 -1px 0 rgba(0,0,0,0.1);
+  background: transparent;
+  border-radius: var(--radius-lg);
+  padding: 0;
 }
 
 .mn-strip__inner {
   background: var(--mn-surface-sunken);
   border-radius: var(--radius-lg);
-  padding: var(--space-xl) var(--space-2xl);
+  padding: var(--space-lg) var(--space-xl);
   display: flex;
   align-items: center;
   gap: var(--space-xl);
-  box-shadow:
-    inset 0 2px 8px rgba(0,0,0,0.8),
-    inset 0 -1px 4px rgba(0,0,0,0.4);
-  min-height: 160px;
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.6);
+  min-height: 140px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   color: var(--mn-text);
 }
 
-/* Scan line effect */
+/* Scan line effect (contained, doesn't clip content) */
 .mn-strip__inner::before {
   content: '';
   position: absolute;
@@ -55,9 +42,11 @@
   );
   pointer-events: none;
   border-radius: inherit;
+  overflow: hidden;
 }
 
 .mn-strip__section { flex: 1; min-width: 0; }
+.mn-strip__section--wide { flex: 2; }
 .mn-strip__section--pod {
   flex: 0 0 auto;
   display: flex;
@@ -71,9 +60,9 @@
   flex-shrink: 0;
 }
 
-/* Strip label classes (replaces inline styles) */
+/* Strip label classes */
 .mn-strip__label {
-  color: var(--avorio-scuro);
+  color: var(--mn-text-tertiary);
   font-size: 0.6rem;
   letter-spacing: 0.15em;
 }
@@ -84,7 +73,7 @@
   color: var(--mn-text);
 }
 .mn-strip__dim {
-  color: var(--avorio-scuro);
+  color: var(--mn-text-muted);
   margin-bottom: 2px;
 }
 
@@ -165,7 +154,7 @@
 .mn-strip__legend-toggle:hover {
   background: rgba(255,199,44,0.15);
   border-color: rgba(255,199,44,0.3);
-  color: var(--giallo-ferrari);
+  color: var(--mn-accent);
 }
 .mn-strip__legend-toggle-icon { line-height: 1; }
 

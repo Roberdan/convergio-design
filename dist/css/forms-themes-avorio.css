@@ -47,12 +47,12 @@
   transition: background 0.3s;
 }
 .mn-form-step--active .mn-form-step__number {
-  background: var(--giallo-ferrari);
+  background: var(--mn-accent);
   color: var(--mn-text-inverse);
   box-shadow: 0 0 12px rgba(255, 199, 44, 0.3);
 }
 .mn-form-step--active .mn-form-step__label {
-  color: var(--giallo-ferrari);
+  color: var(--mn-accent);
 }
 .mn-form-step--complete .mn-form-step__number {
   background: var(--verde-racing);

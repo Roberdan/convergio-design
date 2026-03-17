@@ -25,7 +25,7 @@
   }
 
   .mn-mapbox-popup .mapboxgl-popup-close-button:hover {
-    color: var(--accent, #FFC72C);
+    color: var(--mn-accent);
   }
 }
 

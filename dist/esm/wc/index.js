@@ -58,6 +58,9 @@ async function registerAll() {
     import("./mn-theme-toggle.js"),
     import("./mn-toast.js")
   ]);
+  if (typeof document !== "undefined" && !document.querySelector("mn-a11y")) {
+    document.body.appendChild(document.createElement("mn-a11y"));
+  }
 }
 function isRegistered(tag) {
   return !!customElements.get(tag);

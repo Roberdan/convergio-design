@@ -41,7 +41,7 @@
 .mn-gantt-timeline__zoom-btn:hover {
   background: rgba(255,199,44,0.12);
   border-color: rgba(255,199,44,0.25);
-  color: var(--giallo-ferrari);
+  color: var(--mn-accent);
 }
 .mn-gantt-timeline__zoom-btn--fit {
   padding: 4px 12px;
