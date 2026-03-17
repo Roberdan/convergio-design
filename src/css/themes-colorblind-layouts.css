@@ -83,7 +83,7 @@ body.mn-colorblind .mn-dt__badge--yellow { background: var(--mn-cb-yellow); }
    Detail panel field labels / values
    ============================================================ */
 body.mn-colorblind .mn-detail-panel__section-title { color: var(--mn-accent); }
-body.mn-colorblind .mn-detail-panel__field-label { color: var(--mn-text-muted)); }
+body.mn-colorblind .mn-detail-panel__field-label { color: var(--mn-text-muted); }
 body.mn-colorblind .mn-detail-panel__close:hover {
   color: var(--mn-accent);
 }

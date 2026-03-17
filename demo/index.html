@@ -75,8 +75,8 @@
           var body = document.body;
           var sizes = { sm: 0.875, md: 1.0, lg: 1.125, xl: 1.25 };
           if (s.fontSize && s.fontSize !== 'md') root.style.fontSize = ((sizes[s.fontSize] || 1) * 16) + 'px';
-          if (s.reducedMotion) root.classList.add('mn-reduced-motion');
-          if (s.highContrast) { root.classList.add('mn-high-contrast'); body.classList.add('mn-a11y-high-contrast'); }
+          if (s.reducedMotion) body.classList.add('mn-a11y-reduced-motion');
+          if (s.highContrast) body.classList.add('mn-a11y-high-contrast');
           if (!s.focusVisible) root.classList.add('mn-no-focus-ring');
           if (s.dyslexiaFont) {
             body.classList.add('mn-a11y-dyslexia-font');
@@ -101,6 +101,7 @@
       <li><a href="#tokens">Tokens</a></li>
       <li><a href="#cards">Cards</a></li>
       <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#dashboard-classic">Dash Classic</a></li>
       <li><a href="#charts">Charts</a></li>
       <li><a href="#network">Network</a></li>
       <li><a href="#controls">Controls</a></li>
@@ -156,7 +157,7 @@
       <div class="mn-divider-gold--accent mn-divider-gold" style="margin-bottom:var(--space-xl)"></div>
       <p class="mn-label" style="color:var(--mn-accent);margin-bottom:var(--space-sm)">Maranello Luce Design System</p>
       <p class="mn-micro" style="color:var(--grigio-alluminio)">Demo built with fictional Maranello Luce operations data. All data is illustrative.</p>
-      <p class="mn-micro" style="color:var(--grigio-chiaro);margin-top:var(--space-sm)">v4.13.4 — 4 themes · 150+ APIs · 26 Web Components · WCAG 2.2 AA</p>
+      <p class="mn-micro" style="color:var(--grigio-chiaro);margin-top:var(--space-sm)">v4.14.0 — 4 themes · 150+ APIs · 26 Web Components · WCAG 2.2 AA</p>
       <p class="mn-micro" style="color:var(--grigio-chiaro);margin-top:var(--space-xs)">&copy; Roberdan 2026</p>
     </div>
   </footer>

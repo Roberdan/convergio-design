@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.14.0] - 2026-03-17
+
+### Added
+- Dashboard Strip: restored nacelle with gauge + gradient bars + secondary board + pods
+- KPI Instrument Cluster: binnacle with hero gauge, subdials, crosshair, arc-bar, sparkline complications
+- Dashboard Classic: full BI prototype with search, filter tags, 4 gauge cards, data table with progress bars
+- WC catalog: added mn-theme-rotary + mn-section-nav cards, replaced mn-theme-toggle mock with real WC
+- mn-theme-rotary WC: role=radiogroup, keyboard nav (Arrow/Home/End), aria-checked, roving tabindex
+- Reduced motion: gauge-engine + speedometer skip rAF when prefers-reduced-motion or mn-a11y-reduced-motion
+- Forced-colors: @media (forced-colors: active) rules for buttons, focus, status, gauges, toasts, modals
+- Avorio: mn-card-dark border+shadow, mn-section-ivory text color override
+
+### Fixed
+- A11y: class model aligned — applySettings uses body.mn-a11y-* matching CSS selectors
+- A11y: WC catalog no longer duplicates mn-a11y FAB (static mock preview)
+- A11y: demo accessibility section uses real mn-a11y storage key + class model
+- Colorblind: nav inline style overrides removed — CSS cascade handles all themes
+- Colorblind: CSS syntax error )) in themes-colorblind-layouts.css
+- WC tokens: mn-theme-toggle, mn-date-picker, mn-ferrari-control, mn-tabs use --mn-accent (not --mn-error) for focus/active
+- CSS: hardcoded rgba accent glows replaced with color-mix() in accessibility, charts-base, controls-rotary-slider, data-table, integration-reset
+- NaSra: added forced-colors, color-mix, ghost-light, heatmap patterns
+
 ## [4.13.4] - 2026-03-17
 
 ### Fixed

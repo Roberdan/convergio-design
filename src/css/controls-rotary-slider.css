@@ -44,7 +44,7 @@
   margin-left: -1.5px;
   background: var(--mn-accent);
   border-radius: 2px;
-  box-shadow: 0 0 6px rgba(255,199,44,0.5);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--mn-accent) 50%, transparent);
   transform-origin: 50% calc(50% + 30px);
   transition: transform var(--duration-md) var(--ease-out);
 }

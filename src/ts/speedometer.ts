@@ -36,10 +36,8 @@ function speedoPalette(): Record<string, unknown> {
 }
 
 function drawSpeedo(
-  ctx: CanvasRenderingContext2D, dim: number, s: number,
-  cx: number, cy: number, R: number,
-  curAngle: number, curVal: number, barVal: number,
-  options: Record<string, unknown>,
+  ctx: CanvasRenderingContext2D, dim: number, s: number, cx: number, cy: number, R: number,
+  curAngle: number, curVal: number, barVal: number, options: Record<string, unknown>,
 ): void {
   const p = speedoPalette();
   const needleCol = (p.needle as string) || (options.needleColor as string);
@@ -151,9 +149,7 @@ function drawSpeedo(
 }
 
 /** Create an animated speedometer gauge on a canvas element. */
-export function speedometer(
-  canvas: HTMLCanvasElement, opts?: SpeedometerOptions,
-): SpeedometerController | undefined {
+export function speedometer(canvas: HTMLCanvasElement, opts?: SpeedometerOptions): SpeedometerController | undefined {
   const options: Record<string, unknown> = {
     value: 0, max: 100, unit: '', size: 'md',
     ticks: [0, 25, 50, 75, 100], minorTicks: 4,
@@ -211,6 +207,10 @@ export function speedometer(
 
   function animateTo(toAngle: number, toVal: number): void {
     if (animId) cancelAnimationFrame(animId);
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches
+      || document.documentElement.classList.contains('mn-reduced-motion')
+      || document.body.classList.contains('mn-a11y-reduced-motion');
+    if (prefersReducedMotion) { curAngle = toAngle; curVal = toVal; draw(); updateA11y(toVal); animId = null; return; }
     const fromA = curAngle, fromV = curVal, t0 = performance.now(), dur = 800;
     const tick = (now: number): void => {
       const p = Math.min(1, (now - t0) / dur), ep = easeOutCubic(p);

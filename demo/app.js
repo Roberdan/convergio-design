@@ -14,6 +14,7 @@ const SECTIONS = new Map([
   ['tokens',         () => import('./sections/tokens.js').then(m => m.createTokensSection)],
   ['cards',          () => import('./sections/cards.js').then(m => m.createCardsSection)],
   ['dashboard',      () => import('./sections/dashboard.js').then(m => m.createDashboardSection)],
+  ['dashboard-classic', () => import('./sections/dashboard-classic.js').then(m => m.createDashboardClassicSection)],
   ['charts',         () => import('./sections/charts.js').then(m => m.createChartsSection)],
   ['network',        () => import('./sections/network.js').then(m => m.createNetworkSection)],
   ['controls',       () => import('./sections/controls.js').then(m => m.createControlsSection)],
@@ -55,7 +56,7 @@ const SECTIONS = new Map([
 const SECTION_KEYS = [...SECTIONS.keys()];
 
 const SECTION_LABELS = {
-  'hero': 'Home', 'tokens': 'Tokens', 'cards': 'Cards', 'dashboard': 'Dashboard',
+  'hero': 'Home', 'tokens': 'Tokens', 'cards': 'Cards', 'dashboard': 'Dashboard', 'dashboard-classic': 'Dash Classic',
   'charts': 'Charts', 'network': 'Network', 'controls': 'Controls', 'forms': 'Forms',
   'tables': 'Tables', 'gauges': 'Gauges', 'cockpit': 'Cockpit', 'telemetry': 'Telemetry',
   'gantt': 'Gantt', 'icons': 'Icons', 'animations': 'Anim', 'heatmap': 'Heatmap',
@@ -180,16 +181,7 @@ function updateThemeLabel() {
   label.textContent = `${prefix} ${map[getActiveTheme()] ?? getActiveTheme()}`;
 }
 
-document.addEventListener('mn-theme-change', (event) => {
-  const nav = document.querySelector('.demo-nav');
-  if (!nav) return;
-  if (event.detail?.theme === 'avorio') {
-    nav.style.background = 'rgba(250,243,230,0.95)';
-    nav.style.borderBottomColor = 'var(--avorio-scuro)';
-  } else {
-    nav.style.background = 'rgba(10,10,10,0.92)';
-    nav.style.borderBottomColor = 'var(--grigio-scuro)';
-  }
+document.addEventListener('mn-theme-change', () => {
   updateThemeLabel();
 });
 

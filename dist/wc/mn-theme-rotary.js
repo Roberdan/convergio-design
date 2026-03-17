@@ -13,6 +13,10 @@ class MnThemeRotary extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this._controller = null;
+    this._labels = {};
+    this._positions = [];
+    this._wrap = null;
+    this._onKeyDown = null;
   }
   connectedCallback() {
     let saved = null;
@@ -32,6 +36,7 @@ class MnThemeRotary extends HTMLElement {
     this._render(size);
   }
   disconnectedCallback() {
+    if (this._wrap && this._onKeyDown) this._wrap.removeEventListener("keydown", this._onKeyDown);
     this._controller?.destroy();
     this._controller = null;
   }
@@ -67,6 +72,8 @@ class MnThemeRotary extends HTMLElement {
     const centerSize = size * 0.32;
     const wrap = document.createElement("div");
     wrap.className = "wrap";
+    wrap.setAttribute("role", "radiogroup");
+    wrap.setAttribute("aria-label", "Theme selector");
     const dial = document.createElement("div");
     dial.className = "dial";
     dial.style.width = dial.style.height = size + "px";
@@ -87,9 +94,15 @@ class MnThemeRotary extends HTMLElement {
       const el = document.createElement("div");
       el.className = "pos";
       el.textContent = pos.label;
+      el.setAttribute("role", "radio");
+      el.setAttribute("tabindex", "-1");
+      el.setAttribute("aria-checked", "false");
       el.style.left = lx + "px";
       el.style.top = ly + "px";
-      el.addEventListener("click", () => this._applyTheme(pos.mode));
+      el.addEventListener("click", () => {
+        this._applyTheme(pos.mode);
+        el.focus();
+      });
       dial.appendChild(el);
       labels[pos.mode] = el;
     }
@@ -102,6 +115,39 @@ class MnThemeRotary extends HTMLElement {
     this._labels = labels;
     this._pointer = pointer;
     this._positions = POSITIONS;
+    this._wrap = wrap;
+    this._onKeyDown = (event) => {
+      const current = this._getTheme();
+      const currentIndex = this._positions.findIndex((p) => p.mode === current);
+      let nextIndex = currentIndex;
+      switch (event.key) {
+        case "ArrowRight":
+        case "ArrowDown":
+          event.preventDefault();
+          nextIndex = (currentIndex + 1) % this._positions.length;
+          break;
+        case "ArrowLeft":
+        case "ArrowUp":
+          event.preventDefault();
+          nextIndex = (currentIndex - 1 + this._positions.length) % this._positions.length;
+          break;
+        case "Home":
+          event.preventDefault();
+          nextIndex = 0;
+          break;
+        case "End":
+          event.preventDefault();
+          nextIndex = this._positions.length - 1;
+          break;
+        default:
+          return;
+      }
+      const nextMode = this._positions[nextIndex]?.mode;
+      if (!nextMode) return;
+      this._applyTheme(nextMode);
+      this._labels[nextMode]?.focus();
+    };
+    wrap.addEventListener("keydown", this._onKeyDown);
     this._update();
   }
   _getTheme() {
@@ -139,7 +185,10 @@ class MnThemeRotary extends HTMLElement {
     const angle = pos ? pos.angle : -45;
     this._pointer.style.transform = `translateX(-50%) rotate(${angle}deg)`;
     for (const [mode, el] of Object.entries(this._labels)) {
-      el.classList.toggle("pos--active", mode === current);
+      const active = mode === current;
+      el.classList.toggle("pos--active", active);
+      el.setAttribute("aria-checked", String(active));
+      el.setAttribute("tabindex", active ? "0" : "-1");
     }
   }
 }

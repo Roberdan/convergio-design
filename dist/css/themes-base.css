@@ -157,6 +157,11 @@ body.mn-avorio {
   --backdrop:         rgba(0,0,0,0.25);
   --grigio-30:        rgba(0,0,0,0.08);
 }
+body.mn-avorio .mn-section-ivory { color: var(--mn-text); }
+body.mn-avorio .mn-card-dark {
+  border: 1px solid var(--mn-border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
 /* ============================================================
    COLORBLIND MODE — high-contrast, colorblind-safe palette
    Uses Okabe-Ito palette for signal colors.

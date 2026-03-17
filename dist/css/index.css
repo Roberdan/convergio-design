@@ -466,8 +466,8 @@
 
   .mn-input:focus-visible {
     border-color: var(--mn-accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--mn-accent) 30%, transparent);
     outline: none;
-    box-shadow: 0 0 0 2px #ffc72c4d;
   }
 
   .mn-icon-btn:focus-visible {
@@ -621,6 +621,33 @@
     transition-duration: .01ms !important;
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
+  }
+
+  @media (forced-colors: active) {
+    .mn-btn {
+      border: 2px solid buttontext;
+    }
+
+    .mn-btn:focus-visible {
+      outline-offset: 2px;
+      outline: 2px solid highlight;
+    }
+
+    .mn-status__dot {
+      forced-color-adjust: none;
+    }
+
+    .mn-gauge__glass {
+      display: none;
+    }
+
+    .mn-toast, .mn-modal {
+      border: 2px solid canvastext;
+    }
+
+    .mn-progress__fill {
+      forced-color-adjust: none;
+    }
   }
 }
 
@@ -2291,16 +2318,16 @@
 
   .mn-rotary__pointer {
     background: var(--mn-accent);
-    transform-origin: 50% calc(50% + 30px);
     width: 3px;
     height: 14px;
+    box-shadow: 0 0 6px color-mix(in srgb, var(--mn-accent) 50%, transparent);
+    transform-origin: 50% calc(50% + 30px);
     transition: transform var(--duration-md) var(--ease-out);
     border-radius: 2px;
     margin-left: -1.5px;
     position: absolute;
     top: 8px;
     left: 50%;
-    box-shadow: 0 0 6px #ffc72c80;
   }
 
   .mn-rotary__notches {
@@ -3826,8 +3853,8 @@
 
 @layer charts {
   :root {
-    --mn-chart-series-1: #ffc72c;
-    --mn-chart-series-2: #dc0000;
+    --mn-chart-series-1: var(--mn-accent);
+    --mn-chart-series-2: var(--mn-error);
     --mn-chart-series-3: #00a651;
     --mn-chart-series-4: #d4622b;
     --mn-chart-series-5: #4ea8de;
@@ -3842,13 +3869,13 @@
     --mn-chart-grid: #c8c8c814;
     --mn-chart-axis: #616161;
     --mn-chart-axis-text: #9e9e9e;
-    --mn-chart-crosshair: #ffc72c4d;
+    --mn-chart-crosshair: color-mix(in srgb, var(--mn-accent) 30%, transparent);
     --mn-chart-zero-line: #c8c8c826;
     --mn-chart-tooltip-bg: #0a0a0aeb;
-    --mn-chart-tooltip-border: #ffc72c40;
+    --mn-chart-tooltip-border: color-mix(in srgb, var(--mn-accent) 25%, transparent);
     --mn-chart-tooltip-text: #fafafa;
     --mn-chart-tooltip-shadow: 0 4px 24px #00000080,
-    0 0 0 1px #ffc72c26;
+    0 0 0 1px color-mix(in srgb, var(--mn-accent) 15%, transparent);
   }
 
   .mn-chart {
@@ -6291,7 +6318,7 @@
 
   .mn-dt__filter-input:focus {
     border-color: var(--mn-accent);
-    box-shadow: 0 0 0 2px #ffc72c26;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--mn-accent) 15%, transparent);
   }
 
   .mn-dt__row {
@@ -6308,21 +6335,21 @@
   }
 
   .mn-dt--crosshair .mn-dt__row--hovered {
-    background: #ffc72c0f;
+    background: color-mix(in srgb, var(--mn-accent) 6%, transparent);
   }
 
   .mn-dt__row--selected {
-    background: #ffc72c1a;
+    background: color-mix(in srgb, var(--mn-accent) 10%, transparent);
   }
 
   .mn-dt__row--selected:hover, .mn-dt--crosshair .mn-dt__row--selected.mn-dt__row--hovered {
-    background: #ffc72c24;
+    background: color-mix(in srgb, var(--mn-accent) 14%, transparent);
   }
 
   .mn-dt__col-highlight {
     pointer-events: none;
+    background: color-mix(in srgb, var(--mn-accent) 4%, transparent);
     z-index: 1;
-    background: #ffc72c0a;
     transition: left .1s, width .1s;
     position: absolute;
     top: 0;
@@ -11854,6 +11881,15 @@
     --grigio-30: #00000014;
   }
 
+  body.mn-avorio .mn-section-ivory {
+    color: var(--mn-text);
+  }
+
+  body.mn-avorio .mn-card-dark {
+    border: 1px solid var(--mn-border);
+    box-shadow: 0 1px 3px #00000014;
+  }
+
   body.mn-colorblind {
     --stage-1: #e69f00;
     --stage-2: #e69f00;
@@ -12316,7 +12352,15 @@
     background: var(--mn-cb-yellow);
   }
 
-  body.mn-colorblind .mn-detail-panel__section-title, body.mn-colorblind .mn-detail-panel__close:hover {
+  body.mn-colorblind .mn-detail-panel__section-title {
+    color: var(--mn-accent);
+  }
+
+  body.mn-colorblind .mn-detail-panel__field-label {
+    color: var(--mn-text-muted);
+  }
+
+  body.mn-colorblind .mn-detail-panel__close:hover {
     color: var(--mn-accent);
   }
 

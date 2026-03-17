@@ -10,8 +10,8 @@
 /* ── CHART TOKENS ── */
 :root {
   /* Series palette (12 colors, Ferrari-inspired) */
-  --mn-chart-series-1:  #FFC72C;  /* giallo */
-  --mn-chart-series-2:  #DC0000;  /* rosso */
+  --mn-chart-series-1:  var(--mn-accent);  /* giallo */
+  --mn-chart-series-2:  var(--mn-error);  /* rosso */
   --mn-chart-series-3:  #00A651;  /* verde */
   --mn-chart-series-4:  #D4622B;  /* arancio */
   --mn-chart-series-5:  #4EA8DE;  /* azzurro */
@@ -28,16 +28,16 @@
   --mn-chart-grid:      rgba(200,200,200,0.08);
   --mn-chart-axis:      #616161;
   --mn-chart-axis-text: #9e9e9e;
-  --mn-chart-crosshair: rgba(255,199,44,0.3);
+  --mn-chart-crosshair: color-mix(in srgb, var(--mn-accent) 30%, transparent);
   --mn-chart-zero-line: rgba(200,200,200,0.15);
 
   /* Tooltip */
   --mn-chart-tooltip-bg:     rgba(10,10,10,0.92);
-  --mn-chart-tooltip-border: rgba(255,199,44,0.25);
+  --mn-chart-tooltip-border: color-mix(in srgb, var(--mn-accent) 25%, transparent);
   --mn-chart-tooltip-text:   #fafafa;
   --mn-chart-tooltip-shadow:
     0 4px 24px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(255,199,44,0.15);
+    0 0 0 1px color-mix(in srgb, var(--mn-accent) 15%, transparent);
 }
 
 

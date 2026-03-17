@@ -35,7 +35,7 @@
 .mn-input:focus-visible {
   outline: none;
   border-color: var(--mn-accent);
-  box-shadow: 0 0 0 2px rgba(255,199,44,0.3);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--mn-accent) 30%, transparent);
 }
 
 .mn-icon-btn:focus-visible {
@@ -225,5 +225,15 @@ body.mn-a11y-reduced-motion *::after {
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
+}
+
+@media (forced-colors: active) {
+  .mn-btn { border: 2px solid ButtonText; }
+  .mn-btn:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+  .mn-status__dot { forced-color-adjust: none; }
+  .mn-gauge__glass { display: none; }
+  .mn-toast { border: 2px solid CanvasText; }
+  .mn-modal { border: 2px solid CanvasText; }
+  .mn-progress__fill { forced-color-adjust: none; }
 }
 } /* end @layer base */

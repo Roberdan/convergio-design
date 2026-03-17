@@ -103,6 +103,10 @@ export class FerrariGauge {
 
   /** Animate from 0 to full with ease-in-out-cubic. */
   animate(): void {
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches
+      || document.documentElement.classList.contains('mn-reduced-motion')
+      || document.body.classList.contains('mn-a11y-reduced-motion');
+    if (prefersReducedMotion) { this.draw(1); return; }
     const duration = 1400;
     const start = performance.now();
     const ease = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;

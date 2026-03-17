@@ -1,4 +1,4 @@
-/* Maranello Luce Design v4.13.4 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v4.14.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 "use strict";
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -5075,6 +5075,11 @@ var FerrariGauge = class {
   }
   /** Animate from 0 to full with ease-in-out-cubic. */
   animate() {
+    const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches || document.documentElement.classList.contains("mn-reduced-motion") || document.body.classList.contains("mn-a11y-reduced-motion");
+    if (prefersReducedMotion) {
+      this.draw(1);
+      return;
+    }
     const duration = 1400;
     const start = performance.now();
     const ease = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -5403,6 +5408,15 @@ function speedometer(canvas, opts) {
   }
   function animateTo(toAngle, toVal) {
     if (animId) cancelAnimationFrame(animId);
+    const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches || document.documentElement.classList.contains("mn-reduced-motion") || document.body.classList.contains("mn-a11y-reduced-motion");
+    if (prefersReducedMotion) {
+      curAngle = toAngle;
+      curVal = toVal;
+      draw();
+      updateA11y(toVal);
+      animId = null;
+      return;
+    }
     const fromA = curAngle, fromV = curVal, t0 = performance.now(), dur = 800;
     const tick = (now) => {
       const p = Math.min(1, (now - t0) / dur), ep = easeOutCubic(p);
@@ -11440,20 +11454,22 @@ function loadDyslexicFont() {
 }
 function applySettings(settings) {
   const root = document.documentElement;
+  const body = document.body;
   const sz = SIZES3[settings.fontSize] ?? SIZES3.md;
   root.style.fontSize = `${sz.scale * 16}px`;
-  root.classList.toggle("mn-reduced-motion", settings.reducedMotion);
-  root.classList.toggle("mn-high-contrast", settings.highContrast);
+  root.classList.remove("mn-reduced-motion", "mn-high-contrast");
+  body.classList.toggle("mn-a11y-reduced-motion", settings.reducedMotion);
+  body.classList.toggle("mn-a11y-high-contrast", settings.highContrast);
   root.classList.toggle("mn-no-focus-ring", !settings.focusVisible);
   if (settings.dyslexiaFont) loadDyslexicFont();
-  document.body.classList.toggle("mn-a11y-dyslexia-font", settings.dyslexiaFont);
+  body.classList.toggle("mn-a11y-dyslexia-font", settings.dyslexiaFont);
   const ls = LINE_SPACINGS[settings.lineSpacing] ?? LINE_SPACINGS.normal;
   if (ls.value === "normal") {
     root.style.removeProperty("--mn-line-height");
-    document.body.style.removeProperty("line-height");
+    body.style.removeProperty("line-height");
   } else {
     root.style.setProperty("--mn-line-height", ls.value);
-    document.body.style.lineHeight = ls.value;
+    body.style.lineHeight = ls.value;
   }
 }
 function slidersIcon() {
@@ -16278,5 +16294,5 @@ M.charts = {
 registerExtras(M);
 
 // src/ts/index.ts
-var VERSION = "4.13.4";
+var VERSION = "4.14.0";
 //# sourceMappingURL=index.cjs.map

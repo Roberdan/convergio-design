@@ -36,7 +36,7 @@ class MnThemeToggle extends HTMLElement {
         box-shadow: 0 2px 8px rgba(0,0,0,.3) }
       .mn-theme-btn:hover { background: var(--mn-border);
         transform: scale(1.08) }
-      .mn-theme-btn:focus-visible { outline: 2px solid var(--mn-error);
+      .mn-theme-btn:focus-visible { outline: 2px solid var(--mn-accent);
         outline-offset: 2px }
     `;
     this._btn = document.createElement("button");

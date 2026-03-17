@@ -1,4 +1,4 @@
-/* Maranello Luce Design v4.13.4 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v4.14.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 import {
   SERIES,
   applyChartA11y,
@@ -19,15 +19,15 @@ import {
   radar,
   sparkline,
   sparklineInteract
-} from "./chunks/chunk-PXCT5LLI.js";
+} from "./chunks/chunk-RR4VPH2M.js";
 import {
   FerrariGauge,
   buildGaugePalette,
   speedometer
-} from "./chunks/chunk-ZSQMIHYQ.js";
+} from "./chunks/chunk-YSB6OLTL.js";
 import {
   gantt
-} from "./chunks/chunk-DGKQKNLP.js";
+} from "./chunks/chunk-OUXXSMMC.js";
 import {
   closeDetailPanel,
   closeDrawer,
@@ -40,7 +40,7 @@ import {
   steppedRotary,
   toggleLever,
   toggleNotifications
-} from "./chunks/chunk-BCFHWUSV.js";
+} from "./chunks/chunk-KYW5IOBG.js";
 import {
   ALLOWED_BIND_PROPERTIES,
   clamp,
@@ -62,7 +62,7 @@ import {
   sanitizeSvg,
   setTheme,
   throttle
-} from "./chunks/chunk-NRLFVGMI.js";
+} from "./chunks/chunk-FAITTTFH.js";
 import {
   addValidator,
   defaultMessages,
@@ -81,11 +81,11 @@ import {
   validateField,
   validateForm,
   validators
-} from "./chunks/chunk-TNUDXBCC.js";
+} from "./chunks/chunk-TNCL63SG.js";
 import {
   EventBus,
   eventBus
-} from "./chunks/chunk-2URDBOUO.js";
+} from "./chunks/chunk-E5BEGLDY.js";
 
 // src/ts/network-messages.ts
 function resolveContainer(container) {
@@ -6364,20 +6364,22 @@ function loadDyslexicFont() {
 }
 function applySettings(settings) {
   const root = document.documentElement;
+  const body = document.body;
   const sz = SIZES[settings.fontSize] ?? SIZES.md;
   root.style.fontSize = `${sz.scale * 16}px`;
-  root.classList.toggle("mn-reduced-motion", settings.reducedMotion);
-  root.classList.toggle("mn-high-contrast", settings.highContrast);
+  root.classList.remove("mn-reduced-motion", "mn-high-contrast");
+  body.classList.toggle("mn-a11y-reduced-motion", settings.reducedMotion);
+  body.classList.toggle("mn-a11y-high-contrast", settings.highContrast);
   root.classList.toggle("mn-no-focus-ring", !settings.focusVisible);
   if (settings.dyslexiaFont) loadDyslexicFont();
-  document.body.classList.toggle("mn-a11y-dyslexia-font", settings.dyslexiaFont);
+  body.classList.toggle("mn-a11y-dyslexia-font", settings.dyslexiaFont);
   const ls = LINE_SPACINGS[settings.lineSpacing] ?? LINE_SPACINGS.normal;
   if (ls.value === "normal") {
     root.style.removeProperty("--mn-line-height");
-    document.body.style.removeProperty("line-height");
+    body.style.removeProperty("line-height");
   } else {
     root.style.setProperty("--mn-line-height", ls.value);
-    document.body.style.lineHeight = ls.value;
+    body.style.lineHeight = ls.value;
   }
 }
 function slidersIcon() {
@@ -11202,7 +11204,7 @@ M.charts = {
 registerExtras(M);
 
 // src/ts/index.ts
-var VERSION = "4.13.4";
+var VERSION = "4.14.0";
 export {
   COLOR,
   CONTINENTS,

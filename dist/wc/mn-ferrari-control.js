@@ -178,7 +178,7 @@ class MnFerrariControl extends HTMLElement {
     input.max = String(max);
     input.step = String(step);
     input.value = String(initial);
-    input.style.cssText = "width:140px;accent-color:var(--mn-error)";
+    input.style.cssText = "width:140px;accent-color:var(--mn-accent)";
     input.addEventListener("input", () => onChange(Number(input.value)));
     const valEl = document.createElement("span");
     valEl.style.cssText = "font-family:var(--font-body,sans-serif);font-size:var(--text-micro,.65rem);color:var(--mn-text-tertiary)";

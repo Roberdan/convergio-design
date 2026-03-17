@@ -36,7 +36,7 @@ class MnTabs extends HTMLElement {
         transition: color var(--duration-sm, .15s), border-color var(--duration-sm, .15s) }
       .mn-tabs__tab:hover { color: var(--mn-text-tertiary) }
       .mn-tabs__tab--active { color: var(--mn-text);
-        border-bottom-color: var(--mn-error); font-weight: 600 }
+        border-bottom-color: var(--mn-accent); font-weight: 600 }
       .mn-tabs__panel { display: none }
       .mn-tabs__panel--active { display: block }
     `;

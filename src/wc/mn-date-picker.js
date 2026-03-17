@@ -52,7 +52,7 @@ class MnDatePicker extends HTMLElement {
         font-family:var(--font-body,sans-serif);font-size:.9rem;
         transition:border-color var(--duration-sm,.15s)}
       .mn-wc-trigger:hover{border-color:var(--mn-text-muted)}
-      .mn-wc-trigger:focus{outline:2px solid var(--mn-error);outline-offset:2px}
+      .mn-wc-trigger:focus{outline:2px solid var(--mn-accent);outline-offset:2px}
       .mn-wc-icon{font-size:1rem}
     `;
 

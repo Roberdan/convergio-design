@@ -1,4 +1,4 @@
-/* Maranello Luce Design v4.13.4 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v4.14.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 "use strict";
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -824,6 +824,11 @@ var FerrariGauge = class {
   }
   /** Animate from 0 to full with ease-in-out-cubic. */
   animate() {
+    const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches || document.documentElement.classList.contains("mn-reduced-motion") || document.body.classList.contains("mn-a11y-reduced-motion");
+    if (prefersReducedMotion) {
+      this.draw(1);
+      return;
+    }
     const duration = 1400;
     const start = performance.now();
     const ease = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -1152,6 +1157,15 @@ function speedometer(canvas, opts) {
   }
   function animateTo(toAngle, toVal) {
     if (animId) cancelAnimationFrame(animId);
+    const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches || document.documentElement.classList.contains("mn-reduced-motion") || document.body.classList.contains("mn-a11y-reduced-motion");
+    if (prefersReducedMotion) {
+      curAngle = toAngle;
+      curVal = toVal;
+      draw();
+      updateA11y(toVal);
+      animId = null;
+      return;
+    }
     const fromA = curAngle, fromV = curVal, t0 = performance.now(), dur = 800;
     const tick = (now) => {
       const p = Math.min(1, (now - t0) / dur), ep = easeOutCubic(p);

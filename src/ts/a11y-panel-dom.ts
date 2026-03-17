@@ -75,22 +75,24 @@ function loadDyslexicFont(): void {
 
 export function applySettings(settings: A11ySettings): void {
   const root = document.documentElement;
+  const body = document.body;
   const sz = SIZES[settings.fontSize] ?? SIZES.md;
   root.style.fontSize = `${sz.scale * 16}px`;
-  root.classList.toggle('mn-reduced-motion', settings.reducedMotion);
-  root.classList.toggle('mn-high-contrast', settings.highContrast);
+  root.classList.remove('mn-reduced-motion', 'mn-high-contrast');
+  body.classList.toggle('mn-a11y-reduced-motion', settings.reducedMotion);
+  body.classList.toggle('mn-a11y-high-contrast', settings.highContrast);
   root.classList.toggle('mn-no-focus-ring', !settings.focusVisible);
 
   if (settings.dyslexiaFont) loadDyslexicFont();
-  document.body.classList.toggle('mn-a11y-dyslexia-font', settings.dyslexiaFont);
+  body.classList.toggle('mn-a11y-dyslexia-font', settings.dyslexiaFont);
 
   const ls = LINE_SPACINGS[settings.lineSpacing] ?? LINE_SPACINGS.normal;
   if (ls.value === 'normal') {
     root.style.removeProperty('--mn-line-height');
-    document.body.style.removeProperty('line-height');
+    body.style.removeProperty('line-height');
   } else {
     root.style.setProperty('--mn-line-height', ls.value);
-    document.body.style.lineHeight = ls.value;
+    body.style.lineHeight = ls.value;
   }
 }
 
