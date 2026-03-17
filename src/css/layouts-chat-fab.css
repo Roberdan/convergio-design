@@ -22,6 +22,17 @@
 .mn-chat-fab:hover { transform: scale(1.08); box-shadow: var(--shadow-deep); }
 .mn-chat-fab svg { width: 22px; height: 22px; }
 .mn-chat-fab__avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; display: block; }
+/* Fallback for broken avatar images */
+.mn-chat-fab__avatar[src=""],
+.mn-chat-fab__avatar:not([src]),
+.mn-chat-fab__avatar[alt]::after {
+  content: '';
+}
+.mn-chat-fab__avatar:is([src=""],[src="#"]) {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--mn-surface-raised); color: var(--mn-accent);
+  font-size: 1.2rem; font-weight: 700;
+}
 .mn-chat-fab--hidden { display: none; }
 .mn-chat-fab__pulse {
   position: absolute;
