@@ -1,6 +1,6 @@
 # Maranello Luce Design — Agent Reference
 
-> Ferrari Luce-inspired design system. Zero deps. 4 themes. 150+ APIs. v4.0.2
+> Ferrari Luce-inspired design system. Zero deps. 4 themes. 150+ APIs. v4.13.3
 > Repo: github.com/Roberdan/MaranelloLuceDesign
 > Demo: roberdan.github.io/MaranelloLuceDesign/
 > AI Expert: @NaSra (see `.github/agents/NaSra.agent.md`)
@@ -8,7 +8,7 @@
 ## Install
 
 ```bash
-npm i github:Roberdan/MaranelloLuceDesign#v4.0.2
+npm i github:Roberdan/MaranelloLuceDesign#v4.13.3
 ```
 
 ## Import Paths
@@ -22,13 +22,13 @@ npm i github:Roberdan/MaranelloLuceDesign#v4.0.2
 | `maranello-luce-design-business/controls` | manettino, cruiseLever, toggleLever, steppedRotary, initRotary, initSlider, openDrawer, openDetailPanel |
 | `maranello-luce-design-business/forms` | initForms, validateField, validateForm, initTagInput, initFileUpload, initFormSteps |
 | `maranello-luce-design-business/gantt` | Gantt timeline renderer |
-| `maranello-luce-design-business/wc` | All 25 Web Components |
+| `maranello-luce-design-business/wc` | All 26 Web Components |
 | `maranello-luce-design-business/wc/mn-*` | Individual Web Components |
 
 CDN (no build):
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Roberdan/MaranelloLuceDesign@v4.0.2/dist/css/index.css">
-<script src="https://cdn.jsdelivr.net/gh/Roberdan/MaranelloLuceDesign@v4.0.2/dist/iife/maranello.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Roberdan/MaranelloLuceDesign@v4.13.3/dist/css/index.css">
+<script src="https://cdn.jsdelivr.net/gh/Roberdan/MaranelloLuceDesign@v4.13.3/dist/iife/maranello.min.js"></script>
 ```
 IIFE attaches everything to `window.Maranello`.
 
@@ -146,7 +146,7 @@ Fluid WCs: `<mn-gauge size="fluid">` · `<mn-speedometer size="fluid">` · `<mn-
 | `updateGauge(id, value)` | Update gauge by data-id |
 | `bindChart(id, source)` | Live-bind chart data |
 
-## Web Components (24)
+## Web Components (26 tags, 25 components)
 
 All use `mn-` prefix. Attributes are kebab-case. Events: `mn-{name}-ready`, `mn-{name}-change`.
 
@@ -160,6 +160,8 @@ All use `mn-` prefix. Attributes are kebab-case. Events: `mn-{name}-ready`, `mn-
 | `<mn-hbar>` | `data, options` | — |
 | `<mn-funnel>` | `data, options` | `mn-funnel-click` |
 | `<mn-detail-panel>` | `id, title` | `mn-panel-open` |
+| `<mn-okr>` | `objectives, options` | — |
+| `<mn-ferrari-control>` | `type, options` | — |
 | `<mn-modal>` | `title, open` | `mn-modal-close` |
 | `<mn-toast>` | `type, message, duration` | `mn-toast-dismiss` |
 | `<mn-login>` | `title, action-url` | `mn-login-submit` |
@@ -167,12 +169,14 @@ All use `mn-` prefix. Attributes are kebab-case. Events: `mn-{name}-ready`, `mn-
 | `<mn-date-picker>` | `value, min, max` | `mn-date-change` |
 | `<mn-profile>` | `user, options` | `mn-profile-action` |
 | `<mn-theme-toggle>` | `theme` | `mn-theme-change` |
+| `<mn-theme-rotary>` | `size` | `mn-theme-change` |
 | `<mn-tabs>` / `<mn-tab>` | `value` / `label, value` | `mn-tab-change` |
+| `<mn-section-nav>` | `sections, current, data-theme, data-pos` | — |
 | `<mn-map>` | `data, center, zoom` | `mn-map-click` |
 | `<mn-mapbox>` | `access-token, style, center, zoom` | `mn-mapbox-click` |
 | `<mn-chat>` | `placeholder, title, agents` | `mn-chat-send` |
 | `<mn-system-status>` | `services, environment` | `mn-status-change` |
-| `<mn-a11y>` | — | `mn-a11y-change` |
+| `<mn-a11y>` | — (auto-mounts by default) | `mn-a11y-change` |
 | `<mn-ferrari-control>` | `type, value, min, max` | `mn-control-change` |
 | `<mn-okr>` | `data, options` | `mn-okr-change` |
 

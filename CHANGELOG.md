@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.13.3] - 2026-03-17
+
+### Fixed
+- Docs: aligned all version refs (README, AGENT, CONTRIBUTING, DATA_CONTRACTS, demo) to current release
+- Docs: CSS file count 80 → 123, WC tags 24/25 → 26, exports 87 → 150+
+- Docs: added mn-section-nav + mn-theme-rotary to WC tables
+- Docs: NaSra agent aligned to v4.13 (token migration notes, a11y auto-mount, CI gates)
+- Docs: esbuild banner updated from v4.11.0
+- Demo: API count in hero and api-reference section updated
+
 ## [4.13.2] - 2026-03-17
 
 ### Fixed

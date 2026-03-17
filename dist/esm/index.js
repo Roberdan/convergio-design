@@ -1,4 +1,4 @@
-/* Maranello Luce Design v4.11.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v4.13.3 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 import {
   SERIES,
   applyChartA11y,
@@ -19,15 +19,15 @@ import {
   radar,
   sparkline,
   sparklineInteract
-} from "./chunks/chunk-FVOLESVU.js";
+} from "./chunks/chunk-RJSATOVR.js";
 import {
   FerrariGauge,
   buildGaugePalette,
   speedometer
-} from "./chunks/chunk-YYOWADKC.js";
+} from "./chunks/chunk-CVAD4KTP.js";
 import {
   gantt
-} from "./chunks/chunk-PF2AGDLR.js";
+} from "./chunks/chunk-WVNHIICU.js";
 import {
   closeDetailPanel,
   closeDrawer,
@@ -40,7 +40,7 @@ import {
   steppedRotary,
   toggleLever,
   toggleNotifications
-} from "./chunks/chunk-UDWJYGGQ.js";
+} from "./chunks/chunk-7C7JYABF.js";
 import {
   ALLOWED_BIND_PROPERTIES,
   clamp,
@@ -62,7 +62,7 @@ import {
   sanitizeSvg,
   setTheme,
   throttle
-} from "./chunks/chunk-LOJUMIC7.js";
+} from "./chunks/chunk-DK4LOXVH.js";
 import {
   addValidator,
   defaultMessages,
@@ -81,11 +81,11 @@ import {
   validateField,
   validateForm,
   validators
-} from "./chunks/chunk-5DS3ALMA.js";
+} from "./chunks/chunk-L6ZGKAIE.js";
 import {
   EventBus,
   eventBus
-} from "./chunks/chunk-SR6SJMEN.js";
+} from "./chunks/chunk-3IXBVEXX.js";
 
 // src/ts/network-messages.ts
 function resolveContainer(container) {
@@ -11202,7 +11202,7 @@ M.charts = {
 registerExtras(M);
 
 // src/ts/index.ts
-var VERSION = "4.13.2";
+var VERSION = "4.13.3";
 export {
   COLOR,
   CONTINENTS,
