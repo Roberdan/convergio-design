@@ -71,6 +71,11 @@ export async function registerAll(): Promise<void> {
     import('./mn-theme-toggle.js'),
     import('./mn-toast.js'),
   ]);
+
+  // Auto-inject a11y FAB if not already in DOM
+  if (typeof document !== 'undefined' && !document.querySelector('mn-a11y')) {
+    document.body.appendChild(document.createElement('mn-a11y'));
+  }
 }
 
 /** Check if a specific WC tag is already registered. */

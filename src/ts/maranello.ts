@@ -216,6 +216,19 @@ M.initSlider = initSlider;
 
 // A11y panel
 M.a11yPanel = a11yPanel;
+M._a11yDom = true;
+
+// Auto-mount a11y FAB on DOM ready (always visible by default)
+function _mountA11y(): void {
+  if (document.querySelector('.mn-a11y-fab') || document.querySelector('mn-a11y')) return;
+  M._a11yCtrl = a11yPanel();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _mountA11y, { once: true });
+} else {
+  requestAnimationFrame(_mountA11y);
+}
 
 // Data binding
 M.bind = bind;
