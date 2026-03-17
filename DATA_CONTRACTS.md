@@ -1,8 +1,8 @@
-<!-- v4.14.0 | 2026-03-17 -->
+<!-- v4.14.1 | 2026-03-17 -->
 # Data Contracts
 
 All types importable from `maranello-luce-design-business`. Peer dep: `mapbox-gl` (optional, for MapView).
-Full API detail for v4.14.0 components: [`docs/api-contracts-v4.md`](docs/api-contracts-v4.md).
+Full API detail for v4.14.1 components: [`docs/api-contracts-v4.md`](docs/api-contracts-v4.md).
 
 ## Interface Summary
 
