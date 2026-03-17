@@ -7,7 +7,6 @@
 /* ── Dashboard strip modifier ── */
 .mn-strip--dashboard { margin:0 4px; flex-shrink:0; container-type:inline-size; container-name:strip; }
 .mn-strip--dashboard[hidden] { display:none !important; }
-.mn-strip--dashboard.mn-strip { padding:0; border-radius:0; background:none; }
 .mn-strip--dashboard .mn-strip__inner {
   padding:8px 14px; min-height:120px; gap:var(--space-lg);
   align-items:flex-start;
@@ -53,7 +52,7 @@
 .mn-strip__gauge-wrap,
 .mn-strip-gauge-wrap {
   display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
-  gap:2px; width:150px; flex:0 0 150px; padding:8px 4px 6px; border-radius:12px;
+  gap:2px; width:170px; flex:0 0 170px; padding:8px 4px 6px; border-radius:12px;
 }
 .mn-strip-gauge-label {
   font-family:var(--font-mono,'Barlow Condensed',sans-serif);
@@ -63,7 +62,7 @@
 
 /* ── KPI cells with sparklines ── */
 .mn-strip-kpis { display:flex; gap:var(--space-xl); align-items:flex-start; margin-top:2px; }
-.mn-strip-kpi { display:flex; flex-direction:column; align-items:center; gap:2px; min-width:64px; }
+.mn-strip-kpi { display:flex; flex-direction:column; align-items:center; gap:2px; min-width:80px; }
 .mn-strip-kpi__label {
   font-family:var(--font-mono,'Barlow Condensed',sans-serif);
   font-size:0.55rem; text-transform:uppercase; letter-spacing:0.06em;
@@ -129,11 +128,11 @@ body.mn-avorio .mn-strip-board__cell { border-color:var(--mn-border-strong); bac
   .mn-strip__section[data-section="board"] { flex:1 1 180px; }
   .mn-strip__section[data-section="counters"] { flex:0 1 120px; }
   .mn-strip__divider { display:none; }
-  .mn-strip-gauge-wrap { width:120px; flex:0 0 120px; }
+  .mn-strip-gauge-wrap { width:140px; flex:0 0 140px; }
 }
 
 @container strip (max-width: 700px) {
-  .mn-strip-gauge-wrap { width:100px; flex:0 0 100px; }
+  .mn-strip-gauge-wrap { width:120px; flex:0 0 120px; }
   .mn-strip-kpi__spark,
   .mn-strip__sparkline-mount { width:60px; height:22px; }
 }
@@ -146,7 +145,7 @@ body.mn-avorio .mn-strip-board__cell { border-color:var(--mn-border-strong); bac
   .mn-strip__section { scroll-snap-align:start; flex-shrink:0; }
   .mn-strip__section[data-section="pipeline"] { min-width:240px; }
   .mn-strip__section[data-section="board"] { min-width:180px; }
-  .mn-strip-gauge-wrap { width:90px; flex:0 0 90px; }
+  .mn-strip-gauge-wrap { width:100px; flex:0 0 100px; }
   .mn-strip-kpi__spark,
   .mn-strip__sparkline-mount { width:50px; height:18px; }
 }
