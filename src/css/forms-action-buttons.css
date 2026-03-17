@@ -31,9 +31,9 @@
 
 /* Primary — Ferrari yellow */
 .mn-form-btn--primary {
-  background: var(--giallo-ferrari);
+  background: var(--mn-accent);
   color: var(--mn-text-inverse);
-  border-color: var(--giallo-ferrari);
+  border-color: var(--mn-accent);
 }
 .mn-form-btn--primary:hover {
   background: var(--giallo-hover);

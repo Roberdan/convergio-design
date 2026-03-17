@@ -1,7 +1,7 @@
 @layer integration {
   .mn-status-done { color: var(--success, #00A651); }
   .mn-status-done::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--success); margin-right: 6px; }
-  .mn-status-in-progress { color: var(--accent, #FFC72C); }
+  .mn-status-in-progress { color: var(--mn-accent); }
   .mn-status-in-progress::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-right: 6px; animation: mn-pulse-dot 2s infinite; }
   .mn-status-pending { color: var(--text-dim, #666); }
   .mn-status-pending::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--text-dim); margin-right: 6px; }

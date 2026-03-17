@@ -4,7 +4,7 @@
     --bg-panel: var(--mn-surface-raised);
     --bg-card: var(--mn-border);
     --bg-input: var(--mn-surface);
-    --accent: var(--giallo-ferrari, #FFC72C);
+    --accent: var(--mn-accent);
     --accent-hover: var(--giallo-vivace, #FFD54F);
     --danger: var(--mn-error);
     --success: var(--verde-racing, #00A651);
@@ -14,8 +14,8 @@
     --text-dim: var(--mn-text-muted);
     --text-bright: var(--mn-text);
     --border: var(--mn-border);
-    --border-accent: var(--giallo-ferrari, #FFC72C);
-    --chart-1: #FFC72C; --chart-2: #DC0000; --chart-3: #00A651;
+    --border-accent: var(--mn-accent);
+    --chart-1: var(--mn-accent); --chart-2: #DC0000; --chart-3: #00A651;
     --chart-4: #4EA8DE; --chart-5: #D4622B; --chart-6: #8B5CF6;
     --chart-7: #E91E63; --chart-8: #00BCD4; --chart-9: #FF9800; --chart-10: #9C27B0;
     --shadow-card: 0 2px 8px rgba(0,0,0,0.4);

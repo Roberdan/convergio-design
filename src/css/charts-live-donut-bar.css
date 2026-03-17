@@ -29,8 +29,8 @@
   color: var(--arancio);
 }
 .mn-live-panel__mode--accent {
-  border-color: var(--giallo-ferrari);
-  color: var(--giallo-ferrari);
+  border-color: var(--mn-accent);
+  color: var(--mn-accent);
 }
 .mn-live-panel__value {
   font-family: var(--font-display);

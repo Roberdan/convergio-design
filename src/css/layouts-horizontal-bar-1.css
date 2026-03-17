@@ -210,7 +210,7 @@
   background: var(--verde-racing);
 }
 .mn-okr__status-dot--at-risk {
-  background: var(--giallo-ferrari);
+  background: var(--mn-accent);
 }
 .mn-okr__status-dot--behind {
   background: var(--mn-error);

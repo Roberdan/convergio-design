@@ -16,7 +16,7 @@
   --mn-form-text: var(--mn-text);
   --mn-form-placeholder: var(--mn-text-muted);
   --mn-form-label: var(--mn-border-strong);
-  --mn-form-focus: var(--giallo-ferrari);
+  --mn-form-focus: var(--mn-accent);
   --mn-form-focus-ring: rgba(255, 199, 44, 0.25);
   --mn-form-error: var(--mn-error);
   --mn-form-error-bg: rgba(220, 0, 0, 0.06);
@@ -75,7 +75,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--giallo-ferrari);
+  color: var(--mn-accent);
   padding-bottom: var(--space-xs);
   border-bottom: 1px solid var(--mn-border);
 }

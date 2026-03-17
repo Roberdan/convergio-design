@@ -154,7 +154,7 @@
 .mn-strip__legend-toggle:hover {
   background: rgba(255,199,44,0.15);
   border-color: rgba(255,199,44,0.3);
-  color: var(--giallo-ferrari);
+  color: var(--mn-accent);
 }
 .mn-strip__legend-toggle-icon { line-height: 1; }
 
