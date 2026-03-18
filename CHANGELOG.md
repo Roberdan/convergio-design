@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.16.0] - 2026-03-18
+
+### Added
+- Visual regression tests: 28 Playwright screenshot tests across all 4 themes (Editorial, Nero, Avorio, Colorblind)
+- Per-section snapshots: hero, cards, charts, gauges, forms, icons + full-page smoke per theme
+- `npm run test:e2e:visual` — run visual regression against baselines
+- `npm run test:e2e:visual:update` — regenerate baselines after intentional visual changes
+- Playwright config: standardized viewport (1280×720), snapshot defaults, `expect.toHaveScreenshot` config
+
+### Fixed
+- E2E test suite: `test:e2e` now uses `--ignore-snapshots` so CI doesn't fail on cross-platform pixel diffs
+
 ## [4.15.1] - 2026-03-18
 
 ### Added

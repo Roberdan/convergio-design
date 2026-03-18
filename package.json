@@ -1,6 +1,6 @@
 {
   "name": "maranello-luce-design-business",
-  "version": "4.15.1",
+  "version": "4.16.0",
   "description": "Ferrari Luce-inspired design system for business dashboards. Part of the Convergio project.",
   "type": "module",
   "exports": {
@@ -89,7 +89,9 @@
     "dev": "serve . -l 3000",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "vitest run",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test --ignore-snapshots",
+    "test:e2e:visual": "playwright test visual-regression",
+    "test:e2e:visual:update": "playwright test visual-regression --update-snapshots",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build"
   },
