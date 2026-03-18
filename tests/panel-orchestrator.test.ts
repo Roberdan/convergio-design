@@ -133,6 +133,21 @@ describe('PanelOrchestrator', () => {
     expect(orchestrator.isOpen('alpha')).toBe(true);
   });
 
+  it('close purges closed view from navigation history even when not current', () => {
+    const registry = ViewRegistry.getInstance();
+    registry.register(config('alpha'));
+    registry.register(config('beta'));
+    const nav = new NavigationModel();
+    const orchestrator = new PanelOrchestrator(registry, nav);
+
+    orchestrator.open('alpha');
+    orchestrator.open('beta');
+    orchestrator.close('alpha');
+
+    expect(nav.history().every((e) => e.viewId !== 'alpha')).toBe(true);
+    expect(nav.current()?.viewId).toBe('beta');
+  });
+
   it('closeAll clears every open view', () => {
     const registry = ViewRegistry.getInstance();
     registry.register(config('alpha'));

@@ -70,6 +70,16 @@ describe('NavigationModel', () => {
     expect(model.current()?.viewId).toBe('home');
   });
 
+  it('remove purges a specific viewId from the stack', () => {
+    const model = new NavigationModel();
+    model.push('home');
+    model.push('details');
+    model.push('settings');
+    model.push('details');
+    model.remove('details');
+    expect(model.history().map((e) => e.viewId)).toEqual(['home', 'settings']);
+  });
+
   it('destroy clears state and listeners', () => {
     const model = new NavigationModel();
     const cb = vi.fn();

@@ -22,6 +22,7 @@ interface WidgetRecord {
   key: string;
   wrapper: HTMLElement;
   body: HTMLElement;
+  widgetHost: HTMLElement;
   scaffold: StateScaffold;
   controller: WidgetController;
   rendered: boolean;
@@ -94,11 +95,15 @@ export class DashboardRenderer {
           state: 'loading',
           onRetry: () => this.renderWidget(record),
         });
+        const widgetHost = document.createElement('div');
+        widgetHost.className = 'mn-dashboard-widget-host';
+        scaffold.getContentHost().appendChild(widgetHost);
         const controller = createDashboardWidget(column);
         record = {
           key: column.dataKey,
           wrapper,
           body,
+          widgetHost,
           scaffold,
           controller,
           rendered: false,
@@ -125,13 +130,9 @@ export class DashboardRenderer {
     }
 
     record.scaffold.setState('partial');
-    const status = record.wrapper.querySelector<HTMLElement>('.mn-scaffold__status');
-    const content = record.wrapper.querySelector<HTMLElement>('.mn-scaffold__content');
-    if (status) status.innerHTML = '';
-    content?.classList.remove('mn-scaffold__content--hidden');
 
     if (!record.rendered) {
-      record.controller.render(record.body, value);
+      record.controller.render(record.widgetHost, value);
       record.rendered = true;
       return;
     }

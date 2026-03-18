@@ -69,6 +69,10 @@ export class StateScaffold {
     return this.state;
   }
 
+  getContentHost(): HTMLElement {
+    return this.content;
+  }
+
   destroy(): void {
     this.events?.abort();
     this.events = null;

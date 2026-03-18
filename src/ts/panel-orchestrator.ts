@@ -61,7 +61,7 @@ export class PanelOrchestrator {
     if (entry.handle.container.parentElement) entry.handle.container.parentElement.removeChild(entry.handle.container);
     if (entry.modalId) document.getElementById(entry.modalId)?.remove();
     this.openViews.delete(viewId);
-    if (this.navigation.current()?.viewId === viewId) this.navigation.pop();
+    this.navigation.remove(viewId);
     eventBus.emit('panel-closed', { viewId });
   }
 

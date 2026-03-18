@@ -107,6 +107,7 @@ export class AsyncSelect<T = unknown> {
     if (this.timer) window.clearTimeout(this.timer);
     const query = this.input.value.trim();
     if (query.length < this.minChars) {
+      this.requestId++;
       this.items = [];
       this.dropdown.innerHTML = '';
       this.close();

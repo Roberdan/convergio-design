@@ -161,6 +161,26 @@ describe('AsyncSelect', () => {
     ctrl.destroy();
   });
 
+  it('invalidates in-flight search when input drops below minChars', async () => {
+    let resolveSearch: ((items: string[]) => void) | undefined;
+    const search = vi.fn().mockImplementation(() => new Promise<string[]>((resolve) => { resolveSearch = resolve; }));
+    const ctrl = new AsyncSelect(container, { provider: { search }, minChars: 3 });
+    const input = container.querySelector('.mn-async-select__input') as HTMLInputElement;
+
+    fireInput(input, 'abc');
+    vi.advanceTimersByTime(300);
+    await Promise.resolve();
+    expect(search).toHaveBeenCalledTimes(1);
+
+    fireInput(input, 'ab');
+    resolveSearch?.(['Stale']);
+    await Promise.resolve();
+
+    const dropdown = container.querySelector('.mn-async-select__dropdown') as HTMLDivElement;
+    expect(dropdown.querySelectorAll('.mn-async-select__item')).toHaveLength(0);
+    ctrl.destroy();
+  });
+
   it('calls provider.search with correct query', async () => {
     const search = vi.fn().mockResolvedValue([]);
     const ctrl = new AsyncSelect(container, { provider: { search } });

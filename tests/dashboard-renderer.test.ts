@@ -103,6 +103,22 @@ describe('DashboardRenderer', () => {
     expect(rightRender).toHaveBeenCalledTimes(0);
   });
 
+  it('setData after error correctly renders widget in content host', () => {
+    const renderFn = vi.fn((el: HTMLElement, data: unknown) => { el.textContent = String(data); });
+    const schema: DashboardSchema = {
+      rows: [{ columns: [{ type: 'custom', dataKey: 'w', options: { render: renderFn } }] }],
+    };
+    const renderer = new DashboardRenderer(container, { schema, data: { w: new Error('fail') } });
+    expect(container.querySelector('.mn-scaffold--error')).not.toBeNull();
+
+    renderer.setData('w', 'ok');
+    expect(container.querySelector('.mn-scaffold--partial')).not.toBeNull();
+    expect(renderFn).toHaveBeenCalledTimes(1);
+    const widgetHost = container.querySelector('.mn-dashboard-widget-host');
+    expect(widgetHost).not.toBeNull();
+    expect(widgetHost!.textContent).toBe('ok');
+  });
+
   it('destroy cleans up widgets and container', () => {
     const schema: DashboardSchema = { rows: [{ columns: [{ type: 'stat-card', dataKey: 'x' }] }] };
     const renderer = new DashboardRenderer(container, { schema, data: { x: { value: 10 } } });

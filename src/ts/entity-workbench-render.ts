@@ -78,7 +78,13 @@ function renderField(ctx: RenderContext, field: EntityField): HTMLElement {
   const readOnly = !ctx.editable || field.readOnly || field.type === 'computed';
   const value = field.type === 'computed' ? field.compute?.(ctx.data) : getValue(ctx.data, field.key);
   if (field.type === 'async-select' && !readOnly && field.provider) {
-    const picker = new AsyncSelect(control, { provider: field.provider, onSelect: (item) => ctx.onField(field, item) });
+    const picker = new AsyncSelect(control, {
+      provider: field.provider,
+      onSelect: (item) => {
+        const stored = field.provider?.getId ? field.provider.getId(item) : item;
+        ctx.onField(field, stored);
+      },
+    });
     const input = control.querySelector<HTMLInputElement>('.mn-async-select__input');
     if (input && value != null) input.value = String(value);
     ctx.asyncControls.push(picker);

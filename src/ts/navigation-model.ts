@@ -56,6 +56,12 @@ export class NavigationModel {
     return this.stack.slice();
   }
 
+  remove(viewId: string): void {
+    for (let i = this.stack.length - 1; i >= 0; i--) {
+      if (this.stack[i].viewId === viewId) this.stack.splice(i, 1);
+    }
+  }
+
   clear(): void {
     this.stack.length = 0;
   }

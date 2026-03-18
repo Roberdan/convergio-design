@@ -122,6 +122,27 @@ describe('EntityWorkbench', () => {
     expect(search).toHaveBeenCalledWith('al');
   });
 
+  it('async-select stores getId result, not raw object', async () => {
+    const provider = {
+      search: vi.fn().mockResolvedValue([{ id: '42', name: 'Alice' }]),
+      getId: (item: { id: string }) => item.id,
+      getLabel: (item: { name: string }) => item.name,
+    };
+    const onSave = vi.fn().mockResolvedValue(undefined);
+    const localSchema: EntitySchema = { tabs: [{ id: 't', label: 'T', sections: [{ fields: [{ key: 'owner', label: 'Owner', type: 'async-select', provider }] }] }] };
+    const wb = new EntityWorkbench(container, { schema: localSchema, data: { owner: '' }, onSave });
+    instances.push(wb);
+    const input = container.querySelector('.mn-async-select__input') as HTMLInputElement;
+    input.value = 'al';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await new Promise((resolve) => setTimeout(resolve, 320));
+    const item = container.querySelector('.mn-async-select__item') as HTMLElement;
+    item?.click();
+    (container.querySelector('[data-action="save"]') as HTMLButtonElement).click();
+    await Promise.resolve();
+    expect(onSave).toHaveBeenCalledWith({ owner: '42' });
+  });
+
   it('renders computed field value', () => {
     instances.push(new EntityWorkbench(container, { schema, data: { name: 'Entity', value: 7 } }));
     expect(container.textContent).toContain('14');
