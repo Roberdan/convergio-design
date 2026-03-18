@@ -11,6 +11,7 @@
 @import "./layouts-chat-fab.css";
 @import "./layouts-data-table-compact-3.css";
 @import "./layouts-data-table-panel.css";
+@import "./layouts-data-table-v2.css";
 @import "./layouts-detail-controls-1.css";
 @import "./layouts-detail-controls-2.css";
 @import "./layouts-detail-panel-base.css";
@@ -18,7 +19,9 @@
 @import "./layouts-detail-panel-gantt.css";
 @import "./layouts-detail-panel.css";
 @import "./layouts-detail-panel-extras.css";
+@import "./layouts-entity-workbench.css";
 @import "./layouts-filter-chips.css";
+@import "./layouts-facet-workbench.css";
 @import "./layouts-funnel.css";
 @import "./layouts-heatmap.css";
 @import "./layouts-horizontal-bar-1.css";
@@ -45,3 +48,7 @@
 @import "./layouts-approval-chain.css";
 @import "./layouts-agent-trace.css";
 @import "./layouts-audit-log.css";
+@import "./layouts-state-scaffold.css";
+@import "./layouts-dashboard-renderer.css";
+
+@import "./layouts-app-shell.css";

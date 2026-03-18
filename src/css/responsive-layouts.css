@@ -155,4 +155,42 @@
   }
 }
 
+
+
+@media (max-width: 640px) {
+  .mn-app-shell {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-areas: 'main' !important;
+    padding: calc(var(--mn-app-shell-toolbar-height) + var(--mn-app-shell-filter-height) + var(--mn-space-sm, var(--space-sm))) var(--mn-space-sm, var(--space-sm)) var(--mn-space-sm, var(--space-sm)) var(--mn-space-sm, var(--space-sm)) !important;
+  }
+
+  .mn-app-shell .mn-app-shell__secondary,
+  .mn-app-shell .mn-app-shell__detail,
+  .mn-app-shell .mn-app-shell__bottom {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .mn-app-shell .mn-app-shell__nav {
+    transform: translateX(-100%);
+  }
+
+  .mn-app-shell .mn-app-shell__toolbar,
+  .mn-app-shell .mn-app-shell__filter-bar {
+    left: 0;
+  }
+
+  .mn-app-shell--bottom-open .mn-app-shell__bottom,
+  .mn-app-shell--docked-bottom .mn-app-shell__bottom {
+    width: 100%;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .mn-app-shell--side-detail {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'main' 'detail';
+  }
+}
+
 } /* end @layer layouts */

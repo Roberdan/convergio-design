@@ -9,6 +9,9 @@ export * from './core/types';
 export { EventBus, eventBus } from './core/events';
 export type { EventCallback } from './core/events';
 
+// Presentation runtime (v4.17.0)
+export * from './index-runtime';
+
 // Utilities
 export { cssVar, palette, getTheme, setTheme, cycleTheme, getAccent, debounce, throttle, createElement, formatNumber, formatDate, clamp, lerp, hiDpiCanvas } from './core/utils';
 
@@ -72,6 +75,9 @@ export { initMessages } from './ai-chat-messages';
 
 // System status
 export { systemStatus } from './system-status';
+
+// State scaffold
+// (exported via index-runtime.ts)
 
 // Profile menu
 export { profileMenu } from './profile-menu';

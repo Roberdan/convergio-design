@@ -5,17 +5,9 @@
  */
 
 import type { DataTableOptions, DataTableController } from './core/types';
-import {
-  el,
-  positionColHighlight,
-} from './data-table-render';
+import { el, positionColHighlight } from './data-table-render';
 import type { DataTableState } from './data-table-render';
-import {
-  handleSort,
-  handleFilter,
-  getProcessedData,
-  render,
-} from './data-table-logic';
+import { handleSort, handleFilter, getProcessedData, render } from './data-table-logic';
 
 /** Create a data table in the given container. */
 export function dataTable<RowT extends Record<string, unknown>>(
@@ -52,6 +44,7 @@ export function dataTable<RowT extends Record<string, unknown>>(
     filters: {},
     page: 0,
     expandedGroups: {},
+    groupCollapsed: {},
     selected: null,
     colHighlight: -1,
   };
@@ -60,6 +53,7 @@ export function dataTable<RowT extends Record<string, unknown>>(
   containerEl.classList.add('mn-dt');
   if (resolved.compact) containerEl.classList.add('mn-dt--compact');
   if (resolved.crosshair) containerEl.classList.add('mn-dt--crosshair');
+  if (resolved.onDrillDown) containerEl.classList.add('mn-dt--drilldown');
 
   const scrollWrap = el('div', 'mn-dt__scroll');
   const table = el('table', 'mn-dt__table');
@@ -116,7 +110,7 @@ export function dataTable<RowT extends Record<string, unknown>>(
       if (col.filterable) {
         const input = el('input', 'mn-dt__filter-input') as HTMLInputElement;
         input.type = 'text';
-        input.placeholder = 'Filter\u2026';
+        input.placeholder = 'Filter…';
         input.setAttribute('aria-label', 'Filter ' + (col.label ?? col.key));
         input.addEventListener('input', () => {
           handleFilter(col.key, input.value, state, doRender, resolved.onFilter);
@@ -168,7 +162,10 @@ export function dataTable<RowT extends Record<string, unknown>>(
   if (resolved.groupBy) {
     for (const row of state.data) {
       const v = row[resolved.groupBy as keyof RowT];
-      if (v) state.expandedGroups[String(v)] = true;
+      if (v != null) {
+        state.expandedGroups[String(v)] = true;
+        state.groupCollapsed[String(v)] = false;
+      }
     }
   }
   doRender();
@@ -189,7 +186,7 @@ export function dataTable<RowT extends Record<string, unknown>>(
     refresh: () => doRender(),
     destroy: () => {
       containerEl.innerHTML = '';
-      containerEl.classList.remove('mn-dt', 'mn-dt--compact', 'mn-dt--crosshair');
+      containerEl.classList.remove('mn-dt', 'mn-dt--compact', 'mn-dt--crosshair', 'mn-dt--drilldown');
     },
   };
 }

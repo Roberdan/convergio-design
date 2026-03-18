@@ -60,6 +60,15 @@ import { initForms, forms } from './forms';
 import { validateField as validateFormField, validateForm, initLiveValidation, addValidator } from './forms-validate';
 import { initPasswordToggle, initFileUpload, initFormSteps, initInlineEdit } from './forms-widgets';
 import { toggleNotifications, initDrillDown } from './controls';
+import { StateScaffold } from './state-scaffold';
+import { AsyncSelect } from './async-select';
+import { FacetWorkbench } from './facet-workbench';
+import { ViewRegistry } from './view-registry';
+import { NavigationModel } from './navigation-model';
+import { AppShellController } from './app-shell';
+import { PanelOrchestrator } from './panel-orchestrator';
+import { DashboardRenderer } from './dashboard-renderer';
+import { EntityWorkbench } from './entity-workbench';
 
 /** Register W3/W4 primitives + forms + missing controls on the window.Maranello namespace object. */
 export function registerExtras(M: Record<string, unknown>): void {
@@ -166,7 +175,18 @@ export function registerExtras(M: Record<string, unknown>): void {
   M.initFormSteps = initFormSteps;
   M.initInlineEdit = initInlineEdit;
 
+  // State scaffold
+  M.StateScaffold = StateScaffold;
+
   // Controls (missing)
   M.toggleNotifications = toggleNotifications;
   M.initDrillDown = initDrillDown;
+  M.AsyncSelect = AsyncSelect;
+  M.FacetWorkbench = FacetWorkbench;
+  M.EntityWorkbench = EntityWorkbench;
+  M.ViewRegistry = ViewRegistry;
+  M.NavigationModel = NavigationModel;
+  M.AppShellController = AppShellController;
+  M.PanelOrchestrator = PanelOrchestrator;
+  M.DashboardRenderer = DashboardRenderer;
 }

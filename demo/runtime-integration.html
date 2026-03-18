@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Runtime Integration Golden Path</title>
+  <link rel="stylesheet" href="../src/fonts/local-fonts.css">
+  <link rel="stylesheet" href="../dist/css/maranello.css">
+  <style>
+    body { margin: 0; background: var(--mn-surface); color: var(--mn-text); }
+    .toolbar-inner { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .toolbar-inner .spacer { margin-left: auto; }
+    .nav-links { display: grid; gap: 0.35rem; padding: 0.75rem; }
+    .nav-links .mn-btn.is-active { outline: 2px solid var(--mn-accent); }
+    .view-grid { display: grid; gap: 1rem; grid-template-columns: minmax(16rem, 24rem) minmax(0, 1fr); }
+    .panel-box { border: 1px solid var(--mn-border); border-radius: var(--radius-md); background: var(--mn-surface-raised); padding: 0.75rem; }
+    #mn-slot-page .mn-panel-view,
+    #mn-slot-side-panel .mn-panel-view { height: 100%; }
+    @media (max-width: 640px) {
+      .view-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="mn-nero">
+  <mn-app-shell id="golden-shell" layout="full">
+    <div slot="nav">
+      <aside class="mn-sidebar">
+        <div class="mn-sidebar__header"><span class="mn-sidebar__brand">Runtime Suite</span></div>
+        <nav class="mn-sidebar__nav nav-links" id="main-nav">
+          <button type="button" class="mn-btn mn-btn--ghost is-active" data-view="dashboard">Dashboard</button>
+          <button type="button" class="mn-btn mn-btn--ghost" data-view="team">Team</button>
+          <button type="button" class="mn-btn mn-btn--ghost" data-view="projects">Projects</button>
+        </nav>
+      </aside>
+    </div>
+    <div slot="toolbar">
+      <div class="toolbar-inner">
+        <button type="button" class="mn-btn mn-btn--ghost" id="sidebar-toggle">☰</button>
+        <strong class="mn-title-sm" id="view-title">Dashboard</strong>
+        <span class="spacer"></span>
+        <label for="theme-picker">Theme</label>
+        <select id="theme-picker" class="mn-form-select">
+          <option value="editorial">Editorial</option>
+          <option value="nero" selected>Nero</option>
+          <option value="avorio">Avorio</option>
+          <option value="colorblind">Colorblind</option>
+        </select>
+      </div>
+    </div>
+    <div slot="filter-bar"><span class="mn-micro">Golden path: ViewRegistry + PanelOrchestrator + StateScaffold</span></div>
+    <div slot="main" id="mn-slot-page" class="mn-slot mn-slot--page"></div>
+    <div slot="secondary"></div>
+    <div slot="detail" id="mn-slot-side-panel" class="mn-slot mn-slot--side-panel"></div>
+    <div slot="bottom" id="mn-slot-bottom-dock" class="mn-slot mn-slot--bottom-dock"></div>
+    <div slot="overlay" id="mn-slot-overlay" class="mn-slot mn-slot--overlay"></div>
+  </mn-app-shell>
+
+  <script src="../dist/iife/maranello.min.js"></script>
+  <script type="module" src="../dist/wc/mn-app-shell.js"></script>
+  <script>
+    (function () {
+      const M = window.Maranello;
+      if (!M) return;
+
+      const themes = ['editorial', 'nero', 'avorio', 'colorblind'];
+      const shellEl = document.getElementById('golden-shell');
+      const mainNav = document.getElementById('main-nav');
+      const pageSlot = document.getElementById('mn-slot-page');
+      const title = document.getElementById('view-title');
+
+      const registry = M.ViewRegistry.getInstance();
+      registry.clear();
+      const navigation = new M.NavigationModel();
+      const orchestrator = new M.PanelOrchestrator(registry, navigation);
+      shellEl.orchestrator = orchestrator;
+
+      const employees = [
+        { id: 'E-101', name: 'Elena Rossi', email: 'elena.rossi@futuraops.com', department: 'Engineering', status: 'Active', joinDate: '2020-03-15', remote: 'Yes', level: 'L5' },
+        { id: 'E-102', name: 'Giulia Ferri', email: 'giulia.ferri@futuraops.com', department: 'Design', status: 'Active', joinDate: '2022-02-10', remote: 'Yes', level: 'L5' },
+        { id: 'E-103', name: 'Matteo Bianchi', email: 'matteo.bianchi@futuraops.com', department: 'Engineering', status: 'On Leave', joinDate: '2019-11-01', remote: 'No', level: 'L4' },
+        { id: 'E-104', name: 'Nora Vitale', email: 'nora.vitale@futuraops.com', department: 'Marketing', status: 'Active', joinDate: '2021-04-29', remote: 'No', level: 'L4' },
+        { id: 'E-105', name: 'Chiara De Santis', email: 'chiara.desantis@futuraops.com', department: 'HR', status: 'Active', joinDate: '2023-01-09', remote: 'Yes', level: 'L3' },
+      ];
+
+      const projects = [
+        { code: 'PRJ-201', project: 'Aquila CRM', status: 'Active', revenue: '$540,000', progress: { value: 82, max: 100, label: '82%' } },
+        { code: 'PRJ-202', project: 'Atlas BI', status: 'Paused', revenue: '$120,000', progress: { value: 38, max: 100, label: '38%' } },
+        { code: 'PRJ-203', project: 'Vector Payroll', status: 'Completed', revenue: '$890,000', progress: { value: 100, max: 100, label: '100%' } },
+      ];
+
+      const dashboardSchema = {
+        rows: [
+          { columns: [{ type: 'kpi-strip', dataKey: 'kpis', span: 12 }] },
+          {
+            columns: [
+              { type: 'chart', dataKey: 'sparkline', span: 4, options: { chartType: 'sparkline' } },
+              { type: 'chart', dataKey: 'donut', span: 4, options: { chartType: 'donut' } },
+              { type: 'chart', dataKey: 'bar', span: 4, options: { chartType: 'bar' } },
+            ],
+          },
+          {
+            columns: [
+              { type: 'gauge', dataKey: 'load', span: 6, options: { label: 'Server Load', unit: '%' } },
+              { type: 'gauge', dataKey: 'latency', span: 6, options: { label: 'API Latency', unit: 'ms', max: 300 } },
+            ],
+          },
+        ],
+      };
+
+      const dashboardData = {
+        kpis: [
+          { label: 'Revenue', value: '$1.2M', delta: '▲12%' },
+          { label: 'Users', value: '45.2K', delta: '▲5%' },
+          { label: 'Orders', value: '8,921', delta: '▼2%' },
+          { label: 'Avg Rating', value: '4.7', delta: '▲0.3' },
+        ],
+        sparkline: [920, 980, 1020, 1100, 1160, 1220, 1290, 1335, 1390, 1450],
+        donut: [{ label: 'Enterprise', value: 52 }, { label: 'SMB', value: 31 }, { label: 'Public', value: 17 }],
+        bar: [{ label: 'NA', value: 3200 }, { label: 'EU', value: 2700 }, { label: 'APAC', value: 1371 }],
+        load: { value: 72, max: 100, unit: '%' },
+        latency: { value: 145, max: 300, unit: 'ms' },
+      };
+
+      const entitySchema = {
+        tabs: [
+          {
+            id: 'profile',
+            label: 'Profile',
+            sections: [{
+              title: 'Profile',
+              fields: [
+                { key: 'name', label: 'Name', type: 'text', required: true },
+                { key: 'email', label: 'Email', type: 'text', required: true },
+                { key: 'department', label: 'Department', type: 'text' },
+                { key: 'level', label: 'Level', type: 'text' },
+              ],
+            }],
+          },
+        ],
+      };
+
+      registry.register({
+        id: 'dashboard',
+        title: 'Dashboard',
+        defaultPlacement: 'page',
+        factory: (container) => {
+          container.innerHTML = '<div class="panel-box" id="dash-root"></div>';
+          const renderer = new M.DashboardRenderer(container.querySelector('#dash-root'), { schema: dashboardSchema, data: dashboardData });
+          return () => renderer.destroy();
+        },
+      });
+
+      registry.register({
+        id: 'team',
+        title: 'Team',
+        defaultPlacement: 'page',
+        factory: (container) => {
+          container.innerHTML = `
+            <div class="view-grid">
+              <section class="panel-box"><h3 class="mn-title-sm">Team Filters</h3><div id="team-facets"></div></section>
+              <section class="panel-box"><h3 class="mn-title-sm">Employee List</h3><div id="team-table"></div></section>
+            </div>
+          `;
+          const table = M.dataTable(container.querySelector('#team-table'), {
+            columns: [
+              { key: 'name', label: 'Name', type: 'text', sortable: true },
+              { key: 'department', label: 'Department', type: 'tag', sortable: true },
+              { key: 'status', label: 'Status', type: 'status', sortable: true },
+              { key: 'joinDate', label: 'Join Date', type: 'date' },
+              { key: 'remote', label: 'Remote', type: 'text' },
+            ],
+            data: employees,
+            onRowClick: (row) => {
+              if (orchestrator.isOpen('team-entity')) orchestrator.close('team-entity');
+              orchestrator.open('team-entity', 'side-panel', row);
+              shellEl.setAttribute('layout', 'side-detail');
+            },
+          });
+
+          const wb = new M.FacetWorkbench(container.querySelector('#team-facets'), {
+            facets: [
+              { id: 'department', label: 'Department', type: 'multi-select', dataProvider: async () => ['Engineering', 'Design', 'Marketing', 'Sales', 'HR'].map((v) => ({ id: v, label: v })) },
+              { id: 'status', label: 'Status', type: 'select', dataProvider: async () => ['Active', 'On Leave', 'Terminated'].map((v) => ({ id: v, label: v })) },
+              { id: 'search', label: 'Search', type: 'search', dataProvider: async () => employees.map((e) => ({ id: e.email, label: `${e.name} · ${e.email}` })) },
+              { id: 'joinDate', label: 'Join Date', type: 'date-range', dataProvider: async () => [] },
+              { id: 'remote', label: 'Remote', type: 'boolean', dataProvider: async () => [] },
+            ],
+            onFilterChange: (filters) => {
+              const filtered = employees.filter((person) => {
+                const dep = filters.get('department');
+                if (dep && dep.length && !dep.includes(person.department)) return false;
+                const status = filters.get('status');
+                if (status && status.length && !status.includes(person.status)) return false;
+                const search = filters.get('search');
+                if (search && search.length) {
+                  const hay = `${person.name} ${person.email}`.toLowerCase();
+                  if (!search.some((s) => hay.includes(String(s).toLowerCase()))) return false;
+                }
+                const dateRange = filters.get('joinDate');
+                if (dateRange && dateRange.length) {
+                  const from = dateRange[0] || '1900-01-01';
+                  const to = dateRange[1] || '2999-12-31';
+                  if (person.joinDate < from || person.joinDate > to) return false;
+                }
+                const remote = filters.get('remote');
+                if (remote && remote.length && person.remote !== 'Yes') return false;
+                return true;
+              });
+              table.setData(filtered);
+            },
+          });
+
+          return () => {
+            wb.destroy();
+            table.destroy();
+          };
+        },
+      });
+
+      registry.register({
+        id: 'projects',
+        title: 'Projects',
+        defaultPlacement: 'page',
+        factory: (container) => {
+          container.innerHTML = `
+            <div class="view-grid">
+              <section class="panel-box"><h3 class="mn-title-sm">Project Facets</h3><div id="project-facets"></div></section>
+              <section class="panel-box"><h3 class="mn-title-sm">Project Table</h3><div id="project-table"></div></section>
+            </div>
+          `;
+
+          const table = M.dataTable(container.querySelector('#project-table'), {
+            columns: [
+              { key: 'code', label: 'Code', type: 'text' },
+              { key: 'project', label: 'Project', type: 'text', sortable: true },
+              { key: 'status', label: 'Status', type: 'status', sortable: true },
+              { key: 'progress', label: 'Progress', type: 'progress' },
+              { key: 'revenue', label: 'Revenue', type: 'text', sortable: true },
+            ],
+            data: projects,
+          });
+
+          const wb = new M.FacetWorkbench(container.querySelector('#project-facets'), {
+            facets: [
+              { id: 'status', label: 'Status', type: 'multi-select', dataProvider: async () => ['Active', 'Paused', 'Completed'].map((v) => ({ id: v, label: v })) },
+              { id: 'search', label: 'Search', type: 'search', dataProvider: async () => projects.map((p) => ({ id: p.code, label: `${p.code} · ${p.project}` })) },
+              { id: 'remote', label: 'External', type: 'boolean', dataProvider: async () => [] },
+              { id: 'joinDate', label: 'Delivery Window', type: 'date-range', dataProvider: async () => [] },
+              { id: 'department', label: 'Portfolio', type: 'select', dataProvider: async () => [{ id: 'core', label: 'Core' }, { id: 'growth', label: 'Growth' }] },
+            ],
+            onFilterChange: (filters) => {
+              const filtered = projects.filter((project) => {
+                const st = filters.get('status');
+                if (st && st.length && !st.includes(project.status)) return false;
+                const search = filters.get('search');
+                if (search && search.length) {
+                  const hay = `${project.code} ${project.project}`.toLowerCase();
+                  if (!search.some((s) => hay.includes(String(s).toLowerCase()))) return false;
+                }
+                return true;
+              });
+              table.setData(filtered);
+            },
+          });
+
+          return () => {
+            wb.destroy();
+            table.destroy();
+          };
+        },
+      });
+
+      registry.register({
+        id: 'team-entity',
+        title: 'Employee Detail',
+        defaultPlacement: 'side-panel',
+        factory: (container, row) => {
+          container.innerHTML = '<div class="panel-box"><h3 class="mn-title-sm">Employee Workbench</h3><div id="entity-host"></div></div>';
+          const wb = new M.EntityWorkbench(container.querySelector('#entity-host'), {
+            schema: entitySchema,
+            data: row || employees[0],
+            onSave: async (changes) => {
+              console.log('Saved employee changes', changes);
+            },
+          });
+          return () => wb.destroy();
+        },
+      });
+
+      const showStateScaffold = (nextView) => {
+        orchestrator.closeAll();
+        shellEl.setAttribute('layout', nextView === 'team' ? 'full' : 'full');
+        const scaffold = new M.StateScaffold(pageSlot, { state: 'loading' });
+        setTimeout(() => {
+          scaffold.destroy();
+          pageSlot.innerHTML = '';
+          orchestrator.open(nextView, 'page');
+          if (nextView !== 'team' && orchestrator.isOpen('team-entity')) orchestrator.close('team-entity');
+          if (nextView !== 'team') shellEl.setAttribute('layout', 'full');
+          title.textContent = nextView[0].toUpperCase() + nextView.slice(1);
+        }, 1000);
+      };
+
+      mainNav.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-view]');
+        if (!button) return;
+        const view = button.getAttribute('data-view');
+        mainNav.querySelectorAll('button').forEach((item) => item.classList.remove('is-active'));
+        button.classList.add('is-active');
+        if (orchestrator.isOpen('team-entity')) orchestrator.close('team-entity');
+        shellEl.setAttribute('layout', 'full');
+        showStateScaffold(view);
+      });
+
+      document.getElementById('sidebar-toggle').addEventListener('click', () => {
+        const collapsed = shellEl.classList.toggle('mn-app-shell--sidebar-collapsed');
+        if (!collapsed) shellEl.classList.remove('mn-app-shell--sidebar-collapsed');
+      });
+
+      document.getElementById('theme-picker').addEventListener('change', (event) => {
+        const theme = event.target.value;
+        if (!themes.includes(theme)) return;
+        M.setTheme(theme);
+      });
+
+      showStateScaffold('dashboard');
+    })();
+  </script>
+</body>
+</html>

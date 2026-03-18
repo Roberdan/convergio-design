@@ -1,10 +1,5 @@
-/**
- * Maranello Luce Design - Person search field widget
- * Debounced async search with avatar initials dropdown.
- */
-
-import { escapeHtml } from './core/sanitize';
-import { debounce } from './core/utils';
+/** Maranello Luce Design - Person search field widget */
+import { AsyncSelect } from './async-select';
 
 export interface PersonResult {
   id: string;
@@ -40,108 +35,44 @@ export function initPersonField(
   opts: PersonFieldOptions,
 ): PersonFieldApi {
   const { searchFn, onSelect, placeholder = 'Search people...' } = opts;
-  let selectedId = '';
-
-  /* Build DOM */
-  el.innerHTML = '';
   el.classList.add('mn-person-field');
-
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.className = 'mn-input mn-person-field__input';
-  input.placeholder = placeholder;
-  input.setAttribute('aria-label', placeholder);
-  if (opts.value) input.value = opts.value;
-  el.appendChild(input);
-
-  const dropdown = document.createElement('div');
-  dropdown.className = 'mn-person-field__dropdown';
-  dropdown.style.display = 'none';
-  dropdown.setAttribute('role', 'listbox');
-  el.appendChild(dropdown);
-
-  function hideDropdown(): void {
-    dropdown.style.display = 'none';
-    dropdown.innerHTML = '';
-  }
-
-  function renderResults(results: PersonResult[]): void {
-    dropdown.innerHTML = '';
-    if (results.length === 0) {
-      dropdown.style.display = 'none';
-      return;
-    }
-    dropdown.style.display = '';
-    for (const person of results) {
-      const item = document.createElement('div');
-      item.className = 'mn-person-field__item';
-      item.setAttribute('role', 'option');
-      item.setAttribute('tabindex', '-1');
-
-      const initials = person.initials ?? deriveInitials(person.name);
-      const avatar = document.createElement('span');
-      avatar.className = 'mn-person__avatar';
-      avatar.textContent = initials;
-      item.appendChild(avatar);
-
-      const info = document.createElement('div');
-      const nameSpan = document.createElement('span');
-      nameSpan.className = 'mn-person-field__name';
-      nameSpan.textContent = escapeHtml(person.name);
-      info.appendChild(nameSpan);
-
-      if (person.email) {
-        const emailSpan = document.createElement('div');
-        emailSpan.className = 'mn-person-field__email';
-        emailSpan.textContent = escapeHtml(person.email);
-        info.appendChild(emailSpan);
-      }
-      item.appendChild(info);
-
-      item.addEventListener('click', () => {
-        input.value = person.name;
-        selectedId = person.id;
-        hideDropdown();
-        if (onSelect) onSelect({ id: person.id, name: person.name });
-      });
-      dropdown.appendChild(item);
-    }
-  }
-
-  /* Debounced search */
-  const doSearch = debounce(async () => {
-    const query = input.value.trim();
-    if (!query) { hideDropdown(); return; }
-    try {
-      const results = await searchFn(query);
-      renderResults(results);
-    } catch {
-      hideDropdown();
-    }
-  }, 300);
-
-  input.addEventListener('input', () => { doSearch(); });
-
-  /* Escape closes dropdown */
-  input.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === 'Escape') { hideDropdown(); }
+  let selectedId = '';
+  const asyncSelect = new AsyncSelect<PersonResult>(el, {
+    provider: {
+      search: (query) => searchFn(query),
+      renderItem: (person) => {
+        const initials = person.initials ?? deriveInitials(person.name);
+        const suffix = person.email ? ` • ${person.email}` : '';
+        return `${initials} ${person.name}${suffix}`;
+      },
+      getLabel: (person) => person.name,
+      getId: (person) => person.id,
+    },
+    placeholder,
+    debounceMs: 300,
+    minChars: 1,
+    onSelect: (person) => {
+      selectedId = person.id;
+      onSelect?.({ id: person.id, name: person.name });
+    },
   });
-
-  /* Click outside closes dropdown */
-  const onDocClick = (e: MouseEvent): void => {
-    if (!el.contains(e.target as Node)) hideDropdown();
-  };
-  document.addEventListener('click', onDocClick);
+  const input = el.querySelector<HTMLInputElement>('.mn-async-select__input');
+  if (input) {
+    input.classList.add('mn-input', 'mn-person-field__input');
+    if (opts.value) input.value = opts.value;
+  }
 
   function destroy(): void {
-    document.removeEventListener('click', onDocClick);
-    el.innerHTML = '';
+    asyncSelect.destroy();
     el.classList.remove('mn-person-field');
   }
 
   return {
-    getValue: () => input.value,
-    setValue: (name: string) => { input.value = name; selectedId = ''; },
+    getValue: () => input?.value ?? '',
+    setValue: (name: string) => {
+      if (input) input.value = name;
+      selectedId = '';
+    },
     destroy,
   };
 }

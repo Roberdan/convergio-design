@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Runtime Dashboard Demo</title>
+  <link rel="stylesheet" href="../src/fonts/local-fonts.css">
+  <link rel="stylesheet" href="../dist/css/maranello.css">
+  <style>
+    body { margin: 0; background: var(--mn-surface); color: var(--mn-text); }
+    .demo-wrap { max-width: 1300px; margin: 0 auto; padding: 1rem; }
+    .demo-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 0.75rem 1rem;
+      background: color-mix(in oklab, var(--mn-surface-raised) 90%, transparent);
+      border-bottom: 1px solid var(--mn-border);
+      backdrop-filter: blur(8px);
+    }
+    .demo-toolbar__spacer { flex: 1; }
+    .demo-toolbar .mn-btn { white-space: nowrap; }
+    .demo-toolbar .mn-form-select { min-width: 10rem; }
+    #dashboard-host { margin-top: 1rem; }
+    @media (max-width: 640px) {
+      .demo-toolbar { padding: 0.75rem; }
+      .demo-toolbar .mn-form-select { min-width: 8rem; }
+    }
+  </style>
+</head>
+<body class="mn-nero">
+  <div class="demo-toolbar">
+    <strong class="mn-title-sm">Schema Dashboard</strong>
+    <button type="button" class="mn-btn mn-btn--ghost" id="btn-loading">Loading State</button>
+    <button type="button" class="mn-btn mn-btn--ghost" id="btn-error">Error State</button>
+    <button type="button" class="mn-btn" id="btn-reset">Reset</button>
+    <span class="demo-toolbar__spacer"></span>
+    <label for="theme-picker" class="mn-micro">Theme</label>
+    <select id="theme-picker" class="mn-form-select">
+      <option value="editorial">Editorial</option>
+      <option value="nero" selected>Nero</option>
+      <option value="avorio">Avorio</option>
+      <option value="colorblind">Colorblind</option>
+    </select>
+  </div>
+  <main class="demo-wrap">
+    <div id="dashboard-host"></div>
+  </main>
+
+  <script src="../dist/iife/maranello.min.js"></script>
+  <script>
+    (function () {
+      const M = window.Maranello;
+      if (!M) return;
+
+      const schema = {
+        rows: [
+          { columns: [{ type: 'kpi-strip', dataKey: 'kpis', span: 12 }] },
+          {
+            columns: [
+              { type: 'chart', dataKey: 'sparklineRevenue', span: 4, options: { chartType: 'sparkline' } },
+              { type: 'chart', dataKey: 'donutMix', span: 4, options: { chartType: 'donut' } },
+              { type: 'chart', dataKey: 'barOrders', span: 4, options: { chartType: 'bar' } },
+            ],
+          },
+          {
+            columns: [
+              { type: 'gauge', dataKey: 'serverLoad', span: 6, options: { label: 'Server Load', unit: '%' } },
+              { type: 'gauge', dataKey: 'apiLatency', span: 6, options: { label: 'API Latency', unit: 'ms', max: 300 } },
+            ],
+          },
+        ],
+      };
+
+      const baseline = {
+        kpis: [
+          { label: 'Revenue', value: '$1.2M', delta: '▲12%' },
+          { label: 'Users', value: '45.2K', delta: '▲5%' },
+          { label: 'Orders', value: '8,921', delta: '▼2%' },
+          { label: 'Avg Rating', value: '4.7', delta: '▲0.3' },
+        ],
+        sparklineRevenue: [920, 980, 1020, 1100, 1160, 1220, 1290, 1335, 1390, 1450, 1490, 1530],
+        donutMix: [
+          { label: 'Enterprise', value: 52, color: '#FFC72C' },
+          { label: 'SMB', value: 31, color: '#448AFF' },
+          { label: 'Public Sector', value: 17, color: '#00A651' },
+        ],
+        barOrders: [
+          { label: 'NA', value: 3200 },
+          { label: 'EU', value: 2700 },
+          { label: 'LATAM', value: 1650 },
+          { label: 'APAC', value: 1371 },
+        ],
+        serverLoad: { value: 72, max: 100, unit: '%' },
+        apiLatency: { value: 145, max: 300, unit: 'ms' },
+      };
+
+      const host = document.getElementById('dashboard-host');
+      const renderer = new M.DashboardRenderer(host, { schema, data: baseline });
+      const keys = Object.keys(baseline);
+
+      const setAll = (mode) => {
+        keys.forEach((key) => {
+          if (mode === 'loading') renderer.setData(key, null);
+          if (mode === 'error') renderer.setData(key, new Error('Data service unavailable'));
+          if (mode === 'reset') renderer.setData(key, baseline[key]);
+        });
+      };
+
+      document.getElementById('btn-loading').addEventListener('click', () => setAll('loading'));
+      document.getElementById('btn-error').addEventListener('click', () => setAll('error'));
+      document.getElementById('btn-reset').addEventListener('click', () => setAll('reset'));
+
+      document.getElementById('theme-picker').addEventListener('change', (event) => {
+        const theme = event.target.value;
+        if (!['editorial', 'nero', 'avorio', 'colorblind'].includes(theme)) return;
+        M.setTheme(theme);
+      });
+    })();
+  </script>
+</body>
+</html>

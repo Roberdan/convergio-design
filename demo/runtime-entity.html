@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Runtime Entity Workbench Demo</title>
+  <link rel="stylesheet" href="../src/fonts/local-fonts.css">
+  <link rel="stylesheet" href="../dist/css/maranello.css">
+  <style>
+    body { margin: 0; background: var(--mn-surface); color: var(--mn-text); }
+    .toolbar {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--mn-border);
+      background: var(--mn-surface-raised);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    #entity-host { max-width: 980px; margin: 1rem auto; padding: 0 1rem 1rem; }
+    .status-pill {
+      margin-left: auto;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--mn-text-muted);
+    }
+    @media (max-width: 640px) {
+      .status-pill { width: 100%; margin-left: 0; }
+    }
+  </style>
+</head>
+<body class="mn-nero">
+  <header class="toolbar">
+    <strong class="mn-title-sm">EntityWorkbench</strong>
+    <button type="button" class="mn-btn mn-btn--ghost" id="view-manager">View Manager</button>
+    <button type="button" class="mn-btn mn-btn--ghost" id="go-back" disabled>Back</button>
+    <span class="status-pill" id="dirty-status">No unsaved changes</span>
+    <label for="theme">Theme</label>
+    <select id="theme" class="mn-form-select">
+      <option value="editorial">Editorial</option>
+      <option value="nero" selected>Nero</option>
+      <option value="avorio">Avorio</option>
+      <option value="colorblind">Colorblind</option>
+    </select>
+  </header>
+  <main id="entity-host"></main>
+
+  <script src="../dist/iife/maranello.min.js"></script>
+  <script>
+    (function () {
+      const M = window.Maranello;
+      if (!M) return;
+
+      const schema = {
+        tabs: [
+          {
+            id: 'profile',
+            label: 'Profile',
+            sections: [
+              {
+                title: 'Identity',
+                fields: [
+                  { key: 'name', label: 'Name', type: 'text', required: true },
+                  { key: 'email', label: 'Email', type: 'text', required: true, options: { pattern: '^.+@.+\\..+$' } },
+                  {
+                    key: 'department',
+                    label: 'Department',
+                    type: 'select',
+                    options: {
+                      options: [
+                        { value: 'Engineering', label: 'Engineering' },
+                        { value: 'Design', label: 'Design' },
+                        { value: 'Marketing', label: 'Marketing' },
+                        { value: 'Sales', label: 'Sales' },
+                      ],
+                    },
+                  },
+                  {
+                    key: 'manager',
+                    label: 'Manager',
+                    type: 'async-select',
+                    provider: {
+                      search: async (query) => {
+                        const people = ['Alberto Ricci', 'Nadia Guerra', 'Paolo Ferrero', 'Frida Neri'];
+                        return people.filter((name) => name.toLowerCase().includes(String(query).toLowerCase()));
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: 'employment',
+            label: 'Employment',
+            sections: [
+              {
+                title: 'Contract',
+                fields: [
+                  { key: 'startDate', label: 'Start Date', type: 'date' },
+                  { key: 'salary', label: 'Salary', type: 'number' },
+                  { key: 'title', label: 'Title', type: 'text' },
+                  {
+                    key: 'level',
+                    label: 'Level',
+                    type: 'select',
+                    options: {
+                      options: [
+                        { value: 'L3', label: 'L3' },
+                        { value: 'L4', label: 'L4' },
+                        { value: 'L5', label: 'L5' },
+                        { value: 'L6', label: 'L6' },
+                      ],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: 'notes',
+            label: 'Notes',
+            sections: [
+              {
+                title: 'People Notes',
+                fields: [
+                  { key: 'bio', label: 'Bio', type: 'textarea' },
+                  {
+                    key: 'tags',
+                    label: 'Tags',
+                    type: 'computed',
+                    compute: (data) => `${String(data.department || 'General')} · ${String(data.level || 'N/A')}`,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+
+      const rootEntity = {
+        id: 'emp-102',
+        name: 'Giulia Ferri',
+        email: 'giulia.ferri@futuraops.com',
+        department: 'Design',
+        manager: 'Alberto Ricci',
+        startDate: '2022-02-10',
+        salary: 98000,
+        title: 'Lead Product Designer',
+        level: 'L5',
+        bio: 'Leads the dashboard UX language and enterprise accessibility initiatives.',
+      };
+
+      const managerEntity = {
+        id: 'mgr-044',
+        name: 'Alberto Ricci',
+        email: 'alberto.ricci@futuraops.com',
+        department: 'Design',
+        manager: 'Nadia Guerra',
+        startDate: '2018-05-02',
+        salary: 132000,
+        title: 'Director of Experience',
+        level: 'L6',
+        bio: 'Owns design operations, coaching framework, and product governance cadence.',
+      };
+
+      const host = document.getElementById('entity-host');
+      const dirtyStatus = document.getElementById('dirty-status');
+      const backBtn = document.getElementById('go-back');
+
+      const wb = new M.EntityWorkbench(host, {
+        schema,
+        data: rootEntity,
+        onSave: async (changes) => {
+          console.log('Saved changes:', changes);
+        },
+      });
+
+      const syncState = () => {
+        dirtyStatus.textContent = wb.isDirty() ? 'Unsaved changes in form *' : 'No unsaved changes';
+        backBtn.disabled = !wb.canGoBack();
+      };
+
+      host.addEventListener('input', syncState);
+      host.addEventListener('change', syncState);
+
+      document.getElementById('view-manager').addEventListener('click', () => {
+        wb.pushEntity(schema, managerEntity);
+        syncState();
+      });
+
+      backBtn.addEventListener('click', () => {
+        wb.popEntity();
+        syncState();
+      });
+
+      document.getElementById('theme').addEventListener('change', (event) => {
+        const theme = event.target.value;
+        if (!['editorial', 'nero', 'avorio', 'colorblind'].includes(theme)) return;
+        M.setTheme(theme);
+      });
+
+      syncState();
+    })();
+  </script>
+</body>
+</html>

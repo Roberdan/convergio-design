@@ -1,4 +1,4 @@
-<!-- v4.14.1 | 2026-03-17 -->
+<!-- v4.15.0 | 2026-03-17 -->
 # Data Contracts
 
 All types importable from `maranello-luce-design-business`. Peer dep: `mapbox-gl` (optional, for MapView).
@@ -53,6 +53,32 @@ Full API detail for v4.14.1 components: [`docs/api-contracts-v4.md`](docs/api-co
 | `ActivityFeedOptions` | `activityFeed()` | `maxItems`, `animate` |
 | `BulletChartOptions` | `bulletChart()` | `value`, `target`, `max`, `label`, `unit`, `ranges?` |
 | `NotificationCenterOptions` | `notificationCenter()` | `maxVisible`, `onAction`, `position` |
+| `AppShellConfig` | `AppShellController` | `layout`, `sidebarCollapsed`, `bottomDockHeight` |
+| `ViewConfig` | `ViewRegistry` | `id`, `title`, `defaultPlacement`, `factory?`, `tag?`, `sizeHint?` |
+| `PanelHandle` | `PanelOrchestrator` | `viewId`, `placement`, `container`, `close()`, `moveTo()` |
+| `FacetConfig` | `FacetWorkbench` | `id`, `label`, `type`, `dataProvider`, `countProvider?`, `exclusionRules?` |
+| `FacetPreset` | `FacetWorkbench` | `name`, `filters: Map<string, string[]>` |
+| `EntitySchema` | `EntityWorkbench` | `tabs[]` → `sections[]` → `fields[]` |
+| `EntityField` | `EntityWorkbench` | `key`, `label`, `type`, `required?`, `readOnly?`, `provider?`, `compute?` |
+| `DashboardSchema` | `DashboardRenderer` | `rows[]` → `columns[]` (`type`, `dataKey`, `span?`, `options?`) |
+| `AsyncDataProvider<T>` | `AsyncSelect` | `search(query): Promise<T[]>`, `renderItem?`, `getLabel?`, `getId?` |
+| `AsyncSelectOptions<T>` | `AsyncSelect` | `provider`, `onSelect?`, `placeholder?`, `debounceMs?`, `minChars?` |
+| `StateScaffoldOptions` | `StateScaffold` | `state`, `message?`, `actionLabel?`, `onRetry?`, `onAction?` |
+| `ViewEntry` | `NavigationModel` | `viewId`, `params?`, `timestamp` |
+
+## Presentation Runtime
+
+| Class | Placement Values | Notes |
+|---|---|---|
+| `AppShellController` | `layout: 'full'\|'split'\|'stacked'\|'docked-bottom'\|'dual-panel'\|'side-detail'` | Slots: nav, toolbar, filter-bar, main, secondary, detail, bottom, overlay |
+| `ViewRegistry` (singleton) | `defaultPlacement: 'page'\|'side-panel'\|'bottom-dock'\|'modal'\|'overlay'\|'workspace'` | `register()` throws on duplicate id |
+| `PanelOrchestrator` | — | `open(id, placement?, data?)` → `PanelHandle` |
+| `FacetWorkbench` | `FacetType: 'select'\|'multi-select'\|'search'\|'date-range'\|'boolean'` | `onFilterChange(Map<string,string[]>)` |
+| `EntityWorkbench` | — | `onSave(delta)`, `pushEntity(schema, data)` for nested drill-in |
+| `DashboardRenderer` | — | `setData(key, value\|Error\|null)` triggers state scaffold per widget |
+| `AsyncSelect<T>` | — | `debounceMs` default 300; `minChars` default 1 |
+| `StateScaffold` | `state: 'loading'\|'empty'\|'error'\|'partial'\|'no-results'` | All states have ARIA live regions |
+| `NavigationModel` | `NavigateAction: 'push'\|'pop'\|'replace'` | `onNavigate(cb)` returns unsubscribe fn |
 
 ## Column Type Options (DataTable)
 

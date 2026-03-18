@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Runtime Facet Workbench Demo</title>
+  <link rel="stylesheet" href="../src/fonts/local-fonts.css">
+  <link rel="stylesheet" href="../dist/css/maranello.css">
+  <style>
+    body { margin: 0; background: var(--mn-surface); color: var(--mn-text); }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--mn-border);
+      background: var(--mn-surface-raised);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .panel {
+      border: 1px solid var(--mn-border);
+      border-radius: var(--radius-md);
+      background: var(--mn-surface-raised);
+      padding: 0.85rem;
+    }
+    .chips { min-height: 2rem; margin-bottom: 0.75rem; }
+    .preset-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+    @media (max-width: 640px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="mn-nero">
+  <header class="toolbar">
+    <strong class="mn-title-sm">FacetWorkbench + Employee Table</strong>
+    <button type="button" class="mn-btn mn-btn--ghost" id="save-current">Save Preset</button>
+    <button type="button" class="mn-btn mn-btn--ghost" id="load-current">Load Preset</button>
+    <button type="button" class="mn-btn" id="load-engineering">Engineering Remote</button>
+    <span style="margin-left:auto"></span>
+    <label for="theme">Theme</label>
+    <select id="theme" class="mn-form-select">
+      <option value="editorial">Editorial</option>
+      <option value="nero" selected>Nero</option>
+      <option value="avorio">Avorio</option>
+      <option value="colorblind">Colorblind</option>
+    </select>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <h2 class="mn-title-sm">Filters</h2>
+      <div id="facet-host"></div>
+    </section>
+    <section class="panel">
+      <h2 class="mn-title-sm">Employees</h2>
+      <div id="active-filter-chips" class="mn-filter-chips chips"></div>
+      <div id="table-host"></div>
+    </section>
+  </main>
+
+  <script src="../dist/iife/maranello.min.js"></script>
+  <script>
+    (function () {
+      const M = window.Maranello;
+      if (!M) return;
+
+      const employees = [
+        { name: 'Elena Rossi', email: 'elena.rossi@futuraops.com', department: 'Engineering', status: 'Active', joinDate: '2020-03-15', remote: 'Yes' },
+        { name: 'Matteo Bianchi', email: 'matteo.bianchi@futuraops.com', department: 'Engineering', status: 'On Leave', joinDate: '2019-11-01', remote: 'No' },
+        { name: 'Sara Conti', email: 'sara.conti@futuraops.com', department: 'Design', status: 'Active', joinDate: '2022-02-10', remote: 'Yes' },
+        { name: 'Nora Vitale', email: 'nora.vitale@futuraops.com', department: 'Marketing', status: 'Active', joinDate: '2021-04-29', remote: 'No' },
+        { name: 'Luca Greco', email: 'luca.greco@futuraops.com', department: 'Sales', status: 'Terminated', joinDate: '2018-08-18', remote: 'No' },
+        { name: 'Chiara De Santis', email: 'chiara.desantis@futuraops.com', department: 'HR', status: 'Active', joinDate: '2023-01-09', remote: 'Yes' },
+        { name: 'Davide Moretti', email: 'davide.moretti@futuraops.com', department: 'Sales', status: 'Active', joinDate: '2022-07-21', remote: 'Yes' },
+        { name: 'Giulia Ferri', email: 'giulia.ferri@futuraops.com', department: 'Marketing', status: 'On Leave', joinDate: '2020-12-02', remote: 'Yes' },
+        { name: 'Riccardo Pini', email: 'riccardo.pini@futuraops.com', department: 'Engineering', status: 'Active', joinDate: '2017-05-13', remote: 'No' },
+        { name: 'Francesca Leone', email: 'francesca.leone@futuraops.com', department: 'Design', status: 'Active', joinDate: '2024-01-17', remote: 'Yes' },
+      ];
+
+      const facets = [
+        {
+          id: 'department',
+          label: 'Department',
+          type: 'multi-select',
+          dataProvider: async () => ['Engineering', 'Design', 'Marketing', 'Sales', 'HR'].map((v) => ({ id: v, label: v })),
+        },
+        {
+          id: 'status',
+          label: 'Status',
+          type: 'select',
+          dataProvider: async () => ['Active', 'On Leave', 'Terminated'].map((v) => ({ id: v, label: v })),
+        },
+        {
+          id: 'search',
+          label: 'Search',
+          type: 'search',
+          dataProvider: async () => employees.map((person) => ({ id: person.email, label: `${person.name} · ${person.email}` })),
+        },
+        {
+          id: 'joinDate',
+          label: 'Join Date',
+          type: 'date-range',
+          dataProvider: async () => [],
+        },
+        {
+          id: 'remote',
+          label: 'Remote',
+          type: 'boolean',
+          dataProvider: async () => [],
+        },
+      ];
+
+      const table = M.dataTable(document.getElementById('table-host'), {
+        columns: [
+          { key: 'name', label: 'Name', type: 'text', sortable: true },
+          { key: 'department', label: 'Department', type: 'tag', sortable: true, filterable: true },
+          { key: 'status', label: 'Status', type: 'status', sortable: true, filterable: true },
+          { key: 'joinDate', label: 'Join Date', type: 'date', sortable: true },
+          { key: 'remote', label: 'Remote', type: 'text', sortable: true },
+        ],
+        data: employees,
+        pageSize: 8,
+        ariaLabel: 'Filtered employee table',
+      });
+
+      const chipsHost = document.getElementById('active-filter-chips');
+      const updateChips = (filters) => {
+        chipsHost.innerHTML = '';
+        filters.forEach((values, key) => {
+          values.forEach((value) => {
+            chipsHost.innerHTML += `<span class="mn-filter-chip"><span class="mn-filter-chip__label">${key}: ${value}</span></span>`;
+          });
+        });
+      };
+
+      const applyFilters = (filters) => {
+        const next = employees.filter((person) => {
+          const dep = filters.get('department');
+          if (dep && dep.length && !dep.includes(person.department)) return false;
+
+          const status = filters.get('status');
+          if (status && status.length && !status.includes(person.status)) return false;
+
+          const search = filters.get('search');
+          if (search && search.length) {
+            const hay = `${person.name} ${person.email}`.toLowerCase();
+            const ok = search.some((s) => hay.includes(String(s).toLowerCase()));
+            if (!ok) return false;
+          }
+
+          const dateRange = filters.get('joinDate');
+          if (dateRange && dateRange.length) {
+            const from = dateRange[0] || '1900-01-01';
+            const to = dateRange[1] || '2999-12-31';
+            if (person.joinDate < from || person.joinDate > to) return false;
+          }
+
+          const remote = filters.get('remote');
+          if (remote && remote.length && person.remote !== 'Yes') return false;
+
+          return true;
+        });
+
+        table.setData(next);
+        updateChips(filters);
+      };
+
+      const wb = new M.FacetWorkbench(document.getElementById('facet-host'), {
+        facets,
+        presets: [
+          {
+            name: 'Engineering Remote',
+            filters: new Map([
+              ['department', ['Engineering']],
+              ['remote', ['true']],
+              ['status', ['Active']],
+            ]),
+          },
+        ],
+        onFilterChange: applyFilters,
+      });
+
+      document.getElementById('save-current').addEventListener('click', () => {
+        wb.savePreset('Current Runtime Preset');
+      });
+      document.getElementById('load-current').addEventListener('click', () => {
+        wb.loadPreset('Current Runtime Preset');
+      });
+      document.getElementById('load-engineering').addEventListener('click', () => {
+        wb.loadPreset('Engineering Remote');
+      });
+
+      document.getElementById('theme').addEventListener('change', (event) => {
+        const theme = event.target.value;
+        if (!['editorial', 'nero', 'avorio', 'colorblind'].includes(theme)) return;
+        M.setTheme(theme);
+      });
+    })();
+  </script>
+</body>
+</html>

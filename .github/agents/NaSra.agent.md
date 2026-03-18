@@ -496,3 +496,282 @@ To add a legitimate exception, add comment `/* intentional: <reason> */` on the 
 5. Never guess token names — grep `src/css/themes-*.css` for the override you need
 6. Simulate colorblind: Chrome DevTools → Rendering → Emulate vision deficiency
 7. Responsive test: resize window 320px → 1920px, check canvas charts redraw, no overflow
+
+## Presentation Runtime Components (v5.0)
+
+Nine new capabilities for building dashboards, entity editors, and filterable views.
+
+### Component Inventory
+
+| Component | WC Tag | Headless Class | Purpose |
+|---|---|---|---|
+| AppShell | `<mn-app-shell layout="side-detail">` | `AppShellController` | Adaptive 6-mode layout container with named slots |
+| ViewRegistry | — (singleton) | `ViewRegistry` | Central registry mapping view IDs to factory functions |
+| PanelOrchestrator | — | `PanelOrchestrator` | Opens/closes/moves registered views between placements |
+| NavigationModel | — | `NavigationModel` | Push/pop history stack with typed callbacks |
+| DashboardRenderer | `<mn-dashboard>` | `DashboardRenderer` | Schema-driven 12-col grid of typed widgets |
+| FacetWorkbench | `<mn-facet-workbench>` | `FacetWorkbench` | Collapsible filter panel with presets + keyboard nav |
+| EntityWorkbench | `<mn-entity-workbench open>` | `EntityWorkbench` | Tabbed entity editor with back-stack + validation |
+| AsyncSelect | `<mn-async-select>` | `AsyncSelect` | Debounced typeahead with ARIA combobox |
+| StateScaffold | `<mn-state-scaffold state="loading">` | `StateScaffold` | Manages 5 UI states (loading/empty/error/partial/no-results) |
+
+### AppShellController
+
+```ts
+constructor(container: HTMLElement, config?: { layout?: LayoutMode; sidebarCollapsed?: boolean; bottomDockHeight?: string })
+shell.setLayout(mode: LayoutMode): void   // switch between 6 modes
+shell.toggleSidebar(): void               // collapse/expand nav slot
+shell.setBottomDock(open: boolean): void  // show/hide bottom slot
+shell.getSlot(name: string): HTMLElement | null  // access named slot
+shell.destroy(): void
+```
+
+**When to use:** Any multi-area page. Replaces hand-crafted grid CSS. Always use before adding `mn-sidebar`, toolbar, or detail panels.
+
+### ViewRegistry
+
+```ts
+ViewRegistry.getInstance(): ViewRegistry         // singleton
+registry.register(config: ViewConfig): void      // { id, title, defaultPlacement, factory }
+registry.get(id: string): ViewConfig | undefined
+registry.unregister(id: string): boolean
+```
+
+**When to use:** Before creating a PanelOrchestrator. Register all views at app init.
+
+### PanelOrchestrator
+
+```ts
+constructor(registry: ViewRegistry, navigation: NavigationModel)
+orch.open(viewId, target?: Placement, data?: unknown): PanelHandle
+orch.close(viewId: string): void
+orch.move(viewId: string, newTarget: Placement): void   // preserves DOM + state
+orch.swap(viewId1, viewId2): void
+```
+
+**When to use:** Whenever a view must move between placements (page → modal → side-panel) without re-mounting.
+
+### NavigationModel
+
+```ts
+constructor()
+nav.push(viewId, params?): ViewEntry
+nav.pop(): ViewEntry | undefined
+nav.current(): ViewEntry | undefined
+nav.onNavigate(cb: NavigateCallback): () => void   // returns unsubscribe fn
+```
+
+**When to use:** Plug into consumer router to sync back/forward history with panel state.
+
+### DashboardRenderer
+
+```ts
+constructor(container: HTMLElement, options: { schema: DashboardSchema; data?: Record<string, unknown> })
+dash.setData(key: string, value: unknown): void   // triggers widget re-render
+dash.setSchema(newSchema: DashboardSchema): void  // hot-swap layout
+dash.getWidget(dataKey: string): unknown          // access widget controller
+```
+
+**When to use:** Any analytics or monitoring page with multiple widget types. Avoids repeated widget boilerplate.
+
+### FacetWorkbench
+
+```ts
+constructor(container: HTMLElement, options: { facets: FacetConfig[]; onFilterChange?: (filters: Map<string, string[]>) => void; presets?: FacetPreset[] })
+wb.getActiveFilters(): Map<string, string[]>
+wb.clearAll(): void
+wb.savePreset(name: string): FacetPreset
+wb.loadPreset(name: string): void
+```
+
+**When to use:** Any page with filterable data (tables, card grids). Replaces custom filter UI.
+
+### EntityWorkbench
+
+```ts
+constructor(container: HTMLElement, options: { schema: EntitySchema; data: Record<string,unknown>; editable?: boolean; onSave?: (data) => void; onClose?: () => void })
+wb.isDirty(): boolean
+wb.validate(): { valid: boolean; errors: Map<string, string> }
+wb.pushEntity(schema: EntitySchema, data: Record<string,unknown>): void   // drill-in
+wb.getModifiedData(): Record<string, unknown>
+```
+
+**When to use:** CRUD editors, detail panels, drill-in flows. Replaces custom form scaffolding.
+
+### AsyncSelect
+
+```ts
+constructor(container: HTMLElement, options: { provider: AsyncDataProvider<T>; onSelect?: (item: T) => void; placeholder?: string; debounceMs?: number; minChars?: number })
+sel.open(): void
+sel.close(): void
+sel.clear(): void
+sel.setProvider(provider: AsyncDataProvider<T>): void
+```
+
+**When to use:** Any typeahead field inside EntityWorkbench (field type `async-select`) or standalone search.
+
+### StateScaffold
+
+```ts
+constructor(container: HTMLElement, options: { state: ScaffoldState; message?: string; onRetry?: () => void; onAction?: () => void })
+scaffold.setState(state: ScaffoldState, message?: string): void
+scaffold.getState(): string
+scaffold.destroy(): void
+```
+
+**When to use:** Wrap any async-loaded region. Never show a blank container while data is loading.
+
+---
+
+## Layout Modes Reference
+
+| Mode | Grid Layout | When to Use |
+|---|---|---|
+| `full` | Single main area, full width | Simple pages, landing, login |
+| `split` | main + secondary side by side | Compare views, master-detail |
+| `stacked` | main over secondary, vertical | Mobile-first flows, stepped wizards |
+| `docked-bottom` | main + fixed bottom panel | Data + timeline, chat + canvas |
+| `dual-panel` | Two equal panels | Side-by-side editors, diff views |
+| `side-detail` | Sidebar nav + main + detail panel | Full apps with nav + drill-in |
+
+All modes collapse to single-column at ≤640px. Sidebar goes off-canvas.
+
+---
+
+## Schema Patterns
+
+### DashboardSchema (2 widgets)
+
+```json
+{
+  "rows": [
+    {
+      "columns": [
+        { "type": "kpi-strip", "dataKey": "kpis", "span": 12 },
+        { "type": "chart", "dataKey": "sales", "span": 6, "options": { "chartType": "sparkline" } },
+        { "type": "gauge", "dataKey": "uptime", "span": 6 }
+      ]
+    }
+  ]
+}
+```
+
+### EntitySchema (1 tab, 2 fields)
+
+```json
+{
+  "tabs": [
+    {
+      "id": "main",
+      "label": "Details",
+      "sections": [
+        {
+          "fields": [
+            { "key": "name", "label": "Name", "type": "text", "required": true },
+            { "key": "manager", "label": "Manager", "type": "async-select", "provider": "<AsyncDataProvider>" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+### FacetConfig[] (2 facets)
+
+```json
+[
+  { "id": "status", "label": "Status", "type": "multi-select", "dataProvider": "<() => Promise<FacetOption[]>>" },
+  { "id": "search", "label": "Search", "type": "search",       "dataProvider": "<() => Promise<[]>>" }
+]
+```
+
+---
+
+## Consumer Contract Summary
+
+| Responsibility | Owner |
+|---|---|
+| Data fetching, API calls | Consumer |
+| Business rules, permissions | Consumer |
+| Routing, URL management | Consumer |
+| Action handlers (`onSave`, `onAction`) | Consumer |
+| Rendering, layout, orchestration | Maranello |
+| Loading/empty/error states | Maranello (StateScaffold) |
+| Accessibility, ARIA, keyboard nav | Maranello |
+| Theming, responsive breakpoints | Maranello |
+
+**Pattern:** register → schema → bind
+
+```js
+// 1. Register views
+registry.register({ id: 'detail', title: 'Detail', defaultPlacement: 'side-panel', factory: renderDetail });
+// 2. Declare schema
+const dash = new DashboardRenderer(el, { schema });
+// 3. Bind data
+dash.setData('kpis', await fetchKpis());
+```
+
+---
+
+## WCAG / ARIA — Runtime Components
+
+### AsyncSelect
+- Input: `role=combobox`, `aria-autocomplete=list`, `aria-controls={listboxId}`
+- Dropdown: `role=listbox`; items: `role=option`, `aria-selected`
+- `aria-expanded` toggled on open/close
+- `aria-activedescendant` updated on arrow-key navigation
+- Escape closes dropdown; Tab commits or dismisses
+
+### FacetWorkbench
+- Tab moves between facet sections
+- Arrow keys navigate within a facet's option list
+- Each section has `role=group` + `aria-labelledby` from its heading
+- Collapsed sections have `aria-expanded=false` on header button
+
+### EntityWorkbench
+- Wraps detail-panel dialog pattern: `role=dialog`, `aria-labelledby` from active tab title
+- Back-stack uses `aria-label="Go back to {parent}"` on back button
+- Dirty-check confirm uses native `window.confirm` (no custom modal needed)
+
+### DataTable v2
+- Grouped rows: `role=rowgroup` with `aria-label={groupName}`
+- Expandable group headers: `aria-expanded` toggled on click
+- Sort controls: `aria-sort=ascending|descending|none`
+
+### StateScaffold
+- Status div has `aria-live=polite` (transitions: empty → partial, error)
+- Loading state: `aria-busy=true` on container, spinner has `aria-hidden=true`
+- Error state: `role=alert` on error banner
+- Action button is focusable with visible focus ring
+
+---
+
+## Responsive — Runtime Components
+
+### AppShell
+- ≤640px: single-column, sidebar off-canvas (`mn-app-shell--sidebar-collapsed` auto-applied)
+- Bottom dock hidden by default on mobile; consumer calls `shell.setBottomDock(true)` explicitly
+- Slots stack in DOM order: nav → toolbar → filter-bar → main → detail → bottom
+
+### DashboardRenderer
+- Widgets respect `span` 1–12 on desktop; all widgets become `span 12` (full-width) at ≤640px
+- Row gap collapses from `--mn-space-4` to `--mn-space-2` at mobile
+
+### FacetWorkbench
+- Stacks vertically at ≤640px; collapsed by default to save space
+- Chips strip scrolls horizontally on mobile
+
+---
+
+## StateScaffold Guidance
+
+| State | When to Use | Consumer Action |
+|---|---|---|
+| `loading` | Initial data fetch in progress | Show immediately; replace on resolve |
+| `empty` | Fetch succeeded, zero records | Add CTA via `actionLabel` + `onAction` |
+| `error` | Fetch failed | Provide `onRetry`; display error message |
+| `partial` | Data loaded; content renders inside scaffold | Call `setState('partial')` — content slot becomes visible |
+| `no-results` | Filters applied, zero matches | Offer "Clear filters" via `onAction` |
+
+Always start with `state: 'loading'`; never leave a container empty while async work is pending.
