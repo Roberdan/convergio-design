@@ -8,14 +8,19 @@
  */
 
 const WC_TAGS = [
+  'mn-app-shell',
   'mn-a11y',
+  'mn-async-select',
   'mn-chart',
   'mn-chat',
   'mn-command-palette',
+  'mn-dashboard',
   'mn-data-table',
   'mn-date-picker',
   'mn-detail-panel',
+  'mn-entity-workbench',
   'mn-ferrari-control',
+  'mn-facet-workbench',
   'mn-funnel',
   'mn-gantt',
   'mn-gauge',
@@ -27,6 +32,7 @@ const WC_TAGS = [
   'mn-okr',
   'mn-profile',
   'mn-speedometer',
+  'mn-state-scaffold',
   'mn-system-status',
   'mn-tab',
   'mn-tabs',
@@ -45,14 +51,19 @@ export async function registerAll(): Promise<void> {
   if (_loaded) return;
   _loaded = true;
   await Promise.all([
+    import('./mn-app-shell.js'),
     import('./mn-a11y.js'),
+    import('./mn-async-select.js'),
     import('./mn-chart.js'),
     import('./mn-chat.js'),
     import('./mn-command-palette.js'),
+    import('./mn-dashboard.js'),
     import('./mn-data-table.js'),
     import('./mn-date-picker.js'),
     import('./mn-detail-panel.js'),
+    import('./mn-entity-workbench.js'),
     import('./mn-ferrari-control.js'),
+    import('./mn-facet-workbench.js'),
     import('./mn-funnel.js'),
     import('./mn-gantt.js'),
     import('./mn-gauge.js'),
@@ -64,6 +75,7 @@ export async function registerAll(): Promise<void> {
     import('./mn-okr.js'),
     import('./mn-profile.js'),
     import('./mn-speedometer.js'),
+    import('./mn-state-scaffold.js'),
     import('./mn-system-status.js'),
     import('./mn-tabs.js'), // also registers mn-tab
     import('./mn-section-nav.js'),

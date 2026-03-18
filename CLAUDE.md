@@ -25,7 +25,8 @@ Ferrari Luce-inspired design system for business dashboards. Part of Convergio.
 |---|---|---|---|
 | CSS-only | `src/css/` (123 files) | Tokens, themes, components, layouts — zero JS | `./css` |
 | Headless JS | `src/ts/` | Charts, gauge, controls, forms — framework-agnostic | `./charts` `./gantt` `./gauge` `./controls` `./forms` |
-| Web Components | `src/wc/` (26 tags, 25 components) | `mn-*` custom elements wrapping headless JS | `./wc` |
+| Web Components | `src/wc/` (31 tags, 30 components) | `mn-*` custom elements wrapping headless JS | `./wc` |
+| Runtime | `src/ts/` (app-shell, dashboard-renderer, etc.) | AppShell, DashboardRenderer, FacetWorkbench, EntityWorkbench, ViewRegistry, PanelOrchestrator, NavigationModel, AsyncSelect, StateScaffold | `./index` |
 
 ## File Tree
 
@@ -48,7 +49,20 @@ Ferrari Luce-inspired design system for business dashboards. Part of Convergio.
 | `src/css/responsive-data.css` | Data table, toolbar, strip-pod mobile overrides |
 | `src/css/responsive-forms.css` | Form grid, touch targets mobile overrides |
 | `src/css/responsive-charts.css` | Chart/gauge container mobile overrides |
-| `src/wc/index.ts` | WC registry (`registerAll()`) |
+| `src/ts/app-shell.ts` | AppShellController — 6-mode adaptive layout |
+| `src/ts/view-registry.ts` | ViewRegistry singleton — view ID → factory map |
+| `src/ts/panel-orchestrator.ts` | PanelOrchestrator — open/close/move views |
+| `src/ts/navigation-model.ts` | NavigationModel — push/pop history stack |
+| `src/ts/dashboard-renderer.ts` | DashboardRenderer — schema-driven 12-col widget grid |
+| `src/ts/facet-workbench.ts` | FacetWorkbench — collapsible filter panel |
+| `src/ts/entity-workbench.ts` | EntityWorkbench — tabbed entity editor with back-stack |
+| `src/ts/async-select.ts` | AsyncSelect — debounced typeahead with ARIA combobox |
+| `src/ts/state-scaffold.ts` | StateScaffold — 5-state async region manager |
+| `src/css/layouts-app-shell.css` | AppShell 6-mode grid + slot layout |
+| `src/css/layouts-dashboard-renderer.css` | Dashboard 12-col grid + widget cells |
+| `src/css/layouts-facet-workbench.css` | Facet filter panel + chips strip |
+| `src/css/layouts-entity-workbench.css` | Entity editor tabs + back-stack chrome |
+| `src/css/layouts-state-scaffold.css` | Loading/empty/error/partial state banners |
 | `esbuild.config.mjs` | JS build config |
 | `scripts/build-css.mjs` | CSS build config |
 | `dist/` | Build output (gitignored) |
@@ -181,13 +195,16 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 ### Map (2)
 `mapView` · `attachEvents`
 
+### Runtime (9)
+`AppShellController` · `ViewRegistry` · `PanelOrchestrator` · `NavigationModel` · `DashboardRenderer` · `FacetWorkbench` · `EntityWorkbench` · `AsyncSelect` · `StateScaffold`
+
 ### Analytics & BI (11)
 `waterfallChart` · `confidenceChart` · `costTimeline` · `riskMatrix` · `kpiScorecard` · `agentCostBreakdown` · `tokenMeter` · `cohortGrid` · `approvalChain` · `decisionMatrix` · `renderSourceCards`
 
 ### Chart Interaction (2)
 `chartInteract` · `sparklineInteract`
 
-## Web Components (26 tags, 25 components)
+## Web Components (31 tags, 30 components)
 
 | Tag | Attrs |
 |---|---|
@@ -216,6 +233,12 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 | `mn-section-nav` | `sections`, `current`, `data-theme`, `data-pos` |
 | `mn-theme-rotary` | `size` |
 | `mn-a11y` | (FAB + settings panel, auto-mounts by default) |
+| `mn-app-shell` | `layout` (`full`\|`split`\|`stacked`\|`docked-bottom`\|`dual-panel`\|`side-detail`) |
+| `mn-dashboard` | `schema` (JSON), `data` (JSON) |
+| `mn-facet-workbench` | `facets` (JSON), `presets` (JSON) |
+| `mn-entity-workbench` | `open`, `schema` (JSON), `data` (JSON), `editable` |
+| `mn-async-select` | `placeholder`, `min-chars`, `debounce` |
+| `mn-state-scaffold` | `state` (`loading`\|`empty`\|`error`\|`partial`\|`no-results`), `message`, `action-label` |
 
 ## CSS Class Families
 

@@ -4,12 +4,7 @@
  */
 
 import type { DataTableOptions } from './core/types';
-import {
-  buildRow,
-  buildGroupHeader,
-  buildPagination,
-  buildEmptyRow,
-} from './data-table-render';
+import { buildRow, buildGroupHeader, buildPagination, buildEmptyRow } from './data-table-render';
 import type { DataTableState } from './data-table-render';
 
 export function compare(a: unknown, b: unknown, dir: number): number {
@@ -22,20 +17,15 @@ export function compare(a: unknown, b: unknown, dir: number): number {
 
 export function matchFilter(val: unknown, query: string): boolean {
   if (!query) return true;
-  return String(val ?? '').toLowerCase().indexOf(query.toLowerCase()) !== -1;
+  return String(val ?? '').toLowerCase().includes(query.toLowerCase());
 }
 
 export function handleSort(
-  key: string, ci: number, state: DataTableState,
-  headerRow: HTMLElement, renderFn: () => void,
+  key: string, ci: number, state: DataTableState, headerRow: HTMLElement, renderFn: () => void,
   onSort?: (key: string, dir: 'asc' | 'desc') => void,
 ): void {
-  if (state.sortKey === key) {
-    state.sortDir = state.sortDir === 1 ? -1 : 1;
-  } else {
-    state.sortKey = key;
-    state.sortDir = 1;
-  }
+  if (state.sortKey === key) state.sortDir = state.sortDir === 1 ? -1 : 1;
+  else { state.sortKey = key; state.sortDir = 1; }
   headerRow.querySelectorAll<HTMLElement>('.mn-dt__th').forEach((th, i) => {
     if (i === ci) {
       th.setAttribute('aria-sort', state.sortDir === 1 ? 'ascending' : 'descending');
@@ -51,8 +41,7 @@ export function handleSort(
 }
 
 export function handleFilter(
-  key: string, val: string, state: DataTableState,
-  renderFn: () => void,
+  key: string, val: string, state: DataTableState, renderFn: () => void,
   onFilter?: (filters: Record<string, string>) => void,
 ): void {
   if (val) state.filters[key] = val;
@@ -62,33 +51,18 @@ export function handleFilter(
   renderFn();
 }
 
-export function getProcessedData<RowT extends Record<string, unknown>>(
-  state: DataTableState<RowT>,
-): RowT[] {
+export function getProcessedData<RowT extends Record<string, unknown>>(state: DataTableState<RowT>): RowT[] {
   let rows = state.data.slice();
   const filterKeys = Object.keys(state.filters);
-  if (filterKeys.length > 0) {
-    rows = rows.filter((row) =>
-      filterKeys.every((k) => matchFilter(row[k], state.filters[k])),
-    );
-  }
-  if (state.sortKey !== null) {
-    const sk = state.sortKey;
-    const sd = state.sortDir;
-    rows.sort((a, b) => compare(a[sk], b[sk], sd));
-  }
+  if (filterKeys.length > 0) rows = rows.filter((row) => filterKeys.every((k) => matchFilter(row[k], state.filters[k])));
+  if (state.sortKey !== null) rows.sort((a, b) => compare(a[state.sortKey as string], b[state.sortKey as string], state.sortDir));
   return rows;
 }
 
-interface GroupResult<RowT> {
-  groups: Record<string, RowT[]>;
-  order: string[];
-}
+interface GroupResult<RowT> { groups: Record<string, RowT[]>; order: string[] }
 
 export function getGroupedData<RowT extends Record<string, unknown>>(
-  rows: RowT[],
-  groupBy?: string,
-  groupOrder?: string[],
+  rows: RowT[], groupBy?: string, groupOrder?: string[],
 ): GroupResult<RowT> | null {
   if (!groupBy) return null;
   const groups: Record<string, RowT[]> = {};
@@ -98,29 +72,21 @@ export function getGroupedData<RowT extends Record<string, unknown>>(
     if (!groups[gv]) { groups[gv] = []; order.push(gv); }
     groups[gv].push(row);
   }
-  if (groupOrder) {
-    order.sort((a, b) => {
-      let ia = groupOrder.indexOf(a);
-      let ib = groupOrder.indexOf(b);
-      if (ia === -1) ia = 999;
-      if (ib === -1) ib = 999;
-      return ia - ib;
-    });
-  }
+  if (groupOrder) order.sort((a, b) => {
+    let ia = groupOrder.indexOf(a);
+    let ib = groupOrder.indexOf(b);
+    if (ia === -1) ia = 999;
+    if (ib === -1) ib = 999;
+    return ia - ib;
+  });
   return { groups, order };
 }
 
 export function render<RowT extends Record<string, unknown>>(
-  state: DataTableState<RowT>,
-  opts: DataTableOptions<RowT>,
-  tbody: HTMLTableSectionElement,
-  paginationEl: HTMLDivElement | null,
-  liveRegion?: HTMLElement,
+  state: DataTableState<RowT>, opts: DataTableOptions<RowT>,
+  tbody: HTMLTableSectionElement, paginationEl: HTMLDivElement | null, liveRegion?: HTMLElement,
 ): void {
-  // Warn only when data is missing (null/undefined) — an empty array is valid
-  if (state.data == null) {
-    console.warn('[Maranello] dataTable: data is null or undefined');
-  }
+  if (state.data == null) console.warn('[Maranello] dataTable: data is null or undefined');
   tbody.innerHTML = '';
   const rows = getProcessedData(state);
   const grouped = getGroupedData(rows, opts.groupBy, opts.groupOrder);
@@ -134,32 +100,24 @@ export function render<RowT extends Record<string, unknown>>(
     return;
   }
 
-  if (grouped !== null) {
+  if (grouped) {
     let rowIdx = 0;
     for (const gname of grouped.order) {
       const grow = grouped.groups[gname];
-      const isExpanded = state.expandedGroups[gname] !== false;
-      tbody.appendChild(buildGroupHeader(gname, grow.length, isExpanded, colSpan, state, renderFn));
-      if (isExpanded) {
-        for (const row of grow) {
-          tbody.appendChild(buildRow(row, rowIdx++, opts, state, tbody));
-        }
-      } else {
-        rowIdx += grow.length;
-      }
+      const isCollapsed = state.groupCollapsed[gname] === true || state.expandedGroups[gname] === false;
+      const isExpanded = !isCollapsed;
+      const header = buildGroupHeader(gname, grow.length, isExpanded, colSpan, state, renderFn);
+      header.setAttribute('data-group', gname);
+      tbody.appendChild(header);
+      if (isExpanded) for (const row of grow) tbody.appendChild(buildRow(row, rowIdx++, opts, state, tbody));
+      else rowIdx += grow.length;
     }
     buildPagination(rows.length, paginationEl, opts.pageSize ?? 0, state, renderFn);
   } else {
     const pageSize = opts.pageSize ?? 0;
-    let start = 0;
-    let end = rows.length;
-    if (pageSize > 0) {
-      start = state.page * pageSize;
-      end = Math.min(start + pageSize, rows.length);
-    }
-    for (let i = start; i < end; i++) {
-      tbody.appendChild(buildRow(rows[i], i, opts, state, tbody));
-    }
+    const start = pageSize > 0 ? state.page * pageSize : 0;
+    const end = pageSize > 0 ? Math.min(start + pageSize, rows.length) : rows.length;
+    for (let i = start; i < end; i++) tbody.appendChild(buildRow(rows[i], i, opts, state, tbody));
     buildPagination(rows.length, paginationEl, pageSize, state, renderFn);
   }
 
@@ -168,20 +126,14 @@ export function render<RowT extends Record<string, unknown>>(
   const sortDir = state.sortDir === 1 ? 'ascending' : 'descending';
   const pgSize = opts.pageSize ?? 0;
   const totalPages = pgSize > 0 ? Math.ceil(rows.length / pgSize) : 1;
-
-  let msg: string;
-  if (state.sortKey && hasFilters) {
-    msg = 'Sorted by ' + state.sortKey + ' ' + sortDir + '. Showing ' + rows.length + ' of ' + totalData + ' rows';
-  } else if (state.sortKey) {
-    msg = 'Sorted by ' + state.sortKey + ' ' + sortDir;
-  } else if (hasFilters) {
-    msg = 'Showing ' + rows.length + ' of ' + totalData + ' rows';
-  } else {
-    msg = rows.length + ' rows';
-  }
-  if (pgSize > 0) {
-    msg += '. Page ' + (state.page + 1) + ' of ' + totalPages;
-  }
+  let msg = state.sortKey && hasFilters
+    ? 'Sorted by ' + state.sortKey + ' ' + sortDir + '. Showing ' + rows.length + ' of ' + totalData + ' rows'
+    : state.sortKey
+      ? 'Sorted by ' + state.sortKey + ' ' + sortDir
+      : hasFilters
+        ? 'Showing ' + rows.length + ' of ' + totalData + ' rows'
+        : rows.length + ' rows';
+  if (pgSize > 0) msg += '. Page ' + (state.page + 1) + ' of ' + totalPages;
   announce(msg, liveRegion);
 }
 

@@ -46,7 +46,7 @@ It ships as **three independent layers** that you can use together or separately
 |---|---|---|
 | **CSS-only** | 80+ component stylesheets, token system, 4 adaptive themes — zero JS required | `maranello-luce-design-business/css` |
 | **Headless JS** | 87 framework-agnostic APIs: charts, gauges, Gantt, forms, controls, data binding | `maranello-luce-design-business` |
-| **Web Components** | 25 `mn-*` custom elements — drop into any framework or plain HTML | `maranello-luce-design-business/wc` |
+| **Web Components** | 31 `mn-*` custom elements — drop into any framework or plain HTML | `maranello-luce-design-business/wc` |
 
 ### Key Capabilities
 
@@ -55,13 +55,64 @@ It ships as **three independent layers** that you can use together or separately
 | **4 Adaptive Themes** | Editorial · Nero · Avorio (warm light) · Colorblind (Wong palette) — all WCAG 2.2 AA |
 | **Token System** | 3-layer: primitive → semantic → component. `--mn-text` / `--mn-surface` auto-invert in light themes |
 | **87 JS APIs** | Charts (11), Gauges (9), Gantt, Funnel, Controls (6), Forms (12), Dialogs, Data binding (10), Icons (149+) |
-| **25 Web Components** | `mn-chart`, `mn-gauge`, `mn-gantt`, `mn-data-table`, `mn-detail-panel`, `mn-a11y`, `mn-chat`, `mn-okr`, `mn-map` and more |
+| **31 Web Components** | `mn-chart`, `mn-gauge`, `mn-gantt`, `mn-data-table`, `mn-detail-panel`, `mn-a11y`, `mn-chat`, `mn-okr`, `mn-map` · **Runtime**: `mn-app-shell`, `mn-facet-workbench`, `mn-entity-workbench`, `mn-dashboard`, `mn-async-select`, `mn-state-scaffold` |
 | **Responsive** | Mobile-first breakpoints, `autoResize()` for canvas charts, fluid gauges, off-canvas sidebar |
 | **AI-Native** | Mesh network (`mn-mesh-*`), Mission tracking, OKR panel, Convergio toolbar — built for agentic UIs |
 | **Accessibility** | `<mn-a11y>` FAB: font size, dyslexia font, high contrast, reduced motion, focus rings |
 | **Zero Dependencies** | Vanilla TypeScript. No React, Vue, or Angular required. Works with all of them |
 | **CI Constitution** | Enforced: no hardcoded colors, semantic tokens only, 250-line limit, WCAG-compliant accessibility.css |
 | **NaSra AI Agent** | Built-in expert covers token rules, WCAG 2.2, color blindness, responsive checklist |
+
+---
+
+## Presentation Runtime
+
+Maranello v4.15 adds a **schema-driven Presentation Runtime** on top of the design system. Rather than rendering DOM yourself, you register views, provide data + callbacks, and let the runtime handle layout, panels, state scaffolding, and accessibility.
+
+```
+Consumer App                    Maranello Runtime
+┌────────────┐                 ┌──────────────────┐
+│ Data fetch  │──schema/config─▶│ AppShell         │
+│ Biz rules   │──data──────────▶│ ViewRegistry     │
+│ Permissions │──actions───────▶│ PanelOrchestrator│
+│ Navigation  │──callbacks─────▶│ DashboardRenderer│
+└────────────┘                 │ FacetWorkbench   │
+                               │ EntityWorkbench  │
+                               │ DataTable v2     │
+                               │ StateScaffold    │
+                               └──────────────────┘
+```
+
+**Quick Start** (3 steps, ~15 lines):
+
+```javascript
+// 1. Register views
+const registry = Maranello.ViewRegistry.getInstance();
+registry.register({ id: 'dashboard', title: 'Dashboard', defaultPlacement: 'page',
+  factory: (el, data) => new Maranello.DashboardRenderer(el, { schema, data }) });
+
+// 2. Create shell
+const shell = new Maranello.AppShellController(document.getElementById('app'));
+shell.setLayout('split');
+
+// 3. Orchestrate
+const nav = new Maranello.NavigationModel();
+const orchestrator = new Maranello.PanelOrchestrator(registry, nav);
+orchestrator.open('dashboard', 'page', await fetchDashboardData());
+```
+
+**Before / After:**
+
+| Old Pattern | New Pattern |
+|---|---|
+| `el.innerHTML = buildMyTable(data)` | `new DashboardRenderer(el, { schema, data })` |
+| Custom loading spinner | `new StateScaffold(el, { state: 'loading' })` |
+| Manual DOM layout divs | `new AppShellController(el, { layout: 'split' })` |
+| `openDetailPanel()` inline | `orchestrator.open('detail', 'side-panel', data)` |
+| Ad-hoc filter UI | `new FacetWorkbench(el, { facets, onFilterChange })` |
+| Custom entity forms | `new EntityWorkbench(el, { schema, data, onSave })` |
+
+Consumer contract: [`CONSUMER_CONTRACT.md`](CONSUMER_CONTRACT.md) · Full API: [`docs/api-contracts-v4.md`](docs/api-contracts-v4.md)
 
 ---
 
@@ -161,7 +212,34 @@ Or skip the framework entirely with **Web Components** — they self-initialize,
 <mn-chart type="donut" data='[{"label":"A","value":60},{"label":"B","value":40}]'></mn-chart>
 ```
 
+**Runtime Web Components (new in v4.15):**
+
+| Tag | Key Attrs |
+|---|---|
+| `mn-app-shell` | `layout`, `sidebar-collapsed` |
+| `mn-facet-workbench` | — (configure via `.setOptions()`) |
+| `mn-entity-workbench` | — (configure via `.configure()`) |
+| `mn-dashboard` | `schema` (JSON), data via `.setData(key, value)` |
+| `mn-async-select` | `placeholder`, `.provider` property |
+| `mn-state-scaffold` | `state` (`loading`\|`empty`\|`error`\|`partial`\|`no-results`), `message` |
+
 ## For AI Agents → [AGENT.md](AGENT.md)
+
+## Runtime IIFE Exports (new in v4.15)
+
+Available on `window.Maranello` when using the IIFE bundle:
+
+| Export | Type |
+|---|---|
+| `AppShellController` | Class |
+| `ViewRegistry` | Class (singleton via `.getInstance()`) |
+| `PanelOrchestrator` | Class |
+| `FacetWorkbench` | Class |
+| `EntityWorkbench` | Class |
+| `DashboardRenderer` | Class |
+| `AsyncSelect` | Class |
+| `StateScaffold` | Class |
+| `NavigationModel` | Class |
 
 ## Rules & Governance → [CONSTITUTION.md](CONSTITUTION.md)
 

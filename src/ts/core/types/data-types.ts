@@ -7,7 +7,9 @@
 // --- Data Table ---
 
 export type DataTableColumnAlign = 'left' | 'center' | 'right';
-export type DataTableColumnType = 'text' | 'number' | 'date' | 'status' | 'badge' | 'custom';
+export type DataTableColumnType =
+  | 'text' | 'number' | 'date' | 'status' | 'badge' | 'progress' | 'person'
+  | 'tag' | 'metric' | 'action' | 'link' | 'icon' | 'custom';
 
 export interface DataTableColumn<RowT = Record<string, unknown>> {
   key: string;
@@ -33,6 +35,7 @@ export interface DataTableOptions<RowT = Record<string, unknown>> {
   compact?: boolean;
   emptyMessage?: string;
   onRowClick?: (row: RowT, index: number) => void;
+  onDrillDown?: (row: RowT, event: Event) => void;
   onSort?: (key: string, direction: 'asc' | 'desc') => void;
   onFilter?: (filters: Record<string, string>) => void;
   showFilters?: boolean;

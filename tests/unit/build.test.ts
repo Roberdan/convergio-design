@@ -38,7 +38,7 @@ describe('dist output files exist', () => {
 });
 
 describe('IIFE bundle size', () => {
-  const IIFE_MAX_BYTES = 410 * 1024; // 410 KB (v4.10.0 adds admin, FinOps, consulting components)
+  const IIFE_MAX_BYTES = 450 * 1024; // 450 KB (v4.17.0 adds presentation runtime: AppShell, ViewRegistry, PanelOrchestrator, FacetWorkbench, EntityWorkbench, DashboardRenderer, AsyncSelect, StateScaffold, NavigationModel)
 
   it(`IIFE bundle is under ${IIFE_MAX_BYTES / 1024} KB`, () => {
     const path = join(DIST, 'iife/maranello.min.js');

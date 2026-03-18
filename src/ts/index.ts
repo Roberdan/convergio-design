@@ -8,6 +8,14 @@ export * from './core/types';
 // Event system
 export { EventBus, eventBus } from './core/events';
 export type { EventCallback } from './core/events';
+export { NavigationModel } from './navigation-model';
+export type { ViewEntry, NavigateAction, NavigateCallback } from './navigation-model';
+export { ViewRegistry } from './view-registry';
+export type { ViewConfig, Placement } from './view-registry';
+export { AppShellController } from './app-shell';
+export type { LayoutMode, AppShellConfig } from './app-shell';
+export { PanelOrchestrator } from './panel-orchestrator';
+export type { PanelHandle } from './panel-orchestrator';
 
 // Utilities
 export { cssVar, palette, getTheme, setTheme, cycleTheme, getAccent, debounce, throttle, createElement, formatNumber, formatDate, clamp, lerp, hiDpiCanvas } from './core/utils';
@@ -72,6 +80,10 @@ export { initMessages } from './ai-chat-messages';
 
 // System status
 export { systemStatus } from './system-status';
+
+// State scaffold
+export { StateScaffold } from './state-scaffold';
+export type { StateScaffoldOptions } from './state-scaffold';
 
 // Profile menu
 export { profileMenu } from './profile-menu';
@@ -150,6 +162,14 @@ export { initTagsField } from './forms-tags-field';
 export type { TagsFieldOptions, TagsFieldApi } from './forms-tags-field';
 export { initPersonField } from './forms-person-field';
 export type { PersonResult, PersonFieldOptions, PersonFieldApi } from './forms-person-field';
+export { AsyncSelect } from './async-select';
+export type { AsyncDataProvider, AsyncSelectOptions } from './async-select';
+export { FacetWorkbench } from './facet-workbench';
+export type { FacetOption, FacetType, FacetConfig, FacetPreset, FacetWorkbenchOptions } from './facet-workbench';
+export { EntityWorkbench } from './entity-workbench';
+export type {
+  EntityField, EntitySection, EntityTab, EntitySchema, EntityWorkbenchOptions,
+} from './entity-workbench';
 
 // Progress ring
 export { progressRing } from './progress-ring';
@@ -223,6 +243,8 @@ export type {
 export * from './map-view-helpers';
 
 export { gridLayout } from './grid-layout';
+export { DashboardRenderer } from './dashboard-renderer';
+export type { WidgetType, DashboardWidget, DashboardRow, DashboardSchema } from './dashboard-renderer';
 export type { GridTemplateName, GridLayoutOptions, GridLayoutController } from './grid-layout';
 
 // v4.5–v4.9 components — kept in barrel to stay under 250-line limit

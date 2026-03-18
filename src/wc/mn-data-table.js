@@ -52,11 +52,12 @@ class MnDataTable extends HTMLElement {
     const link2 = cssLink('../css/layouts-data-table-1.css');
     const link3 = cssLink('../css/layouts-data-table-2.css');
     const link4 = cssLink('../css/components-tables-status.css');
+    const link5 = cssLink('../css/layouts-data-table-v2.css');
 
     this._container = document.createElement('div');
     this._container.className = 'mn-wc-root';
     this._container.setAttribute('role', 'grid');
-    this.shadowRoot.append(link1, link2, link3, link4, this._container);
+    this.shadowRoot.append(link1, link2, link3, link4, link5, this._container);
   }
 
   connectedCallback() {

@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.17.0] - 2026-03-18
+
+### Added — Presentation Runtime
+- **AppShell** (`mn-app-shell`): 8-slot layout shell with 6 modes (full, split, stacked, docked-bottom, dual-panel, side-detail), responsive
+- **ViewRegistry**: singleton view registration with Placement types (page, side-panel, bottom-dock, modal, overlay, workspace)
+- **PanelOrchestrator**: open/close/move/stack/swap views — DOM-preserving move, event-driven lifecycle
+- **FacetWorkbench** (`mn-facet-workbench`): schema-driven multi-facet filters (select, multi-select, search, date-range, boolean), presets, chips, exclusion rules, keyboard nav
+- **EntityWorkbench** (`mn-entity-workbench`): schema-driven entity edit panel with tabs, sections, async-select fields, dirty tracking, validation, back-stack navigation
+- **DashboardRenderer** (`mn-dashboard`): schema-driven dashboard composition (KPI strip, stat cards, charts, gauges, legends) with automatic StateScaffold per widget
+- **DataTable v2**: 6 new cell types (metric, person, progress, action, link, icon), collapsible row grouping, row drill-down — backward-compatible
+- **AsyncSelect** (`mn-async-select`): generic async searchable control with ARIA combobox, debounce, keyboard nav; PersonField refactored to use it
+- **StateScaffold** (`mn-state-scaffold`): 5 standard states (loading, empty, error, partial, no-results) with theme-aware CSS
+- **NavigationModel**: back-stack with push/pop/replace, onNavigate hook for consumer routing
+- 6 interactive demo pages: runtime-shell, runtime-dashboard, runtime-facets, runtime-entity, runtime-table-v2, runtime-integration
+- `CONSUMER_CONTRACT.md`: consumer vs Maranello ownership, anti-patterns, migration guide
+- `docs/agent-cookbook.md`: 6 recipes + anti-patterns + schema reference for AI agents
+- Full API documentation in `docs/api-contracts-v4.md` for all runtime components
+- NaSra agent updated with runtime knowledge, layout modes, schema patterns, WCAG
+
+### Changed
+- IIFE bundle size limit: 410 KB → 450 KB (9 new runtime components)
+- `DATA_CONTRACTS.md`: 13 new interface entries for runtime APIs
+- `README.md`: Presentation Runtime section with architecture diagram, Quick Start, Before/After
+- `CLAUDE.md`: runtime exports, WCs, CSS files, architecture layer
+- 31 Web Components (was 25), 96+ IIFE exports
+
 ## [4.16.0] - 2026-03-18
 
 ### Added

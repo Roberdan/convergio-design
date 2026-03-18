@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Runtime DataTable v2 Demo</title>
+  <link rel="stylesheet" href="../src/fonts/local-fonts.css">
+  <link rel="stylesheet" href="../dist/css/maranello.css">
+  <style>
+    body { margin: 0; background: var(--mn-surface); color: var(--mn-text); }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--mn-border);
+      background: var(--mn-surface-raised);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(20rem, 26rem);
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .panel {
+      border: 1px solid var(--mn-border);
+      border-radius: var(--radius-md);
+      background: var(--mn-surface-raised);
+      padding: 0.85rem;
+    }
+    #detail-panel { min-height: 14rem; }
+    @media (max-width: 640px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="mn-nero">
+  <header class="toolbar">
+    <strong class="mn-title-sm">DataTable v2 — Projects</strong>
+    <span style="margin-left:auto"></span>
+    <label for="theme">Theme</label>
+    <select id="theme" class="mn-form-select">
+      <option value="editorial">Editorial</option>
+      <option value="nero" selected>Nero</option>
+      <option value="avorio">Avorio</option>
+      <option value="colorblind">Colorblind</option>
+    </select>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <div id="table-host"></div>
+    </section>
+    <aside class="panel" id="detail-panel">
+      <h2 class="mn-title-sm">Project Detail</h2>
+      <p class="mn-body-sm">Click any row to open the drill-down panel.</p>
+    </aside>
+  </main>
+
+  <script src="../dist/iife/maranello.min.js"></script>
+  <script>
+    (function () {
+      const M = window.Maranello;
+      if (!M) return;
+
+      const projects = [
+        ['Aquila CRM', 'High', 'Active', 82, 540000, 'up', '+8%', 'https://futuraops.com/projects/aquila'],
+        ['Neon Pulse', 'Medium', 'Active', 61, 310000, 'up', '+3%', 'https://futuraops.com/projects/neon-pulse'],
+        ['Atlas BI', 'High', 'Paused', 38, 120000, 'down', '-4%', 'https://futuraops.com/projects/atlas-bi'],
+        ['Vector Payroll', 'Low', 'Completed', 100, 890000, 'flat', '0%', 'https://futuraops.com/projects/vector-payroll'],
+        ['Orbit WMS', 'High', 'Active', 74, 420000, 'up', '+6%', 'https://futuraops.com/projects/orbit-wms'],
+        ['Harbor ERP', 'Medium', 'Paused', 46, 215000, 'down', '-1%', 'https://futuraops.com/projects/harbor-erp'],
+        ['Nimbus HR', 'Medium', 'Completed', 100, 360000, 'up', '+5%', 'https://futuraops.com/projects/nimbus-hr'],
+        ['Northwind CPQ', 'Low', 'Active', 57, 175000, 'up', '+2%', 'https://futuraops.com/projects/northwind-cpq'],
+        ['Falcon Assist', 'High', 'Active', 68, 255000, 'up', '+4%', 'https://futuraops.com/projects/falcon-assist'],
+        ['Sierra Ledger', 'Medium', 'Completed', 100, 410000, 'flat', '0%', 'https://futuraops.com/projects/sierra-ledger'],
+        ['Delta Claims', 'High', 'Paused', 33, 98000, 'down', '-7%', 'https://futuraops.com/projects/delta-claims'],
+        ['Mercury Support', 'Low', 'Active', 59, 142000, 'up', '+2%', 'https://futuraops.com/projects/mercury-support'],
+        ['Zenith Fleet', 'High', 'Active', 77, 332000, 'up', '+9%', 'https://futuraops.com/projects/zenith-fleet'],
+        ['Aurora Docs', 'Low', 'Completed', 100, 126000, 'up', '+1%', 'https://futuraops.com/projects/aurora-docs'],
+        ['Echo Vision', 'Medium', 'Paused', 41, 154000, 'down', '-3%', 'https://futuraops.com/projects/echo-vision'],
+        ['Vertex Auth', 'High', 'Active', 84, 468000, 'up', '+11%', 'https://futuraops.com/projects/vertex-auth'],
+        ['Comet Pay', 'Medium', 'Active', 66, 299000, 'up', '+4%', 'https://futuraops.com/projects/comet-pay'],
+        ['Lumen Retail', 'Low', 'Completed', 100, 520000, 'flat', '0%', 'https://futuraops.com/projects/lumen-retail'],
+        ['Helix Risk', 'High', 'Paused', 28, 73000, 'down', '-8%', 'https://futuraops.com/projects/helix-risk'],
+        ['Prism IoT', 'Medium', 'Active', 63, 284000, 'up', '+5%', 'https://futuraops.com/projects/prism-iot'],
+        ['Titan Forecast', 'High', 'Active', 79, 446000, 'up', '+7%', 'https://futuraops.com/projects/titan-forecast'],
+      ].map((item, idx) => {
+        const icon = item[1] === 'High' ? 'warning' : item[1] === 'Medium' ? 'chart' : 'check';
+        return {
+          id: `PRJ-${200 + idx}`,
+          owner: {
+            name: ['Alessio Romano', 'Beatrice Fontana', 'Carlo Vitale', 'Diana Messina', 'Enrico Palmieri'][idx % 5],
+            email: `owner${idx + 1}@futuraops.com`,
+          },
+          project: item[0],
+          priority: { icon, tooltip: `${item[1]} priority` },
+          progress: { value: item[3], max: 100, label: `${item[3]}%` },
+          revenue: { value: '$' + Number(item[4]).toLocaleString(), trend: item[5], delta: item[6] },
+          status: item[2],
+          url: { text: 'Open', href: item[7], external: true },
+          actions: {
+            actions: [
+              { label: 'View', onClick: `view-${idx}` },
+              { label: 'Edit', onClick: `edit-${idx}` },
+              { label: 'Delete', onClick: `delete-${idx}` },
+            ],
+          },
+        };
+      });
+
+      const detailPanel = document.getElementById('detail-panel');
+      const tableHost = document.getElementById('table-host');
+
+      M.dataTable(tableHost, {
+        columns: [
+          { key: 'priority', label: 'Priority', type: 'icon' },
+          { key: 'owner', label: 'Name', type: 'person', sortable: true },
+          { key: 'project', label: 'Project', type: 'text', sortable: true, filterable: true },
+          { key: 'url', label: 'Project URL', type: 'link' },
+          { key: 'progress', label: 'Progress', type: 'progress', sortable: true },
+          { key: 'revenue', label: 'Revenue', type: 'metric', sortable: true },
+          { key: 'status', label: 'Status', type: 'status', sortable: true, filterable: true },
+          { key: 'actions', label: 'Actions', type: 'action' },
+        ],
+        data: projects,
+        groupBy: 'status',
+        groupOrder: ['Active', 'Completed', 'Paused'],
+        pageSize: 0,
+        onRowClick: (row) => {
+          detailPanel.innerHTML = `
+            <h2 class="mn-title-sm">${row.project}</h2>
+            <p class="mn-body-sm">Owner: ${row.owner.name} (${row.owner.email})</p>
+            <p class="mn-body-sm">Status: ${row.status} · Progress: ${row.progress.label}</p>
+            <p class="mn-body-sm">Forecast revenue: ${row.revenue.value} (${row.revenue.delta})</p>
+            <p class="mn-body-sm">Project ID: ${row.id}</p>
+          `;
+        },
+      });
+
+      tableHost.addEventListener('mn:table-action', (event) => {
+        const action = event.detail.actionId;
+        detailPanel.innerHTML = `<h2 class="mn-title-sm">Action Triggered</h2><p class="mn-body-sm">${action}</p>`;
+      });
+
+      document.getElementById('theme').addEventListener('change', (event) => {
+        const theme = event.target.value;
+        if (!['editorial', 'nero', 'avorio', 'colorblind'].includes(theme)) return;
+        M.setTheme(theme);
+      });
+    })();
+  </script>
+</body>
+</html>

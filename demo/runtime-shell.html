@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Runtime Shell Demo</title>
+  <link rel="stylesheet" href="../src/fonts/local-fonts.css">
+  <link rel="stylesheet" href="../dist/css/maranello.css">
+  <style>
+    body { margin: 0; background: var(--mn-surface); color: var(--mn-text); }
+    .mn-app-shell .mn-app-shell__toolbar,
+    .mn-app-shell .mn-app-shell__filter-bar { display: flex; align-items: center; gap: 0.75rem; }
+    .demo-search { flex: 1; min-width: 12rem; }
+    .demo-search .mn-form-input { width: 100%; }
+    .demo-avatar {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 999px;
+      background: var(--mn-accent);
+      color: var(--mn-surface);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .mode-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .mode-buttons .mn-btn.is-active { outline: 2px solid var(--mn-accent); }
+    .slot-grid { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+    .slot-card {
+      border: 1px solid var(--mn-border);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      background: var(--mn-surface-sunken);
+      min-height: 6.5rem;
+    }
+    .slot-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--mn-text-muted); }
+    .slot-body { margin-top: 0.45rem; font-weight: 600; }
+    .mn-sidebar__item { display: block; padding: 0.5rem 0.25rem; }
+    .mn-app-shell__secondary,
+    .mn-app-shell__detail,
+    .mn-app-shell__bottom { animation: slot-fade 220ms ease-out; }
+    @keyframes slot-fade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 640px) {
+      .demo-search { min-width: 8rem; }
+      .mn-app-shell .mn-app-shell__toolbar,
+      .mn-app-shell .mn-app-shell__filter-bar { flex-wrap: wrap; }
+      .mode-buttons .mn-btn { padding-inline: 0.55rem; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body class="mn-nero">
+  <div id="shell"></div>
+
+  <script src="../dist/iife/maranello.min.js"></script>
+  <script>
+    (function () {
+      const M = window.Maranello;
+      if (!M) return;
+
+      const themes = ['editorial', 'nero', 'avorio', 'colorblind'];
+      const shellEl = document.getElementById('shell');
+      const shell = new M.AppShellController(shellEl, { layout: 'full' });
+
+      shell.getSlot('nav').innerHTML = `
+        <aside class="mn-sidebar">
+          <div class="mn-sidebar__header">
+            <div class="mn-sidebar__brand">Runtime Shell</div>
+          </div>
+          <nav class="mn-sidebar__nav">
+            <a class="mn-sidebar__item" href="#">Dashboard</a>
+            <a class="mn-sidebar__item" href="#">Projects</a>
+            <a class="mn-sidebar__item" href="#">Team</a>
+            <a class="mn-sidebar__item" href="#">Settings</a>
+          </nav>
+        </aside>
+      `;
+
+      shell.getSlot('toolbar').innerHTML = `
+        <button type="button" class="mn-btn mn-btn--ghost" data-sidebar-toggle>☰</button>
+        <div class="demo-search"><input class="mn-form-input" type="search" placeholder="Search teams, projects, tickets…"></div>
+        <label class="mn-micro" for="theme-select">Theme</label>
+        <select id="theme-select" class="mn-form-select">
+          ${themes.map((t) => `<option value="${t}">${t[0].toUpperCase() + t.slice(1)}</option>`).join('')}
+        </select>
+        <span class="demo-avatar" aria-label="User avatar">AL</span>
+      `;
+
+      shell.getSlot('filter-bar').innerHTML = `
+        <div class="mode-buttons" id="mode-buttons">
+          <button class="mn-btn mn-btn--ghost is-active" data-layout="full">full</button>
+          <button class="mn-btn mn-btn--ghost" data-layout="split">split</button>
+          <button class="mn-btn mn-btn--ghost" data-layout="stacked">stacked</button>
+          <button class="mn-btn mn-btn--ghost" data-layout="docked-bottom">docked-bottom</button>
+          <button class="mn-btn mn-btn--ghost" data-layout="dual-panel">dual-panel</button>
+          <button class="mn-btn mn-btn--ghost" data-layout="side-detail">side-detail</button>
+        </div>
+      `;
+
+      shell.getSlot('main').innerHTML = `
+        <h2 class="mn-title-md">Main Workspace</h2>
+        <div class="slot-grid">
+          <article class="slot-card"><div class="slot-title">Pipeline</div><div class="slot-body">Q3 Delivery: 18 active milestones</div></article>
+          <article class="slot-card"><div class="slot-title">Budget</div><div class="slot-body">€4.2M allocated · 64% consumed</div></article>
+          <article class="slot-card"><div class="slot-title">Operations</div><div class="slot-body">6 incidents open · MTTR 42 min</div></article>
+        </div>
+      `;
+
+      shell.getSlot('secondary').innerHTML = `
+        <h3 class="mn-title-sm">Secondary Panel</h3>
+        <p class="mn-body-sm">Sprint burndown, milestone dependencies, and release notes preview.</p>
+      `;
+
+      shell.getSlot('detail').innerHTML = `
+        <h3 class="mn-title-sm">Detail Panel</h3>
+        <p class="mn-body-sm">Customer ACME Motors · Contract renewal due in 9 days.</p>
+      `;
+
+      shell.getSlot('bottom').innerHTML = `
+        <h3 class="mn-title-sm">Bottom Dock</h3>
+        <p class="mn-body-sm">Deployment logs and agent activity stream.</p>
+      `;
+
+      shell.getSlot('overlay').innerHTML = '';
+
+      const themeSelect = shell.getSlot('toolbar').querySelector('#theme-select');
+      themeSelect.value = 'nero';
+      themeSelect.addEventListener('change', (event) => {
+        const next = event.target.value;
+        if (!themes.includes(next)) return;
+        M.setTheme(next);
+      });
+
+      const modeButtons = shell.getSlot('filter-bar').querySelector('#mode-buttons');
+      modeButtons.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-layout]');
+        if (!button) return;
+        const mode = button.getAttribute('data-layout');
+        shell.setLayout(mode);
+        modeButtons.querySelectorAll('button').forEach((item) => item.classList.remove('is-active'));
+        button.classList.add('is-active');
+      });
+
+      shell.getSlot('toolbar').querySelector('[data-sidebar-toggle]').addEventListener('click', () => {
+        shell.toggleSidebar();
+      });
+
+      const stylePulse = () => {
+        ['secondary', 'detail', 'bottom'].forEach((name) => {
+          const slot = shell.getSlot(name);
+          slot.style.animation = 'none';
+          void slot.offsetWidth;
+          slot.style.animation = '';
+        });
+      };
+      modeButtons.addEventListener('click', stylePulse);
+    })();
+  </script>
+</body>
+</html>
