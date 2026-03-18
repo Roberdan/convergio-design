@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.15.1] - 2026-03-18
+
+### Added
+- CI: `check-theme-semantics.sh` now blocks `var(--mn-text-inverse)` in Avorio CSS overrides (prevents invisible text regression)
+
+### Changed
+- Version bump for CI guard addition
+
+## [4.15.0] - 2026-03-18
+
+### Added
+- Gauge `colorMode` option: `'higher-better'` (red→yellow→green) or `'lower-better'` (green→yellow→red) — auto-generates arcBar colorStops
+- Dashboard Strip: right-side pods replaced with second gauge (latency, lower-better demo)
+- `costTimeline`: hover dots at each series intersection on mouseover
+- `waterfallChart`: bar highlight glow on hover
+- 13 missing APIs documented in CLAUDE.md, AGENT.md, NaSra, DATA_CONTRACTS (waterfallChart, costTimeline, confidenceChart, riskMatrix, kpiScorecard, agentCostBreakdown, tokenMeter, cohortGrid, approvalChain, decisionMatrix, renderSourceCards, chartInteract, sparklineInteract)
+
+### Fixed
+- **Avorio theme: 24 color fixes** — `var(--mn-text-inverse)` (#fff) replaced with `var(--mn-text)` (#111) across 17 CSS files (buttons, tooltips, modals, toasts, dropdowns, filter chips, forms, icons, map popups, nav tooltips, panels)
+- Avorio tooltip: background changed from nearly-invisible `var(--mn-hover-bg)` to `var(--mn-surface-raised)`
+- Avorio ghost-light buttons: added explicit `background: transparent` (specificity fix)
+- Avorio hover states: 4 files changed from `var(--mn-hover-bg)` (0.06 opacity) to `rgba(0,0,0,0.08)`
+- Avorio chart panel title: white → dark text
+- Avorio treemap cell: wrong token (`--mn-hover-bg` as color) → `--mn-text`
+
+### ⚠️ Migration Notes (for consumers of Maranello CSS)
+- If you have custom CSS with `body.mn-avorio` selectors using `color: var(--mn-text-inverse)`, change to `color: var(--mn-text)` — `--mn-text-inverse` is `#fff` (invisible on light bg)
+- Ghost button variants (`.mn-btn--ghost`, `.mn-btn--ghost-light`) in Avorio now correctly show transparent bg — remove any custom workarounds
+- Gauge configs can now use `"colorMode": "higher-better"` or `"lower-better"` instead of manual `colorStops` arrays
+
 ## [4.14.1] - 2026-03-17
 
 ### Fixed

@@ -33,6 +33,17 @@ while IFS= read -r match; do
   ((errors++)) || true
 done < <(grep -rn "color[[:space:]]*:[[:space:]]*var(--bianco-caldo" "$ROOT/demo/" 2>/dev/null || true)
 
+echo "Checking CSS: var(--mn-text-inverse) as text color in Avorio overrides..."
+while IFS= read -r match; do
+  file="${match%%:*}"; line="${match#*:*:}"
+  # Allow intentional uses: on accent/error bg, dark section scoped, or form step active (accent bg)
+  if echo "$line" | grep -qE "intentional|mn-section-dark|mn-accent-text|mn-form-step--active"; then continue; fi
+  echo "  FAIL: $file  line $(echo "$match" | cut -d: -f2)"
+  echo "        $line"
+  echo "  Fix : Replace color: var(--mn-text-inverse) with var(--mn-text) in Avorio overrides"
+  ((errors++)) || true
+done < <(grep -rn 'mn-avorio.*color.*var(--mn-text-inverse)' "$ROOT/src/css/" 2>/dev/null || true)
+
 echo ""
 if [[ $errors -gt 0 ]]; then
   echo "FAIL: $errors theme-semantic violations. Text invisible on light/Avorio theme."
