@@ -79,15 +79,10 @@ export function buildDOM(
   container.classList.add('mn-detail-panel');
   if (isInline) container.classList.add('mn-detail-panel--inline');
 
-  /* Inline mode: no backdrop needed */
-  let backdrop: HTMLElement;
-  if (isInline) {
-    backdrop = createElement('div', 'mn-detail-panel__backdrop');
-    backdrop.style.display = 'none';
-  } else {
-    backdrop = createElement('div', 'mn-detail-panel__backdrop');
-    container.parentNode!.insertBefore(backdrop, container);
-  }
+  /* Inline mode: hidden backdrop; overlay mode: inserted before container */
+  const backdrop = createElement('div', 'mn-detail-panel__backdrop');
+  if (isInline) backdrop.style.display = 'none';
+  else container.parentNode!.insertBefore(backdrop, container);
 
   const header = createElement('div', 'mn-detail-panel__header');
 
@@ -125,11 +120,9 @@ export function buildDOM(
   const editBtn = createElement('button', 'mn-detail-panel__action-btn mn-detail-panel__edit-btn');
   editBtn.textContent = 'Edit';
   editBtn.style.display = opts.editable !== false ? '' : 'none';
-
   const saveBtn = createElement('button', 'mn-detail-panel__action-btn mn-detail-panel__save-btn');
   saveBtn.textContent = 'Save';
   saveBtn.style.display = 'none';
-
   const cancelBtn = createElement('button', 'mn-detail-panel__action-btn mn-detail-panel__cancel-btn');
   cancelBtn.textContent = 'Cancel';
   cancelBtn.style.display = 'none';
