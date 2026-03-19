@@ -1,0 +1,311 @@
+{
+  "objective": "Evolve Maranello from a generic design system into a generic presentation runtime for data-heavy operational applications, with schema/config-driven rendering, layout composition, panel orchestration, and consumer contract enforcement.",
+  "user_request": "I need Maranello to evolve from a generic design system into a generic presentation runtime for data-heavy operational applications. Consumer applications should own only data fetching, business rules, permissions, navigation state, actions/workflows, domain-specific calculations. Maranello should own rendering, layout composition, shell/workspace behavior, panel orchestration, reusable interaction patterns, loading/empty/error/partial-data presentation states, responsive behavior, accessibility, theme handling. Adding or moving a feature becomes: register the view, provide schema/config, bind data and actions — NOT cross-app layout rewrites.",
+  "requirements": [
+    {
+      "group": "A: AppShell & WorkspaceLayout",
+      "items": [
+        {
+          "id": "F-01",
+          "said": "Slots for nav, toolbar, filter bar, main view, secondary view, detail panel, bottom panel, overlays",
+          "text": "Create mn-app-shell Web Component with named slots: nav, toolbar, filter-bar, main, secondary, detail, bottom, overlay",
+          "verify": "mn-app-shell.js exists in src/wc/; renders all 8 named slots; unit test confirms slot projection",
+          "priority": "P0"
+        },
+        {
+          "id": "F-02",
+          "said": "Layout modes such as full-page, split, stacked, docked-bottom, dual-panel, side-detail",
+          "text": "mn-app-shell supports layout attribute with modes: full, split, stacked, docked-bottom, dual-panel, side-detail; CSS-only mode switching via @layer",
+          "verify": "Each layout mode applies correct CSS grid; visual test or E2E confirms at least 4 modes",
+          "priority": "P0"
+        },
+        {
+          "id": "F-02w",
+          "inferred_from": "F-02",
+          "text": "Layout mode CSS must use tokens for all spacing/sizing, be responsive at 640px/1024px breakpoints, and use @layer",
+          "verify": "grep confirms no hardcoded px values for spacing, @layer present, @media queries at breakpoints",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "B: ViewRegistry & PanelOrchestrator",
+      "items": [
+        {
+          "id": "F-03",
+          "said": "Register views declaratively",
+          "text": "Create ViewRegistry class: register(id, config) where config includes component tag/factory, title, icon, placement (page|panel|dock|modal|overlay), size hints",
+          "verify": "ViewRegistry exported from index.ts; register/get/list methods tested; at least 5 unit tests",
+          "priority": "P0"
+        },
+        {
+          "id": "F-04",
+          "said": "Open, close, move, dock, stack, and swap views by configuration",
+          "text": "Create PanelOrchestrator that manages view lifecycle: open(viewId, target?), close(viewId), move(viewId, newTarget), stack(viewId), swap(viewId1, viewId2). Emits events via data-binding system.",
+          "verify": "PanelOrchestrator exported; open/close/move/stack/swap methods tested; integration test with mn-app-shell",
+          "priority": "P0"
+        },
+        {
+          "id": "F-05",
+          "said": "Support page, side panel, bottom dock, modal, overlay, and workspace modes",
+          "text": "PanelOrchestrator placement types: 'page' | 'side-panel' | 'bottom-dock' | 'modal' | 'overlay' | 'workspace'. Each placement maps to an mn-app-shell slot with appropriate show/hide animations.",
+          "verify": "All 6 placement types documented and tested; placement changes trigger CSS transitions",
+          "priority": "P0"
+        },
+        {
+          "id": "F-05w",
+          "inferred_from": "F-04",
+          "text": "PanelOrchestrator must integrate with existing mn-detail-panel, mn-modal, mn-toast (don't duplicate)",
+          "verify": "PanelOrchestrator.open with placement=modal uses existing openModal; no duplicate overlay logic",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "C: FacetWorkbench",
+      "items": [
+        {
+          "id": "F-06",
+          "said": "Multi-select filters, async search, counters, chips/active filters, mutual exclusion rules, saved views/presets, keyboard navigation",
+          "text": "Create FacetWorkbench headless class and mn-facet-workbench WC. Schema-driven: facets[] with type (select|multi-select|search|date-range|boolean), dataProvider (sync/async), countProvider, exclusionRules. Renders chips for active filters. Full keyboard nav (arrow keys, Enter, Escape).",
+          "verify": "mn-facet-workbench WC exists; unit tests for each facet type; keyboard nav tested; chip rendering confirmed",
+          "priority": "P0"
+        },
+        {
+          "id": "F-07",
+          "said": "saved views / presets",
+          "text": "FacetWorkbench supports savePreset(name) / loadPreset(name) / listPresets(). Consumer provides persistence callback; Maranello handles UI for preset selector.",
+          "verify": "Preset save/load round-trips in unit test; mn-facet-workbench has preset-selector UI",
+          "priority": "P1"
+        },
+        {
+          "id": "F-07w",
+          "inferred_from": "F-06",
+          "text": "FacetWorkbench must integrate with existing layouts-filter-chips.css and extend it, not replace",
+          "verify": "grep layouts-filter-chips.css confirms existing classes preserved; new classes added with mn-facet- prefix",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "D: EntityWorkbench",
+      "items": [
+        {
+          "id": "F-08",
+          "said": "Schema-driven detail and edit panel with tabs, sections, field renderers, actions, save/cancel states",
+          "text": "Create EntityWorkbench that extends existing detail-panel with: schema-driven tab/section layout, pluggable field renderers (reusing detail-panel-renderers.ts), action bar with save/cancel/custom actions, dirty-state tracking, validation integration with forms-validate.ts",
+          "verify": "EntityWorkbench renders from schema; tabs/sections work; save/cancel emit events; dirty tracking tested",
+          "priority": "P0"
+        },
+        {
+          "id": "F-09",
+          "said": "Async lookup fields, person fields, select/search fields",
+          "text": "EntityWorkbench field types include async-select (generic async search), person (extends existing forms-person-field.ts), search-select. All use a common AsyncDataProvider interface.",
+          "verify": "AsyncDataProvider interface exported; async-select field type tested with mock provider; person field reuses existing code",
+          "priority": "P0"
+        },
+        {
+          "id": "F-10",
+          "said": "Back-stack / nested detail support",
+          "text": "EntityWorkbench maintains a navigation back-stack: pushEntity(schema, data) / popEntity() / canGoBack(). Breadcrumb trail rendered. Integrates with PanelOrchestrator.",
+          "verify": "Back-stack push/pop tested; breadcrumb updates; 3-level nesting test passes",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "E: DashboardRenderer",
+      "items": [
+        {
+          "id": "F-11",
+          "said": "KPI strip, cards, charts, gauges, legends, state scaffolds — composition from schema/config instead of consumer-written page HTML",
+          "text": "Create DashboardRenderer that takes a DashboardSchema (rows/columns of widgets) and renders using existing chart/gauge/card components. Widget types: kpi-strip, stat-card, chart (all types), gauge, legend, table-summary, custom. Schema defines layout grid, widget type, dataKey, options.",
+          "verify": "DashboardRenderer renders a 3-widget schema correctly; each built-in widget type has a test; grid layout responsive",
+          "priority": "P0"
+        },
+        {
+          "id": "F-11w",
+          "inferred_from": "F-11",
+          "text": "DashboardRenderer reuses ALL existing chart factories (sparkline, donut, barChart, etc.), gauge classes, and card CSS — no reimplementation",
+          "verify": "DashboardRenderer imports from charts.ts, gauge-engine.ts; no duplicate rendering code",
+          "priority": "P0"
+        },
+        {
+          "id": "F-12",
+          "said": "state scaffolds",
+          "text": "Each dashboard widget slot shows loading/empty/error state scaffold automatically based on data state. StateScaffold (F-19) provides the patterns.",
+          "verify": "Widget with null data shows loading; empty array shows empty state; error object shows error with retry",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "F: DataTable v2",
+      "items": [
+        {
+          "id": "F-13",
+          "said": "Rich cell types: grouping, status/metric/person/progress/action cells, row drill-down, declarative render contracts",
+          "text": "Enhance existing data-table with new cell types: metric (with trend indicator), person (avatar+name), progress (bar), action (button group), link, icon. Add row-group with collapsible headers. Add row drill-down (click row → emit detail event or open EntityWorkbench). All via column type declaration in schema.",
+          "verify": "6+ new cell types tested; row grouping collapses/expands; drill-down emits event; all column types declared in schema",
+          "priority": "P0"
+        },
+        {
+          "id": "F-13w",
+          "inferred_from": "F-13",
+          "text": "DataTable v2 must be backwards-compatible: existing DataTableOptions interface extends, not replaces. New features are additive.",
+          "verify": "Existing DataTable unit tests pass unchanged; new column types are opt-in",
+          "priority": "P0"
+        }
+      ]
+    },
+    {
+      "group": "G: AsyncSelect / SearchPicker / PersonField",
+      "items": [
+        {
+          "id": "F-14",
+          "said": "Reusable searchable controls with async providers, keyboard and accessibility complete",
+          "text": "Create generic AsyncSelect (headless + WC mn-async-select): consumer provides dataProvider(query) → Promise<Item[]>, renderItem, onSelect. Full keyboard nav, aria-combobox pattern, debounced search. PersonField and SearchPicker become thin wrappers.",
+          "verify": "mn-async-select WC exists; keyboard nav tested (arrow, enter, escape); aria roles correct; debounce tested",
+          "priority": "P0"
+        },
+        {
+          "id": "F-14w",
+          "inferred_from": "F-14",
+          "text": "Existing forms-person-field.ts is refactored to use AsyncSelect internally, maintaining backward compat",
+          "verify": "forms-person-field.ts imports from async-select; existing person field tests pass",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "H: StateScaffold",
+      "items": [
+        {
+          "id": "F-15",
+          "said": "Standard loading, empty, error, retry, partial-data, and no-results patterns",
+          "text": "Create StateScaffold headless utility and mn-state-scaffold WC. States: loading (skeleton/spinner), empty (illustration+message+action), error (message+retry button), partial (data+warning banner), no-results (message+clear-filters action). Consumer provides state + optional customization. CSS uses tokens.",
+          "verify": "mn-state-scaffold WC renders all 5 states; each state has CSS using tokens; unit tests for state transitions",
+          "priority": "P0"
+        },
+        {
+          "id": "F-15w",
+          "inferred_from": "F-15",
+          "text": "StateScaffold CSS must be theme-aware (works across Editorial, Nero, Avorio, Colorblind)",
+          "verify": "Visual test or manual check: scaffold renders correctly in all 4 themes",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "I: Navigation Model",
+      "items": [
+        {
+          "id": "F-16",
+          "said": "Generic view metadata, back-stack support, route-to-view mapping hooks",
+          "text": "Create NavigationModel class: maintains ordered history stack of ViewEntry (viewId, params, timestamp). Provides push/pop/replace/canGoBack/current. Hook: onNavigate(callback) for consumer routing. Does NOT own the URL — consumer maps URL↔viewId.",
+          "verify": "NavigationModel exported; push/pop/replace tested; onNavigate callback fires; history length correct",
+          "priority": "P1"
+        },
+        {
+          "id": "F-17",
+          "said": "Ability for a consumer to move a feature from page -> panel -> dock without rewriting feature UI",
+          "text": "ViewRegistry placement is mutable at runtime: consumer calls orchestrator.move(viewId, 'side-panel') and the view re-renders in new slot without unmounting its internal DOM (move, don't destroy/recreate).",
+          "verify": "Test: view registered as page, moved to panel, state preserved (no re-init); DOM node same reference",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "J: Consumer Contract & Guardrails",
+      "items": [
+        {
+          "id": "F-18",
+          "said": "Consumer apps must NOT create new product UI through createElement-heavy rendering, custom layout CSS, inline visual styles, or feature-specific presentation shells",
+          "text": "Document clear consumer contract: what consumer owns (data, actions, schemas, routing) vs what Maranello owns (rendering, layout, orchestration). Add lint rule or CI check that warns on bare createElement in consumer app code that doesn't delegate to Maranello components.",
+          "verify": "CONSUMER_CONTRACT.md exists; lint rule skeleton exists; DATA_CONTRACTS.md updated with runtime API section",
+          "priority": "P1"
+        },
+        {
+          "id": "F-19",
+          "said": "Consumer apps should pass schema, config, data, actions, and callbacks. Maranello should render and orchestrate the UI.",
+          "text": "All new runtime components (AppShell, DashboardRenderer, FacetWorkbench, EntityWorkbench) accept schema/config as primary API. No consumer HTML templates needed — Maranello generates DOM from schema.",
+          "verify": "All new WCs accept JSON schema attrs; no WC requires innerHTML from consumer for core functionality",
+          "priority": "P0"
+        }
+      ]
+    },
+    {
+      "group": "K: Cross-Cutting",
+      "items": [
+        {
+          "id": "F-20",
+          "said": "Maranello must stay generic and reusable across multiple projects",
+          "text": "No domain-specific names, no VirtualBPM references, no hardcoded business logic. All new APIs are generic (entity, view, facet, dashboard — not simulator, copilot, admin).",
+          "verify": "grep -r 'VirtualBPM\\|Convergio\\|Simulator' src/ returns 0 matches in new code",
+          "priority": "P0"
+        },
+        {
+          "id": "F-21",
+          "said": "Prefer a framework-agnostic approach: Web Components + headless JS + schema/config-driven runtime",
+          "text": "Every new capability has: (1) headless JS class/function (framework-agnostic), (2) Web Component wrapper (mn-* prefix), (3) IIFE export on window.Maranello. No React/Vue/Angular dependencies.",
+          "verify": "Each new capability has .ts headless + .js WC + IIFE entry in maranello-exports.ts; no framework imports in src/",
+          "priority": "P0"
+        },
+        {
+          "id": "F-22",
+          "said": "adding or moving a feature becomes: register the view, provide schema/config, bind data and actions",
+          "text": "End-to-end integration test: register 2 views, open one as page, move to panel, open second as page — all via config, no DOM manipulation by consumer.",
+          "verify": "Integration test exists in tests/ or e2e/; passes with 0 consumer DOM calls",
+          "priority": "P1"
+        },
+        {
+          "id": "F-23",
+          "inferred_from": "F-01,F-21",
+          "text": "All new Web Components follow existing mn-* naming, use shadow DOM consistently with existing WCs, and register via registerAll() in src/wc/index.ts",
+          "verify": "New WCs in src/wc/; all use customElements.define with mn- prefix; index.ts updated; registerAll() includes them",
+          "priority": "P0"
+        },
+        {
+          "id": "F-24",
+          "inferred_from": "F-01,F-08,F-11,F-15",
+          "text": "IIFE exports: AppShell, ViewRegistry, PanelOrchestrator, FacetWorkbench, EntityWorkbench, DashboardRenderer, StateScaffold, AsyncSelect, NavigationModel all exported on window.Maranello",
+          "verify": "maranello-exports.ts includes all 9 new exports; IIFE build includes them; typeof check in test",
+          "priority": "P0"
+        }
+      ]
+    }
+  ],
+  "scope": {
+    "in": [
+      "AppShell/WorkspaceLayout WC with layout modes",
+      "ViewRegistry + PanelOrchestrator",
+      "FacetWorkbench with async search, presets, keyboard nav",
+      "EntityWorkbench extending detail-panel",
+      "DashboardRenderer schema-driven composition",
+      "DataTable v2 rich cell types + grouping + drill-down",
+      "AsyncSelect / SearchPicker / PersonField refactor",
+      "StateScaffold (loading/empty/error/partial/no-results)",
+      "NavigationModel with back-stack",
+      "Consumer contract documentation + guardrails",
+      "IIFE + WC + headless JS for all new capabilities",
+      "Unit tests, integration tests, E2E tests"
+    ],
+    "out": [
+      "VirtualBPM-specific logic or names",
+      "React/Vue/Angular framework bindings",
+      "Server-side rendering",
+      "Authentication/authorization logic",
+      "Data fetching implementations",
+      "URL routing library (consumer owns routing)"
+    ]
+  },
+  "stop_conditions": [
+    "All F-xx requirements verified",
+    "npm run build passes",
+    "npm run test:unit passes",
+    "npx tsc --noEmit passes",
+    "No VirtualBPM/domain references in new code",
+    "All new capabilities have headless + WC + IIFE exports",
+    "User confirms presentation runtime meets needs"
+  ]
+}

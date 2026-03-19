@@ -1,0 +1,12 @@
+{
+  "type": "plan-request",
+  "user_request": "Convergio-wide self-improving optimization system (Evolution Engine)",
+  "governance": {
+    "plan_scope": "ecosystem-complete",
+    "automation_authority": "recommend-and-open-prs-only",
+    "cadence": "daily-micro-plus-weekly-runner",
+    "web_research_policy": "internal-plus-web-as-hypothesis",
+    "maranello_role": "both-canary-and-ui"
+  },
+  "timestamp": "2026-03-17T00:00:00Z"
+}

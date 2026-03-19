@@ -1,0 +1,1537 @@
+{
+  "user_request": "Design a Convergio-wide self-improving optimization system (Evolution Engine) that auto-improves over time like F1 continuous optimization, based on real operational data. Propose optimizations safely using daily micro-loops and weekly night runners. Cover the full Convergio ecosystem with human governance, immutable evaluators, safe experimentation, agent evolution, and Maranello serving as both canary benchmark and dashboard UI surface.",
+  "constraints": [
+    {
+      "id": "C-01",
+      "text": "No self-authorizing merges \u2014 all optimization changes via human-approved PRs only",
+      "type": "permission",
+      "verify": "grep -rL 'requiresHumanApproval' packages/evolution-engine/src/pr/ | wc -l | grep -q '^0$'"
+    },
+    {
+      "id": "C-02",
+      "text": "No secrets in telemetry data, logs, or optimization proposals \u2014 secrets-safe handling throughout",
+      "type": "security",
+      "verify": "grep -rq 'sanitizeSecrets' packages/telemetry/src/collector.ts"
+    },
+    {
+      "id": "C-03",
+      "text": "Every optimization experiment has a fixed token/compute budget with auto-abort on breach",
+      "type": "cost",
+      "verify": "grep -q 'budgetEnforcer' packages/evolution-engine/src/experiment/runner.ts"
+    },
+    {
+      "id": "C-04",
+      "text": "No PII in telemetry or optimization data \u2014 privacy boundaries enforced at collection and storage",
+      "type": "compliance",
+      "verify": "grep -q 'piiFilter' packages/telemetry/src/sanitizer.ts"
+    },
+    {
+      "id": "C-05",
+      "text": "Evaluator/guardrail code is immutable by the optimization subsystem \u2014 integrity enforcement required",
+      "type": "technical",
+      "verify": "grep -q 'checksumVerify' packages/evaluator/src/integrity.ts"
+    },
+    {
+      "id": "C-06",
+      "text": "Web research results tagged as hypothesis only \u2014 never auto-promoted to production decisions",
+      "type": "process",
+      "verify": "grep -q 'hypothesisOnly' packages/evolution-engine/src/research/web-researcher.ts"
+    },
+    {
+      "id": "C-07",
+      "text": "Every experiment targets exactly one metric and one target \u2014 no multi-variable mutations",
+      "type": "technical",
+      "verify": "grep -q 'singleTargetEnforced' packages/evolution-engine/src/experiment/validator.ts"
+    },
+    {
+      "id": "C-08",
+      "text": "All optimization decisions logged with full audit trail, reasoning chain, and timestamps",
+      "type": "process",
+      "verify": "grep -q 'auditTrail' packages/evolution-engine/src/audit/logger.ts"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "F-01",
+      "text": "Unified telemetry collection across all Convergio subsystems: .claude agents, CI/CD, runtime services, mesh, database, workload distribution, latency, and performance",
+      "wave": "W1"
+    },
+    {
+      "id": "F-02",
+      "text": "Daily micro-loop that identifies quick-win optimizations from recent 24h telemetry data",
+      "wave": "W4"
+    },
+    {
+      "id": "F-03",
+      "text": "Weekly night runner performing deep analysis, trend detection, cross-metric correlation, and comprehensive optimization proposals",
+      "wave": "W4"
+    },
+    {
+      "id": "F-04",
+      "text": "Independent optimizer subsystem analyzing telemetry and generating typed, structured improvement proposals",
+      "wave": "W3"
+    },
+    {
+      "id": "F-05",
+      "text": "Immutable evaluator/guardrail subsystem validating all proposals, unmodifiable by optimization code paths",
+      "wave": "W2"
+    },
+    {
+      "id": "F-06",
+      "text": "Safe experimentation model: single target, single metric, fixed budget, automatic rollback, full reversibility",
+      "wave": "W3"
+    },
+    {
+      "id": "F-07",
+      "text": "Human governance gate: recommend and open PRs only \u2014 no self-authorizing merges or production rollout",
+      "wave": "W3"
+    },
+    {
+      "id": "F-08",
+      "text": "Web research integration as hypothesis source only, with human review gate before any adoption",
+      "wave": "W8"
+    },
+    {
+      "id": "F-09",
+      "text": "Agent evolution system based on real repository work patterns, task outcomes, token efficiency, and error analysis",
+      "wave": "W5"
+    },
+    {
+      "id": "F-10",
+      "text": "Replay/shadow/canary/promotion gate pipeline for safe staged rollout of optimizations",
+      "wave": "W9"
+    },
+    {
+      "id": "F-11",
+      "text": "Documentation, governance framework, decision audit trail, and ROI measurement system",
+      "wave": "W8"
+    },
+    {
+      "id": "F-12",
+      "text": "Cost control with per-experiment budgets, privacy boundaries for all data, and secrets-safe handling",
+      "wave": "W2"
+    },
+    {
+      "id": "F-13",
+      "text": "Maranello evolution assessment: how the design system should evolve to embrace self-improvement philosophy",
+      "wave": "W7"
+    },
+    {
+      "id": "F-14",
+      "text": "Maranello as canary/benchmark repository with strict CI gates (build, unit, e2e, bundle, a11y, constitution) as experiment validation surface",
+      "wave": "W7"
+    },
+    {
+      "id": "F-15",
+      "text": "Maranello as observability/dashboard UI surface using existing chart, gauge, and data components to display optimization telemetry and decisions",
+      "wave": "W7"
+    },
+    {
+      "id": "F-16",
+      "text": "Reuse and extend existing dashboard_web (Convergio Control Room) as the Evolution Engine ops surface, leveraging its GridStack widgets, KPI strip, scheduler, optimize signals, and Maranello DS integration",
+      "wave": "W7"
+    },
+    {
+      "id": "F-17",
+      "text": "Extract generalizable evolution UI patterns from dashboard_web integration back into Maranello as reusable web components (mn-evolution-kpi, mn-experiment-card) following existing WC conventions",
+      "wave": "W7"
+    }
+  ],
+  "waves": [
+    {
+      "id": "W0",
+      "name": "Discovery & Baseline",
+      "estimated_hours": 20,
+      "merge_mode": "none",
+      "theme": "discovery",
+      "tasks": [
+        {
+          "id": "T0-01",
+          "do": "Create Evolution Engine architecture design document (ADR) defining all subsystems (telemetry, evaluator, optimizer, loops, experimentation, rollout, governance), their interfaces, data flows, and isolation boundaries",
+          "summary": "Architecture ADR for all Evolution Engine subsystems",
+          "files": [
+            "docs/evolution/adr-evolution-engine-architecture.md"
+          ],
+          "verify": [
+            "test -f docs/evolution/adr-evolution-engine-architecture.md",
+            "grep -q 'evaluator' docs/evolution/adr-evolution-engine-architecture.md",
+            "grep -q 'optimizer' docs/evolution/adr-evolution-engine-architecture.md",
+            "grep -q 'telemetry' docs/evolution/adr-evolution-engine-architecture.md"
+          ],
+          "ref": "F-04,F-05",
+          "priority": "P0",
+          "type": "documentation",
+          "model": "claude-opus-4.6",
+          "effort": 3,
+          "executor_agent": "claude"
+        },
+        {
+          "id": "T0-02",
+          "do": "Audit current Convergio telemetry surface area \u2014 catalog all existing metrics, logs, traces, CI outputs, and performance data across repos and services into a structured inventory JSON",
+          "summary": "Inventory all existing Convergio telemetry sources",
+          "files": [
+            "docs/evolution/telemetry-inventory.json"
+          ],
+          "verify": [
+            "test -f docs/evolution/telemetry-inventory.json",
+            "jq '.sources | length > 0' docs/evolution/telemetry-inventory.json"
+          ],
+          "ref": "F-01",
+          "priority": "P0",
+          "type": "documentation",
+          "model": "claude-opus-4.6",
+          "effort": 2,
+          "executor_agent": "claude"
+        },
+        {
+          "id": "T0-03",
+          "do": "Define measurable baseline KPIs with current values and improvement targets: latency p50/p95, CI pass rate, build time, bundle size, agent success rate, cost per task, test coverage, time to merge",
+          "summary": "Baseline KPI definitions with targets",
+          "files": [
+            "docs/evolution/baseline-kpis.json"
+          ],
+          "verify": [
+            "test -f docs/evolution/baseline-kpis.json",
+            "jq '.kpis | length >= 8' docs/evolution/baseline-kpis.json"
+          ],
+          "ref": "F-11",
+          "priority": "P0",
+          "type": "documentation",
+          "model": "claude-opus-4.6",
+          "effort": 2,
+          "executor_agent": "claude"
+        },
+        {
+          "id": "T0-04",
+          "do": "Design canonical TypeScript type definitions for all telemetry events, optimization proposals, experiment records, and audit entries \u2014 the data model shared by all subsystems",
+          "summary": "Canonical TypeScript data model for all subsystems",
+          "files": [
+            "packages/evolution-engine/src/types/index.ts",
+            "packages/evolution-engine/src/types/telemetry.ts",
+            "packages/evolution-engine/src/types/proposal.ts",
+            "packages/evolution-engine/src/types/experiment.ts",
+            "packages/evolution-engine/src/types/audit.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/types/telemetry.ts",
+            "grep -q 'TelemetryEvent' packages/evolution-engine/src/types/telemetry.ts",
+            "grep -q 'OptimizationProposal' packages/evolution-engine/src/types/proposal.ts",
+            "grep -q 'ExperimentRecord' packages/evolution-engine/src/types/experiment.ts"
+          ],
+          "ref": "F-01,F-04",
+          "priority": "P0",
+          "type": "feature",
+          "model": "claude-opus-4.6",
+          "effort": 3,
+          "executor_agent": "claude",
+          "consumers": [
+            "packages/telemetry/src/collector.ts",
+            "packages/evolution-engine/src/optimizer/core.ts",
+            "packages/evaluator/src/validator.ts",
+            "packages/evolution-engine/src/experiment/runner.ts"
+          ]
+        },
+        {
+          "id": "T0-05",
+          "do": "Write ADR documenting the Maranello vs dashboard_web architectural split: Maranello = reusable UI component platform + canary benchmark repo; dashboard_web = productized Convergio ops app shell extended with Evolution Engine sections. Document which patterns extract back to Maranello and which stay as app-specific widgets",
+          "summary": "ADR: Maranello vs dashboard_web architectural split",
+          "files": [
+            "docs/evolution/adr-maranello-dashboard-split.md"
+          ],
+          "verify": [
+            "test -f docs/evolution/adr-maranello-dashboard-split.md",
+            "grep -q 'dashboard_web' docs/evolution/adr-maranello-dashboard-split.md",
+            "grep -q 'Maranello' docs/evolution/adr-maranello-dashboard-split.md",
+            "grep -q 'app shell' docs/evolution/adr-maranello-dashboard-split.md"
+          ],
+          "ref": "F-16,F-17",
+          "priority": "P0",
+          "type": "documentation",
+          "model": "claude-opus-4.6",
+          "effort": 2,
+          "executor_agent": "claude"
+        }
+      ]
+    },
+    {
+      "id": "W1",
+      "name": "Telemetry Foundation",
+      "estimated_hours": 24,
+      "merge_mode": "sync",
+      "theme": "telemetry",
+      "precondition": {
+        "type": "wave_status",
+        "wave_id": "W0",
+        "status": "done"
+      },
+      "tasks": [
+        {
+          "id": "T1-01",
+          "do": "Implement central telemetry collector module with standardized event ingestion, in-memory buffering, deduplication, and configurable routing to storage backends",
+          "summary": "Telemetry collector core with buffering and routing",
+          "files": [
+            "packages/telemetry/src/collector.ts",
+            "packages/telemetry/src/buffer.ts"
+          ],
+          "verify": [
+            "test -f packages/telemetry/src/collector.ts",
+            "grep -q 'TelemetryCollector' packages/telemetry/src/collector.ts",
+            "grep -q 'sanitizeSecrets' packages/telemetry/src/collector.ts"
+          ],
+          "ref": "F-01",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 3,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/telemetry/src/adapters/agent-adapter.ts",
+            "packages/telemetry/src/adapters/ci-adapter.ts",
+            "packages/telemetry/src/adapters/runtime-adapter.ts",
+            "packages/telemetry/src/storage.ts"
+          ]
+        },
+        {
+          "id": "T1-02",
+          "do": "Create telemetry sanitization layer that strips PII, secrets, and sensitive data from all events before storage, with configurable rules, allowlists, and redaction logging",
+          "summary": "PII/secrets sanitizer for telemetry pipeline",
+          "files": [
+            "packages/telemetry/src/sanitizer.ts"
+          ],
+          "verify": [
+            "test -f packages/telemetry/src/sanitizer.ts",
+            "grep -q 'piiFilter' packages/telemetry/src/sanitizer.ts",
+            "grep -q 'sanitizeSecrets' packages/telemetry/src/sanitizer.ts"
+          ],
+          "ref": "F-12",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/telemetry/src/collector.ts"
+          ]
+        },
+        {
+          "id": "T1-03",
+          "do": "Create adapter collecting .claude agent metrics: task outcomes (success/fail/partial), token usage per model, session duration, model routing decisions, error categories, and cost per task",
+          "summary": "Agent telemetry adapter for .claude metrics",
+          "files": [
+            "packages/telemetry/src/adapters/agent-adapter.ts"
+          ],
+          "verify": [
+            "test -f packages/telemetry/src/adapters/agent-adapter.ts",
+            "grep -q 'AgentTelemetryAdapter' packages/telemetry/src/adapters/agent-adapter.ts",
+            "grep -q 'tokenUsage' packages/telemetry/src/adapters/agent-adapter.ts"
+          ],
+          "ref": "F-01",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/telemetry/src/collector.ts",
+            "packages/evolution-engine/src/agent-evolution/pattern-analyzer.ts"
+          ]
+        },
+        {
+          "id": "T1-04",
+          "do": "Create adapter collecting CI/CD pipeline metrics: build durations, test pass/fail/skip counts, deployment outcomes, bundle sizes, lint warnings, and gate verdicts",
+          "summary": "CI/CD telemetry adapter for pipeline metrics",
+          "files": [
+            "packages/telemetry/src/adapters/ci-adapter.ts"
+          ],
+          "verify": [
+            "test -f packages/telemetry/src/adapters/ci-adapter.ts",
+            "grep -q 'CITelemetryAdapter' packages/telemetry/src/adapters/ci-adapter.ts",
+            "grep -q 'buildDuration' packages/telemetry/src/adapters/ci-adapter.ts"
+          ],
+          "ref": "F-01",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/telemetry/src/collector.ts",
+            "packages/evolution-engine/src/platform/ci-optimizer.ts"
+          ]
+        },
+        {
+          "id": "T1-05",
+          "do": "Create adapter collecting runtime/mesh/database metrics: service latency percentiles, error rates, mesh throughput, DB query times, connection pool stats, workload distribution, and resource utilization",
+          "summary": "Runtime/mesh/DB telemetry adapter",
+          "files": [
+            "packages/telemetry/src/adapters/runtime-adapter.ts"
+          ],
+          "verify": [
+            "test -f packages/telemetry/src/adapters/runtime-adapter.ts",
+            "grep -q 'RuntimeTelemetryAdapter' packages/telemetry/src/adapters/runtime-adapter.ts",
+            "grep -q 'latencyP95' packages/telemetry/src/adapters/runtime-adapter.ts"
+          ],
+          "ref": "F-01",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/telemetry/src/collector.ts",
+            "packages/evolution-engine/src/platform/runtime-optimizer.ts"
+          ]
+        },
+        {
+          "id": "T1-06",
+          "do": "Implement telemetry storage backend with time-series indexing, configurable retention (hot 7d / warm 30d / cold 90d), and query API supporting range queries, aggregations, and percentile calculations",
+          "summary": "Time-series storage with retention and query API",
+          "files": [
+            "packages/telemetry/src/storage.ts",
+            "packages/telemetry/src/query.ts"
+          ],
+          "verify": [
+            "test -f packages/telemetry/src/storage.ts",
+            "grep -q 'TimeSeriesStore' packages/telemetry/src/storage.ts",
+            "grep -q 'retentionPolicy' packages/telemetry/src/storage.ts",
+            "test -f packages/telemetry/src/query.ts"
+          ],
+          "ref": "F-01",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 3,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/optimizer/core.ts",
+            "packages/evolution-engine/src/loops/daily-micro.ts",
+            "packages/evolution-engine/src/loops/weekly-runner.ts",
+            "dashboard_web/api_server.py"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "W2",
+      "name": "Evaluator & Guardrails",
+      "estimated_hours": 20,
+      "merge_mode": "sync",
+      "theme": "safety",
+      "precondition": {
+        "type": "wave_status",
+        "wave_id": "W1",
+        "status": "done"
+      },
+      "tasks": [
+        {
+          "id": "T2-01",
+          "do": "Implement evaluator core module with filesystem-level read-only enforcement, checksum verification on load, tamper detection alerting, and proposal validation interface",
+          "summary": "Evaluator core with immutability and tamper detection",
+          "files": [
+            "packages/evaluator/src/core.ts",
+            "packages/evaluator/src/integrity.ts"
+          ],
+          "verify": [
+            "test -f packages/evaluator/src/core.ts",
+            "grep -q 'checksumVerify' packages/evaluator/src/integrity.ts",
+            "grep -q 'EvaluatorCore' packages/evaluator/src/core.ts"
+          ],
+          "ref": "F-05",
+          "priority": "P0",
+          "type": "feature",
+          "model": "claude-opus-4.6",
+          "effort": 3,
+          "executor_agent": "claude",
+          "consumers": [
+            "packages/evolution-engine/src/pipeline/proposal-pipeline.ts",
+            "packages/evaluator/src/validator.ts"
+          ]
+        },
+        {
+          "id": "T2-02",
+          "do": "Create guardrails module enforcing: per-experiment budget limits with auto-abort, single-target enforcement, rollback trigger conditions, reversibility verification, and blast radius containment rules",
+          "summary": "Safety guardrails: budget, rollback, single-target",
+          "files": [
+            "packages/evaluator/src/guardrails.ts"
+          ],
+          "verify": [
+            "test -f packages/evaluator/src/guardrails.ts",
+            "grep -q 'budgetEnforcer' packages/evaluator/src/guardrails.ts",
+            "grep -q 'singleTargetEnforced' packages/evaluator/src/guardrails.ts",
+            "grep -q 'rollbackTrigger' packages/evaluator/src/guardrails.ts"
+          ],
+          "ref": "F-06,F-12",
+          "priority": "P0",
+          "type": "feature",
+          "model": "claude-opus-4.6",
+          "effort": 3,
+          "executor_agent": "claude",
+          "consumers": [
+            "packages/evaluator/src/core.ts",
+            "packages/evolution-engine/src/experiment/runner.ts"
+          ]
+        },
+        {
+          "id": "T2-03",
+          "do": "Implement proposal validation pipeline: JSON schema check, constraint verification (C-01..C-08), risk scoring (1-10 scale), budget verification, and human-review-required flag computation",
+          "summary": "Proposal validation: schema, constraints, risk scoring",
+          "files": [
+            "packages/evaluator/src/validator.ts",
+            "packages/evaluator/src/risk-scorer.ts"
+          ],
+          "verify": [
+            "test -f packages/evaluator/src/validator.ts",
+            "grep -q 'OptimizationProposal' packages/evaluator/src/validator.ts",
+            "grep -q 'riskScore' packages/evaluator/src/risk-scorer.ts"
+          ],
+          "ref": "F-05,F-07",
+          "priority": "P0",
+          "type": "feature",
+          "model": "claude-opus-4.6",
+          "effort": 2,
+          "executor_agent": "claude",
+          "consumers": [
+            "packages/evolution-engine/src/pipeline/proposal-pipeline.ts"
+          ]
+        },
+        {
+          "id": "T2-04",
+          "do": "Implement per-experiment and per-cycle cost tracking with configurable token/compute limits, real-time budget monitoring, auto-abort on breach, and cost rollup reporting for ROI",
+          "summary": "Cost control: budget limits, monitoring, auto-abort",
+          "files": [
+            "packages/evaluator/src/cost-control.ts"
+          ],
+          "verify": [
+            "test -f packages/evaluator/src/cost-control.ts",
+            "grep -q 'CostController' packages/evaluator/src/cost-control.ts",
+            "grep -q 'autoAbort' packages/evaluator/src/cost-control.ts"
+          ],
+          "ref": "F-12",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/experiment/runner.ts",
+            "packages/evolution-engine/src/loops/daily-micro.ts",
+            "packages/evolution-engine/src/audit/roi-tracker.ts"
+          ]
+        },
+        {
+          "id": "T2-05",
+          "do": "Write evaluator immutability test harness proving optimizer cannot modify evaluator: attempt filesystem writes (expect rejection), verify checksum enforcement, verify tamper detection fires alerts",
+          "summary": "Immutability proof test suite for evaluator",
+          "files": [
+            "packages/evaluator/tests/immutability.test.ts"
+          ],
+          "verify": [
+            "test -f packages/evaluator/tests/immutability.test.ts",
+            "grep -q 'immutability' packages/evaluator/tests/immutability.test.ts",
+            "grep -q 'tamperDetection' packages/evaluator/tests/immutability.test.ts"
+          ],
+          "ref": "F-05",
+          "priority": "P0",
+          "type": "test",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot"
+        }
+      ]
+    },
+    {
+      "id": "W3",
+      "name": "Optimizer Engine Core",
+      "estimated_hours": 22,
+      "merge_mode": "sync",
+      "theme": "engine",
+      "precondition": {
+        "type": "wave_status",
+        "wave_id": "W2",
+        "status": "done"
+      },
+      "tasks": [
+        {
+          "id": "T3-01",
+          "do": "Implement optimizer core that queries telemetry storage, identifies improvement opportunities using statistical analysis, and generates typed OptimizationProposal objects with target, metric, hypothesis, expected improvement, and rollback plan",
+          "summary": "Optimizer core: telemetry analysis to proposals",
+          "files": [
+            "packages/evolution-engine/src/optimizer/core.ts",
+            "packages/evolution-engine/src/optimizer/analyzer.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/optimizer/core.ts",
+            "grep -q 'OptimizerCore' packages/evolution-engine/src/optimizer/core.ts",
+            "grep -q 'generateProposal' packages/evolution-engine/src/optimizer/core.ts",
+            "grep -q 'TimeSeriesStore' packages/evolution-engine/src/optimizer/core.ts"
+          ],
+          "ref": "F-04",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 3,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/loops/daily-micro.ts",
+            "packages/evolution-engine/src/loops/weekly-runner.ts",
+            "packages/evolution-engine/src/pipeline/proposal-pipeline.ts"
+          ]
+        },
+        {
+          "id": "T3-02",
+          "do": "Create canonical proposal format module with required fields (target, metric, hypothesis, budget, expectedImprovement, rollbackPlan, reversibilityProof, riskAssessment) and JSON schema validation",
+          "summary": "Proposal format with schema validation",
+          "files": [
+            "packages/evolution-engine/src/optimizer/proposal-format.ts",
+            "packages/evolution-engine/src/optimizer/proposal-schema.json"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/optimizer/proposal-format.ts",
+            "test -f packages/evolution-engine/src/optimizer/proposal-schema.json",
+            "grep -q 'rollbackPlan' packages/evolution-engine/src/optimizer/proposal-format.ts"
+          ],
+          "ref": "F-06,F-04",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/optimizer/core.ts",
+            "packages/evaluator/src/validator.ts",
+            "packages/evolution-engine/src/pr/generator.ts"
+          ]
+        },
+        {
+          "id": "T3-03",
+          "do": "Implement draft PR generator that converts approved proposals into GitHub draft PRs with full context: proposal details, expected impact, rollback instructions, experiment constraints, evaluator sign-off, and audit reference",
+          "summary": "PR generator: proposals to GitHub draft PRs",
+          "files": [
+            "packages/evolution-engine/src/pr/generator.ts",
+            "packages/evolution-engine/src/pr/templates.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/pr/generator.ts",
+            "grep -q 'requiresHumanApproval' packages/evolution-engine/src/pr/generator.ts",
+            "grep -q 'createDraftPR' packages/evolution-engine/src/pr/generator.ts"
+          ],
+          "ref": "F-07",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/pipeline/proposal-pipeline.ts"
+          ]
+        },
+        {
+          "id": "T3-04",
+          "do": "Build end-to-end proposal pipeline orchestrator wiring: optimizer generates \u2192 evaluator validates \u2192 risk scores \u2192 budget checks \u2192 PR generation \u2014 each stage independently auditable with structured log output",
+          "summary": "Proposal pipeline: optimizer\u2192evaluator\u2192PR wiring",
+          "files": [
+            "packages/evolution-engine/src/pipeline/proposal-pipeline.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/pipeline/proposal-pipeline.ts",
+            "grep -q 'EvaluatorCore' packages/evolution-engine/src/pipeline/proposal-pipeline.ts",
+            "grep -q 'OptimizerCore' packages/evolution-engine/src/pipeline/proposal-pipeline.ts",
+            "grep -q 'createDraftPR' packages/evolution-engine/src/pipeline/proposal-pipeline.ts"
+          ],
+          "ref": "F-04,F-05,F-07",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/loops/daily-micro.ts",
+            "packages/evolution-engine/src/loops/weekly-runner.ts"
+          ]
+        },
+        {
+          "id": "T3-05",
+          "do": "Create experiment runner executing approved experiments with: fixed budget enforcement via CostController, single-metric tracking, automatic rollback on regression beyond threshold, timeout enforcement, and full audit logging",
+          "summary": "Experiment runner with budget/rollback/audit",
+          "files": [
+            "packages/evolution-engine/src/experiment/runner.ts",
+            "packages/evolution-engine/src/experiment/rollback.ts",
+            "packages/evolution-engine/src/experiment/validator.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/experiment/runner.ts",
+            "grep -q 'budgetEnforcer' packages/evolution-engine/src/experiment/runner.ts",
+            "grep -q 'automaticRollback' packages/evolution-engine/src/experiment/rollback.ts",
+            "grep -q 'singleTargetEnforced' packages/evolution-engine/src/experiment/validator.ts"
+          ],
+          "ref": "F-06",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 3,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/loops/daily-micro.ts",
+            "packages/evolution-engine/src/loops/weekly-runner.ts",
+            "packages/evolution-engine/src/rollout/canary.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "W4",
+      "name": "Loop Architecture",
+      "estimated_hours": 16,
+      "merge_mode": "batch",
+      "theme": "engine",
+      "precondition": {
+        "type": "wave_status",
+        "wave_id": "W3",
+        "status": "done"
+      },
+      "tasks": [
+        {
+          "id": "T4-01",
+          "do": "Implement daily micro-loop that runs at configurable cadence (default 06:00 UTC), scans last 24h telemetry for regressions and quick-win opportunities, generates bounded proposals, and respects daily budget ceiling",
+          "summary": "Daily micro-loop with 24h telemetry scan",
+          "files": [
+            "packages/evolution-engine/src/loops/daily-micro.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/loops/daily-micro.ts",
+            "grep -q 'DailyMicroLoop' packages/evolution-engine/src/loops/daily-micro.ts",
+            "grep -q 'dailyBudget' packages/evolution-engine/src/loops/daily-micro.ts",
+            "grep -q 'proposalPipeline' packages/evolution-engine/src/loops/daily-micro.ts"
+          ],
+          "ref": "F-02",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 3,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/scheduler/cron.ts"
+          ]
+        },
+        {
+          "id": "T4-02",
+          "do": "Implement weekly night runner (default Sunday 02:00 UTC) performing deep analysis: multi-week trend detection, cross-metric correlation, regression root cause identification, architecture-level proposals, and comprehensive summary report",
+          "summary": "Weekly night runner with deep trend analysis",
+          "files": [
+            "packages/evolution-engine/src/loops/weekly-runner.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/loops/weekly-runner.ts",
+            "grep -q 'WeeklyNightRunner' packages/evolution-engine/src/loops/weekly-runner.ts",
+            "grep -q 'trendDetection' packages/evolution-engine/src/loops/weekly-runner.ts",
+            "grep -q 'crossMetricCorrelation' packages/evolution-engine/src/loops/weekly-runner.ts"
+          ],
+          "ref": "F-03",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 3,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/scheduler/cron.ts"
+          ]
+        },
+        {
+          "id": "T4-03",
+          "do": "Create cron-based scheduler orchestrating daily micro-loops and weekly runners with configurable timing, deadlock prevention, concurrency limits (max 1 loop active), and skip-if-running semantics",
+          "summary": "Cron scheduler for daily+weekly loops",
+          "files": [
+            "packages/evolution-engine/src/scheduler/cron.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/scheduler/cron.ts",
+            "grep -q 'CadenceScheduler' packages/evolution-engine/src/scheduler/cron.ts",
+            "grep -q 'concurrencyLimit' packages/evolution-engine/src/scheduler/cron.ts"
+          ],
+          "ref": "F-02,F-03",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/index.ts"
+          ]
+        },
+        {
+          "id": "T4-04",
+          "do": "Write integration tests for daily + weekly loops: mock telemetry \u2192 optimizer \u2192 evaluator \u2192 PR pipeline \u2192 audit trail \u2014 verify full cycle end-to-end including budget enforcement and rollback",
+          "summary": "Loop architecture integration tests",
+          "files": [
+            "packages/evolution-engine/tests/loops.integration.test.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/tests/loops.integration.test.ts",
+            "grep -q 'DailyMicroLoop' packages/evolution-engine/tests/loops.integration.test.ts",
+            "grep -q 'WeeklyNightRunner' packages/evolution-engine/tests/loops.integration.test.ts"
+          ],
+          "ref": "F-02,F-03",
+          "priority": "P1",
+          "type": "test",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot"
+        }
+      ]
+    },
+    {
+      "id": "W5",
+      "name": "Agent Evolution",
+      "estimated_hours": 20,
+      "merge_mode": "sync",
+      "theme": "evolution",
+      "precondition": {
+        "type": "wave_pr_created",
+        "wave_id": "W3"
+      },
+      "tasks": [
+        {
+          "id": "T5-01",
+          "do": "Implement agent work pattern analyzer processing task outcomes, token efficiency ratios, error categories, model routing hit/miss rates, and session-level performance to identify improvement patterns and regressions",
+          "summary": "Agent pattern analyzer from real work data",
+          "files": [
+            "packages/evolution-engine/src/agent-evolution/pattern-analyzer.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/agent-evolution/pattern-analyzer.ts",
+            "grep -q 'PatternAnalyzer' packages/evolution-engine/src/agent-evolution/pattern-analyzer.ts",
+            "grep -q 'tokenEfficiency' packages/evolution-engine/src/agent-evolution/pattern-analyzer.ts"
+          ],
+          "ref": "F-09",
+          "priority": "P1",
+          "type": "feature",
+          "model": "claude-opus-4.6",
+          "effort": 3,
+          "executor_agent": "claude",
+          "consumers": [
+            "packages/evolution-engine/src/agent-evolution/config-proposer.ts"
+          ]
+        },
+        {
+          "id": "T5-02",
+          "do": "Create agent configuration proposer generating improvement proposals: model routing changes, prompt refinements, tool usage optimizations, context window strategies \u2014 all as evaluator-gated OptimizationProposal objects",
+          "summary": "Agent config proposer for model/prompt/tools",
+          "files": [
+            "packages/evolution-engine/src/agent-evolution/config-proposer.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/agent-evolution/config-proposer.ts",
+            "grep -q 'AgentConfigProposal' packages/evolution-engine/src/agent-evolution/config-proposer.ts",
+            "grep -q 'OptimizationProposal' packages/evolution-engine/src/agent-evolution/config-proposer.ts"
+          ],
+          "ref": "F-09",
+          "priority": "P1",
+          "type": "feature",
+          "model": "claude-opus-4.6",
+          "effort": 2,
+          "executor_agent": "claude",
+          "consumers": [
+            "packages/evolution-engine/src/agent-evolution/replay-system.ts",
+            "packages/evolution-engine/src/pipeline/proposal-pipeline.ts"
+          ]
+        },
+        {
+          "id": "T5-03",
+          "do": "Implement replay system that re-runs past agent tasks (sanitized inputs, read-only execution, no side effects) with proposed configuration changes to measure improvement before proposing via PR",
+          "summary": "Agent task replay for safe validation",
+          "files": [
+            "packages/evolution-engine/src/agent-evolution/replay-system.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/agent-evolution/replay-system.ts",
+            "grep -q 'ReplayRunner' packages/evolution-engine/src/agent-evolution/replay-system.ts",
+            "grep -q 'readOnly' packages/evolution-engine/src/agent-evolution/replay-system.ts"
+          ],
+          "ref": "F-09,F-10",
+          "priority": "P1",
+          "type": "feature",
+          "model": "claude-opus-4.6",
+          "effort": 3,
+          "executor_agent": "claude",
+          "consumers": [
+            "packages/evolution-engine/src/agent-evolution/evolution-loop.ts"
+          ]
+        },
+        {
+          "id": "T5-04",
+          "do": "Wire agent evolution subsystem (pattern-analyzer \u2192 config-proposer \u2192 replay \u2192 evaluator \u2192 PR) into the daily/weekly loop architecture with proper scheduling priority and budget allocation",
+          "summary": "Wire agent evolution into loop architecture",
+          "files": [
+            "packages/evolution-engine/src/agent-evolution/evolution-loop.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/agent-evolution/evolution-loop.ts",
+            "grep -q 'PatternAnalyzer' packages/evolution-engine/src/agent-evolution/evolution-loop.ts",
+            "grep -q 'proposalPipeline' packages/evolution-engine/src/agent-evolution/evolution-loop.ts"
+          ],
+          "ref": "F-09",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/loops/daily-micro.ts",
+            "packages/evolution-engine/src/loops/weekly-runner.ts"
+          ]
+        },
+        {
+          "id": "T5-05",
+          "do": "Write test suite for pattern analyzer accuracy, config proposer safety (no proposals exceeding budget), replay system isolation (no side effects), and end-to-end agent evolution flow with mock data",
+          "summary": "Agent evolution unit + integration tests",
+          "files": [
+            "packages/evolution-engine/tests/agent-evolution.test.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/tests/agent-evolution.test.ts",
+            "grep -q 'PatternAnalyzer' packages/evolution-engine/tests/agent-evolution.test.ts",
+            "grep -q 'ReplayRunner' packages/evolution-engine/tests/agent-evolution.test.ts"
+          ],
+          "ref": "F-09",
+          "priority": "P1",
+          "type": "test",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot"
+        }
+      ]
+    },
+    {
+      "id": "W6",
+      "name": "Platform & Runtime Optimization",
+      "estimated_hours": 14,
+      "merge_mode": "batch",
+      "theme": "evolution",
+      "precondition": {
+        "type": "wave_pr_created",
+        "wave_id": "W3"
+      },
+      "tasks": [
+        {
+          "id": "T6-01",
+          "do": "Implement CI pipeline optimizer analyzing build times, test parallelism, cache hit rates, and dependency install durations \u2014 generating proposals for CI config improvements, caching strategies, and test ordering",
+          "summary": "CI pipeline optimizer with build/test analysis",
+          "files": [
+            "packages/evolution-engine/src/platform/ci-optimizer.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/platform/ci-optimizer.ts",
+            "grep -q 'CIOptimizer' packages/evolution-engine/src/platform/ci-optimizer.ts",
+            "grep -q 'OptimizationProposal' packages/evolution-engine/src/platform/ci-optimizer.ts"
+          ],
+          "ref": "F-04,F-01",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/platform/index.ts"
+          ]
+        },
+        {
+          "id": "T6-02",
+          "do": "Implement runtime configuration optimizer analyzing service latency, resource utilization, and error rates \u2014 proposing changes for caching, connection pools, timeouts, and resource allocation",
+          "summary": "Runtime config optimizer for services",
+          "files": [
+            "packages/evolution-engine/src/platform/runtime-optimizer.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/platform/runtime-optimizer.ts",
+            "grep -q 'RuntimeOptimizer' packages/evolution-engine/src/platform/runtime-optimizer.ts"
+          ],
+          "ref": "F-04,F-01",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/platform/index.ts"
+          ]
+        },
+        {
+          "id": "T6-03",
+          "do": "Implement database/query optimizer analyzing query execution times, index utilization, connection pool metrics \u2014 proposing query rewrites, index additions, and connection pool tuning",
+          "summary": "Database/query optimizer for DB telemetry",
+          "files": [
+            "packages/evolution-engine/src/platform/db-optimizer.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/platform/db-optimizer.ts",
+            "grep -q 'DBOptimizer' packages/evolution-engine/src/platform/db-optimizer.ts"
+          ],
+          "ref": "F-04,F-01",
+          "priority": "P2",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/platform/index.ts"
+          ]
+        },
+        {
+          "id": "T6-04",
+          "do": "Register CI, runtime, and DB optimizers as pluggable analyzers in the optimizer core \u2014 create platform optimizer index that feeds all domain proposals into the standard evaluation pipeline",
+          "summary": "Register platform optimizers as plugins",
+          "files": [
+            "packages/evolution-engine/src/platform/index.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/platform/index.ts",
+            "grep -q 'CIOptimizer' packages/evolution-engine/src/platform/index.ts",
+            "grep -q 'RuntimeOptimizer' packages/evolution-engine/src/platform/index.ts",
+            "grep -q 'DBOptimizer' packages/evolution-engine/src/platform/index.ts"
+          ],
+          "ref": "F-04",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5-mini",
+          "effort": 1,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/optimizer/core.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "W7",
+      "name": "Maranello & Control Room Integration",
+      "estimated_hours": 30,
+      "merge_mode": "sync",
+      "theme": "maranello",
+      "precondition": {
+        "type": "wave_pr_created",
+        "wave_id": "W1"
+      },
+      "tasks": [
+        {
+          "id": "T7-01",
+          "do": "Write Maranello + dashboard_web evolution assessment: audit dashboard_web prior art (67 JS files, 14K LoC, GridStack widgets, optimize.js session signals, nightly-jobs scheduler, KPI strip, IPC budget/router/skills/models panels, Maranello WC loader), document architectural split decision, map NaSra integration points, and define progressive adoption roadmap",
+          "summary": "Evolution assessment with dashboard_web prior art audit",
+          "files": [
+            "docs/evolution/maranello-evolution-assessment.md"
+          ],
+          "verify": [
+            "test -f docs/evolution/maranello-evolution-assessment.md",
+            "grep -q 'dashboard_web' docs/evolution/maranello-evolution-assessment.md",
+            "grep -q 'NaSra' docs/evolution/maranello-evolution-assessment.md",
+            "grep -q 'prior art' docs/evolution/maranello-evolution-assessment.md"
+          ],
+          "ref": "F-13,F-16",
+          "priority": "P1",
+          "type": "documentation",
+          "model": "claude-opus-4.6",
+          "effort": 3,
+          "executor_agent": "claude"
+        },
+        {
+          "id": "T7-02",
+          "do": "Create Maranello canary benchmark configuration using existing strict CI gates (build, vitest unit, playwright e2e, bundle size <=250KB, accessibility audit, token alignment, constitution check) as experiment validation surface with pass/fail criteria",
+          "summary": "Canary benchmark config using Maranello CI gates",
+          "files": [
+            "packages/evolution-engine/src/canary/maranello-benchmark.ts",
+            "packages/evolution-engine/src/canary/benchmark-config.json"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/canary/maranello-benchmark.ts",
+            "grep -q 'bundleSize' packages/evolution-engine/src/canary/benchmark-config.json",
+            "grep -q 'accessibility' packages/evolution-engine/src/canary/benchmark-config.json",
+            "grep -q 'constitution' packages/evolution-engine/src/canary/benchmark-config.json"
+          ],
+          "ref": "F-14",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/rollout/canary.ts",
+            "packages/evolution-engine/src/experiment/runner.ts"
+          ]
+        },
+        {
+          "id": "T7-03",
+          "do": "Add 'Evolution' section to dashboard_web Control Room: new nav pill, GridStack section with widget slots, section-aware scheduler registration for auto-refresh \u2014 reusing existing convergio-layout.js patterns and widget-catalog.js system for add/remove",
+          "summary": "Add Evolution section to dashboard_web control room",
+          "files": [
+            "dashboard_web/evolution-section.js",
+            "dashboard_web/css/evolution.css"
+          ],
+          "verify": [
+            "test -f dashboard_web/evolution-section.js",
+            "test -f dashboard_web/css/evolution.css",
+            "grep -q 'evolution' dashboard_web/evolution-section.js",
+            "grep -q 'PollScheduler' dashboard_web/evolution-section.js"
+          ],
+          "ref": "F-15,F-16",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 3,
+          "executor_agent": "copilot",
+          "consumers": [
+            "dashboard_web/index.html",
+            "dashboard_web/widget-catalog.js",
+            "dashboard_web/app.js"
+          ]
+        },
+        {
+          "id": "T7-04",
+          "do": "Create evolution proposal widget for dashboard_web: optimization proposals table with approval status, risk scores, evaluator verdicts, and decision rationale \u2014 using existing mn-data-table, mn-modal, mn-badge patterns and widget-catalog.js registration",
+          "summary": "Proposal widget for dashboard_web using existing patterns",
+          "files": [
+            "dashboard_web/evolution-proposals.js"
+          ],
+          "verify": [
+            "test -f dashboard_web/evolution-proposals.js",
+            "grep -q 'proposal' dashboard_web/evolution-proposals.js",
+            "grep -q 'riskScore' dashboard_web/evolution-proposals.js",
+            "grep -q 'widget' dashboard_web/evolution-proposals.js"
+          ],
+          "ref": "F-15,F-16",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "dashboard_web/evolution-section.js",
+            "dashboard_web/widget-catalog.js"
+          ]
+        },
+        {
+          "id": "T7-05",
+          "do": "Create experiment timeline widget for dashboard_web: experiment schedule, duration, outcomes, and stage progression (shadow/canary/staged/full) \u2014 extending existing nightly-jobs.js patterns, using Maranello Gantt and confidenceChart via mn-charts.js bridge",
+          "summary": "Experiment timeline widget extending nightly-jobs pattern",
+          "files": [
+            "dashboard_web/evolution-timeline.js"
+          ],
+          "verify": [
+            "test -f dashboard_web/evolution-timeline.js",
+            "grep -q 'experiment' dashboard_web/evolution-timeline.js",
+            "grep -q 'shadow' dashboard_web/evolution-timeline.js",
+            "grep -q 'canary' dashboard_web/evolution-timeline.js"
+          ],
+          "ref": "F-15,F-16",
+          "priority": "P2",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "dashboard_web/evolution-section.js",
+            "dashboard_web/widget-catalog.js"
+          ]
+        },
+        {
+          "id": "T7-06",
+          "do": "Extend dashboard_web api_server.py with Evolution Engine API endpoints: /api/evolution/telemetry (query time-series), /api/evolution/proposals (list/detail), /api/evolution/experiments (status/history), /api/evolution/roi (attribution summary) \u2014 reading from telemetry storage and audit trail",
+          "summary": "Extend api_server.py with Evolution Engine endpoints",
+          "files": [
+            "dashboard_web/api_server.py"
+          ],
+          "verify": [
+            "grep -q 'evolution/telemetry' dashboard_web/api_server.py",
+            "grep -q 'evolution/proposals' dashboard_web/api_server.py",
+            "grep -q 'evolution/experiments' dashboard_web/api_server.py",
+            "grep -q 'evolution/roi' dashboard_web/api_server.py"
+          ],
+          "ref": "F-15,F-16",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "dashboard_web/evolution-section.js",
+            "dashboard_web/evolution-proposals.js",
+            "dashboard_web/evolution-timeline.js"
+          ]
+        },
+        {
+          "id": "T7-07",
+          "do": "Wire dashboard_web's existing optimize.js session learning signals and mn-kpi.js KPI data (tokens, cost, lines, agents, blocked) into Evolution Engine telemetry collector as a live data source \u2014 creating a dashboard-adapter that transforms existing /api/ responses into TelemetryEvent format",
+          "summary": "Wire dashboard_web signals into telemetry collector",
+          "files": [
+            "packages/telemetry/src/adapters/dashboard-adapter.ts"
+          ],
+          "verify": [
+            "test -f packages/telemetry/src/adapters/dashboard-adapter.ts",
+            "grep -q 'DashboardTelemetryAdapter' packages/telemetry/src/adapters/dashboard-adapter.ts",
+            "grep -q 'optimize' packages/telemetry/src/adapters/dashboard-adapter.ts",
+            "grep -q 'TelemetryEvent' packages/telemetry/src/adapters/dashboard-adapter.ts"
+          ],
+          "ref": "F-01,F-16",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/telemetry/src/collector.ts"
+          ]
+        },
+        {
+          "id": "T7-08",
+          "do": "Extract reusable mn-evolution-kpi web component from dashboard integration back into Maranello: encapsulates evolution metric display (proposals/week, experiments active, ROI, canary status) following existing WC patterns (Shadow DOM, resolveEngine, CSS token inheritance, mn- prefix)",
+          "summary": "Extract mn-evolution-kpi WC back to Maranello",
+          "files": [
+            "maranello/src/wc/mn-evolution-kpi.ts",
+            "maranello/src/css/wc-evolution-kpi.css"
+          ],
+          "verify": [
+            "test -f maranello/src/wc/mn-evolution-kpi.ts",
+            "grep -q 'resolveEngine' maranello/src/wc/mn-evolution-kpi.ts",
+            "grep -q 'Shadow' maranello/src/wc/mn-evolution-kpi.ts",
+            "grep -q 'mn-evolution-kpi' maranello/src/wc/mn-evolution-kpi.ts"
+          ],
+          "ref": "F-17",
+          "priority": "P2",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "maranello/src/wc/index.ts",
+            "dashboard_web/evolution-section.js"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "W8",
+      "name": "Governance, Research & Audit",
+      "estimated_hours": 18,
+      "merge_mode": "sync",
+      "theme": "governance",
+      "precondition": {
+        "type": "wave_pr_created",
+        "wave_id": "W3"
+      },
+      "tasks": [
+        {
+          "id": "T8-01",
+          "do": "Write governance framework document defining decision authority matrix, escalation paths, approval thresholds (risk score >=7 requires senior review), emergency override procedures, and responsibility assignments",
+          "summary": "Governance framework with authority matrix",
+          "files": [
+            "docs/evolution/governance-framework.md"
+          ],
+          "verify": [
+            "test -f docs/evolution/governance-framework.md",
+            "grep -q 'authority' docs/evolution/governance-framework.md",
+            "grep -q 'escalation' docs/evolution/governance-framework.md",
+            "grep -q 'emergency' docs/evolution/governance-framework.md"
+          ],
+          "ref": "F-11",
+          "priority": "P1",
+          "type": "documentation",
+          "model": "claude-opus-4.6",
+          "effort": 2,
+          "executor_agent": "claude"
+        },
+        {
+          "id": "T8-02",
+          "do": "Implement append-only audit trail system recording every proposal, evaluation verdict, experiment outcome, and decision with timestamps, actor IDs, reasoning chains, and immutable log integrity",
+          "summary": "Append-only audit trail for all decisions",
+          "files": [
+            "packages/evolution-engine/src/audit/logger.ts",
+            "packages/evolution-engine/src/audit/storage.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/audit/logger.ts",
+            "grep -q 'auditTrail' packages/evolution-engine/src/audit/logger.ts",
+            "grep -q 'appendOnly' packages/evolution-engine/src/audit/storage.ts"
+          ],
+          "ref": "F-11",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/pipeline/proposal-pipeline.ts",
+            "packages/evolution-engine/src/experiment/runner.ts",
+            "packages/evolution-engine/src/loops/daily-micro.ts",
+            "packages/evolution-engine/src/audit/integration.ts"
+          ]
+        },
+        {
+          "id": "T8-03",
+          "do": "Create web research integration module that queries external sources for optimization hypotheses, tags all results with hypothesisOnly status, requires human review gate before any adoption, and logs full provenance",
+          "summary": "Web research as hypothesis with human gate",
+          "files": [
+            "packages/evolution-engine/src/research/web-researcher.ts",
+            "packages/evolution-engine/src/research/hypothesis-store.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/research/web-researcher.ts",
+            "grep -q 'hypothesisOnly' packages/evolution-engine/src/research/web-researcher.ts",
+            "grep -q 'humanReviewRequired' packages/evolution-engine/src/research/web-researcher.ts"
+          ],
+          "ref": "F-08",
+          "priority": "P2",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/optimizer/core.ts",
+            "packages/evolution-engine/src/audit/logger.ts"
+          ]
+        },
+        {
+          "id": "T8-04",
+          "do": "Implement ROI measurement framework tracking optimization impact: cost savings, performance deltas, time saved, quality improvements \u2014 with per-proposal attribution, trend reporting, and dashboard-ready output",
+          "summary": "ROI tracker with attribution and trend output",
+          "files": [
+            "packages/evolution-engine/src/audit/roi-tracker.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/audit/roi-tracker.ts",
+            "grep -q 'ROITracker' packages/evolution-engine/src/audit/roi-tracker.ts",
+            "grep -q 'attribution' packages/evolution-engine/src/audit/roi-tracker.ts"
+          ],
+          "ref": "F-11",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/audit/logger.ts",
+            "dashboard_web/evolution-section.js"
+          ]
+        },
+        {
+          "id": "T8-05",
+          "do": "Wire audit logger into optimizer, evaluator, experiment runner, PR generator, and loop scheduler \u2014 verify every decision point emits structured audit events with correlation IDs",
+          "summary": "Wire audit trail into all subsystems",
+          "files": [
+            "packages/evolution-engine/src/audit/integration.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/audit/integration.ts",
+            "grep -q 'OptimizerCore' packages/evolution-engine/src/audit/integration.ts",
+            "grep -q 'EvaluatorCore' packages/evolution-engine/src/audit/integration.ts",
+            "grep -q 'correlationId' packages/evolution-engine/src/audit/integration.ts"
+          ],
+          "ref": "F-11",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5-mini",
+          "effort": 1,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/index.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "W9",
+      "name": "Pilot & Canary Rollout",
+      "estimated_hours": 22,
+      "merge_mode": "sync",
+      "theme": "rollout",
+      "precondition": {
+        "type": "wave_status",
+        "wave_id": "W4",
+        "status": "done"
+      },
+      "tasks": [
+        {
+          "id": "T9-01",
+          "do": "Implement shadow execution mode running proposals through the full pipeline (analysis \u2192 proposal \u2192 evaluation \u2192 experiment simulation) without applying any changes, producing shadow-mode reports for confidence building",
+          "summary": "Shadow mode: full pipeline, no side effects",
+          "files": [
+            "packages/evolution-engine/src/rollout/shadow.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/rollout/shadow.ts",
+            "grep -q 'ShadowMode' packages/evolution-engine/src/rollout/shadow.ts",
+            "grep -q 'noSideEffects' packages/evolution-engine/src/rollout/shadow.ts"
+          ],
+          "ref": "F-10",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/rollout/promotion.ts"
+          ]
+        },
+        {
+          "id": "T9-02",
+          "do": "Create canary deployment gate running experiments on a single target (Maranello benchmark), comparing metrics before/after with statistical significance, and triggering automatic rollback if any gate fails or metric regresses",
+          "summary": "Canary gate with Maranello benchmark + rollback",
+          "files": [
+            "packages/evolution-engine/src/rollout/canary.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/rollout/canary.ts",
+            "grep -q 'CanaryGate' packages/evolution-engine/src/rollout/canary.ts",
+            "grep -q 'automaticRollback' packages/evolution-engine/src/rollout/canary.ts",
+            "grep -q 'statisticalSignificance' packages/evolution-engine/src/rollout/canary.ts"
+          ],
+          "ref": "F-10,F-14",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 3,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/rollout/promotion.ts"
+          ]
+        },
+        {
+          "id": "T9-03",
+          "do": "Create staged promotion pipeline: shadow \u2192 canary \u2192 staged \u2192 full, with human approval gates at each transition, configurable soak time (default 48h canary), and automatic regression detection between stages",
+          "summary": "Promotion pipeline: shadow\u2192canary\u2192staged\u2192full",
+          "files": [
+            "packages/evolution-engine/src/rollout/promotion.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/rollout/promotion.ts",
+            "grep -q 'PromotionPipeline' packages/evolution-engine/src/rollout/promotion.ts",
+            "grep -q 'humanApproval' packages/evolution-engine/src/rollout/promotion.ts",
+            "grep -q 'soakTime' packages/evolution-engine/src/rollout/promotion.ts"
+          ],
+          "ref": "F-10,F-07",
+          "priority": "P0",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 3,
+          "executor_agent": "copilot",
+          "consumers": [
+            "packages/evolution-engine/src/index.ts"
+          ]
+        },
+        {
+          "id": "T9-04",
+          "do": "Configure and execute first pilot experiment: Maranello bundle size optimization through complete Evolution Engine pipeline \u2014 telemetry \u2192 analysis \u2192 proposal \u2192 evaluation \u2192 shadow \u2192 canary \u2192 draft PR",
+          "summary": "First pilot: Maranello bundle size optimization",
+          "files": [
+            "packages/evolution-engine/src/pilots/maranello-bundle-pilot.ts",
+            "packages/evolution-engine/src/pilots/pilot-config.json"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/src/pilots/maranello-bundle-pilot.ts",
+            "test -f packages/evolution-engine/src/pilots/pilot-config.json",
+            "grep -q 'bundleSize' packages/evolution-engine/src/pilots/pilot-config.json"
+          ],
+          "ref": "F-14,F-10,F-06",
+          "priority": "P1",
+          "type": "feature",
+          "model": "gpt-5",
+          "effort": 3,
+          "executor_agent": "copilot",
+          "consumers": [
+            "docs/evolution/pilot-results.md"
+          ]
+        },
+        {
+          "id": "T9-05",
+          "do": "Write end-to-end rollout pipeline tests: shadow mode validation, canary gate pass/fail scenarios, promotion gate transitions, rollback under regression, soak time enforcement, and audit trail completeness verification",
+          "summary": "Rollout pipeline integration tests",
+          "files": [
+            "packages/evolution-engine/tests/rollout.integration.test.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/tests/rollout.integration.test.ts",
+            "grep -q 'ShadowMode' packages/evolution-engine/tests/rollout.integration.test.ts",
+            "grep -q 'CanaryGate' packages/evolution-engine/tests/rollout.integration.test.ts",
+            "grep -q 'PromotionPipeline' packages/evolution-engine/tests/rollout.integration.test.ts"
+          ],
+          "ref": "F-10",
+          "priority": "P1",
+          "type": "test",
+          "model": "gpt-5",
+          "effort": 2,
+          "executor_agent": "copilot"
+        }
+      ]
+    },
+    {
+      "id": "WF",
+      "name": "Closure",
+      "estimated_hours": 12,
+      "merge_mode": "sync",
+      "theme": "closure",
+      "precondition": {
+        "type": "wave_status",
+        "wave_id": "W9",
+        "status": "done"
+      },
+      "tasks": [
+        {
+          "id": "TF-tests",
+          "do": "Create final comprehensive integration test suite covering all Evolution Engine subsystems end-to-end: telemetry ingestion \u2192 optimizer analysis \u2192 evaluator validation \u2192 loop scheduling \u2192 agent evolution \u2192 platform optimization \u2192 canary rollout \u2192 promotion \u2192 audit completeness",
+          "summary": "Final E2E integration test suite",
+          "files": [
+            "packages/evolution-engine/tests/final-integration.test.ts"
+          ],
+          "verify": [
+            "test -f packages/evolution-engine/tests/final-integration.test.ts",
+            "grep -q 'TelemetryCollector' packages/evolution-engine/tests/final-integration.test.ts",
+            "grep -q 'PromotionPipeline' packages/evolution-engine/tests/final-integration.test.ts"
+          ],
+          "ref": "F-01,F-02,F-03,F-04,F-05,F-06,F-10",
+          "priority": "P0",
+          "type": "test",
+          "model": "gpt-5",
+          "effort": 3,
+          "executor_agent": "copilot"
+        },
+        {
+          "id": "TF-doc",
+          "do": "Write final documentation package: Evolution Engine README, API reference, operator runbook, deployment guide, KPI baseline report, ADR index, and Maranello dashboard user guide",
+          "summary": "Complete documentation package",
+          "files": [
+            "docs/evolution/README.md",
+            "docs/evolution/api-reference.md",
+            "docs/evolution/runbook.md",
+            "docs/evolution/deployment-guide.md"
+          ],
+          "verify": [
+            "test -f docs/evolution/README.md",
+            "test -f docs/evolution/runbook.md",
+            "test -f docs/evolution/deployment-guide.md",
+            "test -f docs/evolution/api-reference.md"
+          ],
+          "ref": "F-11",
+          "priority": "P0",
+          "type": "documentation",
+          "model": "claude-sonnet-4.6",
+          "effort": 3,
+          "executor_agent": "claude"
+        },
+        {
+          "id": "TF-pr",
+          "do": "Create final PR consolidating all Evolution Engine work with comprehensive changelog entry, migration notes, configuration guide, rollout plan, and links to all supporting documentation",
+          "summary": "Final PR with changelog and rollout plan",
+          "files": [
+            "CHANGELOG.md"
+          ],
+          "verify": [
+            "grep -q 'Evolution Engine' CHANGELOG.md"
+          ],
+          "ref": "F-07,F-11",
+          "priority": "P0",
+          "type": "chore",
+          "model": "gpt-5-mini",
+          "effort": 1,
+          "executor_agent": "copilot"
+        }
+      ]
+    }
+  ]
+}

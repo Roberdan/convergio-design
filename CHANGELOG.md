@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.18.0] - 2026-03-19
+
+### Added
+- **createDetailPanel** — `mode: 'inline'` option for embedding panel in layout (no backdrop, `position: relative`, fills parent, `border-left`)
+- **profileMenu** — `maxWidth` option (default 320px) to constrain dropdown width
+
+### Fixed
+- **externalLinks** buttons in detail panel header now render as ghost-style `<a>` tags with `target="_blank" rel="noopener"`, matching Edit/Close button style (16px icon, `aria-label`)
+- **profileMenu** avatar clamped to 48x48px (was unconstrained), name/email ellipsis on reasonable width, email forced to `0.75rem`
+- **profileMenu** fixed orphaned `.mn-profile-dropdown__avatar-lg` CSS selector that caused avatar styles to not apply
+
 ## [4.17.0] - 2026-03-18
 
 ### Added — Presentation Runtime

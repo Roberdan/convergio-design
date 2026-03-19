@@ -1,0 +1,512 @@
+{
+  "objective": "Design a complete, documented plan for a self-improving optimization system (Convergio AutoPilot) that proposes optimizations based on real data across the Convergio ecosystem with MaranelloLuceDesign serving as both canary repo and observability dashboard UI surface, operating under strict human-approval governance.",
+  "user_request": "Design a complete, documented plan for a system that self-improves over time for the Convergio ecosystem, inspired by autoresearch / optimization loops. The system should propose optimizations based on real data over time, similar to Formula 1 continuous optimization. It should evaluate whether similar mechanisms should optimize agents based on how we work across repositories. It should also consider optimization of mesh, latency, performance, database, workload distribution, and general performance. The system may use a weekly night runner and likely daily micro-loops. It may search the internet for best practices and external solutions, but external knowledge should be treated as hypotheses, not auto-adopted truth. It must be safe: self-improving yes, self-authorizing no. Add whether and how MaranelloLuceDesign should evolve to embrace this philosophy.",
+  "governance_choices": {
+    "plan_scope": "ecosystem-complete",
+    "automation_authority": "recommend-and-open-prs-only",
+    "cadence": "daily-micro-plus-weekly-runner",
+    "web_research_policy": "internal-plus-web-as-hypothesis",
+    "maranello_role": "both-canary-and-ui"
+  },
+  "requirements": [
+    {
+      "group": "A: Telemetry and Data Collection",
+      "items": [
+        {
+          "id": "F-01",
+          "said": "propose optimizations based on real data over time",
+          "text": "Build a telemetry collection layer that captures real runtime metrics from all Convergio services: latency, error rates, throughput, resource utilization, response times",
+          "verify": "Telemetry schema exists; covers latency, errors, throughput, utilization, response_time fields",
+          "priority": "P1"
+        },
+        {
+          "id": "F-02",
+          "said": "optimization of mesh, latency, performance, database, workload distribution, and general performance",
+          "text": "Define specific metric families: mesh topology health, inter-service latency, database query performance, workload distribution balance, memory/CPU profiles, bundle sizes, build times",
+          "verify": "Metric families schema exists with at least 6 distinct families covering mesh, latency, database, workload, bundle, build",
+          "priority": "P1"
+        },
+        {
+          "id": "F-03",
+          "said": "similar to Formula 1 continuous optimization",
+          "text": "Implement time-series storage for all collected metrics so trends, regressions, and improvements are visible over time (F1 lap-over-lap telemetry model)",
+          "verify": "Design doc specifies time-series storage with retention policy; schema supports historical comparison queries",
+          "priority": "P1"
+        },
+        {
+          "id": "F-03w",
+          "inferred_from": "F-03",
+          "text": "Wire telemetry data into MaranelloLuceDesign dashboard components (charts, gauges, live graphs) for real-time and historical visualization",
+          "verify": "Dashboard spec maps telemetry data to mn-chart, mn-gauge, or liveGraph components; data contract defined",
+          "priority": "P1"
+        },
+        {
+          "id": "F-04",
+          "said": "evaluate whether similar mechanisms should optimize agents based on how we work across repositories",
+          "text": "Collect agent-level telemetry: token usage, cost per task, task completion rate, plan accuracy, code quality of agent output, time-to-merge for agent PRs, across all Convergio repositories",
+          "verify": "Agent metrics schema includes fields for tokens, cost, completion_rate, quality_score, time_to_merge",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "B: Evaluation and Analysis Engine",
+      "items": [
+        {
+          "id": "F-05",
+          "said": "propose optimizations based on real data over time",
+          "text": "Build an evaluation engine that analyzes collected telemetry, detects anomalies, regressions, and opportunities for improvement, and generates ranked optimization proposals",
+          "verify": "Evaluation engine spec exists with defined input (metrics) to output (proposals) contract; anomaly detection rules documented",
+          "priority": "P1"
+        },
+        {
+          "id": "F-06",
+          "said": "system that self-improves over time",
+          "text": "The evaluation engine must track the outcome of previously applied optimizations (accepted, rejected, measured impact) and feed that back into future proposal ranking (closed-loop learning)",
+          "verify": "Design includes feedback table linking proposal_id to outcome to measured_delta; ranking algorithm references historical outcomes",
+          "priority": "P1"
+        },
+        {
+          "id": "F-07",
+          "said": "optimization of mesh, latency, performance, database, workload distribution",
+          "text": "Define evaluation domains: (a) runtime performance, (b) infrastructure mesh, (c) database, (d) workload distribution, (e) agent efficiency, (f) build/bundle optimization",
+          "verify": "Each domain has a dedicated evaluator module or configuration section; at least 6 domains defined",
+          "priority": "P1"
+        },
+        {
+          "id": "F-08",
+          "said": "inspired by autoresearch / optimization loops",
+          "text": "Support hypothesis-driven evaluation: each optimization proposal must have a stated hypothesis, expected metric delta, and success/failure criteria before it can be promoted",
+          "verify": "Proposal schema includes fields: hypothesis, expected_delta, success_criteria, failure_criteria",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "C: Experimentation and Execution Modes",
+      "items": [
+        {
+          "id": "F-09",
+          "said": "self-improving yes, self-authorizing no",
+          "text": "Implement three execution modes: (1) Shadow mode: run proposal in parallel without affecting production; (2) Canary mode: apply to MaranelloLuceDesign canary and monitor; (3) Promotion: full rollout after human approval",
+          "verify": "Design documents shadow, canary, promotion modes with distinct lifecycle states; state machine present",
+          "priority": "P1"
+        },
+        {
+          "id": "F-10",
+          "said": "Add whether and how MaranelloLuceDesign should evolve to embrace this philosophy",
+          "text": "MaranelloLuceDesign serves as designated canary repository: all optimization proposals affecting build, bundle, performance, or agent workflow are first tested on MaranelloLuceDesign before ecosystem-wide rollout",
+          "verify": "Canary configuration references MaranelloLuceDesign explicitly; canary pipeline definition exists",
+          "priority": "P1"
+        },
+        {
+          "id": "F-11",
+          "said": "inspired by autoresearch / optimization loops",
+          "text": "Support replay mode: ability to replay a historical optimization proposal against current data to re-evaluate whether it would still be beneficial",
+          "verify": "Replay mode documented with input/output contract; replay does not mutate production state",
+          "priority": "P2"
+        },
+        {
+          "id": "F-12",
+          "inferred_from": "F-09",
+          "text": "Each execution mode must produce a structured experiment report: before/after metrics, confidence interval, duration, side effects observed",
+          "verify": "Experiment report schema defined with fields: mode, before_metrics, after_metrics, confidence, duration, side_effects",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "D: Cadence and Scheduling",
+      "items": [
+        {
+          "id": "F-13",
+          "said": "daily micro-loops",
+          "text": "Implement daily micro-loops that: collect latest telemetry, run lightweight evaluations, generate quick-win proposals (dependency updates, token usage anomalies, performance regressions)",
+          "verify": "Daily micro-loop scheduler defined with trigger, scope constraints, max execution time; produces daily digest",
+          "priority": "P1"
+        },
+        {
+          "id": "F-14",
+          "said": "weekly night runner",
+          "text": "Implement weekly night runner that: runs deep analysis across all domains, performs cross-repository correlation, generates comprehensive optimization proposals, compiles weekly report",
+          "verify": "Weekly runner scheduler defined with night-time window, full domain coverage, weekly report template",
+          "priority": "P1"
+        },
+        {
+          "id": "F-14w",
+          "inferred_from": "F-14",
+          "text": "Wire weekly report output into a MaranelloLuceDesign dashboard view using existing chart/table components",
+          "verify": "Dashboard spec maps weekly report JSON to mn-data-table, mn-chart, or similar WC",
+          "priority": "P2"
+        },
+        {
+          "id": "F-15",
+          "inferred_from": "F-13, F-14",
+          "text": "Both cadences must be configurable (cron expressions) and overridable via manual trigger (workflow_dispatch equivalent)",
+          "verify": "Configuration schema includes cron fields for daily and weekly; manual trigger documented",
+          "priority": "P2"
+        }
+      ]
+    },
+    {
+      "group": "E: Web Research and External Knowledge",
+      "items": [
+        {
+          "id": "F-16",
+          "said": "may search the internet for best practices and external solutions",
+          "text": "The system may search the internet for best practices, benchmarks, known optimizations, and external tooling relevant to detected issues",
+          "verify": "Web research module specified with API/tool integration points; search scope constraints defined",
+          "priority": "P2"
+        },
+        {
+          "id": "F-17",
+          "said": "external knowledge should be treated as hypotheses, not auto-adopted truth",
+          "text": "All externally sourced knowledge must be tagged as hypothesis status, include source attribution, and pass through same evaluation/experiment/human-approval pipeline. External knowledge is NEVER auto-adopted.",
+          "verify": "Proposal schema has source_type enum (internal, external_hypothesis); external proposals require same approval gates; no auto-apply path",
+          "priority": "P1"
+        },
+        {
+          "id": "F-18",
+          "inferred_from": "F-17",
+          "text": "External research results must be cached, deduplicated, and versioned so the system does not repeatedly search for the same thing",
+          "verify": "Research cache design with TTL, dedup key, version tracking documented",
+          "priority": "P3"
+        }
+      ]
+    },
+    {
+      "group": "F: Guardrails and Human Approval",
+      "items": [
+        {
+          "id": "F-19",
+          "said": "self-improving yes, self-authorizing no",
+          "text": "The system MUST NOT auto-apply any optimization. All proposals surfaced as recommendations. Execution requires explicit human approval.",
+          "verify": "No code path from proposal to production without human_approved gate; gate is mandatory in state machine",
+          "priority": "P0"
+        },
+        {
+          "id": "F-20",
+          "said": "recommend-and-open-prs-only",
+          "text": "System maximum autonomous action is to open a Pull Request with proposed change. Merging requires human review and approval.",
+          "verify": "Automation authority ceiling documented as open PR; no merge automation; PR template includes proposal metadata",
+          "priority": "P0"
+        },
+        {
+          "id": "F-21",
+          "inferred_from": "F-19",
+          "text": "Promotion gate: proposals must clear shadow then canary then human-review then production. No stage can be skipped.",
+          "verify": "Pipeline has exactly these stages in order; no skip mechanism; each transition logged",
+          "priority": "P0"
+        },
+        {
+          "id": "F-22",
+          "inferred_from": "F-19",
+          "text": "Blast radius limits: each proposal must declare scope (single repo, single service, ecosystem-wide) and cannot exceed declared scope",
+          "verify": "Proposal schema includes blast_radius field with enum; execution enforces scope check",
+          "priority": "P1"
+        },
+        {
+          "id": "F-23",
+          "inferred_from": "F-19",
+          "text": "Kill switch: any running experiment can be immediately halted and rolled back by a human operator",
+          "verify": "Kill switch mechanism documented; rollback procedure defined; accessible from dashboard UI",
+          "priority": "P0"
+        },
+        {
+          "id": "F-24",
+          "inferred_from": "F-19",
+          "text": "Rate limiting: configurable limits on proposals per day/week and concurrent open PRs",
+          "verify": "Rate limit config with defaults; applies to daily and weekly; exceeded limits trigger alert",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "G: Agent Optimization",
+      "items": [
+        {
+          "id": "F-25",
+          "said": "evaluate whether similar mechanisms should optimize agents based on how we work across repositories",
+          "text": "Design agent optimization sub-system that evaluates agent configurations (.claude files, agent definitions, prompts, tool selections) based on observed performance metrics across repositories",
+          "verify": "Agent optimization module spec exists; references .claude/ and agent definitions; evaluates prompt effectiveness, tool usage, task completion quality",
+          "priority": "P1"
+        },
+        {
+          "id": "F-26",
+          "inferred_from": "F-25",
+          "text": "Agent optimization proposals may include: prompt refinements, tool selection changes, model parameter tuning, memory/context strategy adjustments, orchestration flow changes",
+          "verify": "At least 5 agent optimization categories defined with example proposals",
+          "priority": "P1"
+        },
+        {
+          "id": "F-27",
+          "inferred_from": "F-25",
+          "text": "Agent optimization must respect same governance (recommend-and-open-prs-only): proposed changes are PRs to .claude/ or agent config files, never auto-applied",
+          "verify": "Agent optimization feeds into same PR-based approval flow; no direct agent config mutation path",
+          "priority": "P0"
+        },
+        {
+          "id": "F-28",
+          "inferred_from": "F-25, F-10",
+          "text": "MaranelloLuceDesign NaSra agent serves as canary for agent optimization proposals: test agent config changes on NaSra before applying to other Convergio agents",
+          "verify": "NaSra explicitly named as agent-optimization canary; canary test procedure documented",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "H: Convergio Runtime and Infrastructure Optimization",
+      "items": [
+        {
+          "id": "F-29",
+          "said": "optimization of mesh",
+          "text": "Service mesh optimization: evaluate topology, routing rules, retry policies, circuit breaker thresholds; propose improvements based on traffic patterns",
+          "verify": "Mesh evaluator defined with metric inputs and output proposals",
+          "priority": "P1"
+        },
+        {
+          "id": "F-30",
+          "said": "optimization of latency",
+          "text": "Latency optimization: identify p50/p95/p99 hotspots, propose caching, connection pooling, architectural improvements",
+          "verify": "Latency evaluator references percentile metrics; proposal types include caching, pooling, architecture",
+          "priority": "P1"
+        },
+        {
+          "id": "F-31",
+          "said": "optimization of database",
+          "text": "Database optimization: analyze slow queries, index usage, connection pools, schema efficiency; propose index additions, query rewrites, pool sizing",
+          "verify": "Database evaluator includes slow query analysis, index recommendations, pool sizing",
+          "priority": "P1"
+        },
+        {
+          "id": "F-32",
+          "said": "optimization of workload distribution",
+          "text": "Workload distribution optimization: analyze load imbalance, queue depths; propose rebalancing, scaling, scheduling changes",
+          "verify": "Workload evaluator defined with load and queue metrics",
+          "priority": "P1"
+        },
+        {
+          "id": "F-33",
+          "said": "optimization of general performance",
+          "text": "General performance: bundle size, build time, startup time, memory, CPU; applicable to runtime services and MaranelloLuceDesign builds",
+          "verify": "Performance evaluator covers bundle, build, startup, memory, CPU; MLD build metrics included",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "I: MaranelloLuceDesign Evolution",
+      "items": [
+        {
+          "id": "F-34",
+          "said": "Add whether and how MaranelloLuceDesign should evolve to embrace this philosophy",
+          "text": "Define how MLD evolves: (a) canary repo for ecosystem optimizations, (b) UI surface for observability dashboards showing optimization status, telemetry, experiment results",
+          "verify": "Design has dedicated MLD section covering canary and UI roles with component mappings",
+          "priority": "P1"
+        },
+        {
+          "id": "F-35",
+          "inferred_from": "F-34",
+          "text": "Create AutoPilot Dashboard components in MLD: proposal list (mn-data-table), trend charts (mn-chart), experiment gauges (mn-gauge), approval workflow (approvalChain), cost tracking (costTimeline/tokenMeter)",
+          "verify": "Dashboard component list mapped to existing MLD components; wireframe or spec exists",
+          "priority": "P2"
+        },
+        {
+          "id": "F-35w",
+          "inferred_from": "F-35",
+          "text": "Wire AutoPilot Dashboard into MaranelloLuceDesign demo as new section",
+          "verify": "demo/sections/ includes autopilot section; accessible from navigation",
+          "priority": "P2"
+        },
+        {
+          "id": "F-36",
+          "inferred_from": "F-34",
+          "text": "MLD own build/bundle/test metrics collected by telemetry layer and fed into optimization engine (dogfooding)",
+          "verify": "Telemetry config includes MLD build output, bundle sizes, test pass rates, build times",
+          "priority": "P1"
+        },
+        {
+          "id": "F-37",
+          "inferred_from": "F-34, F-23",
+          "text": "Kill switch and experiment controls accessible from MLD dashboard (not just CLI)",
+          "verify": "Kill switch UI component specified; maps to action in dashboard",
+          "priority": "P2"
+        }
+      ]
+    },
+    {
+      "group": "J: Documentation and Governance",
+      "items": [
+        {
+          "id": "F-38",
+          "said": "complete, documented plan",
+          "text": "Plan must be complete and documented in every part: architecture, data flows, schemas, governance model, cadence, promotion gates, rollback procedures, configuration",
+          "verify": "Plan document covers all sections; no TBD sections at completion",
+          "priority": "P1"
+        },
+        {
+          "id": "F-39",
+          "inferred_from": "F-38",
+          "text": "Create ADR for self-improvement system in docs/adr/ following existing convention",
+          "verify": "ADR file exists in docs/adr/ with Status Proposed or Accepted",
+          "priority": "P1"
+        },
+        {
+          "id": "F-40",
+          "inferred_from": "F-19",
+          "text": "Document governance model: approval roles, escalation for high-blast-radius changes, veto rights, audit trail requirements",
+          "verify": "Governance section defines approval roles, escalation matrix, veto, audit trail schema",
+          "priority": "P1"
+        },
+        {
+          "id": "F-41",
+          "inferred_from": "F-38",
+          "text": "Every proposal traceable: unique ID, timestamp, source (daily/weekly/manual), hypothesis, outcome, linked PR, approver",
+          "verify": "Proposal schema includes all traceability fields; no anonymous proposals",
+          "priority": "P1"
+        }
+      ]
+    },
+    {
+      "group": "K: ROI and Impact Measurement",
+      "items": [
+        {
+          "id": "F-42",
+          "said": "similar to Formula 1 continuous optimization",
+          "text": "Measure ROI of optimization system: improvement gains vs cost of running system (compute, tokens, review time)",
+          "verify": "ROI framework with input costs and output gains; periodic report template",
+          "priority": "P1"
+        },
+        {
+          "id": "F-43",
+          "inferred_from": "F-42",
+          "text": "Track cumulative impact: proposals generated/accepted/rejected, positive/negative impact, net improvement score",
+          "verify": "Scoreboard schema defined; accessible from dashboard",
+          "priority": "P2"
+        },
+        {
+          "id": "F-43w",
+          "inferred_from": "F-43",
+          "text": "Wire scoreboard into MLD dashboard using kpiScorecard or similar component",
+          "verify": "Scoreboard UI maps to mn-* component; data contract defined",
+          "priority": "P2"
+        }
+      ]
+    },
+    {
+      "group": "L: Non-Functional Requirements",
+      "items": [
+        {
+          "id": "NF-01",
+          "said": "self-improving yes, self-authorizing no",
+          "text": "Safety: system must never autonomously change production systems, data, or configs. All mutations require human approval.",
+          "verify": "No auto-mutation paths in architecture; all writes gated behind approval",
+          "priority": "P0"
+        },
+        {
+          "id": "NF-02",
+          "inferred_from": "F-19, F-40",
+          "text": "Auditability: every system action logged with timestamp, actor, input, output. Append-only, tamper-evident.",
+          "verify": "Audit log schema defined; all actions produce entries",
+          "priority": "P1"
+        },
+        {
+          "id": "NF-03",
+          "inferred_from": "F-23",
+          "text": "Reversibility: every applied change must be reversible. Rollback documented and tested per optimization category.",
+          "verify": "Rollback procedure per domain; automated or scripted",
+          "priority": "P1"
+        },
+        {
+          "id": "NF-04",
+          "inferred_from": "F-42",
+          "text": "Cost control: configurable budget limits for compute, API calls, tokens, web research. Exceed triggers pause + alert.",
+          "verify": "Budget config with per-resource limits; pause + alert on exceed",
+          "priority": "P1"
+        },
+        {
+          "id": "NF-05",
+          "inferred_from": "ecosystem-complete scope",
+          "text": "Privacy: telemetry must not capture PII, secrets, or sensitive business data. Data contracts specify inclusions/exclusions.",
+          "verify": "Telemetry schema has PII/secrets exclusion rules; no raw user data",
+          "priority": "P1"
+        },
+        {
+          "id": "NF-06",
+          "inferred_from": "ecosystem-complete scope",
+          "text": "Platform portability: not locked to single CI/CD, cloud, or observability vendor. Abstract interfaces with pluggable adapters.",
+          "verify": "Interface/adapter pattern; at least 2 adapter examples documented",
+          "priority": "P2"
+        },
+        {
+          "id": "NF-07",
+          "inferred_from": "MaranelloLuceDesign CONSTITUTION.md",
+          "text": "Any MLD components must comply with Constitution: WCAG 2.2 AA, zero emoji, mn- prefix, @layer CSS, max 250 lines/file, 4 themes, no hardcoded colors",
+          "verify": "npm run build and npm run test:unit pass; CI constitution checks pass",
+          "priority": "P1"
+        },
+        {
+          "id": "NF-08",
+          "inferred_from": "F-01, F-04",
+          "text": "Graceful degradation: optimization system unavailability must not impact production. Purely observational and advisory.",
+          "verify": "Architecture confirms no production dependency; failure mode documented",
+          "priority": "P1"
+        }
+      ]
+    }
+  ],
+  "scope": {
+    "in": [
+      "Convergio ecosystem-wide optimization system design and architecture",
+      "All optimization domains: mesh, latency, performance, database, workload distribution, agent efficiency, build/bundle",
+      "Telemetry collection, evaluation engine, experimentation framework",
+      "Daily micro-loops and weekly night runner scheduling",
+      "Web research as hypothesis source (not auto-adopted truth)",
+      "Human-approval governance with PR-only automation ceiling",
+      "Shadow, canary, and promotion execution modes",
+      "MaranelloLuceDesign as canary repository for optimization proposals",
+      "MaranelloLuceDesign as observability/dashboard UI surface",
+      "NaSra agent as canary target for agent optimization proposals",
+      "Agent optimization across Convergio repositories (.claude, agent configs, prompts)",
+      "Guardrails: kill switch, blast radius limits, rate limits, budget controls",
+      "Documentation: ADR, governance model, data contracts, rollback procedures",
+      "ROI measurement and cumulative impact tracking",
+      "Non-functional: safety, auditability, reversibility, cost control, privacy, portability, graceful degradation"
+    ],
+    "out": [
+      "Implementation/coding (this phase is plan/design only)",
+      "Auto-merging or auto-deploying (user: recommend-and-open-prs-only)",
+      "Auto-adopting external knowledge as truth (user: hypotheses, not auto-adopted truth)",
+      "Self-authorizing behavior (user: self-authorizing no)"
+    ]
+  },
+  "stop_conditions": [
+    "All F-xx and NF-xx requirements have corresponding design sections",
+    "Governance model (recommend-and-open-prs-only) enforced in every execution path",
+    "No auto-mutation path without human approval gate",
+    "MLD canary role and UI surface role specified with concrete component mappings",
+    "Daily micro-loop and weekly runner cadences fully specified",
+    "Web research treated as hypothesis in all artifacts",
+    "ADR document created in docs/adr/",
+    "Plan complete with no TBD sections",
+    "User confirms requirements complete and accurate"
+  ],
+  "metadata": {
+    "created": "2025-01-20",
+    "repo": "MaranelloLuceDesign",
+    "repo_version": "v4.16.0",
+    "ecosystem": "Convergio",
+    "phase": "requirements-extraction",
+    "next_phase": "planning",
+    "total_f_requirements": 43,
+    "total_nf_requirements": 8,
+    "total_requirements": 51,
+    "priority_distribution": {
+      "P0": 6,
+      "P1": 31,
+      "P2": 11,
+      "P3": 1
+    },
+    "model_recommendation": "claude-opus-4.6"
+  }
+}
