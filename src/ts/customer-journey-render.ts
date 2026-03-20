@@ -107,13 +107,20 @@ export function renderJourneyPhases(
 }
 
 /** Draw SVG connector lines between adjacent phases. */
-export function drawConnectors(el: HTMLElement, phases: JourneyPhase[]): void {
+export function drawConnectors(el: HTMLElement, _phases: JourneyPhase[]): void {
   const phaseEls = el.querySelectorAll<HTMLElement>('.mn-journey__phase');
   if (phaseEls.length < 2) return;
+
+  const elRect = el.getBoundingClientRect();
+  const w = el.scrollWidth;
+  const h = el.scrollHeight;
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.classList.add('mn-journey__connectors');
   svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('width', String(w));
+  svg.setAttribute('height', String(h));
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
 
   /* Arrow marker */
   const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
@@ -131,19 +138,29 @@ export function drawConnectors(el: HTMLElement, phases: JourneyPhase[]): void {
   defs.appendChild(marker);
   svg.appendChild(defs);
 
-  /* Lines between last card of phase N and first card of phase N+1 */
+  /* Lines from last card of phase N to first card of phase N+1 */
   for (let i = 0; i < phaseEls.length - 1; i++) {
-    const srcCards = phaseEls[i].querySelectorAll('.mn-journey__card');
-    const dstCards = phaseEls[i + 1].querySelectorAll('.mn-journey__card');
+    const srcCards = phaseEls[i].querySelectorAll<HTMLElement>('.mn-journey__card');
+    const dstCards = phaseEls[i + 1].querySelectorAll<HTMLElement>('.mn-journey__card');
     if (!srcCards.length || !dstCards.length) continue;
+
+    const src = srcCards[srcCards.length - 1].getBoundingClientRect();
+    const dst = dstCards[0].getBoundingClientRect();
+
+    const x1 = src.right - elRect.left + el.scrollLeft;
+    const y1 = src.top + src.height / 2 - elRect.top + el.scrollTop;
+    const x2 = dst.left - elRect.left + el.scrollLeft;
+    const y2 = dst.top + dst.height / 2 - elRect.top + el.scrollTop;
 
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.classList.add('mn-journey__connector-line');
-    line.setAttribute('data-from-phase', String(i));
-    line.setAttribute('data-to-phase', String(i + 1));
+    line.setAttribute('x1', String(x1));
+    line.setAttribute('y1', String(y1));
+    line.setAttribute('x2', String(x2));
+    line.setAttribute('y2', String(y2));
     line.style.stroke = 'var(--mn-info)';
     line.setAttribute('stroke-dasharray', '6 4');
-    line.setAttribute('stroke-width', '2');
+    line.setAttribute('stroke-width', '2.5');
     line.setAttribute('marker-end', 'url(#mn-journey-arrow)');
     svg.appendChild(line);
   }
