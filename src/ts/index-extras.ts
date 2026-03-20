@@ -71,3 +71,11 @@ export type {
   EngagementStatus, EngagementType, JourneyEngagement,
   JourneyPhase, CustomerJourneyOptions, CustomerJourneyController,
 } from './customer-journey';
+
+// v4.15 — Admin Shell, Section Card, Settings Panel
+export { adminShell } from './admin-shell';
+export type { AdminShellNavItem, AdminShellOpts, AdminShellController } from './admin-shell';
+export { sectionCard } from './section-card';
+export type { SectionCardOpts, SectionCardController } from './section-card';
+export { settingsPanel } from './settings-panel';
+export type { SettingsPanelSection, SettingsPanelOpts, SettingsPanelController } from './settings-panel';
