@@ -130,7 +130,7 @@
 
 .mn-nine-box__item:hover {
   border-color: var(--mn-accent);
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--mn-text) 15%, transparent);
+  box-shadow: var(--shadow-card);
 }
 
 .mn-nine-box__item--selected {
