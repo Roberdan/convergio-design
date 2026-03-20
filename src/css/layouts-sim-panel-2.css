@@ -27,7 +27,7 @@
 .mn-sim-step-header__title { font-weight:700; font-size:1rem; flex:1; color:var(--mn-text); }
 .mn-sim-back {
   background:none; border:none; color:var(--mn-text-muted); cursor:pointer;
-  font-size:0.85rem; padding:4px 8px; border-radius:4px;
+  font-size:0.85rem; padding:4px 8px; border-radius:var(--radius-sm);
 }
 .mn-sim-back:hover { color:var(--mn-accent); background:var(--mn-surface-raised); }
 .mn-sim-desc { font-size:0.85rem; color:var(--mn-text-muted); margin-bottom:16px; }
@@ -76,13 +76,13 @@
 /* ── Mutation card ── */
 .mn-sim-mutation {
   background:var(--mn-surface-raised); border:1px solid var(--mn-border);
-  border-radius:8px; padding:12px; transition:border-color 0.15s;
+  border-radius:var(--radius-md); padding:12px; transition:border-color 0.15s;
 }
 .mn-sim-mutation:hover { border-color:var(--mn-text-muted); }
 .mn-sim-mutation__header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
 .mn-sim-mutation__remove {
   background:none; border:none; color:var(--mn-text-muted); font-size:0.9rem;
-  cursor:pointer; padding:2px 6px; line-height:1; border-radius:4px; transition:all 0.15s;
+  cursor:pointer; padding:2px 6px; line-height:1; border-radius:var(--radius-sm); transition:all 0.15s;
 }
 .mn-sim-mutation__remove:hover { color:var(--mn-error); background:var(--signal-danger-bg); }
 .mn-sim-mutation__fields { display:flex; flex-direction:column; gap:6px; }
@@ -90,7 +90,7 @@
 /* ── Label input ── */
 .mn-sim-label-input {
   width:100%; padding:8px 12px; background:var(--mn-surface-raised);
-  border:1px solid var(--mn-border); border-radius:6px; color:var(--mn-text);
+  border:1px solid var(--mn-border); border-radius:var(--radius-sm); color:var(--mn-text);
   font-family:var(--font-body,'Inter',sans-serif); font-size:0.85rem;
   outline:none; transition:border-color 0.15s; box-sizing:border-box;
 }
@@ -99,7 +99,7 @@
 
 /* ── Evaluate & Apply buttons ── */
 .mn-sim-evaluate-btn {
-  width:100%; padding:10px 16px; border:none; border-radius:8px;
+  width:100%; padding:10px 16px; border:none; border-radius:var(--radius-md);
   background:var(--mn-accent); color:var(--mn-accent-text);
   font-family:var(--font-mono,'Barlow Condensed',sans-serif);
   font-weight:700; font-size:0.9rem; text-transform:uppercase;
@@ -108,7 +108,7 @@
 .mn-sim-evaluate-btn:hover:not(:disabled) { opacity:0.85; }
 .mn-sim-evaluate-btn:disabled { opacity:0.4; cursor:not-allowed; }
 .mn-sim-apply-btn {
-  flex:1; padding:10px 16px; border:none; border-radius:8px;
+  flex:1; padding:10px 16px; border:none; border-radius:var(--radius-md);
   background:var(--verde-racing); color:var(--mn-accent-text);
   font-family:var(--font-mono,'Barlow Condensed',sans-serif);
   font-weight:700; font-size:0.85rem; text-transform:uppercase;
@@ -125,7 +125,7 @@
 /* ── AI suggestion card ── */
 .mn-sim-suggestion {
   background:var(--mn-accent-bg); border:1px solid var(--mn-accent-border);
-  border-radius:8px; padding:12px; margin-top:8px;
+  border-radius:var(--radius-md); padding:12px; margin-top:8px;
 }
 .mn-sim-suggestion p { font-size:0.82rem; color:var(--mn-text-muted); margin:6px 0 0; line-height:1.45; }
 
@@ -144,7 +144,7 @@
 .mn-sim-bar__label { font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.05em; }
 .mn-sim-bar__toggle {
   background:var(--mn-surface); border:1px solid var(--mn-border);
-  color:var(--mn-text-muted); padding:3px 10px; border-radius:4px;
+  color:var(--mn-text-muted); padding:3px 10px; border-radius:var(--radius-sm);
   cursor:pointer; font-size:0.75rem;
 }
 .mn-sim-bar__toggle--active { background:var(--mn-accent); color:var(--mn-accent-text); border-color:var(--mn-accent); }
@@ -152,21 +152,21 @@
 /* ── Insight & preview cards ── */
 .mn-sim-eng-preview {
   padding:10px 12px; margin:8px 0; background:var(--mn-surface-raised);
-  border-left:3px solid var(--mn-accent); border-radius:0 6px 6px 0;
+  border-left:3px solid var(--mn-accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 .mn-sim-talent-card {
   padding:12px; margin-bottom:8px; background:var(--mn-surface);
-  border:1px solid var(--mn-border); border-radius:8px; border-left:3px solid var(--mn-border);
+  border:1px solid var(--mn-border); border-radius:var(--radius-md); border-left:3px solid var(--mn-border);
 }
 .mn-sim-insight {
   padding:12px 16px; margin:12px 0; background:var(--mn-accent-bg);
-  border:1px solid var(--mn-accent); border-radius:8px;
+  border:1px solid var(--mn-accent); border-radius:var(--radius-md);
   font-size:0.85rem; color:var(--mn-text-muted);
 }
 .mn-sim-insight__title { font-weight:600; color:var(--mn-accent); margin-bottom:6px; font-size:0.8rem; }
 .mn-sim-ado-preview {
   padding:12px; margin:12px 0; background:var(--mn-surface-raised);
-  border-radius:8px; font-size:0.8rem; color:var(--mn-text-muted);
+  border-radius:var(--radius-md); font-size:0.8rem; color:var(--mn-text-muted);
 }
 .mn-sim-ado-preview ul { color:var(--mn-text-muted); }
 .mn-sim-saved-list { margin-top:8px; }
@@ -174,7 +174,7 @@
 /* ── Nav sim button ── */
 .mn-nav__sim-btn {
   background:none; border:1px solid var(--mn-border); color:var(--mn-text-muted);
-  cursor:pointer; font-size:1rem; padding:4px 8px; border-radius:6px;
+  cursor:pointer; font-size:1rem; padding:4px 8px; border-radius:var(--radius-sm);
   line-height:1; transition:all 0.15s;
 }
 .mn-nav__sim-btn:hover { border-color:var(--mn-accent); color:var(--mn-accent); }

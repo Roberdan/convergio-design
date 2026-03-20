@@ -26,7 +26,7 @@
 
   .mn-source-card:hover {
     border-color: var(--mn-accent);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-card);
   }
 
   .mn-source-card:focus-visible {
@@ -50,7 +50,7 @@
   .mn-source-card__badge {
     font-size: 0.6875rem;
     padding: 2px 8px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: color-mix(in srgb, var(--mn-accent) 15%, transparent);
     color: var(--mn-accent);
     font-weight: 600;
@@ -166,7 +166,7 @@
 
   /* Theme: Nero — deeper shadow on hover */
   body.mn-nero .mn-source-card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    box-shadow: var(--shadow-md);
   }
 
   /* Responsive: mobile single column for grid */

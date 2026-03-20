@@ -117,7 +117,7 @@ body.mn-avorio .mn-avatar__status { border-color: var(--mn-text); }
   height: 35%;
   margin-left: -1px;
   background: var(--mn-accent);
-  border-radius: 2px;
+  border-radius: var(--radius-xs);
   transform-origin: bottom center;
   animation: mn-spin 0.8s linear infinite;
   box-shadow: 0 0 4px rgba(255,199,44,0.5);
@@ -142,7 +142,7 @@ body.mn-nero .mn-tooltip {
   background: var(--mn-surface-sunken);
   color: var(--mn-text);
   border-color: var(--mn-border);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  box-shadow: var(--shadow-md);
 }
 body.mn-nero .mn-tooltip::after { border-top-color: var(--mn-border); }
 body.mn-nero .mn-tooltip--bottom::after {
@@ -154,7 +154,7 @@ body.mn-nero .mn-modal {
   background: var(--mn-surface-sunken);
   color: var(--mn-text);
   border-color: var(--mn-border);
-  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  box-shadow: var(--shadow-heavy);
 }
 body.mn-nero .mn-modal__header,
 body.mn-nero .mn-modal__footer { border-color: var(--mn-border); }
@@ -166,7 +166,7 @@ body.mn-nero .mn-toast {
   background: var(--mn-surface-sunken);
   color: var(--mn-text);
   border-color: var(--mn-border);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  box-shadow: var(--shadow-lg);
 }
 body.mn-nero .mn-toast__text { color: var(--mn-text-muted); }
 
@@ -178,7 +178,7 @@ body.mn-nero .mn-dropdown__trigger {
 body.mn-nero .mn-dropdown__menu {
   background: var(--mn-surface-sunken);
   border-color: var(--mn-border);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  box-shadow: var(--shadow-lg);
 }
 body.mn-nero .mn-dropdown__item { color: var(--mn-text-muted); }
 body.mn-nero .mn-dropdown__item:hover { background: var(--mn-surface-raised); color: var(--mn-text); }

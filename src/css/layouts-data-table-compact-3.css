@@ -27,7 +27,7 @@
 .mn-chat-msg__avatar { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 1px; background: var(--mn-surface-raised); color: var(--mn-accent); font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 .mn-chat-msg__time { font-family: var(--font-mono); font-size: var(--text-nano); color: var(--mn-text-muted); margin-top: 2px; }
 .mn-chat-msg__code { font-family: var(--font-mono); font-size: var(--text-micro); background: var(--mn-text-inverse); padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm); margin-top: var(--space-xs); overflow-x: auto; position: relative; white-space: pre; }
-.mn-chat-msg__inline-code { font-family: var(--font-mono); font-size: 0.85em; background: var(--mn-hover-bg); padding: 1px 4px; border-radius: 3px; }
+.mn-chat-msg__inline-code { font-family: var(--font-mono); font-size: 0.85em; background: var(--mn-hover-bg); padding: 1px 4px; border-radius: var(--radius-xs); }
 .mn-chat-msg__copy { position: absolute; top: 4px; right: 4px; background: none; border: none; font-family: var(--font-mono); font-size: var(--text-nano); color: var(--mn-text-muted); cursor: pointer; }
 .mn-chat-msg__copy:hover { color: var(--mn-accent); }
 

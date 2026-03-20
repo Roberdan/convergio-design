@@ -45,6 +45,7 @@
   --space-5xl:  calc(8rem     * var(--mn-a11y-space-scale));
 
   /* ─── Radius ─── */
+  --radius-xs:   0.1875rem;
   --radius-sm:   0.375rem;
   --radius-md:   0.75rem;
   --radius-lg:   1rem;

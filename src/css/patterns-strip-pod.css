@@ -82,7 +82,7 @@
   flex: 1;
   height: 6px;
   background: var(--mn-hover-bg);
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
   overflow: hidden;
 }
 .mn-bar-metric {

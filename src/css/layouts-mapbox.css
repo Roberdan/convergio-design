@@ -8,11 +8,11 @@
     background: var(--bg-panel, #141414);
     color: var(--text, #c0c0c0);
     border: 1px solid var(--border, #333);
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     padding: 10px 14px;
     font-family: var(--font-body, 'Inter', sans-serif);
     font-size: 0.8rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-elevated);
   }
 
   .mn-mapbox-popup .mapboxgl-popup-tip {
@@ -34,8 +34,8 @@
 .mn-map .mapboxgl-ctrl-group {
   background: var(--bg-panel, #141414);
   border: 1px solid var(--border, #333);
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
 }
 
 .mn-map .mapboxgl-ctrl-group button {

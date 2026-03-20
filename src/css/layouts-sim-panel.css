@@ -78,7 +78,7 @@
 .mn-sim-select__dropdown {
   position:absolute; top:100%; left:0; right:0; z-index:50;
   background:var(--mn-surface); border:1px solid var(--mn-border);
-  border-radius:var(--radius-sm,4px); box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  border-radius:var(--radius-sm,4px); box-shadow:var(--shadow-elevated);
   max-height:220px; display:flex; flex-direction:column;
 }
 .mn-sim-select__search {
@@ -156,7 +156,7 @@ body.mn-avorio .mn-sim-btn--ghost { color:var(--mn-text-muted); border-color:var
 body.mn-avorio .mn-sim-banner { background:rgba(220,0,0,0.06); }
 
 /* ── Status tags (results table) ── */
-.mn-sim-tag { padding:2px 6px; border-radius:3px; font-size:0.65rem; font-weight:600; text-transform:uppercase; }
+.mn-sim-tag { padding:2px 6px; border-radius:var(--radius-xs); font-size:0.65rem; font-weight:600; text-transform:uppercase; }
 .mn-sim-tag--danger { background:rgba(220,0,0,0.15); color:var(--mn-error); }
 .mn-sim-tag--warn { background:rgba(234,88,12,0.15); color:var(--arancio,#ea580c); }
 .mn-sim-tag--ok { background:rgba(0,166,81,0.12); color:var(--verde,#00A651); }

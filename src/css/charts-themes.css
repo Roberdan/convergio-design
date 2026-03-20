@@ -5,7 +5,7 @@
 .mn-chart-panel {
   background: linear-gradient(135deg, rgba(18,18,18,0.95), rgba(8,8,8,0.98));
   border: 1px solid var(--mn-hover-bg);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 .mn-chart-panel__header {
@@ -27,7 +27,7 @@
   font-family: var(--font-display);
   font-size: 0.6rem;
   padding: 2px 8px;
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
   background: rgba(255,199,44,0.12);
   color: var(--mn-accent);
   font-weight: 600;
@@ -88,7 +88,7 @@ body.mn-nero .mn-gantt__label { color: var(--mn-text-tertiary); }
   background: var(--mn-surface-raised);
   border-color: var(--mn-border-strong);
   color: var(--mn-text);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.16);
+  box-shadow: var(--shadow-md);
 }
 .mn-avorio .mn-chart-tooltip__label { color: var(--mn-text-tertiary); }
 .mn-avorio .mn-live-panel {

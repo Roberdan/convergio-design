@@ -6,7 +6,7 @@
   padding: 12px;
   margin-bottom: 12px;
   border: 1px solid var(--mn-border);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--mn-surface-raised);
 }
 .mn-activities-gantt__title {
@@ -40,7 +40,7 @@
   margin-bottom: 4px;
   cursor: pointer;
   padding: 3px 0;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   transition: background 0.15s;
 }
 .mn-activities-gantt__row:hover {
@@ -60,14 +60,14 @@
   position: relative;
   height: 14px;
   background: var(--mn-surface);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
 }
 .mn-activities-gantt__bar {
   position: absolute;
   top: 2px;
   bottom: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   opacity: 0.9;
   transition: opacity 0.2s;
 }

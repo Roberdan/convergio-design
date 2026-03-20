@@ -61,12 +61,12 @@
 .mn-hbar__track {
   position: relative;
   background: var(--mn-hbar-track-bg);
-  border-radius: 0 999px 999px 0;
+  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
   overflow: visible;
 }
 .mn-hbar__fill {
   position: relative;
-  border-radius: 0 999px 999px 0;
+  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
   min-width: 1px;
   display: flex;
   align-items: center;
@@ -117,7 +117,7 @@
   background: rgba(10, 10, 10, 0.92);
   color: var(--mn-text);
   border: 1px solid var(--mn-hover-bg);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   padding: 6px 10px;
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -186,7 +186,7 @@
 }
 .mn-okr__summary-card:hover {
   border-color: var(--mn-hover-bg);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  box-shadow: var(--shadow-md);
 }
 .mn-okr__summary-arc {
   flex-shrink: 0;

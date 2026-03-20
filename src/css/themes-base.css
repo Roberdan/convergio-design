@@ -93,7 +93,7 @@ body.mn-nero .mn-form__actions { border-color: var(--mn-border); }
 body.mn-nero .mn-signal-panel { border-color: var(--mn-border); background: rgba(255,255,255,0.02); }
 body.mn-nero .mn-signal-panel__title { color: var(--mn-text); }
 body.mn-nero .mn-signal-panel__eyebrow { color: var(--avorio-scuro); }
-body.mn-nero .mn-card { background: var(--mn-surface-raised); color: var(--mn-text); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+body.mn-nero .mn-card { background: var(--mn-surface-raised); color: var(--mn-text); box-shadow: var(--shadow-md); }
 body.mn-nero .mn-card__text { color: var(--mn-text-tertiary); }
 body.mn-nero .mn-card__title { color: var(--mn-text); }
 body.mn-nero .mn-demo-swatch { border-color: var(--mn-border); }
@@ -160,7 +160,7 @@ body.mn-avorio {
 body.mn-avorio .mn-section-ivory { color: var(--mn-text); }
 body.mn-avorio .mn-card-dark {
   border: 1px solid var(--mn-border);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: var(--shadow-sm);
 }
 /* ============================================================
    COLORBLIND MODE — high-contrast, colorblind-safe palette

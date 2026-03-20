@@ -64,7 +64,7 @@
   background: linear-gradient(90deg, var(--mn-surface-raised) 25%, var(--mn-border) 50%, var(--mn-surface-raised) 75%);
   background-size: 200% 100%;
   animation: mnShimmer 1.5s infinite;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 @keyframes mnShimmer {
   0%   { background-position: 200% 0; }

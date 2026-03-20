@@ -119,7 +119,7 @@ body.mn-colorblind .mn-heatmap__delta--negative::before { content:"▼ "; }
 
 /* ═══ Grid cell with tooltip ═══ */
 .mn-heatmap__cell {
-  min-width:44px; height:28px; border-radius:2px;
+  min-width:44px; height:28px; border-radius:var(--radius-xs);
   display:flex; align-items:center; justify-content:center;
   font-family:var(--font-mono,'Barlow Condensed',sans-serif); font-size:0.65rem;
   color:var(--mn-text); cursor:default; transition:background 0.2s, transform 0.1s;
@@ -145,7 +145,7 @@ body.mn-colorblind .mn-heatmap__delta--negative::before { content:"▼ "; }
   display:flex; align-items:center; gap:6px; font-size:0.6rem; color:var(--mn-text-muted);
 }
 .mn-heatmap__legend-bar {
-  width:100px; height:8px; border-radius:4px;
+  width:100px; height:8px; border-radius:var(--radius-sm);
   background:linear-gradient(90deg, var(--mn-surface-sunken) 0%, var(--verde-racing) 40%, var(--mn-accent) 65%, var(--mn-error) 100%);
 }
 

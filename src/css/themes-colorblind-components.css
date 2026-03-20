@@ -74,7 +74,7 @@ body.mn-colorblind .mn-led--green .mn-led__bulb {
   box-shadow: 0 0 6px var(--mn-cb-blue);
 }
 body.mn-colorblind .mn-led--red .mn-led__bulb {
-  border-radius: 2px;
+  border-radius: var(--radius-xs);
   box-shadow: 0 0 6px var(--mn-cb-orange);
 }
 body.mn-colorblind .mn-led--amber .mn-led__bulb {

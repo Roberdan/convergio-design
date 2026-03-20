@@ -20,7 +20,7 @@
   min-height: 60px;
   background: var(--mn-surface-raised);
   border: 1px solid var(--mn-border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   color: var(--mn-text);
   font-family: var(--font-body);
   font-size: 0.8rem;
@@ -41,7 +41,7 @@
   background: var(--mn-accent);
   color: var(--mn-text);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 6px 14px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -108,7 +108,7 @@
   right: 0;
   background: var(--mn-surface-sunken);
   border: 1px solid var(--mn-border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   max-height: 180px;
   overflow-y: auto;
   z-index: 200;

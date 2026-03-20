@@ -7,7 +7,7 @@
   flex-direction: column;
   background: linear-gradient(135deg, rgba(12,12,12,0.98), rgba(8,8,8,0.99));
   border: 1px solid var(--mn-hover-bg);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   font-family: var(--font-body);
 }
@@ -29,7 +29,7 @@
   background: var(--mn-hover-bg);
   color: var(--mn-border-strong);
   border: 1px solid var(--mn-hover-bg);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 4px 10px;
   font-family: var(--font-mono, 'Barlow Condensed', sans-serif);
   font-size: 0.7rem;
@@ -68,7 +68,7 @@
   display: inline-block;
   width: 10px;
   height: 10px;
-  border-radius: 2px;
+  border-radius: var(--radius-xs);
   flex-shrink: 0;
 }
 .mn-gantt-timeline__canvas-wrap {

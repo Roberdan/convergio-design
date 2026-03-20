@@ -9,7 +9,7 @@
   align-items: start;
   padding: var(--space-lg);
   background: linear-gradient(135deg, rgba(15,15,15,0.95), rgba(5,5,5,0.98));
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--mn-hover-bg);
 }
 .mn-live-panel__metric {
@@ -133,7 +133,7 @@
   flex: 1;
   min-width: 8px;
   background: var(--mn-chart-series-1);
-  border-radius: 3px 3px 0 0;
+  border-radius: var(--radius-xs) var(--radius-xs) 0 0;
   transition: height 0.6s cubic-bezier(0.22,1,0.36,1), opacity 0.2s;
   position: relative;
   cursor: pointer;
@@ -156,7 +156,7 @@
   border-radius: 0;
 }
 .mn-bar-chart--stacked .mn-bar-chart__bar:last-child {
-  border-radius: 3px 3px 0 0;
+  border-radius: var(--radius-xs) var(--radius-xs) 0 0;
 }
 /* Horizontal variant */
 .mn-bar-chart--horizontal {
@@ -168,7 +168,7 @@
 .mn-bar-chart--horizontal .mn-bar-chart__bar {
   height: auto;
   min-height: 20px;
-  border-radius: 0 3px 3px 0;
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
 }
 
 

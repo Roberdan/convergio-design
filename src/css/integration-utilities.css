@@ -5,7 +5,7 @@
   .mn-heading { font-family: var(--font-display, 'Outfit', sans-serif); text-transform: uppercase; letter-spacing: 0.06em; }
   .mn-caption { font-family: var(--font-mono, 'Barlow Condensed', monospace); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
 
-  .mn-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .mn-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: var(--radius-pill); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
   .mn-badge--success { background: rgba(0,166,81,0.15); color: var(--verde-racing); }
   .mn-badge--warning { background: rgba(255,199,44,0.15); color: var(--mn-accent); }
   .mn-badge--danger { background: rgba(220,0,0,0.15); color: var(--mn-error); }

@@ -173,7 +173,7 @@
   border-radius: 50%;
   background: var(--mn-surface);
   transition: transform 0.2s var(--ease-out);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  box-shadow: var(--shadow-sm);
 }
 .mn-a11y-toggle--on .mn-a11y-toggle__thumb {
   transform: translateX(20px);

@@ -46,7 +46,7 @@
   position: relative;
   width: 100%;
   background: var(--mn-chart-bg);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
@@ -72,7 +72,7 @@
   padding: 10px 14px;
   background: var(--mn-chart-tooltip-bg);
   border: 1px solid var(--mn-chart-tooltip-border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   box-shadow: var(--mn-chart-tooltip-shadow);
   color: var(--mn-chart-tooltip-text);
   font-family: var(--font-body);
@@ -130,7 +130,7 @@
 .mn-chart-legend__swatch {
   width: 10px;
   height: 10px;
-  border-radius: 2px;
+  border-radius: var(--radius-xs);
   flex-shrink: 0;
 }
 .mn-chart-legend__swatch--line {

@@ -33,7 +33,7 @@
   transition: opacity var(--duration-sm) var(--ease-out),
               transform var(--duration-sm) var(--ease-out);
   z-index: 1020;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  box-shadow: var(--shadow-md);
 }
 .mn-tooltip::after {
   content: '';
@@ -64,7 +64,7 @@ body.mn-avorio .mn-tooltip {
   background: var(--mn-surface);
   color: var(--mn-text);
   border-color: var(--mn-border-strong);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  box-shadow: var(--shadow-md);
 }
 body.mn-avorio .mn-tooltip::after { border-top-color: var(--mn-border-strong); }
 body.mn-avorio .mn-tooltip--bottom::after {
@@ -101,7 +101,7 @@ body.mn-avorio .mn-tooltip--bottom::after {
   width: 90%;
   max-height: 85vh;
   overflow: hidden;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  box-shadow: var(--shadow-heavy);
   transform: translateY(20px) scale(0.97);
   transition: transform var(--duration-md) var(--ease-out);
   color: var(--mn-text);

@@ -12,7 +12,7 @@
   }
 
   .mn-widget:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-md);
     border-color: rgba(255, 199, 44, 0.12);
   }
 
@@ -58,7 +58,7 @@
     border: none;
     background: transparent;
     color: var(--text-dim, var(--mn-text-muted));
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     transition: background 0.15s, color 0.15s;
     font-size: 0.75rem;
@@ -101,7 +101,7 @@
     background: linear-gradient(90deg, transparent 25%, rgba(255, 199, 44, 0.04) 50%, transparent 75%);
     background-size: 200% 100%;
     animation: mn-shimmer 1.5s infinite;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
 
   @keyframes mn-shimmer {

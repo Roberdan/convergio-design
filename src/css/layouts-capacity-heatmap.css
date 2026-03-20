@@ -13,7 +13,7 @@
 }
 .mn-cap-heatmap__legend { display:flex; align-items:center; gap:6px; font-size:0.6rem; color:var(--mn-text-tertiary); }
 .mn-cap-heatmap__legend-bar {
-  width:100px; height:8px; border-radius:4px;
+  width:100px; height:8px; border-radius:var(--radius-sm);
   background:linear-gradient(90deg, var(--mn-surface) 0%, var(--verde) 40%, var(--mn-accent) 65%, var(--mn-error) 100%);
 }
 
@@ -42,7 +42,7 @@
 
 /* ── Cells ── */
 .mn-cap-grid__cell {
-  min-width:44px; height:28px; border-radius:2px;
+  min-width:44px; height:28px; border-radius:var(--radius-xs);
   display:flex; align-items:center; justify-content:center;
   font-family:var(--font-mono,'Barlow Condensed',sans-serif); font-size:0.65rem;
   color:var(--mn-hover-bg); cursor:default; transition:background 0.2s, transform 0.1s;
@@ -87,7 +87,7 @@ body.mn-avorio .mn-cap-tooltip { background:var(--mn-surface); border-color:var(
 }
 .mn-cap-heatmap__filter-chips { display:flex; gap:4px; flex-wrap:wrap; flex:1; min-width:0; }
 .mn-chip {
-  padding:3px 10px; border-radius:12px; border:1px solid var(--mn-border);
+  padding:3px 10px; border-radius:var(--radius-md); border:1px solid var(--mn-border);
   background:transparent; color:var(--mn-text-tertiary); font-size:0.6rem;
   font-family:var(--font-mono,'Barlow Condensed',sans-serif); cursor:pointer;
   text-transform:uppercase; letter-spacing:0.04em; transition:all 0.15s;
