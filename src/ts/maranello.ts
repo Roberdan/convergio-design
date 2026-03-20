@@ -60,6 +60,7 @@ import { networkMessages } from './network-messages';
 import { neuralNodes } from './neural-nodes';
 import { initTagsField } from './forms-tags-field';
 import { openSearchDrawer } from './search-drawer';
+import { customerJourney } from './customer-journey';
 import { registerExtras } from './maranello-exports';
 
 declare global {
@@ -218,6 +219,9 @@ M.initSidebarToggleAuto = initSidebarToggleAuto;
 M.charts = {
   sparkline, donut, barChart, areaChart, radar, halfGauge, bubble, liveGraph, hBarChart,
 };
+
+// Customer Journey
+M.customerJourney = customerJourney;
 
 // W3/W4 draw primitives and map internals
 registerExtras(M);

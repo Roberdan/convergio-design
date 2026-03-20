@@ -51,4 +51,6 @@
 @import "./layouts-state-scaffold.css";
 @import "./layouts-dashboard-renderer.css";
 
+@import "./layouts-customer-journey.css";
+
 @import "./layouts-app-shell.css";
