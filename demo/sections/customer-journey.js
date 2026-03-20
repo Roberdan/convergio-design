@@ -1,0 +1,158 @@
+/**
+ * Customer Journey section — interactive swimlane visualization.
+ * VirtualBPM sample: Meridian Consulting Group engagement history.
+ */
+
+const PHASES = [
+  {
+    id: 'lead', label: 'Lead Generation',
+    engagements: [
+      { id: 'e1', title: 'Primo incontro commerciale', status: 'completed', type: 'meeting', assignee: 'Marco Bianchi', date: '2025-09-12' },
+      { id: 'e2', title: 'Qualifica esigenze IT', status: 'completed', type: 'meeting', assignee: 'Elena Rossi', date: '2025-09-18' },
+    ],
+  },
+  {
+    id: 'opportunity', label: 'Opportunity',
+    engagements: [
+      { id: 'e3', title: 'Proposta BPM Enterprise', status: 'completed', type: 'opportunity', assignee: 'Luca Ferretti', date: '2025-10-02' },
+      { id: 'e4', title: 'Demo piattaforma', status: 'completed', type: 'meeting', assignee: 'Sara Conti', date: '2025-10-10' },
+      { id: 'e5', title: 'Negoziazione contratto', status: 'completed', type: 'opportunity', assignee: 'Marco Bianchi', date: '2025-10-22' },
+    ],
+  },
+  {
+    id: 'contract', label: 'Contract',
+    engagements: [
+      { id: 'e6', title: 'Bozza contratto Enterprise', status: 'active', type: 'contract', assignee: 'Ufficio Legale', date: '2025-11-05' },
+      { id: 'e7', title: 'Revisione legale', status: 'pending', type: 'contract', assignee: 'Anna Marchetti' },
+      { id: 'e8', title: 'Firma digitale', status: 'pending', type: 'contract' },
+    ],
+  },
+  {
+    id: 'onboarding', label: 'Onboarding',
+    engagements: [
+      { id: 'e9', title: 'Kickoff progetto', status: 'pending', type: 'meeting' },
+      { id: 'e10', title: 'Formazione piattaforma', status: 'pending', type: 'task' },
+      { id: 'e11', title: 'Go-live produzione', status: 'pending', type: 'task' },
+    ],
+  },
+  {
+    id: 'support', label: 'Support',
+    engagements: [
+      { id: 'e12', title: 'Ticket #1001 — SLA breach alert', status: 'completed', type: 'ticket', assignee: 'Paolo Verdi', date: '2025-12-03' },
+      { id: 'e13', title: 'Ticket #1044 — Integrazione API', status: 'active', type: 'ticket', assignee: 'Chiara Neri', date: '2026-01-15' },
+    ],
+  },
+];
+
+/** Build a summary strip showing phase counts and completion. */
+function buildSummaryStrip(container) {
+  const strip = document.createElement('div');
+  strip.className = 'mn-strip mn-mb-lg';
+  strip.style.cssText = 'display:flex;gap:var(--space-md);flex-wrap:wrap';
+  const total = PHASES.reduce((n, p) => n + p.engagements.length, 0);
+  const done = PHASES.reduce((n, p) => n + p.engagements.filter(e => e.status === 'completed').length, 0);
+  const active = PHASES.reduce((n, p) => n + p.engagements.filter(e => e.status === 'active').length, 0);
+
+  const stats = [
+    { label: 'Fasi', value: PHASES.length },
+    { label: 'Attivita totali', value: total },
+    { label: 'Completate', value: done },
+    { label: 'In corso', value: active },
+    { label: 'In attesa', value: total - done - active },
+  ];
+
+  for (const s of stats) {
+    const pod = document.createElement('div');
+    pod.className = 'mn-pod';
+    pod.innerHTML = `
+      <span class="mn-stat__value" style="font-size:var(--text-h3);color:var(--mn-accent)">${s.value}</span>
+      <span class="mn-stat__label" style="font-size:var(--text-micro);color:var(--mn-text-muted)">${s.label}</span>`;
+    strip.appendChild(pod);
+  }
+  container.appendChild(strip);
+}
+
+export function createCustomerJourneySection() {
+  const M = window.Maranello;
+  const section = document.createElement('section');
+  section.id = 'customer-journey';
+  section.className = 'mn-section-dark';
+
+  section.innerHTML = `
+    <div class="mn-container">
+      <p class="mn-section-number">42 — Customer Journey</p>
+      <div class="mn-watermark">JOURNEY</div>
+      <h2 class="mn-title-section mn-mb-sm mn-anim-fadeInUp">Customer Journey — Meridian Consulting Group</h2>
+      <p class="mn-body mn-mb-lg">Swimlane visualization of the full client engagement lifecycle — from lead generation through post-sale support.</p>
+
+      <div id="cj-summary"></div>
+
+      <div class="mn-card-dark mn-mb-2xl" style="padding:var(--space-xl)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md)">
+          <span class="mn-label" style="color:var(--mn-accent)">Journey Swimlane</span>
+          <div style="display:flex;gap:var(--space-sm)">
+            <button class="mn-btn mn-btn--ghost" id="cj-compact" style="font-size:var(--text-micro)">Compact</button>
+            <button class="mn-btn mn-btn--ghost" id="cj-vertical" style="font-size:var(--text-micro)">Vertical</button>
+          </div>
+        </div>
+        <div id="cj-root"></div>
+        <details class="mn-code-snippet" style="margin-top:var(--space-md)">
+          <summary class="mn-micro" style="cursor:pointer;color:var(--mn-text-muted)">Headless usage</summary>
+          <pre style="font-family:var(--font-mono);font-size:var(--text-micro);padding:var(--space-sm) 0;color:var(--mn-text-muted);overflow-x:auto">const ctrl = M.customerJourney(el, phases, {
+  onSelect: (eng) => console.log(eng.title),
+  showConnectors: true,
+});
+ctrl.update(newPhases);   // re-render
+ctrl.selectEngagement('e3');
+ctrl.destroy();</pre>
+        </details>
+      </div>
+
+      <div class="mn-card-dark" style="padding:var(--space-xl)">
+        <span class="mn-label" style="color:var(--mn-accent)">Web Component (planned)</span>
+        <pre style="font-family:var(--font-mono);font-size:var(--text-micro);padding:var(--space-sm) 0;color:var(--mn-text-muted);overflow-x:auto">&lt;mn-customer-journey
+  phases='${JSON.stringify(PHASES).slice(0, 60)}...'
+  orientation="horizontal"
+  show-connectors
+&gt;&lt;/mn-customer-journey&gt;</pre>
+        <p class="mn-micro" style="color:var(--mn-text-muted);margin-top:var(--space-sm)">WC wrapper planned for next release. Use the headless API above for now.</p>
+      </div>
+    </div>`;
+
+  requestAnimationFrame(() => {
+    buildSummaryStrip(section.querySelector('#cj-summary'));
+
+    const root = section.querySelector('#cj-root');
+    if (!M.customerJourney) {
+      root.innerHTML = '<p class="mn-micro" style="color:var(--mn-text-muted);padding:var(--space-md)">customerJourney: not yet in IIFE bundle — rebuild with npm run build</p>';
+      return;
+    }
+
+    let ctrl = M.customerJourney(root, PHASES, {
+      onSelect: (eng) => {
+        M.toast({ type: 'info', title: eng.title, message: `${eng.type} — ${eng.status}${eng.assignee ? ' — ' + eng.assignee : ''}` });
+      },
+      showConnectors: true,
+    });
+
+    /* Compact toggle */
+    section.querySelector('#cj-compact').addEventListener('click', () => {
+      ctrl.destroy();
+      ctrl = M.customerJourney(root, PHASES, {
+        compactMode: true, showConnectors: true,
+        onSelect: (eng) => M.toast({ type: 'info', title: eng.title, message: eng.status }),
+      });
+    });
+
+    /* Vertical toggle */
+    section.querySelector('#cj-vertical').addEventListener('click', () => {
+      ctrl.destroy();
+      ctrl = M.customerJourney(root, PHASES, {
+        orientation: 'vertical', showConnectors: true,
+        onSelect: (eng) => M.toast({ type: 'info', title: eng.title, message: eng.status }),
+      });
+    });
+  });
+
+  return section;
+}
