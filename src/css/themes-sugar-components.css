@@ -2,46 +2,58 @@
 /* themes -- Sugar Components | Maranello Design System
    Cool gray light theme — SugarCRM-inspired, black accent */
 
-/* ============================================================
-   Section overrides — dark/light/ivory on cool gray bg
-   ============================================================ */
-body.mn-sugar .mn-section-dark { background: var(--mn-surface-sunken); color: var(--mn-text); }
+/* Section overrides — dark/light/ivory on cool gray bg */
+body.mn-sugar .mn-section-dark,
+body.mn-sugar .mn-section-accent { background: var(--mn-surface-raised); color: var(--mn-text); }
 body.mn-sugar .mn-section-light { background: var(--mn-surface-raised); }
 body.mn-sugar .mn-section-ivory { color: var(--mn-text); }
+body.mn-sugar .mn-section-dark .mn-watermark,
 body.mn-sugar .mn-section-light .mn-watermark,
 body.mn-sugar .mn-section-ivory .mn-watermark { color: var(--mn-border); }
+body.mn-sugar .mn-section-dark .mn-body,
 body.mn-sugar .mn-section-light .mn-body,
 body.mn-sugar .mn-section-ivory .mn-body,
+body.mn-sugar .mn-section-dark .mn-caption,
 body.mn-sugar .mn-section-light .mn-caption,
 body.mn-sugar .mn-section-ivory .mn-caption { color: var(--mn-text-tertiary); }
-body.mn-sugar .mn-section-light .mn-title-section,
+body.mn-sugar .mn-section-dark .mn-title-section,
 body.mn-sugar .mn-section-ivory .mn-title-section,
+body.mn-sugar .mn-section-light .mn-title-section,
+body.mn-sugar .mn-section-dark .mn-title-sub,
 body.mn-sugar .mn-section-light .mn-title-sub,
 body.mn-sugar .mn-section-ivory .mn-title-sub { color: var(--mn-text); }
+body.mn-sugar .mn-section-dark .mn-section-number,
 body.mn-sugar .mn-section-light .mn-section-number,
 body.mn-sugar .mn-section-ivory .mn-section-number { color: var(--mn-text-muted); }
 
-/* ============================================================
-   Card / Panel
-   ============================================================ */
-body.mn-sugar .mn-card-dark { border: 1px solid var(--mn-border); box-shadow: var(--shadow-sm); }
+/* Binnacle / Cockpit — force light bg instead of dark */
+body.mn-sugar .mn-binnacle { background: var(--mn-surface-raised); border: 1px solid var(--mn-border); }
+body.mn-sugar .mn-binnacle__title { color: var(--mn-text-muted); }
+body.mn-sugar .mn-strip { background: var(--mn-surface-raised); border: 1px solid var(--mn-border); }
+body.mn-sugar .mn-pod { background: var(--mn-surface); border-color: var(--mn-border); }
+
+/* Card / Panel */
+body.mn-sugar .mn-card-dark { background: var(--mn-surface-raised); border: 1px solid var(--mn-border); box-shadow: var(--shadow-sm); color: var(--mn-text); }
 body.mn-sugar .mn-card { background: var(--mn-surface-raised); color: var(--mn-text); box-shadow: var(--shadow-card); }
 body.mn-sugar .mn-card__title { color: var(--mn-text); }
 body.mn-sugar .mn-card__text { color: var(--mn-text-tertiary); }
 body.mn-sugar .mn-signal-panel { border-color: var(--mn-border); background: var(--mn-surface-raised); }
 body.mn-sugar .mn-signal-panel__title { color: var(--mn-text); }
+body.mn-sugar .mn-signal-panel__eyebrow { color: var(--mn-text-muted); }
 
-/* ============================================================
-   Buttons
-   ============================================================ */
+/* Machined buttons — lighten for Sugar */
+body.mn-sugar .mn-machined-btn { background: var(--mn-surface-raised); border: 1px solid var(--mn-border); color: var(--mn-text); box-shadow: var(--shadow-sm); }
+body.mn-sugar .mn-machined-btn:hover { background: var(--mn-hover-bg); }
+body.mn-sugar .mn-machined-btn--pressed { background: var(--mn-accent); color: var(--mn-accent-text); }
+
+/* Buttons */
 body.mn-sugar .mn-btn { background: var(--mn-accent); color: var(--mn-accent-text); }
 body.mn-sugar .mn-btn:hover { background: var(--mn-accent-hover); }
-body.mn-sugar .mn-btn--ghost { background: transparent; border-color: var(--mn-border-strong); color: var(--mn-text); }
+body.mn-sugar .mn-btn--ghost { background: transparent; border: 1px solid var(--mn-border-strong); color: var(--mn-text); }
 body.mn-sugar .mn-btn--ghost:hover { background: var(--mn-hover-bg); }
+body.mn-sugar .mn-btn--ghost-light { background: transparent; border-color: var(--mn-border); color: var(--mn-text); }
 
-/* ============================================================
-   Forms — inputs, select, textarea, checkbox, radio
-   ============================================================ */
+/* Forms */
 body.mn-sugar .mn-input { background: var(--mn-surface-input); border-color: var(--mn-border); color: var(--mn-text); }
 body.mn-sugar .mn-select { background: var(--mn-surface-input); border-color: var(--mn-border); color: var(--mn-text); }
 body.mn-sugar .mn-textarea { background: var(--mn-surface-input); border-color: var(--mn-border); color: var(--mn-text); }
@@ -52,54 +64,84 @@ body.mn-sugar .mn-fieldset { border-color: var(--mn-border); }
 body.mn-sugar .mn-form__section-title { color: var(--mn-text); }
 body.mn-sugar .mn-form__actions { border-color: var(--mn-border); }
 
-/* ============================================================
-   Accordion
-   ============================================================ */
+/* Accordion */
 body.mn-sugar .mn-accordion, body.mn-sugar .mn-accordion__item { border-color: var(--mn-border); }
 body.mn-sugar .mn-accordion__header { color: var(--mn-text); }
 body.mn-sugar .mn-accordion__body { color: var(--mn-text-tertiary); }
 
-/* ============================================================
-   Tags / Badges
-   ============================================================ */
-body.mn-sugar .mn-tag { border-color: var(--mn-border); color: var(--mn-text-muted); }
+/* Tags / Badges */
+body.mn-sugar .mn-tag { border-color: var(--mn-border); color: var(--mn-text-muted); background: var(--mn-surface-raised); }
 body.mn-sugar .mn-tag:hover,
 body.mn-sugar .mn-tag--active { background: var(--mn-accent); color: var(--mn-accent-text); border-color: var(--mn-accent); }
 
-/* ============================================================
-   Table
-   ============================================================ */
+/* Table */
 body.mn-sugar .mn-table-wrap { border-color: var(--mn-border); }
-body.mn-sugar .mn-section-light .mn-table thead { background: var(--mn-surface-sunken); }
-body.mn-sugar .mn-section-light .mn-table td { border-color: var(--mn-border); color: var(--mn-text-tertiary); }
-body.mn-sugar .mn-section-light .mn-table tbody tr:hover { background: var(--mn-surface-hover); }
+body.mn-sugar .mn-table thead { background: var(--mn-surface-sunken); color: var(--mn-text); }
+body.mn-sugar .mn-table td { border-color: var(--mn-border); color: var(--mn-text-tertiary); }
+body.mn-sugar .mn-table tbody tr:hover { background: var(--mn-hover-bg); }
 
-/* ============================================================
-   Sidebar
-   ============================================================ */
+/* Sidebar */
 body.mn-sugar .mn-sidebar { background: var(--mn-surface-raised); border-color: var(--mn-border); }
 body.mn-sugar .mn-sidebar__link { color: var(--mn-text-muted); }
 body.mn-sugar .mn-sidebar__link:hover { color: var(--mn-text); background: var(--mn-hover-bg); }
 body.mn-sugar .mn-sidebar__link--active { color: var(--mn-text); background: var(--mn-active-bg); }
 
-/* ============================================================
-   Progress / Status dots
-   ============================================================ */
+/* Gantt — light bg */
+body.mn-sugar .mn-gantt { background: var(--mn-surface-raised); border: 1px solid var(--mn-border); }
+body.mn-sugar .mn-gantt__header { background: var(--mn-surface-sunken); color: var(--mn-text); }
+body.mn-sugar .mn-gantt__row { border-color: var(--mn-border); }
+body.mn-sugar .mn-gantt__label { color: var(--mn-text); }
+
+/* Chat widget — lighten header */
+body.mn-sugar .mn-chat-header { background: var(--mn-surface-raised); border-bottom: 1px solid var(--mn-border); color: var(--mn-text); }
+body.mn-sugar .mn-chat-body { background: var(--mn-surface); }
+body.mn-sugar .mn-chat-input-wrap { background: var(--mn-surface-raised); border-top: 1px solid var(--mn-border); }
+body.mn-sugar .mn-chat-msg--bot { background: var(--mn-surface-raised); color: var(--mn-text); }
+
+/* Map — border on dark canvas */
+body.mn-sugar .mn-map-container { border: 1px solid var(--mn-border); border-radius: var(--radius-md); overflow: hidden; }
+
+/* Avatar — lighten for visibility */
+body.mn-sugar .mn-avatar { background: var(--mn-border); color: var(--mn-text); border: 1px solid var(--mn-border-strong); }
+
+/* Skeleton loading — visible placeholder on gray */
+body.mn-sugar .mn-skeleton { background: var(--mn-border); }
+body.mn-sugar .mn-skeleton::after { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); }
+
+/* Toggle switches — lighten track */
+body.mn-sugar .mn-ctrl-toggle__body { background: var(--mn-border); box-shadow: inset 0 1px 3px rgba(0,0,0,0.15); }
+body.mn-sugar .mn-ctrl-toggle__lever { background: var(--mn-surface-raised); box-shadow: var(--shadow-sm); }
+
+/* Progress / Status dots */
 body.mn-sugar .mn-progress { background: var(--mn-border); }
 body.mn-sugar .mn-dot { background: var(--mn-border-strong); }
 body.mn-sugar .mn-dot--active { background: var(--mn-accent); }
 body.mn-sugar .mn-status { color: var(--mn-text-tertiary); }
 
-/* ============================================================
-   Divider / Demo swatches
-   ============================================================ */
+/* Divider / Demo swatches */
 body.mn-sugar .mn-divider-gold { background: var(--mn-border); }
 body.mn-sugar .mn-demo-swatch { border-color: var(--mn-border); }
 body.mn-sugar .mn-demo-section-label { color: var(--mn-accent); }
 
-/* ============================================================
-   Chart tooltip vars
-   ============================================================ */
+/* Drawer / Detail panel */
+body.mn-sugar .mn-drawer { background: var(--mn-surface-raised); border-color: var(--mn-border); }
+body.mn-sugar .mn-detail-panel { background: var(--mn-surface-raised); }
+body.mn-sugar .mn-detail-panel__header { border-color: var(--mn-border); }
+
+/* Modal / Tooltip */
+body.mn-sugar .mn-modal__content { background: var(--mn-surface-raised); border: 1px solid var(--mn-border); }
+body.mn-sugar .mn-tooltip { background: var(--mn-surface-raised); border: 1px solid var(--mn-border); color: var(--mn-text); }
+
+/* Nav bar */
+body.mn-sugar .mn-nav { background: var(--mn-surface-sunken); border-bottom: 1px solid var(--mn-border); }
+
+/* Notification center */
+body.mn-sugar .mn-notification-panel { background: var(--mn-surface-raised); border: 1px solid var(--mn-border); }
+
+/* WC gantt — dark canvas override */
+body.mn-sugar mn-gantt { border: 1px solid var(--mn-border); border-radius: var(--radius-md); overflow: hidden; }
+
+/* Chart tooltip vars */
 body.mn-sugar {
   --mn-chart-tooltip-bg: var(--mn-surface-raised);
   --mn-chart-tooltip-border: var(--mn-border-strong);
@@ -107,17 +149,11 @@ body.mn-sugar {
   --mn-chart-tooltip-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
 }
 
-/* ============================================================
-   Severity tokens
-   ============================================================ */
+/* Severity tokens */
 body.mn-sugar {
-  --severity-critical-fg: #dc2626;
-  --severity-critical-bg: #fef2f2;
-  --severity-high-fg: #ea580c;
-  --severity-high-bg: #fff7ed;
-  --severity-warning-fg: #ca8a04;
-  --severity-warning-bg: #fefce8;
-  --severity-resourcing-fg: #2563eb;
-  --severity-resourcing-bg: #eff6ff;
+  --severity-critical-fg: #dc2626; --severity-critical-bg: #fef2f2;
+  --severity-high-fg: #ea580c; --severity-high-bg: #fff7ed;
+  --severity-warning-fg: #ca8a04; --severity-warning-bg: #fefce8;
+  --severity-resourcing-fg: #2563eb; --severity-resourcing-bg: #eff6ff;
 }
 } /* end @layer themes */
