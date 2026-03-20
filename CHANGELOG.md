@@ -18,7 +18,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 - **Radius tokens** — adopted `var(--radius-*)` across 55 CSS files, replacing ~146 hardcoded values
 - **Shadow tokens** — adopted `var(--shadow-*)` across 22 CSS files, replacing ~35 hardcoded values
+- **Button radius** — all buttons use `var(--mn-btn-radius, var(--radius-sm))`; Sugar gets rounded corners, dark themes keep sharp edges
 - **Theme rotary** — now cycles through 5 themes: Editorial, Nero, Avorio, Colorblind, Sugar
+- **Sugar+Colorblind** cross-theme — `body.mn-sugar.mn-colorblind` combines cool gray surfaces with Okabe-Ito accessible signals
+- **DATA_CONTRACTS.md** — added customerJourney, adminShell, sectionCard, settingsPanel interfaces
+- **Unit tests** — added runtime tests for Sugar theme token resolution, customerJourney, adminShell, sectionCard, settingsPanel
 
 ## [4.18.0] - 2026-03-19
 

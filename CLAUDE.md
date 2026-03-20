@@ -1,4 +1,4 @@
-<!-- v4.16.0 | 2026-03-17 -->
+<!-- v4.19.0 | 2026-03-20 -->
 # MaranelloLuceDesign
 
 Ferrari Luce-inspired design system for business dashboards. Part of Convergio.
@@ -25,7 +25,7 @@ Ferrari Luce-inspired design system for business dashboards. Part of Convergio.
 |---|---|---|---|
 | CSS-only | `src/css/` (123 files) | Tokens, themes, components, layouts — zero JS | `./css` |
 | Headless JS | `src/ts/` | Charts, gauge, controls, forms — framework-agnostic | `./charts` `./gantt` `./gauge` `./controls` `./forms` |
-| Web Components | `src/wc/` (31 tags, 30 components) | `mn-*` custom elements wrapping headless JS | `./wc` |
+| Web Components | `src/wc/` (32 tags, 31 components) | `mn-*` custom elements wrapping headless JS | `./wc` |
 | Runtime | `src/ts/` (app-shell, dashboard-renderer, etc.) | AppShell, DashboardRenderer, FacetWorkbench, EntityWorkbench, ViewRegistry, PanelOrchestrator, NavigationModel, AsyncSelect, StateScaffold | `./index` |
 
 ## File Tree
@@ -133,7 +133,7 @@ Maranello.initSidebarToggle(sidebarEl, buttonEl);
 
 All responsive overrides live in `src/css/responsive-*.css` files, imported by `maranello.css` after `utilities.css`. Each file uses `@layer` matching its component domain and `@media` queries for breakpoints.
 
-## IIFE Exports (100 functions/objects on `window.Maranello`)
+## IIFE Exports (104 functions/objects on `window.Maranello`)
 
 ### Charts (11)
 `sparkline` · `donut` · `barChart` · `hBarChart` · `areaChart` · `liveGraph` · `halfGauge` · `progressRing` · `flipCounter` · `radar` · `bubble`
@@ -204,7 +204,10 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 ### Chart Interaction (2)
 `chartInteract` · `sparklineInteract`
 
-## Web Components (31 tags, 30 components)
+### Admin & Journey (4)
+`customerJourney` · `adminShell` · `sectionCard` · `settingsPanel`
+
+## Web Components (32 tags, 31 components)
 
 | Tag | Attrs |
 |---|---|
@@ -239,6 +242,7 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 | `mn-entity-workbench` | `open`, `schema` (JSON), `data` (JSON), `editable` |
 | `mn-async-select` | `placeholder`, `min-chars`, `debounce` |
 | `mn-state-scaffold` | `state` (`loading`\|`empty`\|`error`\|`partial`\|`no-results`), `message`, `action-label` |
+| `mn-customer-journey` | `phases` (JSON), `options` (JSON) |
 
 ## CSS Class Families
 
@@ -280,8 +284,21 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 | `--mn-error` | `#DC0000` | Error/danger |
 | `--mn-success` | `#00A651` | Success |
 | `--mn-info` | `#448AFF` | Info/interactive |
+| `--mn-btn-radius` | `0` (Editorial/Nero), `var(--radius-sm)` (Sugar) | Button border-radius |
 
-## Themes
+### Sugar Theme Token Overrides
+
+| Token | Sugar Value | Notes |
+|---|---|---|
+| `--mn-surface` | `#f4f5f7` | Cool gray background |
+| `--mn-surface-raised` | `#ffffff` | White cards |
+| `--mn-surface-sunken` | `#ebedf0` | Inset areas |
+| `--mn-text` | `#111111` | Black text |
+| `--mn-text-muted` | `#6b7280` | Gray secondary text |
+| `--mn-border` | `#d1d5db` | Light gray borders |
+| `--mn-accent` | `#000000` | Black accent (buttons/links) |
+
+## Themes (5)
 
 | Theme | Body class | Accent |
 |---|---|---|
@@ -289,6 +306,9 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 | Nero | `mn-nero` | `--mn-accent` |
 | Avorio | `mn-avorio` | `--mn-accent` |
 | Colorblind | `mn-colorblind` | `--mn-accent` (Okabe-Ito blue) |
+| Sugar | `mn-sugar` | `--mn-accent` (black #000) |
+
+Sugar+Colorblind cross-theme: `body.mn-sugar.mn-colorblind` — cool gray surfaces with Okabe-Ito signals.
 
 ## API Notes
 
@@ -317,7 +337,7 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 - CSS: all rules in `@layer` blocks
 - TS: strict mode, no `any`, named exports only
 - Comments: explain WHY, not WHAT, <5% density
-- localStorage theme values: always whitelist `['nero', 'avorio', 'colorblind', 'editorial']` before applying
+- localStorage theme values: always whitelist `['nero', 'avorio', 'colorblind', 'editorial', 'sugar']` before applying
 
 ## AI Agent
 
