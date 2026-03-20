@@ -1093,7 +1093,8 @@ var BODY_CLASSES = {
 };
 var THEME_ORDER = ["editorial", "nero", "avorio", "colorblind", "sugar"];
 function cssVar(name, fallback = "") {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+  const el4 = document.body ?? document.documentElement;
+  return getComputedStyle(el4).getPropertyValue(name).trim() || fallback;
 }
 function getTheme() {
   const cl = document.body.classList;
@@ -2646,36 +2647,36 @@ function buildGaugePalette(accent) {
   if (cl.contains("mn-sugar")) {
     return {
       ...D,
-      numbers: "#3a3530",
-      centerValue: "#1a1a1a",
-      centerUnit: "#666660",
-      centerLabel: "#4a4540",
-      muted: "#666660",
-      dimmed: "#7a7570",
-      subDialLabel: "#5a5550",
-      axisLabel: "#4a4540",
-      axisTitle: "#5a5550",
-      gridScale: "#8a8580",
-      sparkMonth: "#8a8580",
-      sparkLabel: "#7a7570",
-      quadrant: "#a0a09a",
-      quadrantDim: "#b0aba4",
-      tickMajor: "#a07818",
-      tickHalf: "#806010",
-      tickMinor: "#604808",
-      capOuter: ["#d0cfc9", "#b8b4ae", "#a09e98", "#888582"],
-      capInner: ["#d8d4ce", "#c0bcb6", "#a8a49e"],
-      capCenter: "#b0aba4",
-      needleTail: "#a8a49e",
-      needleTip: "#1a1a1a",
-      highlightRing: "rgba(0,0,0,0.04)",
-      trackAlpha: "rgba(0,0,0,0.06)",
-      subDialBg: ["#e8e4dc", "#ddd8ce"],
-      subDialBorder: "#c0b9ad",
-      subDialTrack: "rgba(0,0,0,0.08)",
-      odometerBg: "#f0ede6",
-      odometerBorder: "#ccc",
-      odometerText: "#1a1a1a"
+      numbers: "#333",
+      centerValue: "#111",
+      centerUnit: "#666",
+      centerLabel: "#444",
+      muted: "#666",
+      dimmed: "#777",
+      subDialLabel: "#555",
+      axisLabel: "#444",
+      axisTitle: "#555",
+      gridScale: "#888",
+      sparkMonth: "#888",
+      sparkLabel: "#777",
+      quadrant: "#999",
+      quadrantDim: "#aaa",
+      tickMajor: "#888",
+      tickHalf: "#aaa",
+      tickMinor: "#ccc",
+      capOuter: ["#ccc", "#b0b0b5", "#999", "#777"],
+      capInner: ["#d0d0d5", "#b0b0b5", "#999"],
+      capCenter: "#aaa",
+      needleTail: "#999",
+      needleTip: "#111",
+      highlightRing: "rgba(0,0,0,0.06)",
+      trackAlpha: "rgba(0,0,0,0.08)",
+      subDialBg: ["#d0d0d5", "#c0c0c5"],
+      subDialBorder: "#b0b0b5",
+      subDialTrack: "rgba(0,0,0,0.10)",
+      odometerBg: "#e4e4e8",
+      odometerBorder: "#d0d0d5",
+      odometerText: "#111"
     };
   }
   if (cl.contains("mn-colorblind")) {
@@ -17737,12 +17738,18 @@ function renderJourneyPhases(el4, phases, opts, ac, typeIcons) {
     el4.appendChild(buildPhase(phase, typeIcons, ac));
   }
 }
-function drawConnectors(el4, phases) {
+function drawConnectors(el4, _phases) {
   const phaseEls = el4.querySelectorAll(".mn-journey__phase");
   if (phaseEls.length < 2) return;
+  const elRect = el4.getBoundingClientRect();
+  const w = el4.scrollWidth;
+  const h = el4.scrollHeight;
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.classList.add("mn-journey__connectors");
   svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("width", String(w));
+  svg.setAttribute("height", String(h));
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
   const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
   const marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
   marker.setAttribute("id", "mn-journey-arrow");
@@ -17761,13 +17768,21 @@ function drawConnectors(el4, phases) {
     const srcCards = phaseEls[i].querySelectorAll(".mn-journey__card");
     const dstCards = phaseEls[i + 1].querySelectorAll(".mn-journey__card");
     if (!srcCards.length || !dstCards.length) continue;
+    const src = srcCards[srcCards.length - 1].getBoundingClientRect();
+    const dst = dstCards[0].getBoundingClientRect();
+    const x1 = src.right - elRect.left + el4.scrollLeft;
+    const y1 = src.top + src.height / 2 - elRect.top + el4.scrollTop;
+    const x2 = dst.left - elRect.left + el4.scrollLeft;
+    const y2 = dst.top + dst.height / 2 - elRect.top + el4.scrollTop;
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     line.classList.add("mn-journey__connector-line");
-    line.setAttribute("data-from-phase", String(i));
-    line.setAttribute("data-to-phase", String(i + 1));
+    line.setAttribute("x1", String(x1));
+    line.setAttribute("y1", String(y1));
+    line.setAttribute("x2", String(x2));
+    line.setAttribute("y2", String(y2));
     line.style.stroke = "var(--mn-info)";
     line.setAttribute("stroke-dasharray", "6 4");
-    line.setAttribute("stroke-width", "2");
+    line.setAttribute("stroke-width", "2.5");
     line.setAttribute("marker-end", "url(#mn-journey-arrow)");
     svg.appendChild(line);
   }

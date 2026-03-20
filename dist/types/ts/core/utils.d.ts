@@ -3,7 +3,9 @@
  * Extracted from common patterns across all source files.
  */
 import type { ThemeMode } from './types';
-/** Read a CSS custom property value, with fallback. */
+/** Read a CSS custom property value, with fallback.
+ *  Reads from document.body so theme overrides (body.mn-sugar, body.mn-avorio)
+ *  are resolved — :root tokens still inherit via cascade. */
 export declare function cssVar(name: string, fallback?: string): string;
 /** Get the current active theme mode. */
 export declare function getTheme(): ThemeMode;

@@ -19,7 +19,7 @@ import {
   radar,
   sparkline,
   sparklineInteract
-} from "./chunks/chunk-DRP5Y7PX.js";
+} from "./chunks/chunk-GKVW5363.js";
 import {
   FerrariGauge,
   SPEEDO_FONT,
@@ -31,10 +31,10 @@ import {
   speedoPalette,
   speedometer,
   valueToAngle
-} from "./chunks/chunk-G2TSIAZH.js";
+} from "./chunks/chunk-RINBFLIL.js";
 import {
   gantt
-} from "./chunks/chunk-6G43BPB3.js";
+} from "./chunks/chunk-WNYNPBTE.js";
 import {
   closeDetailPanel,
   closeDrawer,
@@ -47,7 +47,7 @@ import {
   steppedRotary,
   toggleLever,
   toggleNotifications
-} from "./chunks/chunk-2D2KYWOF.js";
+} from "./chunks/chunk-EVANFVNW.js";
 import {
   ALLOWED_BIND_PROPERTIES,
   clamp,
@@ -69,7 +69,7 @@ import {
   sanitizeSvg,
   setTheme,
   throttle
-} from "./chunks/chunk-YQNTYDI7.js";
+} from "./chunks/chunk-GNZ7B5YQ.js";
 import {
   addValidator,
   defaultMessages,
@@ -12545,12 +12545,18 @@ function renderJourneyPhases(el4, phases, opts, ac, typeIcons) {
     el4.appendChild(buildPhase(phase, typeIcons, ac));
   }
 }
-function drawConnectors(el4, phases) {
+function drawConnectors(el4, _phases) {
   const phaseEls = el4.querySelectorAll(".mn-journey__phase");
   if (phaseEls.length < 2) return;
+  const elRect = el4.getBoundingClientRect();
+  const w = el4.scrollWidth;
+  const h = el4.scrollHeight;
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.classList.add("mn-journey__connectors");
   svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("width", String(w));
+  svg.setAttribute("height", String(h));
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
   const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
   const marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
   marker.setAttribute("id", "mn-journey-arrow");
@@ -12569,13 +12575,21 @@ function drawConnectors(el4, phases) {
     const srcCards = phaseEls[i].querySelectorAll(".mn-journey__card");
     const dstCards = phaseEls[i + 1].querySelectorAll(".mn-journey__card");
     if (!srcCards.length || !dstCards.length) continue;
+    const src = srcCards[srcCards.length - 1].getBoundingClientRect();
+    const dst = dstCards[0].getBoundingClientRect();
+    const x1 = src.right - elRect.left + el4.scrollLeft;
+    const y1 = src.top + src.height / 2 - elRect.top + el4.scrollTop;
+    const x2 = dst.left - elRect.left + el4.scrollLeft;
+    const y2 = dst.top + dst.height / 2 - elRect.top + el4.scrollTop;
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     line.classList.add("mn-journey__connector-line");
-    line.setAttribute("data-from-phase", String(i));
-    line.setAttribute("data-to-phase", String(i + 1));
+    line.setAttribute("x1", String(x1));
+    line.setAttribute("y1", String(y1));
+    line.setAttribute("x2", String(x2));
+    line.setAttribute("y2", String(y2));
     line.style.stroke = "var(--mn-info)";
     line.setAttribute("stroke-dasharray", "6 4");
-    line.setAttribute("stroke-width", "2");
+    line.setAttribute("stroke-width", "2.5");
     line.setAttribute("marker-end", "url(#mn-journey-arrow)");
     svg.appendChild(line);
   }

@@ -280,7 +280,8 @@ var BODY_CLASSES = {
 };
 var THEME_ORDER = ["editorial", "nero", "avorio", "colorblind", "sugar"];
 function cssVar(name, fallback = "") {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+  const el = document.body ?? document.documentElement;
+  return getComputedStyle(el).getPropertyValue(name).trim() || fallback;
 }
 function getTheme() {
   const cl = document.body.classList;
@@ -448,4 +449,4 @@ export {
   lerp,
   hiDpiCanvas
 };
-//# sourceMappingURL=chunk-YQNTYDI7.js.map
+//# sourceMappingURL=chunk-GNZ7B5YQ.js.map

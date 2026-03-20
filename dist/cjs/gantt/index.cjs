@@ -211,7 +211,8 @@ function isValidColor(val) {
 
 // src/ts/core/utils.ts
 function cssVar(name, fallback = "") {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+  const el = document.body ?? document.documentElement;
+  return getComputedStyle(el).getPropertyValue(name).trim() || fallback;
 }
 
 // src/ts/gantt-defaults.ts
