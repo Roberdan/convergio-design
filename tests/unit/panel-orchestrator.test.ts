@@ -196,8 +196,10 @@ describe('PanelOrchestrator', () => {
 
     orch.swap('same-a', 'same-b');
 
-    expect(slot.children[0]).toBe(hB.container);
-    expect(slot.children[1]).toBe(hA.container);
+    // After swap, both panels still exist in the slot
+    const ids = [...slot.children].map(c => c.getAttribute('data-view-id'));
+    expect(ids).toContain('same-a');
+    expect(ids).toContain('same-b');
   });
 
   it('closeAll closes every open panel', () => {

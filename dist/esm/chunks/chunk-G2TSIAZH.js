@@ -84,6 +84,41 @@ function buildGaugePalette(accent) {
       odometerText: "#1a1a1a"
     };
   }
+  if (cl.contains("mn-sugar")) {
+    return {
+      ...D,
+      numbers: "#3a3530",
+      centerValue: "#1a1a1a",
+      centerUnit: "#666660",
+      centerLabel: "#4a4540",
+      muted: "#666660",
+      dimmed: "#7a7570",
+      subDialLabel: "#5a5550",
+      axisLabel: "#4a4540",
+      axisTitle: "#5a5550",
+      gridScale: "#8a8580",
+      sparkMonth: "#8a8580",
+      sparkLabel: "#7a7570",
+      quadrant: "#a0a09a",
+      quadrantDim: "#b0aba4",
+      tickMajor: "#a07818",
+      tickHalf: "#806010",
+      tickMinor: "#604808",
+      capOuter: ["#d0cfc9", "#b8b4ae", "#a09e98", "#888582"],
+      capInner: ["#d8d4ce", "#c0bcb6", "#a8a49e"],
+      capCenter: "#b0aba4",
+      needleTail: "#a8a49e",
+      needleTip: "#1a1a1a",
+      highlightRing: "rgba(0,0,0,0.04)",
+      trackAlpha: "rgba(0,0,0,0.06)",
+      subDialBg: ["#e8e4dc", "#ddd8ce"],
+      subDialBorder: "#c0b9ad",
+      subDialTrack: "rgba(0,0,0,0.08)",
+      odometerBg: "#f0ede6",
+      odometerBorder: "#ccc",
+      odometerText: "#1a1a1a"
+    };
+  }
   if (cl.contains("mn-colorblind")) {
     return {
       ...D,
@@ -861,15 +896,15 @@ var FerrariGauge = class {
   }
 };
 
-// src/ts/speedometer.ts
-var SIZES2 = { sm: 120, md: 220, lg: 320 };
+// src/ts/speedometer-palette.ts
+var SPEEDO_FONT = "'Barlow Condensed', 'Outfit', sans-serif";
+var SPEEDO_SIZES = { sm: 120, md: 220, lg: 320 };
 var SWEEP = Math.PI * 1.5;
 var START = Math.PI * 0.75;
-var FONT = "'Barlow Condensed', 'Outfit', sans-serif";
 function easeOutCubic(t) {
   return 1 - Math.pow(1 - t, 3);
 }
-function v2a(v, max) {
+function valueToAngle(v, max) {
   return START + Math.min(Math.max(v, 0), max) / max * SWEEP;
 }
 function speedoPalette() {
@@ -895,36 +930,71 @@ function speedoPalette() {
     barDim: "#666",
     barBright: "#aaa"
   };
-  if (isCB) return { ...D, needle: "#4D9DE0", arc: "#7EC8E3", barStops: ["#E15759", "#EDC948", "#59A14F"] };
-  if (isAvorio) return {
-    ...D,
-    bg: ["#faf3e6", "#f0e4cc", "#e8d5b0"],
-    border: "#c4b99a",
-    minorTick: "#999",
-    majStroke: "#555",
-    majText: "#333",
-    capFill: "#333",
-    capStroke: "#555",
-    value: "#1a1a1a",
-    unit: "#555",
-    subLabel: "#777",
-    barBg: "#e8d5b0",
-    barDim: "#777",
-    barBright: "#444",
-    needle: "#DC0000",
-    arc: "#DC0000"
-  };
-  if (isNero) return {
-    ...D,
-    bg: ["#050505", "#111", "#1a1a1a"],
-    border: "#2a2a2a",
-    minorTick: "#333",
-    capFill: "#1a1a1a",
-    capStroke: "#444",
-    barBg: "#111"
-  };
+  const isSugar = cl.contains("mn-sugar");
+  if (isCB) {
+    return {
+      ...D,
+      needle: "#4D9DE0",
+      arc: "#7EC8E3",
+      barStops: ["#E15759", "#EDC948", "#59A14F"]
+    };
+  }
+  if (isSugar) {
+    return {
+      ...D,
+      bg: ["#f8f8fa", "#f0f0f4", "#e4e4ea"],
+      border: "#d0d0d8",
+      minorTick: "#999",
+      majStroke: "#555",
+      majText: "#333",
+      capFill: "#333",
+      capStroke: "#555",
+      value: "#1a1a1a",
+      unit: "#555",
+      subLabel: "#777",
+      barBg: "#e4e4ea",
+      barDim: "#777",
+      barBright: "#444",
+      needle: "#DC0000",
+      arc: "#DC0000"
+    };
+  }
+  if (isAvorio) {
+    return {
+      ...D,
+      bg: ["#faf3e6", "#f0e4cc", "#e8d5b0"],
+      border: "#c4b99a",
+      minorTick: "#999",
+      majStroke: "#555",
+      majText: "#333",
+      capFill: "#333",
+      capStroke: "#555",
+      value: "#1a1a1a",
+      unit: "#555",
+      subLabel: "#777",
+      barBg: "#e8d5b0",
+      barDim: "#777",
+      barBright: "#444",
+      needle: "#DC0000",
+      arc: "#DC0000"
+    };
+  }
+  if (isNero) {
+    return {
+      ...D,
+      bg: ["#050505", "#111", "#1a1a1a"],
+      border: "#2a2a2a",
+      minorTick: "#333",
+      capFill: "#1a1a1a",
+      capStroke: "#444",
+      barBg: "#111"
+    };
+  }
   return D;
 }
+
+// src/ts/speedometer.ts
+var FONT = "'Barlow Condensed', 'Outfit', sans-serif";
 function drawSpeedo(ctx, dim, s, cx, cy, R, curAngle, curVal, barVal, options) {
   const p = speedoPalette();
   const needleCol = p.needle || options.needleColor;
@@ -950,8 +1020,8 @@ function drawSpeedo(ctx, dim, s, cx, cy, R, curAngle, curVal, barVal, options) {
       cx,
       cy,
       R * 1.03,
-      v2a(options.arcStart, options.max),
-      v2a(aEnd, options.max)
+      valueToAngle(options.arcStart, options.max),
+      valueToAngle(aEnd, options.max)
     );
     ctx.strokeStyle = arcCol;
     ctx.lineWidth = 4 * s;
@@ -971,7 +1041,7 @@ function drawSpeedo(ctx, dim, s, cx, cy, R, curAngle, curVal, barVal, options) {
   for (let i = 0; i <= totalMinor; i++) {
     const mv = i / totalMinor * max;
     if (ticks.indexOf(Math.round(mv)) !== -1) continue;
-    const ma = v2a(mv, max);
+    const ma = valueToAngle(mv, max);
     ctx.beginPath();
     ctx.moveTo(cx + Math.cos(ma) * tOut, cy + Math.sin(ma) * tOut);
     ctx.lineTo(cx + Math.cos(ma) * (tOut - minL), cy + Math.sin(ma) * (tOut - minL));
@@ -984,7 +1054,7 @@ function drawSpeedo(ctx, dim, s, cx, cy, R, curAngle, curVal, barVal, options) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   for (let t = 0; t < ticks.length; t++) {
-    const tv = ticks[t], ta = v2a(tv, max);
+    const tv = ticks[t], ta = valueToAngle(tv, max);
     const c1 = Math.cos(ta), s1 = Math.sin(ta);
     ctx.beginPath();
     ctx.moveTo(cx + c1 * tOut, cy + s1 * tOut);
@@ -1090,11 +1160,11 @@ function speedometer(canvas, opts) {
   let dim;
   if (isFluid) {
     const rect = (canvas.parentElement || canvas).getBoundingClientRect();
-    dim = Math.min(rect.width, rect.height) || SIZES2.md;
+    dim = Math.min(rect.width, rect.height) || SPEEDO_SIZES.md;
   } else if (typeof options.size === "number") {
     dim = options.size;
   } else {
-    dim = SIZES2[options.size] || SIZES2.md;
+    dim = SPEEDO_SIZES[options.size] || SPEEDO_SIZES.md;
   }
   const dpr = window.devicePixelRatio || 1;
   canvas.width = dim * dpr;
@@ -1127,7 +1197,7 @@ function speedometer(canvas, opts) {
     canvas.textContent = l;
     srSpan.textContent = l;
   }
-  let curAngle = v2a(options.value, max);
+  let curAngle = valueToAngle(options.value, max);
   let curVal = options.value;
   let barVal = options.bar ? options.bar.value || 0 : 0;
   let animId = null;
@@ -1162,7 +1232,7 @@ function speedometer(canvas, opts) {
   if (options.animate) {
     curAngle = START;
     curVal = 0;
-    animateTo(v2a(options.value, max), options.value);
+    animateTo(valueToAngle(options.value, max), options.value);
   } else {
     draw();
   }
@@ -1182,7 +1252,7 @@ function speedometer(canvas, opts) {
   }
   return {
     setValue(v) {
-      const ta = v2a(v, max);
+      const ta = valueToAngle(v, max);
       if (options.animate) animateTo(ta, v);
       else {
         curAngle = ta;
@@ -1207,6 +1277,13 @@ function speedometer(canvas, opts) {
 export {
   buildGaugePalette,
   FerrariGauge,
+  SPEEDO_FONT,
+  SPEEDO_SIZES,
+  SWEEP,
+  START,
+  easeOutCubic,
+  valueToAngle,
+  speedoPalette,
   speedometer
 };
-//# sourceMappingURL=chunk-3R36LM3B.js.map
+//# sourceMappingURL=chunk-G2TSIAZH.js.map

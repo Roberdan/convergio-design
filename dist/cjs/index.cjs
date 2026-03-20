@@ -47,8 +47,8 @@ __export(index_exports, {
   SPACE: () => SPACE,
   SPEEDO_FONT: () => SPEEDO_FONT,
   SPEEDO_SIZES: () => SPEEDO_SIZES,
-  START: () => START2,
-  SWEEP: () => SWEEP2,
+  START: () => START,
+  SWEEP: () => SWEEP,
   StateScaffold: () => StateScaffold,
   TAU: () => TAU,
   TEXT_SIZE: () => TEXT_SIZE,
@@ -122,7 +122,7 @@ __export(index_exports, {
   donut: () => donut,
   drawMarker: () => drawMarker,
   drawSpeedometer: () => drawSpeedometer,
-  easeOutCubic: () => easeOutCubic2,
+  easeOutCubic: () => easeOutCubic,
   editors: () => editors,
   emit: () => emit,
   eventBus: () => eventBus,
@@ -231,7 +231,7 @@ __export(index_exports, {
   socialGraph: () => socialGraph,
   sparkline: () => sparkline,
   sparklineInteract: () => sparklineInteract,
-  speedoPalette: () => speedoPalette2,
+  speedoPalette: () => speedoPalette,
   speedometer: () => speedometer,
   statusIcons: () => statusIcons,
   steppedRotary: () => steppedRotary,
@@ -2635,6 +2635,41 @@ function buildGaugePalette(accent) {
       highlightRing: "rgba(0,0,0,0.04)",
       trackAlpha: "rgba(0,0,0,0.06)",
       /* Sub-dials and odometer */
+      subDialBg: ["#e8e4dc", "#ddd8ce"],
+      subDialBorder: "#c0b9ad",
+      subDialTrack: "rgba(0,0,0,0.08)",
+      odometerBg: "#f0ede6",
+      odometerBorder: "#ccc",
+      odometerText: "#1a1a1a"
+    };
+  }
+  if (cl.contains("mn-sugar")) {
+    return {
+      ...D,
+      numbers: "#3a3530",
+      centerValue: "#1a1a1a",
+      centerUnit: "#666660",
+      centerLabel: "#4a4540",
+      muted: "#666660",
+      dimmed: "#7a7570",
+      subDialLabel: "#5a5550",
+      axisLabel: "#4a4540",
+      axisTitle: "#5a5550",
+      gridScale: "#8a8580",
+      sparkMonth: "#8a8580",
+      sparkLabel: "#7a7570",
+      quadrant: "#a0a09a",
+      quadrantDim: "#b0aba4",
+      tickMajor: "#a07818",
+      tickHalf: "#806010",
+      tickMinor: "#604808",
+      capOuter: ["#d0cfc9", "#b8b4ae", "#a09e98", "#888582"],
+      capInner: ["#d8d4ce", "#c0bcb6", "#a8a49e"],
+      capCenter: "#b0aba4",
+      needleTail: "#a8a49e",
+      needleTip: "#1a1a1a",
+      highlightRing: "rgba(0,0,0,0.04)",
+      trackAlpha: "rgba(0,0,0,0.06)",
       subDialBg: ["#e8e4dc", "#ddd8ce"],
       subDialBorder: "#c0b9ad",
       subDialTrack: "rgba(0,0,0,0.08)",
@@ -7245,15 +7280,15 @@ function autoResizeAll(selector = "canvas[data-auto-resize]", chartLib) {
   return () => cleanups.forEach((fn) => fn());
 }
 
-// src/ts/speedometer.ts
-var SIZES2 = { sm: 120, md: 220, lg: 320 };
+// src/ts/speedometer-palette.ts
+var SPEEDO_FONT = "'Barlow Condensed', 'Outfit', sans-serif";
+var SPEEDO_SIZES = { sm: 120, md: 220, lg: 320 };
 var SWEEP = Math.PI * 1.5;
 var START = Math.PI * 0.75;
-var FONT2 = "'Barlow Condensed', 'Outfit', sans-serif";
 function easeOutCubic(t) {
   return 1 - Math.pow(1 - t, 3);
 }
-function v2a(v, max) {
+function valueToAngle(v, max) {
   return START + Math.min(Math.max(v, 0), max) / max * SWEEP;
 }
 function speedoPalette() {
@@ -7279,36 +7314,71 @@ function speedoPalette() {
     barDim: "#666",
     barBright: "#aaa"
   };
-  if (isCB) return { ...D, needle: "#4D9DE0", arc: "#7EC8E3", barStops: ["#E15759", "#EDC948", "#59A14F"] };
-  if (isAvorio) return {
-    ...D,
-    bg: ["#faf3e6", "#f0e4cc", "#e8d5b0"],
-    border: "#c4b99a",
-    minorTick: "#999",
-    majStroke: "#555",
-    majText: "#333",
-    capFill: "#333",
-    capStroke: "#555",
-    value: "#1a1a1a",
-    unit: "#555",
-    subLabel: "#777",
-    barBg: "#e8d5b0",
-    barDim: "#777",
-    barBright: "#444",
-    needle: "#DC0000",
-    arc: "#DC0000"
-  };
-  if (isNero) return {
-    ...D,
-    bg: ["#050505", "#111", "#1a1a1a"],
-    border: "#2a2a2a",
-    minorTick: "#333",
-    capFill: "#1a1a1a",
-    capStroke: "#444",
-    barBg: "#111"
-  };
+  const isSugar = cl.contains("mn-sugar");
+  if (isCB) {
+    return {
+      ...D,
+      needle: "#4D9DE0",
+      arc: "#7EC8E3",
+      barStops: ["#E15759", "#EDC948", "#59A14F"]
+    };
+  }
+  if (isSugar) {
+    return {
+      ...D,
+      bg: ["#f8f8fa", "#f0f0f4", "#e4e4ea"],
+      border: "#d0d0d8",
+      minorTick: "#999",
+      majStroke: "#555",
+      majText: "#333",
+      capFill: "#333",
+      capStroke: "#555",
+      value: "#1a1a1a",
+      unit: "#555",
+      subLabel: "#777",
+      barBg: "#e4e4ea",
+      barDim: "#777",
+      barBright: "#444",
+      needle: "#DC0000",
+      arc: "#DC0000"
+    };
+  }
+  if (isAvorio) {
+    return {
+      ...D,
+      bg: ["#faf3e6", "#f0e4cc", "#e8d5b0"],
+      border: "#c4b99a",
+      minorTick: "#999",
+      majStroke: "#555",
+      majText: "#333",
+      capFill: "#333",
+      capStroke: "#555",
+      value: "#1a1a1a",
+      unit: "#555",
+      subLabel: "#777",
+      barBg: "#e8d5b0",
+      barDim: "#777",
+      barBright: "#444",
+      needle: "#DC0000",
+      arc: "#DC0000"
+    };
+  }
+  if (isNero) {
+    return {
+      ...D,
+      bg: ["#050505", "#111", "#1a1a1a"],
+      border: "#2a2a2a",
+      minorTick: "#333",
+      capFill: "#1a1a1a",
+      capStroke: "#444",
+      barBg: "#111"
+    };
+  }
   return D;
 }
+
+// src/ts/speedometer.ts
+var FONT2 = "'Barlow Condensed', 'Outfit', sans-serif";
 function drawSpeedo(ctx, dim, s, cx, cy, R, curAngle, curVal, barVal, options) {
   const p = speedoPalette();
   const needleCol = p.needle || options.needleColor;
@@ -7334,8 +7404,8 @@ function drawSpeedo(ctx, dim, s, cx, cy, R, curAngle, curVal, barVal, options) {
       cx,
       cy,
       R * 1.03,
-      v2a(options.arcStart, options.max),
-      v2a(aEnd, options.max)
+      valueToAngle(options.arcStart, options.max),
+      valueToAngle(aEnd, options.max)
     );
     ctx.strokeStyle = arcCol;
     ctx.lineWidth = 4 * s;
@@ -7355,7 +7425,7 @@ function drawSpeedo(ctx, dim, s, cx, cy, R, curAngle, curVal, barVal, options) {
   for (let i = 0; i <= totalMinor; i++) {
     const mv = i / totalMinor * max;
     if (ticks.indexOf(Math.round(mv)) !== -1) continue;
-    const ma = v2a(mv, max);
+    const ma = valueToAngle(mv, max);
     ctx.beginPath();
     ctx.moveTo(cx + Math.cos(ma) * tOut, cy + Math.sin(ma) * tOut);
     ctx.lineTo(cx + Math.cos(ma) * (tOut - minL), cy + Math.sin(ma) * (tOut - minL));
@@ -7368,7 +7438,7 @@ function drawSpeedo(ctx, dim, s, cx, cy, R, curAngle, curVal, barVal, options) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   for (let t = 0; t < ticks.length; t++) {
-    const tv = ticks[t], ta = v2a(tv, max);
+    const tv = ticks[t], ta = valueToAngle(tv, max);
     const c1 = Math.cos(ta), s1 = Math.sin(ta);
     ctx.beginPath();
     ctx.moveTo(cx + c1 * tOut, cy + s1 * tOut);
@@ -7474,11 +7544,11 @@ function speedometer(canvas, opts) {
   let dim;
   if (isFluid) {
     const rect = (canvas.parentElement || canvas).getBoundingClientRect();
-    dim = Math.min(rect.width, rect.height) || SIZES2.md;
+    dim = Math.min(rect.width, rect.height) || SPEEDO_SIZES.md;
   } else if (typeof options.size === "number") {
     dim = options.size;
   } else {
-    dim = SIZES2[options.size] || SIZES2.md;
+    dim = SPEEDO_SIZES[options.size] || SPEEDO_SIZES.md;
   }
   const dpr2 = window.devicePixelRatio || 1;
   canvas.width = dim * dpr2;
@@ -7511,7 +7581,7 @@ function speedometer(canvas, opts) {
     canvas.textContent = l;
     srSpan.textContent = l;
   }
-  let curAngle = v2a(options.value, max);
+  let curAngle = valueToAngle(options.value, max);
   let curVal = options.value;
   let barVal = options.bar ? options.bar.value || 0 : 0;
   let animId = null;
@@ -7546,7 +7616,7 @@ function speedometer(canvas, opts) {
   if (options.animate) {
     curAngle = START;
     curVal = 0;
-    animateTo(v2a(options.value, max), options.value);
+    animateTo(valueToAngle(options.value, max), options.value);
   } else {
     draw();
   }
@@ -7566,7 +7636,7 @@ function speedometer(canvas, opts) {
   }
   return {
     setValue(v) {
-      const ta = v2a(v, max);
+      const ta = valueToAngle(v, max);
       if (options.animate) animateTo(ta, v);
       else {
         curAngle = ta;
@@ -7651,12 +7721,17 @@ function buildSeverity() {
   };
 }
 function themeColors() {
-  const isLight = document.body.classList.contains("mn-avorio");
+  const cl = document.body.classList;
+  const isLight = cl.contains("mn-avorio") || cl.contains("mn-sugar");
+  const surface = cssVar("--mn-surface", isLight ? "#faf8f2" : "#0a0a0a");
+  const text = cssVar("--mn-text", isLight ? "#1a1a1a" : "#e0e0e0");
+  const muted = cssVar("--mn-text-muted", isLight ? "#666" : "#888");
+  const border = cssVar("--mn-border", isLight ? "rgba(0,0,0,0.08)" : "rgba(200,200,200,0.08)");
   return {
-    bg: isLight ? "#faf8f2" : "#0a0a0a",
-    text: isLight ? "#1a1a1a" : "#e0e0e0",
-    muted: isLight ? "#666" : "#888",
-    border: isLight ? "rgba(0,0,0,0.08)" : "rgba(200,200,200,0.08)",
+    bg: surface,
+    text,
+    muted,
+    border,
     headerBg: isLight ? "rgba(245,242,235,0.98)" : "rgba(18,18,18,0.98)",
     sidebarBg: isLight ? "rgba(245,242,235,0.95)" : "rgba(14,14,14,0.97)",
     rowHover: isLight ? "rgba(99,102,241,0.08)" : "rgba(99,102,241,0.12)",
@@ -9885,8 +9960,8 @@ function manettino(container, opts) {
   let current = clamp(opts?.initial ?? 0, 0, positions.length - 1);
   const onChange = opts?.onChange ?? null;
   const total = positions.length;
-  const ARC = 240, START3 = -120;
-  const angleFor = (i) => START3 + (total > 1 ? i / (total - 1) * ARC : 0);
+  const ARC = 240, START2 = -120;
+  const angleFor = (i) => START2 + (total > 1 ? i / (total - 1) * ARC : 0);
   const root = createElement("div", "mn-ctrl-manettino");
   if (opts?.tint) root.style.setProperty("--mn-ctrl-manettino-tint", opts.tint);
   addLabel2(root, opts?.label);
@@ -9932,7 +10007,7 @@ function manettino(container, opts) {
     const target = e.target;
     if (target?.dataset.index != null) set(Number(target.dataset.index));
   });
-  const cleanup = setupDragRotary(knobEl, dial, root, ARC, START3, total, set, () => current);
+  const cleanup = setupDragRotary(knobEl, dial, root, ARC, START2, total, set, () => current);
   return {
     getValue: () => current,
     setValue: (idx) => set(idx),
@@ -9948,8 +10023,8 @@ function steppedRotary(container, opts) {
   let current = clamp(opts?.initial ?? 0, 0, positions.length - 1);
   const onChange = opts?.onChange ?? null;
   const total = positions.length;
-  const ARC = 180, START3 = -90;
-  const angleFor = (i) => START3 + (total > 1 ? i / (total - 1) * ARC : 0);
+  const ARC = 180, START2 = -90;
+  const angleFor = (i) => START2 + (total > 1 ? i / (total - 1) * ARC : 0);
   const root = createElement("div", "mn-ctrl-stepped");
   addLabel2(root, opts?.label);
   const dial = createElement("div", "mn-ctrl-stepped__dial");
@@ -10004,7 +10079,7 @@ function steppedRotary(container, opts) {
     const target = e.target;
     if (target?.dataset.index != null) set(Number(target.dataset.index));
   });
-  const cleanup = setupDragRotary(knobEl, dial, root, ARC, START3, total, set, () => current);
+  const cleanup = setupDragRotary(knobEl, dial, root, ARC, START2, total, set, () => current);
   return {
     getValue: () => current,
     setValue: (idx) => set(idx),
@@ -12193,85 +12268,9 @@ function autoContrast(selector, threshold = 0.35) {
   });
 }
 
-// src/ts/speedometer-palette.ts
-var SPEEDO_FONT = "'Barlow Condensed', 'Outfit', sans-serif";
-var SPEEDO_SIZES = { sm: 120, md: 220, lg: 320 };
-var SWEEP2 = Math.PI * 1.5;
-var START2 = Math.PI * 0.75;
-function easeOutCubic2(t) {
-  return 1 - Math.pow(1 - t, 3);
-}
-function valueToAngle(v, max) {
-  return START2 + Math.min(Math.max(v, 0), max) / max * SWEEP2;
-}
-function speedoPalette2() {
-  const cl = document.body.classList;
-  const isCB = cl.contains("mn-colorblind");
-  const isNero = cl.contains("mn-nero");
-  const isAvorio = cl.contains("mn-avorio");
-  const D = {
-    needle: null,
-    arc: null,
-    barStops: null,
-    bg: ["#0d0d0d", "#1a1a1a", "#2c2c2c"],
-    border: "#3a3a3a",
-    minorTick: "#444",
-    majStroke: "#aaa",
-    majText: "#c8c8c8",
-    capFill: "#2a2a2a",
-    capStroke: "#555",
-    value: "#fafafa",
-    unit: "#888",
-    subLabel: "#666",
-    barBg: "#1a1a1a",
-    barDim: "#666",
-    barBright: "#aaa"
-  };
-  if (isCB) {
-    return {
-      ...D,
-      needle: "#4D9DE0",
-      arc: "#7EC8E3",
-      barStops: ["#E15759", "#EDC948", "#59A14F"]
-    };
-  }
-  if (isAvorio) {
-    return {
-      ...D,
-      bg: ["#faf3e6", "#f0e4cc", "#e8d5b0"],
-      border: "#c4b99a",
-      minorTick: "#999",
-      majStroke: "#555",
-      majText: "#333",
-      capFill: "#333",
-      capStroke: "#555",
-      value: "#1a1a1a",
-      unit: "#555",
-      subLabel: "#777",
-      barBg: "#e8d5b0",
-      barDim: "#777",
-      barBright: "#444",
-      needle: "#DC0000",
-      arc: "#DC0000"
-    };
-  }
-  if (isNero) {
-    return {
-      ...D,
-      bg: ["#050505", "#111", "#1a1a1a"],
-      border: "#2a2a2a",
-      minorTick: "#333",
-      capFill: "#1a1a1a",
-      capStroke: "#444",
-      barBg: "#111"
-    };
-  }
-  return D;
-}
-
 // src/ts/speedometer-draw.ts
 function drawSpeedometer(ctx, dim, s, cx, cy, R, curAngle, curVal, barVal, opts) {
-  const p = speedoPalette2();
+  const p = speedoPalette();
   const needleCol = p.needle || opts.needleColor;
   const arcCol = p.arc || opts.arcColor;
   ctx.save();
@@ -13005,7 +13004,7 @@ var DEFAULTS2 = {
   lineSpacing: "normal",
   dyslexiaFont: false
 };
-var SIZES3 = {
+var SIZES2 = {
   sm: { label: "S", scale: 0.875 },
   md: { label: "M", scale: 1 },
   lg: { label: "L", scale: 1.125 },
@@ -13051,7 +13050,7 @@ function loadDyslexicFont() {
 function applySettings(settings) {
   const root = document.documentElement;
   const body = document.body;
-  const sz = SIZES3[settings.fontSize] ?? SIZES3.md;
+  const sz = SIZES2[settings.fontSize] ?? SIZES2.md;
   root.style.fontSize = `${sz.scale * 16}px`;
   root.classList.remove("mn-reduced-motion", "mn-high-contrast");
   body.classList.toggle("mn-a11y-reduced-motion", settings.reducedMotion);
@@ -13109,10 +13108,10 @@ function buildPanel(settings) {
   fsGroup.appendChild(createElement("div", "mn-a11y-panel__label", { text: "Text Size" }));
   const fsRow = createElement("div", "mn-a11y-panel__size-btns");
   const sizeButtons = {};
-  for (const key of Object.keys(SIZES3)) {
+  for (const key of Object.keys(SIZES2)) {
     const btn = createElement("button", "mn-a11y-panel__size-btn", {
-      text: SIZES3[key].label,
-      "aria-label": `Font size ${SIZES3[key].label}`
+      text: SIZES2[key].label,
+      "aria-label": `Font size ${SIZES2[key].label}`
     });
     if (settings.fontSize === key) btn.classList.add("mn-a11y-panel__size-btn--active");
     btn.addEventListener("click", () => {
@@ -14472,7 +14471,7 @@ function resolveCssVar(name, fallback) {
   const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   return v || fallback;
 }
-function easeOutCubic3(t) {
+function easeOutCubic2(t) {
   return 1 - Math.pow(1 - t, 3);
 }
 function hexToRgba3(hex, alpha2) {
@@ -14633,7 +14632,7 @@ function waterfallChart(canvas, opts) {
       if (start === null) start = ts;
       const elapsed = ts - start;
       const p = Math.min(elapsed / duration, 1);
-      drawBars(easeOutCubic3(p));
+      drawBars(easeOutCubic2(p));
       if (p < 1) requestAnimationFrame(frame2);
     };
     var frame = frame2;
@@ -18511,11 +18510,11 @@ function aiChat(container, opts) {
 function registerExtras(M2) {
   M2.SPEEDO_FONT = SPEEDO_FONT;
   M2.SPEEDO_SIZES = SPEEDO_SIZES;
-  M2.SPEEDO_SWEEP = SWEEP2;
-  M2.SPEEDO_START = START2;
-  M2.easeOutCubic = easeOutCubic2;
+  M2.SPEEDO_SWEEP = SWEEP;
+  M2.SPEEDO_START = START;
+  M2.easeOutCubic = easeOutCubic;
   M2.valueToAngle = valueToAngle;
-  M2.speedoPalette = speedoPalette2;
+  M2.speedoPalette = speedoPalette;
   M2.drawSpeedometer = drawSpeedometer;
   M2.hexLum = hexLum3;
   M2.createEl = createEl2;

@@ -20324,10 +20324,6 @@
     background: var(--mn-surface-raised) !important;
   }
 
-  body.mn-sugar .mn-gantt canvas, body.mn-sugar mn-gantt canvas {
-    filter: invert(.88) hue-rotate(180deg) !important;
-  }
-
   body.mn-sugar .mn-gauge__glass {
     display: none !important;
   }
@@ -20336,10 +20332,6 @@
     background: var(--mn-surface-raised) !important;
     border: 1px solid var(--mn-border) !important;
     box-shadow: 0 2px 8px #0000001a !important;
-  }
-
-  body.mn-sugar .mn-gauge__canvas, body.mn-sugar .mn-speedometer canvas, body.mn-sugar .mn-section-dark canvas {
-    filter: invert(.88) hue-rotate(180deg) !important;
   }
 
   body.mn-sugar .mn-ctrl-manettino__knob, body.mn-sugar .mn-ctrl-stepped__knob, body.mn-sugar .mn-ctrl-lever__track {
@@ -20566,6 +20558,30 @@
     --severity-warning-bg: #fefce8;
     --severity-resourcing-fg: #2563eb;
     --severity-resourcing-bg: #eff6ff;
+  }
+
+  body.mn-sugar.mn-colorblind {
+    --mn-accent: #0072b2;
+    --mn-accent-hover: #005f94;
+    --mn-accent-text: #fff;
+    --signal-ok: #009e73;
+    --signal-warning: #e69f00;
+    --signal-danger: #d55e00;
+    --mn-error: #d55e00;
+    --mn-success: #009e73;
+    --mn-warning: #e69f00;
+    --mn-info: #56b4e9;
+    --chart-default: #0072b2;
+    --chart-bar: #56b4e9;
+    --mn-focus-ring: #0072b2;
+    --mn-border-focus: #0072b2;
+    --stage-1: #e69f00;
+    --stage-2: #e69f00;
+    --stage-3: #56b4e9;
+    --stage-4: #009e73;
+    --stage-5: #999;
+    --stage-6: #d55e00;
+    --stage-7: #444;
   }
 }
 

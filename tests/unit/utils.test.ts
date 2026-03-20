@@ -159,11 +159,12 @@ describe('cycleTheme', () => {
     expect(getTheme()).toBe('nero');
   });
 
-  it('cycles through all 4 themes and wraps', () => {
-    // editorial → nero → avorio → colorblind → editorial
+  it('cycles through all 5 themes and wraps', () => {
+    // editorial → nero → avorio → colorblind → sugar → editorial
     expect(cycleTheme()).toBe('nero');
     expect(cycleTheme()).toBe('avorio');
     expect(cycleTheme()).toBe('colorblind');
+    expect(cycleTheme()).toBe('sugar');
     expect(cycleTheme()).toBe('editorial');
   });
 });

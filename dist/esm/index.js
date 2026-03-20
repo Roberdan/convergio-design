@@ -22,12 +22,19 @@ import {
 } from "./chunks/chunk-DRP5Y7PX.js";
 import {
   FerrariGauge,
+  SPEEDO_FONT,
+  SPEEDO_SIZES,
+  START,
+  SWEEP,
   buildGaugePalette,
-  speedometer
-} from "./chunks/chunk-3R36LM3B.js";
+  easeOutCubic,
+  speedoPalette,
+  speedometer,
+  valueToAngle
+} from "./chunks/chunk-G2TSIAZH.js";
 import {
   gantt
-} from "./chunks/chunk-XJ2BKUFO.js";
+} from "./chunks/chunk-6G43BPB3.js";
 import {
   closeDetailPanel,
   closeDrawer,
@@ -7067,82 +7074,6 @@ function autoContrast(selector, threshold = 0.35) {
       el4.style.textShadow = lum > threshold ? "none" : "0 1px 3px rgba(0,0,0,0.5)";
     }
   });
-}
-
-// src/ts/speedometer-palette.ts
-var SPEEDO_FONT = "'Barlow Condensed', 'Outfit', sans-serif";
-var SPEEDO_SIZES = { sm: 120, md: 220, lg: 320 };
-var SWEEP = Math.PI * 1.5;
-var START = Math.PI * 0.75;
-function easeOutCubic(t) {
-  return 1 - Math.pow(1 - t, 3);
-}
-function valueToAngle(v, max) {
-  return START + Math.min(Math.max(v, 0), max) / max * SWEEP;
-}
-function speedoPalette() {
-  const cl = document.body.classList;
-  const isCB = cl.contains("mn-colorblind");
-  const isNero = cl.contains("mn-nero");
-  const isAvorio = cl.contains("mn-avorio");
-  const D = {
-    needle: null,
-    arc: null,
-    barStops: null,
-    bg: ["#0d0d0d", "#1a1a1a", "#2c2c2c"],
-    border: "#3a3a3a",
-    minorTick: "#444",
-    majStroke: "#aaa",
-    majText: "#c8c8c8",
-    capFill: "#2a2a2a",
-    capStroke: "#555",
-    value: "#fafafa",
-    unit: "#888",
-    subLabel: "#666",
-    barBg: "#1a1a1a",
-    barDim: "#666",
-    barBright: "#aaa"
-  };
-  if (isCB) {
-    return {
-      ...D,
-      needle: "#4D9DE0",
-      arc: "#7EC8E3",
-      barStops: ["#E15759", "#EDC948", "#59A14F"]
-    };
-  }
-  if (isAvorio) {
-    return {
-      ...D,
-      bg: ["#faf3e6", "#f0e4cc", "#e8d5b0"],
-      border: "#c4b99a",
-      minorTick: "#999",
-      majStroke: "#555",
-      majText: "#333",
-      capFill: "#333",
-      capStroke: "#555",
-      value: "#1a1a1a",
-      unit: "#555",
-      subLabel: "#777",
-      barBg: "#e8d5b0",
-      barDim: "#777",
-      barBright: "#444",
-      needle: "#DC0000",
-      arc: "#DC0000"
-    };
-  }
-  if (isNero) {
-    return {
-      ...D,
-      bg: ["#050505", "#111", "#1a1a1a"],
-      border: "#2a2a2a",
-      minorTick: "#333",
-      capFill: "#1a1a1a",
-      capStroke: "#444",
-      barBg: "#111"
-    };
-  }
-  return D;
 }
 
 // src/ts/speedometer-draw.ts
