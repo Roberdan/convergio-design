@@ -328,6 +328,57 @@ Sugar+Colorblind cross-theme: `body.mn-sugar.mn-colorblind` — cool gray surfac
 - Constitution checks run in CI: no emoji, max 250 lines, mn- CSS prefix, no hardcoded colors (exceptions: gradients, conic, rgba, %, deg)
 - Scrub check: `VirtualBPM`, `ISE Portfolio`, `MirrorDesign`, `MirrorBuddy` forbidden in src/demo
 - `accessibility.css` high-contrast block must use `var(--mn-surface)` / `var(--mn-text)` not `#000`/`#fff`
+- `scripts/check-semantic-design.sh` — WCAG AA contrast audit across 6 theme combinations (96 pairs), signal distinctness, danger-button contrast. Exit 1 on P0.
+- `scripts/check-migration-docs.sh` — if CHANGELOG `## [X.Y.Z]` has `### Breaking Changes`, `docs/migrations/vX.Y.Z.md` must exist or CI fails.
+
+## Releases & Breaking Changes
+
+### When to bump
+
+| Change | Version |
+|---|---|
+| Bug fix, refactor, WCAG fix | PATCH `x.y.Z` |
+| New feature, backward-compatible | MINOR `x.Y.0` |
+| API removal/rename, DOM change, token removal | MINOR `x.Y.0` + migration doc |
+| Major paradigm shift | MAJOR `X.0.0` + migration doc |
+
+### Process for breaking changes
+
+1. Fix the code.
+2. Add `### Breaking Changes` section to CHANGELOG under the new version entry.
+3. Copy `docs/migrations/TEMPLATE.md` → `docs/migrations/vX.Y.Z.md`. Fill every `[BC-N]` block: **why changed**, **who is affected**, **before/after code**, **migration steps**.
+4. `scripts/check-migration-docs.sh` runs in CI — build fails if migration doc is missing.
+5. Bump version in `package.json`, run `npm run build`, commit, tag, push.
+
+### Release checklist
+
+```bash
+# 1. Verify all tests + gates pass
+npm run test:unit && bash scripts/check-semantic-design.sh && bash scripts/check-migration-docs.sh
+
+# 2. Bump version in package.json (manually or with node -e)
+# 3. Add ## [X.Y.Z] entry to CHANGELOG.md
+# 4. npm run build  (updates demo footer via inject-version.mjs)
+# 5. Commit
+git add -A && git commit -m "chore: release vX.Y.Z — <summary>"
+# 6. Tag + push
+git tag vX.Y.Z -m "vX.Y.Z — <summary>" && git push origin main --tags
+# 7. GitHub release
+gh release create vX.Y.Z --title "vX.Y.Z — <title>" --notes "..."
+```
+
+### Migration guide format
+
+```markdown
+## [BC-N] Short title
+**Why it changed:** root cause.
+**Who is affected:** anyone using X.
+**Before:** ```css ... ```
+**After:** ```css ... ```
+**Migrate:** step-by-step.
+```
+
+Full template: `docs/migrations/TEMPLATE.md`
 
 ## Conventions
 
