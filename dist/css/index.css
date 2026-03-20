@@ -663,11 +663,11 @@
     text-transform: uppercase;
     letter-spacing: .1em;
     border: 1.5px solid var(--mn-text-inverse);
+    border-radius: var(--mn-btn-radius, var(--radius-sm));
     background: var(--mn-text-inverse);
     color: var(--mn-text);
     cursor: pointer;
     transition: all var(--duration-sm) var(--ease-out);
-    border-radius: 0;
     font-weight: 500;
     text-decoration: none;
     display: inline-flex;
@@ -2573,8 +2573,8 @@
   }
 
   .mn-form-btn--primary:hover {
-    background: var(--giallo-hover);
-    border-color: var(--giallo-hover);
+    background: var(--mn-accent-hover);
+    border-color: var(--mn-accent-hover);
     box-shadow: 0 4px 12px #ffc72c4d;
   }
 
@@ -2601,7 +2601,7 @@
   }
 
   .mn-form-btn--danger:hover {
-    background: var(--rosso-hover);
+    background: color-mix(in srgb, var(--mn-error) 85%, #000);
     box-shadow: 0 4px 12px #dc00004d;
   }
 
@@ -9056,13 +9056,13 @@
   }
 
   .mn-okr__kr-bar--at-risk {
-    background: linear-gradient(90deg, var(--mn-accent), var(--giallo-ferrari-light));
-    box-shadow: 0 0 8px #ffc72c4d;
+    background: linear-gradient(90deg, var(--signal-warning), color-mix(in srgb, var(--signal-warning) 70%, #fff));
+    box-shadow: 0 0 8px color-mix(in srgb, var(--signal-warning) 30%, transparent);
   }
 
   .mn-okr__kr-bar--behind {
-    background: linear-gradient(90deg, var(--mn-error), var(--rosso-corsa-light));
-    box-shadow: 0 0 8px #dc00004d;
+    background: linear-gradient(90deg, var(--mn-error), color-mix(in srgb, var(--mn-error) 70%, #fff));
+    box-shadow: 0 0 8px color-mix(in srgb, var(--mn-error) 30%, transparent);
   }
 
   .mn-okr__empty {

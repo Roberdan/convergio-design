@@ -6077,20 +6077,30 @@ function miniGaugeSVG(status, latencyMs, label) {
   const pct3 = status === "healthy" ? 95 : status === "degraded" ? 55 : 10;
   const sz = 56, cx = sz / 2, cy = sz - 4, r = 22;
   const startAngle = Math.PI, needleAngle = startAngle + clamp(pct3, 0, 100) / 100 * Math.PI;
+  const light = document.body.classList.contains("mn-sugar") || document.body.classList.contains("mn-avorio");
+  const tickStroke = light ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.2)";
+  const trackStroke = light ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.06)";
+  const dotFill = light ? "#ddd" : "#111";
   let ticks = "";
   for (let i = 0; i <= 6; i++) {
     const a = startAngle + i / 6 * Math.PI;
     const tx1 = cx + Math.cos(a) * (r - 4), ty1 = cy + Math.sin(a) * (r - 4);
     const tx2 = cx + Math.cos(a) * r, ty2 = cy + Math.sin(a) * r;
-    ticks += `<line x1="${tx1.toFixed(1)}" y1="${ty1.toFixed(1)}" x2="${tx2.toFixed(1)}" y2="${ty2.toFixed(1)}" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>`;
+    ticks += `<line x1="${tx1.toFixed(1)}" y1="${ty1.toFixed(1)}" x2="${tx2.toFixed(1)}" y2="${ty2.toFixed(1)}" stroke="${tickStroke}" stroke-width="1"/>`;
   }
   const nx = cx + Math.cos(needleAngle) * (r - 8);
   const ny = cy + Math.sin(needleAngle) * (r - 8);
   const latencyText = latencyMs != null ? `${latencyMs}ms` : "";
-  return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-label="${escapeHtml(label)}"><path d="${arc(cx, cy, r, startAngle, 2 * Math.PI)}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4" stroke-linecap="round"/><path d="${arc(cx, cy, r, startAngle, needleAngle)}" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round" style="filter:drop-shadow(0 0 4px ${color}60)"/>` + ticks + `<line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="2.5" fill="${color}"/><circle cx="${cx}" cy="${cy}" r="1" fill="#111"/>` + (latencyText ? `<text x="${cx}" y="${cy - r - 6}" text-anchor="middle" fill="${color}" font-family="var(--font-mono)" font-size="7" font-weight="600">${latencyText}</text>` : "") + "</svg>";
+  return `<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}" aria-label="${escapeHtml(label)}"><path d="${arc(cx, cy, r, startAngle, 2 * Math.PI)}" fill="none" stroke="${trackStroke}" stroke-width="4" stroke-linecap="round"/><path d="${arc(cx, cy, r, startAngle, needleAngle)}" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round" style="filter:drop-shadow(0 0 4px ${color}60)"/>` + ticks + `<line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="2.5" fill="${color}"/><circle cx="${cx}" cy="${cy}" r="1" fill="${dotFill}"/>` + (latencyText ? `<text x="${cx}" y="${cy - r - 6}" text-anchor="middle" fill="${color}" font-family="var(--font-mono)" font-size="7" font-weight="600">${latencyText}</text>` : "") + "</svg>";
 }
 function compassSVG(size) {
-  return `<svg viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true"><defs><linearGradient id="lb" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#666"/><stop offset="100%" stop-color="#1a1a1a"/></linearGradient><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFD85C"/><stop offset="50%" stop-color="#FFC72C"/><stop offset="100%" stop-color="#E8A838"/></linearGradient><linearGradient id="ln" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF4444"/><stop offset="100%" stop-color="#CC0000"/></linearGradient><filter id="lg2"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="32" cy="32" r="31" fill="url(#lb)" stroke="#555" stroke-width=".5"/><circle cx="32" cy="32" r="27" fill="#0d0d0d"/><g stroke="url(#lg)" stroke-width="1.5" stroke-linecap="round" filter="url(#lg2)"><line x1="32" y1="6" x2="32" y2="11"/><line x1="32" y1="6" x2="32" y2="11" transform="rotate(90,32,32)"/><line x1="32" y1="6" x2="32" y2="11" transform="rotate(180,32,32)"/><line x1="32" y1="6" x2="32" y2="11" transform="rotate(270,32,32)"/></g><g stroke="rgba(255,255,255,.4)" stroke-width="1" stroke-linecap="round"><line x1="32" y1="6" x2="32" y2="10" transform="rotate(45,32,32)"/><line x1="32" y1="6" x2="32" y2="10" transform="rotate(135,32,32)"/><line x1="32" y1="6" x2="32" y2="10" transform="rotate(225,32,32)"/><line x1="32" y1="6" x2="32" y2="10" transform="rotate(315,32,32)"/></g><text x="32" y="16" text-anchor="middle" dominant-baseline="middle" fill="#FFC72C" font-family="'Barlow Condensed',sans-serif" font-weight="700" font-size="7" filter="url(#lg2)">N</text><polygon points="32,10 29,32 32,30 35,32" fill="url(#ln)" filter="url(#lg2)"/><polygon points="32,54 29,32 32,34 35,32" fill="#999"/><circle cx="32" cy="32" r="4" fill="url(#lg)" filter="url(#lg2)"/><circle cx="32" cy="32" r="2" fill="#1a1a1a"/></svg>`;
+  const light = document.body.classList.contains("mn-sugar") || document.body.classList.contains("mn-avorio");
+  const bezelStart = light ? "#ddd" : "#666";
+  const bezelEnd = light ? "#bbb" : "#1a1a1a";
+  const face = light ? "#f0f0f4" : "#0d0d0d";
+  const center = light ? "#e4e4ea" : "#1a1a1a";
+  const minor = light ? "rgba(0,0,0,.25)" : "rgba(255,255,255,.4)";
+  return `<svg viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true"><defs><linearGradient id="lb" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${bezelStart}"/><stop offset="100%" stop-color="${bezelEnd}"/></linearGradient><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFD85C"/><stop offset="50%" stop-color="#FFC72C"/><stop offset="100%" stop-color="#E8A838"/></linearGradient><linearGradient id="ln" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF4444"/><stop offset="100%" stop-color="#CC0000"/></linearGradient><filter id="lg2"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="32" cy="32" r="31" fill="url(#lb)" stroke="#555" stroke-width=".5"/><circle cx="32" cy="32" r="27" fill="${face}"/><g stroke="url(#lg)" stroke-width="1.5" stroke-linecap="round" filter="url(#lg2)"><line x1="32" y1="6" x2="32" y2="11"/><line x1="32" y1="6" x2="32" y2="11" transform="rotate(90,32,32)"/><line x1="32" y1="6" x2="32" y2="11" transform="rotate(180,32,32)"/><line x1="32" y1="6" x2="32" y2="11" transform="rotate(270,32,32)"/></g><g stroke="${minor}" stroke-width="1" stroke-linecap="round"><line x1="32" y1="6" x2="32" y2="10" transform="rotate(45,32,32)"/><line x1="32" y1="6" x2="32" y2="10" transform="rotate(135,32,32)"/><line x1="32" y1="6" x2="32" y2="10" transform="rotate(225,32,32)"/><line x1="32" y1="6" x2="32" y2="10" transform="rotate(315,32,32)"/></g><text x="32" y="16" text-anchor="middle" dominant-baseline="middle" fill="#FFC72C" font-family="'Barlow Condensed',sans-serif" font-weight="700" font-size="7" filter="url(#lg2)">N</text><polygon points="32,10 29,32 32,30 35,32" fill="url(#ln)" filter="url(#lg2)"/><polygon points="32,54 29,32 32,34 35,32" fill="#999"/><circle cx="32" cy="32" r="4" fill="url(#lg)" filter="url(#lg2)"/><circle cx="32" cy="32" r="2" fill="${center}"/></svg>`;
 }
 function createServiceCard(check) {
   const card = createElement("div", "mn-login__service");
@@ -8742,6 +8752,7 @@ var THEMES = {
   editorial: { land: "#333330", water: "#0d0d0d", border: "#444440", grid: "rgba(200,200,200,0.06)", text: "#c8c8c8", muted: "#616161" },
   nero: { land: "#2e2e2a", water: "#080808", border: "#444440", grid: "rgba(200,200,200,0.05)", text: "#c8c8c8", muted: "#555" },
   avorio: { land: "#e8d5b0", water: "#faf3e6", border: "#d7c39a", grid: "rgba(0,0,0,0.05)", text: "#1a1a1a", muted: "#888" },
+  sugar: { land: "#FFFFFF", water: "#E4E4E8", border: "#D0D0D5", grid: "rgba(0,0,0,0.04)", text: "#111111", muted: "#767676" },
   colorblind: { land: "#1a1a1a", water: "#0a0a0a", border: "#2a2a2a", grid: "rgba(200,200,200,0.04)", text: "#c8c8c8", muted: "#616161" }
 };
 function ll(lon, lat) {
@@ -8757,7 +8768,7 @@ var CONTINENTS = {
 };
 function detectTheme() {
   const b = document.body.classList;
-  const name = b.contains("mn-colorblind") ? "colorblind" : b.contains("mn-nero") ? "nero" : b.contains("mn-avorio") ? "avorio" : "editorial";
+  const name = b.contains("mn-colorblind") ? "colorblind" : b.contains("mn-sugar") ? "sugar" : b.contains("mn-nero") ? "nero" : b.contains("mn-avorio") ? "avorio" : "editorial";
   const t = THEMES[name];
   return { ...t, coast: t.border, bg: t.water };
 }
@@ -8766,6 +8777,7 @@ function getMarkerColors() {
     editorial: { active: cssVar("--signal-ok", "#00A651"), warning: cssVar("--signal-warning", "#FFC72C"), danger: cssVar("--signal-danger", "#DC0000") },
     nero: { active: cssVar("--signal-ok", "#00A651"), warning: cssVar("--signal-warning", "#FFC72C"), danger: cssVar("--signal-danger", "#DC0000") },
     avorio: { active: cssVar("--signal-ok", "#00A651"), warning: cssVar("--arancio", "#D4622B"), danger: cssVar("--signal-danger", "#DC0000") },
+    sugar: { active: cssVar("--signal-ok", "#00A651"), warning: cssVar("--signal-warning", "#F59E0B"), danger: cssVar("--signal-danger", "#DC0000") },
     colorblind: { active: "#0072B2", warning: "#FFB000", danger: "#D55E00" }
   };
 }
@@ -8965,7 +8977,7 @@ function mapView(container, opts) {
     ctx.scale(DPR3, DPR3);
     const th = detectTheme();
     const mc = getMarkerColors();
-    const themeName = document.body.classList.contains("mn-colorblind") ? "colorblind" : document.body.classList.contains("mn-nero") ? "nero" : document.body.classList.contains("mn-avorio") ? "avorio" : "editorial";
+    const themeName = document.body.classList.contains("mn-colorblind") ? "colorblind" : document.body.classList.contains("mn-sugar") ? "sugar" : document.body.classList.contains("mn-nero") ? "nero" : document.body.classList.contains("mn-avorio") ? "avorio" : "editorial";
     const colors = mc[themeName];
     ctx.fillStyle = th.bg;
     ctx.fillRect(0, 0, vw, vh);
@@ -9403,7 +9415,7 @@ function socialGraph(container, opts = { nodes: [], edges: [] }) {
       ctx.textBaseline = "middle";
       ctx.fillText(inside(node), node.x, node.y + 0.5, radius * 1.5);
       if (showLabels) {
-        ctx.fillStyle = "rgba(245,245,245,.92)";
+        ctx.fillStyle = cssVar("--mn-text", "rgba(245,245,245,.92)");
         ctx.font = "500 12px Inter, sans-serif";
         ctx.textBaseline = "top";
         ctx.fillText(node.label, node.x, node.y + radius + 8);
@@ -15118,11 +15130,12 @@ function quadOf(it, sT, gT) {
   return "Dogs";
 }
 function quadHex(q) {
+  const isSugar = document.body.classList.contains("mn-sugar");
   const m = {
     "Stars": ["--signal-ok", "#00A651"],
-    "Cash Cows": ["--mn-accent", "#FFC72C"],
+    "Cash Cows": isSugar ? ["--signal-warning", "#F59E0B"] : ["--mn-accent", "#FFC72C"],
     "? Marks": ["--signal-warning", "#FFC72C"],
-    "Dogs": ["--mn-border-subtle", "#4d4d4d"]
+    "Dogs": isSugar ? ["--mn-text-muted", "#767676"] : ["--mn-border-subtle", "#4d4d4d"]
   };
   const [v, fb] = m[q];
   return cssVar(v, fb);
@@ -18237,10 +18250,12 @@ function renderToggle(item, ac, values) {
   row.className = "mn-settings-item";
   const id = nextId("toggle");
   row.appendChild(labelGroup(item.label, item.description, id));
+  const wrap = document.createElement("div");
+  wrap.className = "mn-settings-item__ctrl";
   const input = document.createElement("input");
   input.type = "checkbox";
   input.id = id;
-  input.className = "mn-settings-item__ctrl mn-settings-toggle";
+  input.className = "mn-settings-toggle";
   input.checked = item.value;
   input.setAttribute("role", "switch");
   input.setAttribute("aria-checked", String(item.value));
@@ -18251,7 +18266,8 @@ function renderToggle(item, ac, values) {
     item.onChange(input.checked);
   }, { signal: ac.signal });
   values.set(item.label, item.value);
-  row.appendChild(input);
+  wrap.appendChild(input);
+  row.appendChild(wrap);
   return row;
 }
 function renderText(item, ac, values) {
