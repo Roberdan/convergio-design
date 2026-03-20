@@ -1,5 +1,5 @@
-<!-- v4.15.0 | 2026-03-17 — 10 Presentation Runtime API contracts added -->
-# API Contracts — v4.15.0 Components
+<!-- v4.19.0 | 2026-03-20 — v4.19.0 Sugar Journey + Admin contracts added -->
+# API Contracts — v4.19.0 Components
 
 ## Presentation Runtime
 
@@ -682,3 +682,205 @@ function notificationCenter(triggerEl: HTMLElement, opts?: NotificationCenterOpt
 **Options**: `maxVisible?` (50), `onAction?`, `position?` (`right` | `left`)
 **Controller**: `add(n)`, `markRead(id)`, `markAllRead()`, `remove(id)`, `clear()`, `getUnreadCount()`, `open()`, `close()`, `toggle()`, `destroy()`
 **CSS**: `mn-notif-panel`, `mn-notif-item` prefixes. ARIA: `role="dialog"`. Backdrop + Escape close.
+
+---
+
+## v4.19.0 Components
+
+## customerJourney (src/ts/customer-journey.ts)
+
+```ts
+export type EngagementStatus = 'completed' | 'active' | 'pending' | 'blocked';
+export type EngagementType = 'opportunity' | 'contract' | 'ticket' | 'meeting' | 'task';
+export interface JourneyEngagement {
+  id: string; title: string; avatar?: string; status: EngagementStatus;
+  type: EngagementType; date?: string; assignee?: string; onClick?: () => void;
+}
+export interface JourneyPhase { id: string; label: string; engagements: JourneyEngagement[] }
+export interface CustomerJourneyOptions {
+  orientation?: 'horizontal' | 'vertical'; onSelect?: (engagement: JourneyEngagement) => void;
+  showConnectors?: boolean; compactMode?: boolean;
+}
+```
+
+```ts
+function customerJourney(el: HTMLElement, phases: JourneyPhase[], opts?: CustomerJourneyOptions): CustomerJourneyController
+```
+
+| Method | Signature | Description |
+|---|---|---|
+| `update` | `(phases: JourneyPhase[]): void` | Re-render with new phase data |
+| `selectEngagement` | `(id: string): void` | Programmatically select a card |
+| `getSelected` | `(): string \| null` | Currently selected engagement id |
+| `destroy` | `(): void` | Abort listeners, clear DOM, remove classes |
+
+**Keyboard**: Arrow keys navigate between phases (left/right) and cards (up/down). Enter selects + fires `onClick`/`onSelect`.
+**CSS**: `mn-journey`, `mn-journey--vertical`, `mn-journey--compact`, `mn-journey__phase`, `mn-journey__card`, `mn-journey__card--selected`, `mn-journey__tooltip`
+**ARIA**: `role="list"`, `aria-label="Customer journey"` on root. Cards are focusable with `tabindex="0"`.
+**Utility**: `journeyInitials(name)` — extract max 2-char uppercase initials from a name.
+
+**Headless JS:**
+```ts
+const ctrl = customerJourney(el, [
+  { id: 'discovery', label: 'Discovery', engagements: [
+    { id: 'e1', title: 'Initial call', status: 'completed', type: 'meeting' }
+  ] },
+  { id: 'proposal', label: 'Proposal', engagements: [] },
+], { onSelect: (eng) => openDetail(eng.id) });
+ctrl.selectEngagement('e1');
+ctrl.update(newPhases);
+ctrl.destroy();
+```
+
+---
+
+## adminShell (src/ts/admin-shell.ts)
+
+```ts
+export interface AdminShellNavItem {
+  id: string; label: string; icon: string; section?: string; badge?: string | number;
+}
+export interface AdminShellOpts {
+  sidebar: {
+    header?: { icon?: string; title: string; badge?: string };
+    search?: { placeholder?: string; shortcut?: string; onSearch?: (q: string) => void };
+    nav: AdminShellNavItem[];
+    footer?: HTMLElement;
+  };
+  collapsible?: boolean;    // default true
+  initialCollapsed?: boolean;
+  topBar?: boolean;          // default true
+  onNavigate: (pageId: string) => void;
+  initialPage?: string;
+}
+```
+
+```ts
+function adminShell(el: HTMLElement, opts: AdminShellOpts): AdminShellController
+```
+
+| Method / Property | Signature | Description |
+|---|---|---|
+| `contentEl` | `HTMLElement` (property) | Body slot for page content |
+| `setPage` | `(id: string): void` | Switch active nav item + fire `onNavigate` |
+| `setTitle` | `(title: string): void` | Update topbar title text |
+| `collapse` | `(val: boolean): void` | Programmatically collapse/expand sidebar |
+| `destroy` | `(): void` | Abort listeners, clear DOM |
+
+**Sidebar search**: Filters nav items by label in real-time. Optional keyboard shortcut focuses search input.
+**Sections**: Nav items with matching `section` string are grouped under a section heading.
+**CSS**: `mn-admin-shell`, `mn-admin-shell--collapsed`, `mn-admin-sidebar`, `mn-admin-nav-item`, `mn-admin-nav-item--active`, `mn-admin-content`, `mn-admin-content__body`
+**ARIA**: Sidebar `role="navigation"` `aria-label="Admin navigation"`. Active item gets `aria-current="page"`. Collapse button has `aria-label="Toggle sidebar"`.
+
+**Headless JS:**
+```ts
+const shell = adminShell(document.getElementById('app'), {
+  sidebar: {
+    header: { title: 'Admin', icon: 'settings' },
+    search: { placeholder: 'Search...', shortcut: '/' },
+    nav: [
+      { id: 'users', label: 'Users', icon: 'people', section: 'Management' },
+      { id: 'settings', label: 'Settings', icon: 'gear', section: 'System' },
+    ],
+  },
+  onNavigate: (id) => renderPage(id, shell.contentEl),
+});
+shell.setPage('settings');
+shell.collapse(true);
+```
+
+---
+
+## sectionCard (src/ts/section-card.ts)
+
+```ts
+export interface SectionCardOpts {
+  title: string;
+  action?: { label: string; href?: string; onClick?: () => void };
+  padding?: boolean;       // default true
+  variant?: 'default' | 'flat';
+  className?: string;
+}
+```
+
+```ts
+function sectionCard(el: HTMLElement, opts: SectionCardOpts): SectionCardController
+```
+
+| Method / Property | Signature | Description |
+|---|---|---|
+| `bodyEl` | `HTMLElement` (property) | Content slot inside the card |
+| `setTitle` | `(t: string): void` | Update card title |
+| `setAction` | `(a: SectionCardOpts['action']): void` | Replace or remove header action link/button |
+
+**CSS**: `mn-section-card`, `mn-section-card--flat`, `mn-section-card--no-padding`, `mn-section-card__header`, `mn-section-card__title`, `mn-section-card__action`, `mn-section-card__body`
+**ARIA**: `role="region"`, `aria-labelledby` pointing to the title element.
+**Security**: Title and action label are escaped via `escapeHtml()`.
+
+**Headless JS:**
+```ts
+const card = sectionCard(containerEl, {
+  title: 'Recent Activity',
+  action: { label: 'View all', onClick: () => router.push('/activity') },
+  variant: 'flat',
+});
+activityFeed(card.bodyEl, items);
+card.setTitle('Activity (12)');
+```
+
+---
+
+## settingsPanel (src/ts/settings-panel.ts)
+
+```ts
+export interface SettingsPanelSection {
+  id?: string; title: string; description?: string; items: SettingsItemType[];
+}
+export interface SettingsPanelOpts { sections: SettingsPanelSection[] }
+```
+
+**SettingsItemType** (discriminated union by `type`):
+
+| Type | Key Fields | Callback |
+|---|---|---|
+| `toggle` | `value: boolean`, `disabled?` | `onChange(v: boolean)` |
+| `text` | `value: string`, `placeholder?`, `hint?`, `maxLength?` | `onChange(v: string)` |
+| `select` | `value: string`, `options[]` | `onChange(v: string)` |
+| `range` | `value: number`, `min`, `max`, `step?`, `format?` | `onChange(v: number)` |
+| `radio` | `value: string`, `options[]` | `onChange(v: string)` |
+| `info` | `value: string`, `mono?` | (read-only) |
+| `action` | `buttonLabel`, `variant?: 'default'\|'danger'` | `onAction()` |
+| `custom` | — | `render(el: HTMLElement)` |
+
+All items share `label: string` and optional `description?: string`.
+
+```ts
+function settingsPanel(el: HTMLElement, opts: SettingsPanelOpts): SettingsPanelController
+```
+
+| Method | Signature | Description |
+|---|---|---|
+| `update` | `(sectionId: string, itemLabel: string, value: unknown): void` | Programmatically set a value |
+| `getValues` | `(): Record<string, unknown>` | All current values keyed by `sectionId:label` |
+| `destroy` | `(): void` | Abort listeners, clear DOM |
+
+**CSS**: `mn-settings-panel`, `mn-settings-section`, `mn-settings-section__title`, `mn-settings-item`, `mn-settings-toggle`, `mn-settings-text`, `mn-settings-select`, `mn-settings-range`, `mn-settings-radio`, `mn-settings-info`, `mn-settings-action-btn`, `mn-settings-action-btn--danger`
+**ARIA**: Toggle uses `role="switch"` + `aria-checked`. Radio group uses `role="radiogroup"`. Text hints use `aria-describedby`.
+
+**Headless JS:**
+```ts
+const panel = settingsPanel(el, {
+  sections: [
+    { id: 'general', title: 'General', items: [
+      { type: 'toggle', label: 'Dark mode', value: true, onChange: (v) => setTheme(v ? 'nero' : 'editorial') },
+      { type: 'select', label: 'Language', value: 'en', options: [{ value: 'en', label: 'English' }, { value: 'it', label: 'Italiano' }], onChange: setLang },
+      { type: 'range', label: 'Font size', value: 16, min: 12, max: 24, step: 1, format: (v) => `${v}px`, onChange: setFontSize },
+    ] },
+    { id: 'danger', title: 'Danger Zone', items: [
+      { type: 'action', label: 'Delete account', buttonLabel: 'Delete', variant: 'danger', onAction: () => confirm('Sure?') && deleteAccount() },
+    ] },
+  ],
+});
+panel.getValues(); // { 'general:Dark mode': true, 'general:Language': 'en', ... }
+panel.destroy();
+```

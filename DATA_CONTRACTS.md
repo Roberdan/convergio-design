@@ -1,8 +1,8 @@
-<!-- v4.15.0 | 2026-03-17 -->
+<!-- v4.19.0 | 2026-03-20 -->
 # Data Contracts
 
 All types importable from `maranello-luce-design-business`. Peer dep: `mapbox-gl` (optional, for MapView).
-Full API detail for v4.14.1 components: [`docs/api-contracts-v4.md`](docs/api-contracts-v4.md).
+Full API detail for all components: [`docs/api-contracts-v4.md`](docs/api-contracts-v4.md).
 
 ## Interface Summary
 
@@ -65,6 +65,14 @@ Full API detail for v4.14.1 components: [`docs/api-contracts-v4.md`](docs/api-co
 | `AsyncSelectOptions<T>` | `AsyncSelect` | `provider`, `onSelect?`, `placeholder?`, `debounceMs?`, `minChars?` |
 | `StateScaffoldOptions` | `StateScaffold` | `state`, `message?`, `actionLabel?`, `onRetry?`, `onAction?` |
 | `ViewEntry` | `NavigationModel` | `viewId`, `params?`, `timestamp` |
+| `CustomerJourneyOptions` | `customerJourney()` | `orientation?`, `onSelect?`, `showConnectors?`, `compactMode?` |
+| `JourneyPhase` | `customerJourney()` | `id`, `label`, `engagements[]` |
+| `JourneyEngagement` | `customerJourney()` | `id`, `title`, `status`, `type`, `date?`, `assignee?`, `onClick?` |
+| `AdminShellOpts` | `adminShell()` | `sidebar` (`header?`, `search?`, `nav[]`, `footer?`), `collapsible?`, `onNavigate` |
+| `AdminShellNavItem` | `adminShell()` | `id`, `label`, `icon`, `section?`, `badge?` |
+| `SectionCardOpts` | `sectionCard()` | `title`, `action?`, `padding?`, `variant?`, `className?` |
+| `SettingsPanelOpts` | `settingsPanel()` | `sections[]` (`title`, `description?`, `items[]`) |
+| `SettingsItemType` | `settingsPanel()` | `toggle`\|`text`\|`select`\|`range`\|`radio`\|`info`\|`action`\|`custom` |
 
 ## Presentation Runtime
 
@@ -79,6 +87,10 @@ Full API detail for v4.14.1 components: [`docs/api-contracts-v4.md`](docs/api-co
 | `AsyncSelect<T>` | — | `debounceMs` default 300; `minChars` default 1 |
 | `StateScaffold` | `state: 'loading'\|'empty'\|'error'\|'partial'\|'no-results'` | All states have ARIA live regions |
 | `NavigationModel` | `NavigateAction: 'push'\|'pop'\|'replace'` | `onNavigate(cb)` returns unsubscribe fn |
+| `customerJourney()` | `orientation: 'horizontal'\|'vertical'` | `update(phases)`, `selectEngagement(id)`, `getSelected()`, `destroy()` |
+| `adminShell()` | — | `contentEl`, `setPage(id)`, `setTitle(t)`, `collapse(v)`, `destroy()` |
+| `sectionCard()` | `variant: 'default'\|'flat'` | `bodyEl`, `setTitle(t)`, `setAction(a)` |
+| `settingsPanel()` | `SettingsItemType: 'toggle'\|'text'\|'select'\|'range'\|'radio'\|'info'\|'action'\|'custom'` | `update(sectionId, label, val)`, `getValues()`, `destroy()` |
 
 ## Column Type Options (DataTable)
 
