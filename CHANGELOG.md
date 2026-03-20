@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.19.0] - 2026-03-20
+
+### Added
+- **Sugar theme** — cool gray light theme inspired by SugarCRM: `body.mn-sugar` with white cards, black accent, rounded corners (16px), subtle shadows
+- **customerJourney** — horizontal swimlane flow showing client engagement history with phase columns, SVG connectors, keyboard nav, ARIA
+- **`<mn-customer-journey>`** — Web Component wrapper for customerJourney
+- **adminShell** — full-screen admin layout with fixed overlay, collapsible sidebar, breadcrumb topbar, search with keyboard shortcut
+- **sectionCard** — titled content card wrapper with action link, default/flat variants
+- **settingsPanel** — structured settings form with 8 item types (toggle/text/select/range/radio/info/action/custom)
+
+### Changed
+- **Radius tokens** — adopted `var(--radius-*)` across 55 CSS files, replacing ~146 hardcoded values
+- **Shadow tokens** — adopted `var(--shadow-*)` across 22 CSS files, replacing ~35 hardcoded values
+- **Theme rotary** — now cycles through 5 themes: Editorial, Nero, Avorio, Colorblind, Sugar
+
 ## [4.18.0] - 2026-03-19
 
 ### Added
