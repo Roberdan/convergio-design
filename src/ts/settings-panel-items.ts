@@ -45,10 +45,12 @@ function renderToggle(
   row.className = 'mn-settings-item';
   const id = nextId('toggle');
   row.appendChild(labelGroup(item.label, item.description, id));
+  const wrap = document.createElement('div');
+  wrap.className = 'mn-settings-item__ctrl';
   const input = document.createElement('input');
   input.type = 'checkbox';
   input.id = id;
-  input.className = 'mn-settings-item__ctrl mn-settings-toggle';
+  input.className = 'mn-settings-toggle';
   input.checked = item.value;
   input.setAttribute('role', 'switch');
   input.setAttribute('aria-checked', String(item.value));
@@ -59,7 +61,8 @@ function renderToggle(
     item.onChange(input.checked);
   }, { signal: ac.signal });
   values.set(item.label, item.value);
-  row.appendChild(input);
+  wrap.appendChild(input);
+  row.appendChild(wrap);
   return row;
 }
 

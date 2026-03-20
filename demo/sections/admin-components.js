@@ -55,11 +55,21 @@ function buildSettings(container, M) {
             value: 'nero',
             options: [
               { label: 'Nero', value: 'nero' },
+              { label: 'Sugar', value: 'sugar' },
               { label: 'Avorio', value: 'avorio' },
               { label: 'Editorial', value: 'editorial' },
               { label: 'Daltonismo', value: 'colorblind' },
             ],
             onChange: (v) => { if (M.setTheme) M.setTheme(v); },
+          },
+          {
+            type: 'select', label: 'Lingua',
+            value: 'it',
+            options: [
+              { label: 'Italiano', value: 'it' },
+              { label: 'English', value: 'en' },
+            ],
+            onChange: () => {},
           },
           {
             type: 'range', label: 'Dimensione font',
@@ -69,9 +79,24 @@ function buildSettings(container, M) {
           },
           {
             type: 'toggle', label: 'Animazioni ridotte',
+            description: 'Disabilita transizioni e animazioni per utenti sensibili al movimento.',
             value: false,
             onChange: (v) => { document.body.classList.toggle('mn-a11y-reduced-motion', v); },
           },
+          {
+            type: 'toggle', label: 'Notifiche desktop',
+            description: 'Ricevi notifiche push per eventi critici.',
+            value: true,
+            onChange: () => {},
+          },
+        ],
+      },
+      {
+        id: 'system',
+        title: 'Sistema',
+        items: [
+          { type: 'info', label: 'Versione', value: 'v4.19.0', mono: true },
+          { type: 'info', label: 'Ambiente', value: 'Production' },
         ],
       },
       {
