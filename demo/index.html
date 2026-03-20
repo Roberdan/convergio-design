@@ -38,6 +38,10 @@
     body.mn-sugar #demo-theme-label { color: #555 !important; }
     body.mn-sugar .demo-hamburger { border-color: var(--mn-border); color: #555; }
     body.mn-sugar .demo-nav__right { color: #555; }
+    /* Sugar: WC gantt canvas sits in shadow DOM — border the host */
+    body.mn-sugar mn-gantt { display: block; border: 1px solid var(--mn-border); border-radius: var(--radius-md); overflow: hidden; background: var(--mn-surface-raised); }
+    /* Sugar: drag rotary is a dark circle — lighten */
+    body.mn-sugar .mn-theme-rotary__knob { filter: invert(0.8) !important; }
     /* Hamburger — mobile only */
     .demo-hamburger { display: none; background: none; border: 1px solid var(--grigio-scuro); color: var(--grigio-chiaro); font-size: 1.25rem; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
     @media (max-width: 768px) {
