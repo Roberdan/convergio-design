@@ -10,17 +10,17 @@ const BODY_CLASSES: Record<ThemeMode, string> = {
   nero: 'mn-nero',
   avorio: 'mn-avorio',
   colorblind: 'mn-colorblind',
+  sugar: 'mn-sugar',
 };
 
-const THEME_ORDER: ThemeMode[] = ['editorial', 'nero', 'avorio', 'colorblind'];
+const THEME_ORDER: ThemeMode[] = ['editorial', 'nero', 'avorio', 'colorblind', 'sugar'];
 
-/** Read a CSS custom property value, with fallback. */
+/** Read a CSS custom property value, with fallback.
+ *  Reads from document.body so theme overrides (body.mn-sugar, body.mn-avorio)
+ *  are resolved — :root tokens still inherit via cascade. */
 export function cssVar(name: string, fallback: string = ''): string {
-  return (
-    getComputedStyle(document.documentElement)
-      .getPropertyValue(name)
-      .trim() || fallback
-  );
+  const el = document.body ?? document.documentElement;
+  return getComputedStyle(el).getPropertyValue(name).trim() || fallback;
 }
 
 /** Get the current active theme mode. */
@@ -29,6 +29,7 @@ export function getTheme(): ThemeMode {
   if (cl.contains('mn-nero')) return 'nero';
   if (cl.contains('mn-avorio')) return 'avorio';
   if (cl.contains('mn-colorblind')) return 'colorblind';
+  if (cl.contains('mn-sugar')) return 'sugar';
   return 'editorial';
 }
 

@@ -51,6 +51,8 @@ const SECTIONS = new Map([
   ['bi-dashboard',      () => import('./sections/bi-dashboard.js').then(m => m.createBiDashboardSection)],
   ['platform-admin',    () => import('./sections/platform-admin.js').then(m => m.createPlatformAdminSection)],
   ['finops',            () => import('./sections/finops.js').then(m => m.createFinOpsSection)],
+  ['customer-journey',  () => import('./sections/customer-journey.js').then(m => m.createCustomerJourneySection)],
+  ['admin-components',  () => import('./sections/admin-components.js').then(m => m.createAdminComponentsSection)],
 ]);
 
 const SECTION_KEYS = [...SECTIONS.keys()];
@@ -73,6 +75,8 @@ const SECTION_LABELS = {
   'bi-dashboard': 'BI',
   'platform-admin': 'Admin',
   'finops': 'FinOps',
+  'customer-journey': 'Journey',
+  'admin-components': 'Admin WC',
 };
 
 function safeErr(name, err) {

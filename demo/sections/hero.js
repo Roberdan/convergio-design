@@ -30,7 +30,7 @@ export function createHeroSection() {
       <p class="mn-body" style="max-width:640px;margin:0 auto var(--space-lg);color:var(--grigio-medio);line-height:1.7">
         Inspired by the <a href="https://www.ferrari.com/it-IT/auto/ferrari-luce" target="_blank" style="color:var(--mn-accent);text-decoration:none;border-bottom:1px solid rgba(255,199,44,0.4)">Ferrari Luce</a> interior design language —
         warm leather tones, precision instruments, and cockpit-grade controls.
-        90+ components, 4 themes, Canvas 2D engines for <strong style="color:var(--mn-text-muted)">agentic AI operations</strong>.
+        90+ components, 5 themes, Canvas 2D engines for <strong style="color:var(--mn-text-muted)">agentic AI operations</strong>.
       </p>
       <p class="mn-micro" style="max-width:640px;margin:0 auto var(--space-lg);color:var(--grigio-medio);text-align:center">
         Part of <a href="https://github.com/Roberdan/MyConvergio" target="_blank" style="color:var(--mn-accent);text-decoration:none">Convergio</a> · Aligned with the <a href="https://github.com/Roberdan/MyConvergio/blob/master/AgenticManifesto.md" target="_blank" style="color:var(--mn-accent);text-decoration:none">Agentic Manifesto</a>

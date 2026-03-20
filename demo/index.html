@@ -29,7 +29,22 @@
     body.mn-colorblind .demo-nav__brand { color: #0072B2; }
     body.mn-colorblind .demo-nav__links a:hover,
     body.mn-colorblind .demo-nav__links a.demo-nav__link--active { color: #0072B2; }
-    body:not(.mn-nero):not(.mn-avorio):not(.mn-colorblind) .demo-nav { background: rgba(20,20,24,0.92); }
+    body:not(.mn-nero):not(.mn-avorio):not(.mn-colorblind):not(.mn-sugar) .demo-nav { background: rgba(20,20,24,0.92); }
+    body.mn-sugar .demo-nav { background: rgba(228,228,232,0.95); border-bottom-color: var(--mn-border); }
+    body.mn-sugar .demo-nav__links a { color: var(--mn-text-muted); }
+    body.mn-sugar .demo-nav__links a:hover,
+    body.mn-sugar .demo-nav__links a.demo-nav__link--active { color: var(--mn-text); }
+    body.mn-sugar .demo-nav__brand { color: var(--mn-text); }
+    body.mn-sugar #demo-theme-label { color: var(--mn-text-muted) !important; }
+    body.mn-sugar .demo-hamburger { border-color: var(--mn-border); color: var(--mn-text-muted); }
+    body.mn-sugar .demo-nav__right { color: var(--mn-text-muted); }
+    body.mn-sugar.mn-colorblind .demo-nav__links a:hover,
+    body.mn-sugar.mn-colorblind .demo-nav__links a.demo-nav__link--active { color: #0072B2; }
+    body.mn-sugar.mn-colorblind .demo-nav__brand { color: #0072B2; }
+    /* Sugar: WC gantt canvas sits in shadow DOM — border the host */
+    body.mn-sugar mn-gantt { display: block; border: 1px solid var(--mn-border); border-radius: var(--radius-md); overflow: hidden; background: var(--mn-surface-raised); }
+    /* Sugar: drag rotary is a dark circle — lighten */
+    body.mn-sugar .mn-theme-rotary__knob { filter: invert(0.8) !important; }
     /* Hamburger — mobile only */
     .demo-hamburger { display: none; background: none; border: 1px solid var(--grigio-scuro); color: var(--grigio-chiaro); font-size: 1.25rem; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
     @media (max-width: 768px) {
@@ -138,11 +153,13 @@
       <li><a href="#bi-dashboard">BI</a></li>
       <li><a href="#platform-admin">Admin</a></li>
       <li><a href="#finops">FinOps</a></li>
+      <li><a href="#customer-journey">Journey</a></li>
+      <li><a href="#admin-components">Admin WC</a></li>
     </ul>
     <div class="demo-nav__right">
       <div class="demo-nav__pg" aria-label="Section navigation" role="navigation">
         <button id="demo-pg-prev" class="demo-nav__pg-btn" aria-label="Previous section" disabled>◀</button>
-        <span id="demo-pg-label" class="demo-nav__pg-label" aria-live="polite">1 / 33</span>
+        <span id="demo-pg-label" class="demo-nav__pg-label" aria-live="polite">1 / 35</span>
         <button id="demo-pg-next" class="demo-nav__pg-btn" aria-label="Next section">▶</button>
       </div>
       <div class="demo-nav__pg-sep" aria-hidden="true"></div>
@@ -157,7 +174,7 @@
       <div class="mn-divider-gold--accent mn-divider-gold" style="margin-bottom:var(--space-xl)"></div>
       <p class="mn-label" style="color:var(--mn-accent);margin-bottom:var(--space-sm)">Maranello Luce Design System</p>
       <p class="mn-micro" style="color:var(--grigio-alluminio)">Demo built with fictional Maranello Luce operations data. All data is illustrative.</p>
-      <p class="mn-micro" style="color:var(--grigio-chiaro);margin-top:var(--space-sm)">v4.18.0 — 4 themes · 150+ APIs · 26 Web Components · WCAG 2.2 AA</p>
+      <p class="mn-micro" style="color:var(--grigio-chiaro);margin-top:var(--space-sm)">v4.19.0 — 5 themes · 150+ APIs · 26 Web Components · WCAG 2.2 AA</p>
       <p class="mn-micro" style="color:var(--grigio-chiaro);margin-top:var(--space-xs)">&copy; Roberdan 2026</p>
     </div>
   </footer>
