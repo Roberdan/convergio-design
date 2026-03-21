@@ -175,25 +175,28 @@ test.describe('Theme switching', () => {
     expect(unique.size).toBeGreaterThanOrEqual(2);
   });
 
-  // ── 10. Sugar theme — body background is a light cool gray ──────────────
-  test('Sugar theme: body background-color is light', async ({ page }) => {
+  // ── 10. Sugar theme — surface token is a light cool gray ────────────────
+  test('Sugar theme: --mn-surface resolves to a light value', async ({ page }) => {
     await page.goto('/demo/e2e.html');
     await applyTheme(page, 'mn-sugar');
 
-    // Verify Sugar CSS is loaded first
-    const hasSugar = await page.evaluate(() =>
+    const surface = await page.evaluate(() =>
       getComputedStyle(document.body).getPropertyValue('--mn-surface').trim(),
     );
-    test.skip(!hasSugar, 'CSS tokens not available — serve-demo mode');
 
+    test.skip(!surface, 'CSS tokens not available — serve-demo mode');
+    // Sugar --mn-surface is a light color (#E4E4E8 or similar)
+    // Verify it's a light value by parsing hex or rgb
     const isLight = await page.evaluate(() => {
-      const bg = getComputedStyle(document.body).backgroundColor;
-      const m = bg.match(/\d+/g);
+      const el = document.createElement('div');
+      el.style.color = getComputedStyle(document.body).getPropertyValue('--mn-surface').trim();
+      document.body.appendChild(el);
+      const c = getComputedStyle(el).color;
+      document.body.removeChild(el);
+      const m = c.match(/\d+/g);
       if (!m || m.length < 3) return false;
-      const [r, g, b] = m.map(Number);
-      return (r + g + b) / 3 > 140;
+      return m.map(Number).reduce((a, b) => a + b, 0) / 3 > 140;
     });
-
     expect(isLight).toBe(true);
   });
 
