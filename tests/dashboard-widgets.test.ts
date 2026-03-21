@@ -127,8 +127,8 @@ describe('Legend widget — safe DOM', () => {
     const swatches = container.querySelectorAll('.mn-dashboard-legend__swatch') as NodeListOf<HTMLElement>;
     /* Invalid color should fall back to accent token */
     expect(swatches[0].style.background).not.toContain('evil.com');
-    /* Valid color should work */
-    expect(swatches[1].style.background).toContain('blue');
+    /* Valid color should work — happy-dom may normalize to rgb */
+    expect(swatches[1].style.background === 'blue' || swatches[1].style.background === 'rgb(0, 0, 255)').toBe(true);
   });
 
   it('escapes XSS in legend labels', () => {

@@ -13,9 +13,9 @@ const CSS_PATH = join(
 const content = readFileSync(CSS_PATH, 'utf8');
 
 describe('Sugar theme !important audit', () => {
-  it('has <= 77 !important declarations (40% reduction from 128)', () => {
+  it('has at most 15 !important declarations (current: 9, reduced from 128)', () => {
     const count = (content.match(/!important/g) || []).length;
-    expect(count).toBeLessThanOrEqual(77);
+    expect(count).toBeLessThanOrEqual(15);
   });
 
   it('every remaining !important has an intentional comment on its rule', () => {

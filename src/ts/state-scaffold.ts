@@ -57,6 +57,7 @@ export class StateScaffold {
       this.container.classList.remove(`mn-scaffold--${name}`);
     }
     this.container.classList.add(`mn-scaffold--${state}`);
+    this.container.setAttribute('aria-busy', state === 'loading' ? 'true' : 'false');
 
     this.status.innerHTML = '';
     this.content.classList.toggle('mn-scaffold__content--hidden', state !== 'partial' && state !== 'ready');
@@ -87,6 +88,7 @@ export class StateScaffold {
     }
     this.content.remove();
 
+    this.container.removeAttribute('aria-busy');
     this.container.classList.remove('mn-scaffold', 'mn-scaffold__content--hidden');
     for (const name of VALID_STATES) {
       this.container.classList.remove(`mn-scaffold--${name}`);
@@ -95,7 +97,6 @@ export class StateScaffold {
 
   private renderLoading(): void {
     const panel = this.buildPanel('loading');
-    panel.setAttribute('aria-busy', 'true');
     panel.setAttribute('role', 'status');
     panel.setAttribute('aria-live', 'polite');
 
@@ -144,7 +145,6 @@ export class StateScaffold {
 
   private renderReady(): void {
     this.status.innerHTML = '';
-    this.container.setAttribute('aria-busy', 'false');
   }
 
   private renderNoResults(): void {

@@ -185,6 +185,11 @@ export class EntityWorkbench {
   private onFieldChange(field: EntityField, value: unknown): void {
     setValue(this.currentData, field.key, value);
     updateSaveState(this.container, this.isDirty());
+    // Update breadcrumb text when a label-relevant field changes
+    if (field.key === 'name' || field.key === 'title') {
+      const breadcrumbEl = this.container.querySelector('.mn-entity-workbench__breadcrumb');
+      if (breadcrumbEl) breadcrumbEl.textContent = this.buildBreadcrumb();
+    }
   }
 
   private async handleSave(): Promise<void> {

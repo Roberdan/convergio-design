@@ -38,7 +38,7 @@ export function renderWorkbench(ctx: RenderContext): void {
 export function switchTab(container: HTMLElement, tabId: string, ctx: RenderContext): void {
   const tabButtons = container.querySelectorAll('.mn-entity-workbench__tab');
   tabButtons.forEach((btn) => {
-    btn.classList.toggle('mn-entity-workbench__tab--active', btn.textContent === labelForTab(ctx.schema, tabId));
+    btn.classList.toggle('mn-entity-workbench__tab--active', (btn as HTMLElement).dataset.tabId === tabId);
   });
   const panels = container.querySelectorAll<HTMLElement>('.mn-entity-workbench__tab-panel');
   panels.forEach((panel) => {
@@ -79,6 +79,7 @@ function renderTabs(ctx: RenderContext): HTMLElement {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = `mn-entity-workbench__tab${tab.id === ctx.activeTab ? ' mn-entity-workbench__tab--active' : ''}`;
+    btn.dataset.tabId = tab.id;
     btn.textContent = tab.label;
     btn.addEventListener('click', () => ctx.onTab(tab.id));
     tabs.appendChild(btn);

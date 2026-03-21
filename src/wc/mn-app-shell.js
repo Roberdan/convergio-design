@@ -15,6 +15,7 @@ class MnAppShell extends HTMLElement {
     super();
     this._controller = null;
     this._orchestrator = null;
+    this._ownsOrchestrator = false;
   }
 
   connectedCallback() {
@@ -29,12 +30,14 @@ class MnAppShell extends HTMLElement {
         new NavigationModel(),
         this._controller,
       );
+      this._ownsOrchestrator = true;
     }
   }
 
   disconnectedCallback() {
-    this._orchestrator?.destroy();
+    if (this._ownsOrchestrator) this._orchestrator?.destroy();
     this._orchestrator = null;
+    this._ownsOrchestrator = false;
     this._controller?.destroy();
     this._controller = null;
   }
@@ -47,6 +50,7 @@ class MnAppShell extends HTMLElement {
 
   set orchestrator(value) {
     this._orchestrator = value;
+    this._ownsOrchestrator = false;
   }
 
   get orchestrator() {

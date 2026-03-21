@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 describe('demo section count coherence', () => {
-  const appPath = resolve(__dirname, '../../demo/app.js');
-  const htmlPath = resolve(__dirname, '../../demo/index.html');
+  const appPath = resolve(import.meta.dirname, '../../demo/app.js');
+  const htmlPath = resolve(import.meta.dirname, '../../demo/index.html');
   const appSrc = readFileSync(appPath, 'utf8');
   const htmlSrc = readFileSync(htmlPath, 'utf8');
 

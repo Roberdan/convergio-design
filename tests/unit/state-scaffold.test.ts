@@ -28,10 +28,10 @@ describe('StateScaffold', () => {
     scaffold.destroy();
   });
 
-  it('loading panel has aria-busy and role=status', () => {
+  it('loading panel has role=status and container has aria-busy', () => {
     const scaffold = new StateScaffold(el, { state: 'loading' });
     const panel = el.querySelector('.mn-scaffold__panel--loading');
-    expect(panel?.getAttribute('aria-busy')).toBe('true');
+    expect(el.getAttribute('aria-busy')).toBe('true');
     expect(panel?.getAttribute('role')).toBe('status');
     scaffold.destroy();
   });

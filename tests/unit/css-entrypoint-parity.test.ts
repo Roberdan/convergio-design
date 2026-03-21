@@ -5,7 +5,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync, existsSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, resolve, relative } from 'node:path';
 
 const CSS_SRC = join(import.meta.dirname, '../../src/css');
 
@@ -35,7 +35,7 @@ function resolveAllLeafFiles(entrypoint: string): Set<string> {
     const imports = extractImports(normalized);
     if (imports.length === 0) {
       // Leaf file (no further imports) — add it
-      const base = normalized.replace(resolve(CSS_SRC) + '/', '');
+      const base = relative(resolve(CSS_SRC), normalized).replace(/\\/g, '/');
       leaves.add(base);
       return;
     }
