@@ -57,12 +57,12 @@ Ferrari Luce-inspired design system for business dashboards. Part of Convergio.
 | `src/ts/facet-workbench.ts` | FacetWorkbench — collapsible filter panel |
 | `src/ts/entity-workbench.ts` | EntityWorkbench — tabbed entity editor with back-stack |
 | `src/ts/async-select.ts` | AsyncSelect — debounced typeahead with ARIA combobox |
-| `src/ts/state-scaffold.ts` | StateScaffold — 5-state async region manager |
+| `src/ts/state-scaffold.ts` | StateScaffold — 6-state async region manager |
 | `src/css/layouts-app-shell.css` | AppShell 6-mode grid + slot layout |
 | `src/css/layouts-dashboard-renderer.css` | Dashboard 12-col grid + widget cells |
 | `src/css/layouts-facet-workbench.css` | Facet filter panel + chips strip |
 | `src/css/layouts-entity-workbench.css` | Entity editor tabs + back-stack chrome |
-| `src/css/layouts-state-scaffold.css` | Loading/empty/error/partial state banners |
+| `src/css/layouts-state-scaffold.css` | Loading/empty/error/partial/ready/no-results state banners |
 | `esbuild.config.mjs` | JS build config |
 | `scripts/build-css.mjs` | CSS build config |
 | `dist/` | Build output (gitignored) |
@@ -241,7 +241,7 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 | `mn-facet-workbench` | `facets` (JSON), `presets` (JSON) |
 | `mn-entity-workbench` | `open`, `schema` (JSON), `data` (JSON), `editable` |
 | `mn-async-select` | `placeholder`, `min-chars`, `debounce` |
-| `mn-state-scaffold` | `state` (`loading`\|`empty`\|`error`\|`partial`\|`no-results`), `message`, `action-label` |
+| `mn-state-scaffold` | `state` (`loading`\|`empty`\|`error`\|`ready`\|`partial`\|`no-results`), `message`, `action-label` |
 | `mn-customer-journey` | `phases` (JSON), `options` (JSON) |
 
 ## CSS Class Families
@@ -290,12 +290,12 @@ All responsive overrides live in `src/css/responsive-*.css` files, imported by `
 
 | Token | Sugar Value | Notes |
 |---|---|---|
-| `--mn-surface` | `#f4f5f7` | Cool gray background |
-| `--mn-surface-raised` | `#ffffff` | White cards |
-| `--mn-surface-sunken` | `#ebedf0` | Inset areas |
+| `--mn-surface` | `#E4E4E8` | Cool gray background |
+| `--mn-surface-raised` | `#FFFFFF` | White cards |
+| `--mn-surface-sunken` | `#D8D8DC` | Inset areas |
 | `--mn-text` | `#111111` | Black text |
-| `--mn-text-muted` | `#6b7280` | Gray secondary text |
-| `--mn-border` | `#d1d5db` | Light gray borders |
+| `--mn-text-muted` | `#5e5e5e` | Gray secondary text |
+| `--mn-border` | `#E0E0E4` | Light gray borders |
 | `--mn-accent` | `#000000` | Black accent (buttons/links) |
 
 ## Themes (5)
@@ -320,6 +320,10 @@ Sugar+Colorblind cross-theme: `body.mn-sugar.mn-colorblind` — cool gray surfac
 - `colorMode` gauge option: `'higher-better'` (green at high, red at low) or `'lower-better'` (green at low, red at high) — auto-generates arcBar colorStops
 - `chartInteract(canvas, meta, colors)` — adds crosshair, hover dots, and tooltips to any canvas chart
 - `costTimeline` and `waterfallChart` have built-in hover interaction (dots + bar highlight)
+- `StateScaffold`: 6 states — `loading` → `ready` (success) / `empty` / `error` / `partial` (degraded) / `no-results`. Use `ready` for successful loads, `partial` only for degraded content. Invalid states trigger `console.warn`.
+- `AppShellController.getSlotForPlacement(placement)` — maps PanelOrchestrator placements to shell slots: `page→main`, `side-panel→detail`, `bottom-dock→bottom`, `overlay→overlay`, `workspace→secondary`. Modal uses modal system.
+- `PanelOrchestrator(registry, nav, shell?)` — optional 3rd arg integrates with AppShellController for slot-based rendering. Without shell, falls back to standalone containers.
+- `dashboard-widgets` use safe DOM construction (`createElement` + `textContent`). Color values validated via `isValidColor()` from `core/sanitize.ts`.
 
 ## CI / GitHub Actions
 

@@ -355,6 +355,9 @@ function injectDataTable(canvas: HTMLCanvasElement, data: number[], labels: stri
 | `mn-section-ivory` invisible text in Avorio | `body.mn-avorio .mn-section-ivory { color: var(--mn-text); }` override added in v4.14.1 |
 | `mn-card-dark` no separation in Avorio | Avorio override adds `border: 1px solid var(--mn-border)` + subtle shadow |
 | Hardcoded `border-radius: 0` on buttons | Use `var(--mn-btn-radius, var(--radius-sm))` — Sugar theme uses rounded corners |
+| `innerHTML` with user data in widgets | Use `createElement` + `textContent`; validate colors with `isValidColor()` from `core/sanitize.ts` (v5.0.0) |
+| `setState('partial')` as success | Use `setState('ready')` — `partial` is for degraded content only (v5.0.0 BC-1) |
+| `PanelOrchestrator` creates divs on `document.body` | Pass `AppShellController` as 3rd constructor arg for slot-based rendering (v5.0.0 BC-2) |
 
 ### Avorio Theme Color Rules
 
@@ -371,7 +374,7 @@ function injectDataTable(canvas: HTMLCanvasElement, data: number[], labels: stri
 - Accent: `#000000` (black) — buttons/links are black, not yellow
 - Borders: `#d1d5db` — lighter than Avorio
 - Buttons use `var(--mn-btn-radius, var(--radius-sm))` for rounded corners (all themes)
-- `!important` used selectively in `themes-sugar-*.css` to beat inline dark backgrounds in demo sections
+- `!important` reduced to 9 declarations in `themes-sugar-components.css` (v5.0.0: down from 128). Each has `/* intentional: */` comment. Higher-specificity selectors (`body.mn-sugar`) used instead.
 - Canvas engines read theme tokens via `cssVar()` at draw time — no JS changes needed
 
 ## Demo Compositions (v4.19.0)
@@ -557,6 +560,7 @@ shell.setLayout(mode: LayoutMode): void   // switch between 6 modes
 shell.toggleSidebar(): void               // collapse/expand nav slot
 shell.setBottomDock(open: boolean): void  // show/hide bottom slot
 shell.getSlot(name: string): HTMLElement | null  // access named slot
+shell.getSlotForPlacement(placement: Placement): HTMLElement | null  // map placement to slot (v5.0.0)
 shell.destroy(): void
 ```
 
@@ -576,14 +580,14 @@ registry.unregister(id: string): boolean
 ### PanelOrchestrator
 
 ```ts
-constructor(registry: ViewRegistry, navigation: NavigationModel)
+constructor(registry: ViewRegistry, navigation: NavigationModel, shell?: AppShellController)
 orch.open(viewId, target?: Placement, data?: unknown): PanelHandle
 orch.close(viewId: string): void
 orch.move(viewId: string, newTarget: Placement): void   // preserves DOM + state
 orch.swap(viewId1, viewId2): void
 ```
 
-**When to use:** Whenever a view must move between placements (page → modal → side-panel) without re-mounting.
+**When to use:** Whenever a view must move between placements (page → modal → side-panel) without re-mounting. Pass `AppShellController` as 3rd arg for integrated slot-based rendering (v5.0.0).
 
 ### NavigationModel
 
@@ -803,9 +807,10 @@ dash.setData('kpis', await fetchKpis());
 | State | When to Use | Consumer Action |
 |---|---|---|
 | `loading` | Initial data fetch in progress | Show immediately; replace on resolve |
+| `ready` | Data loaded successfully, content renders | Call `setState('ready')` — content slot visible, status hidden (v5.0.0) |
 | `empty` | Fetch succeeded, zero records | Add CTA via `actionLabel` + `onAction` |
 | `error` | Fetch failed | Provide `onRetry`; display error message |
-| `partial` | Data loaded; content renders inside scaffold | Call `setState('partial')` — content slot becomes visible |
+| `partial` | Some data unavailable, degraded content | Only for degraded state — NOT success (v5.0.0: was previously misused as success) |
 | `no-results` | Filters applied, zero matches | Offer "Clear filters" via `onAction` |
 
-Always start with `state: 'loading'`; never leave a container empty while async work is pending.
+Always start with `state: 'loading'`; transition to `'ready'` on success. Never leave a container empty while async work is pending. Invalid state values trigger `console.warn`.
