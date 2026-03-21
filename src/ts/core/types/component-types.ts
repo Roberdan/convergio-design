@@ -116,6 +116,7 @@ export interface ProfileMenuItem {
 export interface ProfileMenuSection {
   title?: string;
   divider?: boolean;
+  type?: string;
   items?: ProfileMenuItem[];
 }
 

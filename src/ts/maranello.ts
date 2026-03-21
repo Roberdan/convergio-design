@@ -22,6 +22,7 @@ import { commandPalette } from './command-palette';
 import { loginScreen } from './login';
 import { systemStatus } from './system-status';
 import { profileMenu } from './profile-menu';
+import { themePicker } from './theme-picker';
 import { FerrariGauge } from './gauge-engine';
 import { buildGaugePalette } from './gauge-engine-palette';
 import { createGauge, createGaugesInContainer, redrawAll, reinitAll, GAUGE_SIZES } from './gauge-engine-class';
@@ -117,6 +118,7 @@ M.commandPalette = commandPalette;
 M.loginScreen = loginScreen;
 M.systemStatus = systemStatus;
 M.profileMenu = profileMenu;
+M.themePicker = themePicker;
 
 // Gauge
 M.FerrariGauge = FerrariGauge;

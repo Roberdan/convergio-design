@@ -83,6 +83,10 @@ export { systemStatus } from './system-status';
 export { profileMenu } from './profile-menu';
 export type { ProfileMenuUser, ProfileMenuOptions, ProfileMenuController } from './profile-menu';
 
+// Theme picker
+export { themePicker } from './theme-picker';
+export type { ThemePickerOptions, ThemePickerController } from './theme-picker';
+
 // Charts (all chart types + helpers)
 export * from './charts';
 

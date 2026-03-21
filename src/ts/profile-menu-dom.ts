@@ -4,6 +4,7 @@
  */
 
 import { icons } from './icons';
+import { themePicker } from './theme-picker';
 import type { ProfileMenuItem, ProfileMenuSection } from './core/types';
 
 export type { ProfileMenuItem, ProfileMenuSection };
@@ -90,6 +91,13 @@ export function buildDropdown(
       titleEl.className = 'mn-profile-dropdown__section-title';
       titleEl.textContent = section.title;
       sectionEl.appendChild(titleEl);
+    }
+    if (section.type === 'theme-switcher') {
+      const pickerHost = document.createElement('div');
+      sectionEl.appendChild(pickerHost);
+      dd.appendChild(sectionEl);
+      themePicker(pickerHost, { compact: true });
+      continue;
     }
     for (const item of (section.items ?? [])) {
       const row = document.createElement('div');

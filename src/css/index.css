@@ -28,6 +28,7 @@
 @import './components-business-model-canvas.css';
 @import './components-user-table.css';
 @import './components-section-card.css';
+@import './components-theme-picker.css';
 
 /* ── Layer: controls ── */
 @import './controls-advanced-controls.css';
