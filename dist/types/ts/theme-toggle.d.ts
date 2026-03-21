@@ -15,4 +15,4 @@ export interface ThemeToggleController {
  * Initialize theme toggle on a button element.
  * Cycles through the four theme modes on click, redrawing gauges after each switch.
  */
-export declare function initThemeToggle(toggleId: string, gaugeInstances?: ThemeGaugeInstance[], onAutoContrast?: (selector: string) => void): ThemeToggleController;
+export declare function initThemeToggle(toggleId: string | HTMLElement, gaugeInstances?: ThemeGaugeInstance[], onAutoContrast?: (selector: string) => void): ThemeToggleController;

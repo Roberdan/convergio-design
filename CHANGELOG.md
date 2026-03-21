@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.19.3] - 2026-03-21
+
+### Fixed
+- **`adminShell`** — string footer no longer crashes content area; `footer` accepts `string | HTMLElement`
+- **`initThemeToggle`** — accepts `string | HTMLElement` (was string-only)
+- **Avorio `:active` buttons** — stronger press feedback with visible `box-shadow` + darkened background (WCAG 3:1 UI)
+- **Tabs CSS** — added `[aria-selected="true"]` selector alongside `--active` class
+- **Icon aliases** — 6 common names mapped to existing icons: `fastForward`, `shuffle`, `target`, `share`, `trendingUp`, `pieChart`
+
 ## [4.19.2] - 2026-03-20
 
 ### Added

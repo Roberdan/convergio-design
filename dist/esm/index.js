@@ -3038,7 +3038,7 @@ var platformIcons = {
 };
 
 // src/ts/icons.ts
-var icons = {
+var baseIcons = {
   ...navIcons,
   ...statusIcons,
   ...actionIcons,
@@ -3046,6 +3046,15 @@ var icons = {
   ...objectIcons,
   ...platformIcons
 };
+var iconAliases = {
+  fastForward: baseIcons.accelerator,
+  shuffle: baseIcons.sync,
+  target: baseIcons.compass,
+  share: baseIcons.network,
+  trendingUp: baseIcons.trendUp,
+  pieChart: baseIcons.dashboard
+};
+var icons = { ...baseIcons, ...iconAliases };
 function renderIcon(target, name, opts) {
   const el4 = typeof target === "string" ? document.querySelector(target) : target;
   if (!el4 || !icons[name]) return;
@@ -3077,7 +3086,7 @@ var LABELS = {
   sugar: "Sugar"
 };
 function initThemeToggle(toggleId, gaugeInstances = [], onAutoContrast) {
-  const toggle = document.getElementById(toggleId);
+  const toggle = typeof toggleId === "string" ? document.getElementById(toggleId) : toggleId;
   if (!toggle) {
     return {
       getMode: () => getTheme(),
@@ -12937,7 +12946,16 @@ function adminShell(el4, opts) {
     }, { signal: ac.signal });
     sidebar.appendChild(toggle);
   }
-  if (opts.sidebar.footer) sidebar.appendChild(opts.sidebar.footer);
+  if (opts.sidebar.footer) {
+    if (typeof opts.sidebar.footer === "string") {
+      const span = document.createElement("span");
+      span.className = "mn-admin-sidebar__footer";
+      span.textContent = opts.sidebar.footer;
+      sidebar.appendChild(span);
+    } else {
+      sidebar.appendChild(opts.sidebar.footer);
+    }
+  }
   const content = document.createElement("div");
   content.className = "mn-admin-content";
   el4.appendChild(content);

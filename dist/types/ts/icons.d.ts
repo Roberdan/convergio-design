@@ -3,7 +3,6 @@
  * Consolidates all icon sub-modules into a single catalog.
  */
 import type { IconCatalog, RenderIconOptions } from './core/types';
-/** Full icon catalog merging all icon groups. */
 export declare const icons: IconCatalog;
 /** Render an icon into a target element. */
 export declare function renderIcon(target: string | Element, name: string, opts?: RenderIconOptions): void;
