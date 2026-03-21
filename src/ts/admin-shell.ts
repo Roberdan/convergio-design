@@ -165,12 +165,11 @@ export function adminShell(
   if (opts.sidebar.footer) {
     const footer = opts.sidebar.footer;
     if (typeof footer === 'string') {
-      const tag = opts.sidebar.onFooterClick ? 'button' : 'span';
-      const el2 = document.createElement(tag);
+      const el2 = document.createElement('button');
+      el2.type = 'button';
       el2.className = 'mn-admin-sidebar__footer';
       el2.textContent = footer;
       if (opts.sidebar.onFooterClick) {
-        (el2 as HTMLButtonElement).type = 'button';
         el2.addEventListener('click', opts.sidebar.onFooterClick, { signal: ac.signal });
       }
       sidebar.appendChild(el2);

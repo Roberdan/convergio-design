@@ -10943,7 +10943,7 @@
     color: var(--mn-text-muted);
   }
 
-  body.mn-avorio .mn-tabs__tab--active {
+  body.mn-avorio .mn-tabs__tab--active, body.mn-avorio .mn-tabs__tab[aria-selected="true"] {
     color: var(--mn-text);
     background: #0000000d;
   }

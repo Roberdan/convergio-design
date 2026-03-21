@@ -5,7 +5,8 @@
 
 import type { ThemeMode } from './core/types';
 import { setTheme, cycleTheme, getTheme } from './core/utils';
-import { icons } from './icons';
+import { platformIcons } from './icons-platform';
+import { actionIcons } from './icons-actions';
 
 export interface ThemeGaugeInstance {
   redraw: () => void;
@@ -17,12 +18,12 @@ export interface ThemeToggleController {
   destroy: () => void;
 }
 
-const ICON_NAMES: Record<ThemeMode, string> = {
-  editorial: 'contrast',
-  nero: 'moon',
-  avorio: 'sun',
-  colorblind: 'eye',
-  sugar: 'sparkle',
+const THEME_ICONS: Record<ThemeMode, () => string> = {
+  editorial: platformIcons.contrast,
+  nero: platformIcons.moon,
+  avorio: platformIcons.sun,
+  colorblind: actionIcons.eye,
+  sugar: platformIcons.sparkle,
 };
 
 const LABELS: Record<ThemeMode, string> = {
@@ -34,11 +35,9 @@ const LABELS: Record<ThemeMode, string> = {
 };
 
 function themeIcon(mode: ThemeMode): string {
-  const name = ICON_NAMES[mode];
-  const factory = icons[name];
+  const factory = THEME_ICONS[mode];
   if (!factory) return '';
-  const svg = factory();
-  return `<span class="mn-icon mn-icon--sm" aria-hidden="true">${svg}</span>`;
+  return `<span class="mn-icon mn-icon--sm" aria-hidden="true">${factory()}</span>`;
 }
 
 /**
@@ -64,10 +63,12 @@ export function initThemeToggle(
   let current = getTheme();
   toggle.innerHTML = themeIcon(current);
   toggle.title = LABELS[current];
+  toggle.setAttribute('aria-label', LABELS[current]);
 
   function applyTheme(): void {
     toggle!.innerHTML = themeIcon(current);
     toggle!.title = LABELS[current];
+    toggle!.setAttribute('aria-label', LABELS[current]);
     requestAnimationFrame(() => {
       gaugeInstances.forEach((g) => g.redraw());
       if (onAutoContrast) onAutoContrast('.mn-treemap__cell');

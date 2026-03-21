@@ -5703,12 +5703,12 @@ function iconCatalog() {
 }
 
 // src/ts/theme-toggle.ts
-var ICON_NAMES = {
-  editorial: "contrast",
-  nero: "moon",
-  avorio: "sun",
-  colorblind: "eye",
-  sugar: "sparkle"
+var THEME_ICONS = {
+  editorial: platformIcons.contrast,
+  nero: platformIcons.moon,
+  avorio: platformIcons.sun,
+  colorblind: actionIcons.eye,
+  sugar: platformIcons.sparkle
 };
 var LABELS = {
   editorial: "Editorial (mixed)",
@@ -5718,11 +5718,9 @@ var LABELS = {
   sugar: "Sugar"
 };
 function themeIcon(mode) {
-  const name = ICON_NAMES[mode];
-  const factory = icons[name];
+  const factory = THEME_ICONS[mode];
   if (!factory) return "";
-  const svg = factory();
-  return `<span class="mn-icon mn-icon--sm" aria-hidden="true">${svg}</span>`;
+  return `<span class="mn-icon mn-icon--sm" aria-hidden="true">${factory()}</span>`;
 }
 function initThemeToggle(toggleId, gaugeInstances = [], onAutoContrast) {
   const toggle = typeof toggleId === "string" ? document.getElementById(toggleId) : toggleId;
@@ -5737,9 +5735,11 @@ function initThemeToggle(toggleId, gaugeInstances = [], onAutoContrast) {
   let current = getTheme();
   toggle.innerHTML = themeIcon(current);
   toggle.title = LABELS[current];
+  toggle.setAttribute("aria-label", LABELS[current]);
   function applyTheme() {
     toggle.innerHTML = themeIcon(current);
     toggle.title = LABELS[current];
+    toggle.setAttribute("aria-label", LABELS[current]);
     requestAnimationFrame(() => {
       gaugeInstances.forEach((g) => g.redraw());
       if (onAutoContrast) onAutoContrast(".mn-treemap__cell");
@@ -18155,12 +18155,11 @@ function adminShell(el4, opts) {
   if (opts.sidebar.footer) {
     const footer = opts.sidebar.footer;
     if (typeof footer === "string") {
-      const tag = opts.sidebar.onFooterClick ? "button" : "span";
-      const el22 = document.createElement(tag);
+      const el22 = document.createElement("button");
+      el22.type = "button";
       el22.className = "mn-admin-sidebar__footer";
       el22.textContent = footer;
       if (opts.sidebar.onFooterClick) {
-        el22.type = "button";
         el22.addEventListener("click", opts.sidebar.onFooterClick, { signal: ac.signal });
       }
       sidebar.appendChild(el22);
@@ -18812,5 +18811,5 @@ M.charts = {
 registerExtras(M);
 
 // src/ts/index.ts
-var VERSION = "4.14.1";
+var VERSION = "4.20.0";
 //# sourceMappingURL=index.cjs.map

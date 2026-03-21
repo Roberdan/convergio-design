@@ -136,15 +136,16 @@ describe('adminShell', () => {
     ctrl.destroy();
   });
 
-  it('string footer renders as span without breaking content area', () => {
+  it('string footer renders as button without breaking content area', () => {
     const ctrl = adminShell(el, makeOpts({
       sidebar: {
         nav: [{ id: 'dash', label: 'Dashboard', icon: 'chart' }],
-        footer: '\u2190 Back to app' as unknown as HTMLElement,
+        footer: '\u2190 Back to app',
       },
     }));
     const footer = el.querySelector('.mn-admin-sidebar__footer');
     expect(footer).toBeTruthy();
+    expect(footer?.tagName).toBe('BUTTON');
     expect(footer?.textContent).toBe('\u2190 Back to app');
     expect(ctrl.contentEl).toBeInstanceOf(HTMLElement);
     expect(ctrl.contentEl.className).toBe('mn-admin-content__body');
@@ -156,7 +157,7 @@ describe('adminShell', () => {
     const ctrl = adminShell(el, makeOpts({
       sidebar: {
         nav: [{ id: 'dash', label: 'Dashboard', icon: 'chart' }],
-        footer: '\u2190 Back to app' as unknown as HTMLElement,
+        footer: '\u2190 Back to app',
         onFooterClick: onClick,
       },
     }));
@@ -173,7 +174,7 @@ describe('adminShell', () => {
     const ctrl = adminShell(el, makeOpts({
       sidebar: {
         nav: [{ id: 'dash', label: 'Dashboard', icon: 'chart' }],
-        footer: { label: 'Back', onClick } as unknown as HTMLElement,
+        footer: { label: 'Back', onClick },
       },
     }));
     const footer = el.querySelector<HTMLElement>('.mn-admin-sidebar__footer');

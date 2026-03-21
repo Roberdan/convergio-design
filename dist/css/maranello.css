@@ -16916,6 +16916,28 @@
     margin-top: auto;
   }
 
+  button.mn-admin-sidebar__footer {
+    width: 100%;
+    font: inherit;
+    color: inherit;
+    border: none;
+    border-top: 1px solid var(--mn-border);
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--duration-sm) var(--ease-out);
+    background: none;
+    display: block;
+  }
+
+  button.mn-admin-sidebar__footer:hover {
+    background: var(--mn-hover-bg);
+  }
+
+  button.mn-admin-sidebar__footer:focus-visible {
+    outline: 2px solid var(--mn-focus-ring);
+    outline-offset: -2px;
+  }
+
   .mn-admin-nav-item {
     align-items: center;
     gap: var(--space-sm);
@@ -17946,7 +17968,7 @@
     color: var(--mn-text-muted);
   }
 
-  body.mn-avorio .mn-tabs__tab--active {
+  body.mn-avorio .mn-tabs__tab--active, body.mn-avorio .mn-tabs__tab[aria-selected="true"] {
     color: var(--mn-text);
     background: #0000000d;
   }
