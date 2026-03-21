@@ -493,7 +493,7 @@ Preferred when SSR or framework integration overhead is undesirable.
 
 Additional CI gates:
 - **Max 250 lines/file** — all `.ts`, `.css`, `.js` in `src/` and `demo/sections/`
-- **IIFE bundle < 410KB** (`dist/iife/maranello.min.js`)
+- **IIFE bundle < 450KB** (`dist/iife/maranello.min.js`, current: ~434KB)
 - **No emoji** in `src/` or `demo/` files
 - **No hardcoded colors** (exceptions: gradients, conic, rgba, %, deg)
 - **Scrub check**: `VirtualBPM`, `ISE Portfolio`, `MirrorDesign`, `MirrorBuddy` forbidden

@@ -133,7 +133,7 @@ Maranello.initSidebarToggle(sidebarEl, buttonEl);
 
 All responsive overrides live in `src/css/responsive-*.css` files, imported by `maranello.css` after `utilities.css`. Each file uses `@layer` matching its component domain and `@media` queries for breakpoints.
 
-## IIFE Exports (104 functions/objects on `window.Maranello`)
+## IIFE Exports (107+ functions/objects on `window.Maranello`)
 
 ### Charts (11)
 `sparkline` · `donut` · `barChart` · `hBarChart` · `areaChart` · `liveGraph` · `halfGauge` · `progressRing` · `flipCounter` · `radar` · `bubble`
