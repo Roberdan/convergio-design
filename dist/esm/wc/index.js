@@ -35,43 +35,47 @@ const WC_TAGS = [
 let _loaded = false;
 async function registerAll() {
   if (_loaded) return;
-  _loaded = true;
-  await Promise.all([
-    import("./mn-app-shell.js"),
-    import("./mn-a11y.js"),
-    import("./mn-async-select.js"),
-    import("./mn-chart.js"),
-    import("./mn-chat.js"),
-    import("./mn-command-palette.js"),
-    import("./mn-dashboard.js"),
-    import("./mn-data-table.js"),
-    import("./mn-date-picker.js"),
-    import("./mn-detail-panel.js"),
-    import("./mn-entity-workbench.js"),
-    import("./mn-ferrari-control.js"),
-    import("./mn-facet-workbench.js"),
-    import("./mn-funnel.js"),
-    import("./mn-gantt.js"),
-    import("./mn-gauge.js"),
-    import("./mn-hbar.js"),
-    import("./mn-login.js"),
-    import("./mn-map.js"),
-    import("./mn-mapbox.js"),
-    import("./mn-modal.js"),
-    import("./mn-okr.js"),
-    import("./mn-profile.js"),
-    import("./mn-speedometer.js"),
-    import("./mn-state-scaffold.js"),
-    import("./mn-system-status.js"),
-    import("./mn-tabs.js"),
-    // also registers mn-tab
-    import("./mn-section-nav.js"),
-    import("./mn-theme-rotary.js"),
-    import("./mn-theme-toggle.js"),
-    import("./mn-toast.js")
-  ]);
-  if (typeof document !== "undefined" && !document.querySelector("mn-a11y")) {
-    document.body.appendChild(document.createElement("mn-a11y"));
+  try {
+    await Promise.all([
+      import("./mn-app-shell.js"),
+      import("./mn-a11y.js"),
+      import("./mn-async-select.js"),
+      import("./mn-chart.js"),
+      import("./mn-chat.js"),
+      import("./mn-command-palette.js"),
+      import("./mn-dashboard.js"),
+      import("./mn-data-table.js"),
+      import("./mn-date-picker.js"),
+      import("./mn-detail-panel.js"),
+      import("./mn-entity-workbench.js"),
+      import("./mn-ferrari-control.js"),
+      import("./mn-facet-workbench.js"),
+      import("./mn-funnel.js"),
+      import("./mn-gantt.js"),
+      import("./mn-gauge.js"),
+      import("./mn-hbar.js"),
+      import("./mn-login.js"),
+      import("./mn-map.js"),
+      import("./mn-mapbox.js"),
+      import("./mn-modal.js"),
+      import("./mn-okr.js"),
+      import("./mn-profile.js"),
+      import("./mn-speedometer.js"),
+      import("./mn-state-scaffold.js"),
+      import("./mn-system-status.js"),
+      import("./mn-tabs.js"),
+      // also registers mn-tab
+      import("./mn-section-nav.js"),
+      import("./mn-theme-rotary.js"),
+      import("./mn-theme-toggle.js"),
+      import("./mn-toast.js")
+    ]);
+    if (typeof document !== "undefined" && !document.querySelector("mn-a11y")) {
+      document.body.appendChild(document.createElement("mn-a11y"));
+    }
+    _loaded = true;
+  } catch (err) {
+    console.warn("Maranello WC registerAll failed \u2014 retry on next call", err);
   }
 }
 function isRegistered(tag) {

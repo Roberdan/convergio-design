@@ -10,6 +10,7 @@ export declare class NavigationModel {
     private readonly bus;
     private readonly callbacks;
     push(viewId: string, params?: Record<string, unknown>): ViewEntry;
+    /** Remove top entry and return the NEW current (not the removed one). */
     pop(): ViewEntry | undefined;
     replace(viewId: string, params?: Record<string, unknown>): ViewEntry;
     current(): ViewEntry | undefined;

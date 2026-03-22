@@ -314,6 +314,7 @@ var NavigationModel = class {
     this.notify(entry, "push");
     return entry;
   }
+  /** Remove top entry and return the NEW current (not the removed one). */
   pop() {
     if (this.stack.length === 0) return void 0;
     this.stack.pop();
@@ -332,13 +333,14 @@ var NavigationModel = class {
     return entry;
   }
   current() {
-    return this.stack[this.stack.length - 1];
+    const entry = this.stack[this.stack.length - 1];
+    return entry ? { ...entry, params: entry.params ? { ...entry.params } : void 0 } : void 0;
   }
   canGoBack() {
     return this.stack.length > 1;
   }
   history() {
-    return this.stack.slice();
+    return this.stack.map((e) => ({ ...e, params: e.params ? { ...e.params } : void 0 }));
   }
   remove(viewId) {
     let removed = false;
@@ -400,6 +402,9 @@ var ViewRegistry = class _ViewRegistry {
     return _ViewRegistry.instance;
   }
   static reset() {
+    if (_ViewRegistry.instance) {
+      _ViewRegistry.instance.clear();
+    }
     _ViewRegistry.instance = void 0;
   }
   register(config) {
@@ -410,10 +415,11 @@ var ViewRegistry = class _ViewRegistry {
     eventBus.emit("view-registered", { viewId: config.id, config });
   }
   get(id) {
-    return this.configs.get(id);
+    const cfg = this.configs.get(id);
+    return cfg ? { ...cfg } : void 0;
   }
   list() {
-    return Object.freeze([...this.configs.values()]);
+    return Object.freeze([...this.configs.values()].map((c) => ({ ...c })));
   }
   unregister(id) {
     if (!this.configs.has(id)) {
@@ -567,6 +573,13 @@ var PanelOrchestrator = class {
     const existing = this.openViews.get(viewId);
     if (existing) {
       if (target && target !== existing.placement) this.move(viewId, target);
+      if (data !== void 0) {
+        const config2 = this.registry.get(viewId);
+        if (config2) {
+          this.unmount(existing.mountResult);
+          existing.mountResult = this.mountView(config2, existing.handle.container, data);
+        }
+      }
       this.navigation.push(viewId, { placement: this.openViews.get(viewId)?.placement });
       return this.openViews.get(viewId).handle;
     }
@@ -619,6 +632,7 @@ var PanelOrchestrator = class {
     }
     entry.placement = newTarget;
     entry.handle.placement = newTarget;
+    this.navigation.replace(viewId, { placement: newTarget });
     eventBus.emit("panel-moved", { viewId, from, to: newTarget });
   }
   stack(viewId) {
@@ -14223,6 +14237,8 @@ function createLayout(gridEl, options) {
     right: init && typeof init.right === "boolean" ? init.right : initRight ? !initRight.hidden : false
   };
   let leftPanelId = init && init.leftPanelId ? init.leftPanelId : void 0;
+  let rightPanelId = init && init.rightPanelId ? init.rightPanelId : void 0;
+  let stripPanelId = init && init.stripPanelId ? init.stripPanelId : void 0;
   if (init) {
     if (initStrip) initStrip.hidden = !state.strip;
     if (initLeft) initLeft.hidden = !state.left;
@@ -14271,6 +14287,8 @@ function createLayout(gridEl, options) {
       right: state.right
     };
     if (leftPanelId) s.leftPanelId = leftPanelId;
+    if (rightPanelId) s.rightPanelId = rightPanelId;
+    if (stripPanelId) s.stripPanelId = stripPanelId;
     return s;
   }
   function fireEvent() {
@@ -14361,6 +14379,11 @@ function createLayout(gridEl, options) {
           },
           rightViewDriven
         );
+        if (typeof config.right === "object" && config.right && config.right.id) {
+          rightPanelId = config.right.id;
+        } else if (config.right === false) {
+          rightPanelId = void 0;
+        }
         leftLocked = config.left === false;
         rightLocked = config.right === false;
       }
@@ -14374,6 +14397,7 @@ function createLayout(gridEl, options) {
       if (state.fullpage) return;
       state.strip = !state.strip;
       stripViewDriven = false;
+      if (config && config.id) stripPanelId = config.id;
       if (config && config.render) stripManualRender = config.render;
       setSlotHidden("mn-slot-strip", !state.strip);
       fireEvent();
@@ -14399,6 +14423,7 @@ function createLayout(gridEl, options) {
       if (state.fullpage || rightLocked) return;
       state.right = !state.right;
       rightViewDriven = false;
+      if (config && config.id) rightPanelId = config.id;
       if (config && config.render) rightManualRender = config.render;
       setSlotHidden("mn-slot-right", !state.right);
       fireEvent();
@@ -14436,7 +14461,7 @@ function createLayout(gridEl, options) {
       }
     },
     get state() {
-      return state;
+      return Object.freeze({ ...state });
     },
     destroy() {
       for (const cleanup of buttonCleanups) cleanup();

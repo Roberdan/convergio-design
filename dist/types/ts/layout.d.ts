@@ -38,6 +38,8 @@ export interface LayoutPersistState {
     left: boolean;
     right: boolean;
     leftPanelId?: string;
+    rightPanelId?: string;
+    stripPanelId?: string;
 }
 export interface LayoutOptions {
     /** Called on every state change — consumer decides where to persist. */
