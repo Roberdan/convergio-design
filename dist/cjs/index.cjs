@@ -19837,5 +19837,5 @@ M.charts = {
 registerExtras(M);
 
 // src/ts/index.ts
-var VERSION = "5.9.0";
+var VERSION = "5.10.0";
 //# sourceMappingURL=index.cjs.map
