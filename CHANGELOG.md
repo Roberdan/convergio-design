@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.4.0] - 2026-03-22
+
+### Added
+- Default slot styling in `layouts-mn-layout.css` — `#mn-slot-strip` (padding, raised bg, border-bottom), `#mn-slot-left/right` (padding, bg, border). Consumers no longer write generic slot CSS.
+- Viewport setup: `html, body { height: 100%; margin: 0 }` + flex column for `body:has(> #mn-grid)` full-viewport apps.
+
+### Changed
+- `createLayout()` reads initial `hidden` state from DOM — if a slot has `hidden`, internal state starts accordingly. No flash, no sync override. Consumer HTML is source of truth.
+
 ## [5.3.4] - 2026-03-22
 
 ### Fixed

@@ -62,7 +62,7 @@ test.describe('Cross-browser IIFE smoke', () => {
     const result = await page.evaluate(() => {
       const div = document.createElement('div');
       div.innerHTML = [
-        '<div id="mn-slot-strip" hidden></div>',
+        '<div id="mn-slot-strip"></div>',
         '<div id="mn-slot-left" hidden></div>',
         '<div id="mn-slot-center">',
         '  <div data-view="v1">View 1</div>',
@@ -76,7 +76,7 @@ test.describe('Cross-browser IIFE smoke', () => {
       layout.register('v1', { label: 'View 1' });
       layout.register('v2', { label: 'View 2' });
 
-      // Initial: strip should be visible (state.strip=true)
+      // Initial: strip visible (no hidden attr) — state.strip=true
       const stripAfterInit = div.querySelector('#mn-slot-strip').hidden;
 
       layout.showView('v1');

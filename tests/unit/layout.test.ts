@@ -15,12 +15,14 @@ function buildGrid(): HTMLElement {
 
   const left = document.createElement('div');
   left.id = 'mn-slot-left';
+  left.hidden = true;
 
   const center = document.createElement('div');
   center.id = 'mn-slot-center';
 
   const right = document.createElement('div');
   right.id = 'mn-slot-right';
+  right.hidden = true;
 
   grid.append(strip, left, center, right);
   document.body.appendChild(grid);
