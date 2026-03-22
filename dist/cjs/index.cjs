@@ -7288,9 +7288,10 @@ function createButton(btn) {
   el5.type = "button";
   el5.className = "mn-header__btn";
   el5.dataset.headerId = btn.id;
-  if (btn.label) {
-    el5.title = btn.label;
-    el5.setAttribute("aria-label", btn.label);
+  const a11y = btn.title || btn.label || "";
+  if (a11y) {
+    el5.title = a11y;
+    el5.setAttribute("aria-label", a11y);
   }
   if (btn.active) el5.classList.add("mn-header__btn--active");
   if (btn.icon) {
@@ -7299,13 +7300,15 @@ function createButton(btn) {
     iconSpan.innerHTML = btn.icon;
     el5.appendChild(iconSpan);
   }
-  const labelSpan = document.createElement("span");
-  labelSpan.textContent = btn.label;
-  el5.appendChild(labelSpan);
+  if (btn.label) {
+    const labelSpan = document.createElement("span");
+    labelSpan.textContent = btn.label;
+    el5.appendChild(labelSpan);
+  }
   if (btn.onClick) el5.addEventListener("click", btn.onClick);
   el5.addEventListener("click", () => {
     el5.dispatchEvent(new CustomEvent("header-button-click", {
-      detail: { id: btn.id, label: btn.label },
+      detail: { id: btn.id, label: btn.label || btn.title || "" },
       bubbles: true
     }));
   });

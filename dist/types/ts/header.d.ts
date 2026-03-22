@@ -10,7 +10,9 @@ export interface HeaderBrand {
 }
 export interface HeaderButton {
     id: string;
-    label: string;
+    label?: string;
+    /** Tooltip + aria-label. Falls back to label if omitted. */
+    title?: string;
     icon?: string;
     active?: boolean;
     onClick?: () => void;
