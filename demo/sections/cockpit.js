@@ -27,27 +27,20 @@ Maranello.speedometer(document.querySelector('#my-dial'), {
         <div class="mn-card-dark" style="padding:var(--space-lg);text-align:center;min-width:140px;flex:1"><p class="mn-label mn-mb-sm">Agent Load</p><canvas id="cockpit-speed-volunteer" width="120" height="120"></canvas></div>
       </div>
       <h3 class="mn-title-sub mn-mb-sm">Dashboard Strip</h3>
-      <p class="mn-micro mn-mb-lg">The main instrument nacelle: broad strip, primary display bars, and compact secondary board.</p>
-      <div class="mn-strip mn-mb-2xl">
-        <div class="mn-strip__inner">
-          <div class="mn-strip__section--pod"><div class="mn-gauge__instrument mn-gauge__instrument--sm" style="width:120px;height:120px;padding:5px"><div class="mn-gauge__dial"><canvas class="mn-gauge__canvas" data-gauge='${dashboardStripGauge()}'></canvas><div class="mn-gauge__glass"></div></div></div></div>
-          <div class="mn-strip__divider"></div>
-          <div class="mn-strip__section" style="padding:var(--space-sm) 0">
-            <div class="mn-flex-between mn-mb-sm"><span class="mn-label mn-strip__label">PRIMARY DISPLAY</span><span class="mn-label mn-strip__label">MAIN DASHBOARD SHELL</span></div>
-            <div class="mn-flex-col mn-gap-xs">
-              <div class="mn-flex-center mn-gap-sm"><span class="mn-micro mn-bar-metric">72</span><div class="mn-bar-track"><div style="width:72%;height:100%;background:linear-gradient(90deg,#DC0000,#FFC72C);border-radius:3px"></div></div></div>
-              <div class="mn-flex-center mn-gap-sm"><span class="mn-micro mn-bar-metric">86</span><div class="mn-bar-track"><div style="width:86%;height:100%;background:linear-gradient(90deg,#FFC72C,#00A651);border-radius:3px"></div></div></div>
-              <div class="mn-flex-center mn-gap-sm"><span class="mn-micro mn-bar-metric">56</span><div class="mn-bar-track"><div style="width:56%;height:100%;background:linear-gradient(90deg,#DC0000,#FFC72C);border-radius:3px"></div></div></div>
-              <div class="mn-flex-center mn-gap-sm"><span class="mn-micro mn-bar-metric">44</span><div class="mn-bar-track"><div style="width:44%;height:100%;background:linear-gradient(90deg,#DC0000,#DC0000);border-radius:3px"></div></div></div>
-              <div class="mn-flex-center mn-gap-sm"><span class="mn-micro mn-bar-metric">68</span><div class="mn-bar-track"><div style="width:68%;height:100%;background:linear-gradient(90deg,#DC0000,#FFC72C);border-radius:3px"></div></div></div>
-            </div>
-          </div>
-          <div class="mn-strip__divider"></div>
-          <div class="mn-strip__section" style="flex:0 0 220px"><span class="mn-label mn-strip__label mn-block mn-mb-sm">SECONDARY BOARD</span><div class="mn-grid-3 mn-gap-xs"><div class="mn-strip__board-cell"><div class="mn-micro mn-strip__dim">KPI</div><div class="mn-strip__value">94</div></div><div class="mn-strip__board-cell"><div class="mn-micro mn-strip__dim">RUNWAY</div><div class="mn-strip__value">13d</div></div><div class="mn-strip__board-cell"><div class="mn-micro mn-strip__dim">ALERTS</div><div class="mn-strip__value" style="color:#DC0000">04</div></div></div></div>
-          <div class="mn-strip__divider"></div>
-          <div class="mn-strip__section--pod"><div class="mn-gauge__instrument mn-gauge__instrument--sm" style="width:120px;height:120px;padding:5px"><div class="mn-gauge__dial"><canvas class="mn-gauge__canvas" data-gauge='${stripRightGauge()}'></canvas><div class="mn-gauge__glass"></div></div></div></div>
-        </div>
-      </div>
+      <p class="mn-micro mn-mb-lg">The main instrument nacelle: broad strip, primary display bars, and compact secondary board. Built with <code>Maranello.dashboardStrip()</code>.</p>
+      <details class="mn-code-snippet mn-mb-lg">
+        <summary class="mn-label" style="cursor:pointer;color:#FFC72C;margin-bottom:var(--space-sm)">⟨/⟩ Usage</summary>
+        <pre class="mn-card-dark" style="padding:var(--space-md);font-family:var(--font-mono);font-size:var(--text-micro);overflow-x:auto;border-left:3px solid #FFC72C"><code>Maranello.dashboardStrip('container', {
+  zones: [
+    { type: 'gauge', label: 'UTIL', gaugeConfig: {...}, size: 'sm' },
+    { type: 'pipeline', title: 'PIPELINE', rows: [...], footer: {...} },
+    { type: 'trend', title: 'TREND', items: [...] },
+    { type: 'board', title: 'BOARD', stats: [...] },
+    { type: 'gauge', label: 'QUALITY', gaugeConfig: {...}, size: 'sm' }
+  ]
+});</code></pre>
+      </details>
+      <div id="cockpit-dashboard-strip" class="mn-mb-2xl"></div>
       <h3 class="mn-title-sub mn-mb-sm">KPI Instrument Cluster</h3>
       <p class="mn-micro mn-mb-lg">Complications layer utilization, score and portfolio-map insights in a Ferrari-like binnacle.</p>
       <div class="mn-binnacle">
@@ -88,6 +81,37 @@ function initCockpit(section) {
     if (loadCanvas instanceof HTMLCanvasElement) M.speedometer(loadCanvas, { value: 61, max: 100, unit: '%', size: 'sm', ticks: [0, 25, 50, 75, 100], needleColor: '#DC0000', arcColor: '#4EA8DE', subLabel: 'Healthy', animate: true });
   }
   if (section instanceof HTMLElement) M.initGauges ? M.initGauges(section) : M.createGaugesInContainer?.(section);
+
+  // Dashboard Strip (v5.11.0)
+  const stripMount = section.querySelector('#cockpit-dashboard-strip');
+  if (stripMount && M.dashboardStrip) {
+    M.dashboardStrip(stripMount, {
+      ariaLabel: 'Cockpit Dashboard Strip',
+      zones: [
+        { type: 'gauge', label: 'OPERATIONS', gaugeConfig: JSON.parse(dashboardStripGauge()), size: 'sm' },
+        { type: 'pipeline', title: 'PIPELINE & AVG DURATION', rows: [
+          { label: 'PROSPECT', value: 49, color: '#FFC72C', secondary: '47d' },
+          { label: 'EXPLORATION', value: 49, color: '#448AFF', secondary: '119d' },
+          { label: 'SPRINT', value: 36, color: '#7C4DFF', secondary: '141d' },
+          { label: 'WRAP UP', value: 9, color: '#DC0000', secondary: '181d' },
+          { label: 'ON HOLD', value: 13, color: '#9e9e9e', secondary: '118d' },
+          { label: 'COMPLETED', value: 126, color: '#00A651', secondary: '166d' },
+          { label: 'WITHDRAWN', value: 80, color: '#616161', secondary: '142d' },
+        ], footer: { label: 'E2E', value: '157d' } },
+        { type: 'trend', title: '6 MONTH TREND', items: [
+          { label: 'PROSPECTS', value: 49, color: '#DC0000', data: [32,28,35,42,38,49] },
+          { label: 'IN FLIGHT', value: 94, color: '#448AFF', data: [60,68,72,78,85,94] },
+          { label: 'CLOSED', value: 126, color: '#00A651', data: [80,90,95,105,118,126] },
+          { label: 'ON HOLD', value: 13, color: '#9e9e9e', data: [8,10,15,12,11,13] },
+        ] },
+        { type: 'board', title: 'SECONDARY BOARD', stats: [
+          { label: 'ENGAGEMENTS', value: 368 },
+          { label: 'FTE', value: 257 },
+        ] },
+        { type: 'gauge', label: 'LATENCY', gaugeConfig: JSON.parse(stripRightGauge()), size: 'sm' },
+      ]
+    });
+  }
   if (M.systemStatus && statusContainer instanceof HTMLElement) {
     M.systemStatus(statusContainer, {
       version: 'v3.0.0', environment: 'Production', pollInterval: 10000,

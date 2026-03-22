@@ -1,7 +1,7 @@
-<!-- v5.9.2 | 2026-03-22 -->
+<!-- v5.11.0 | 2026-03-22 -->
 # MaranelloLuceDesign
 
-Ferrari Luce-inspired DS for dashboards. 5 themes. 107+ IIFE exports. 33 WC. WCAG 2.2 AA.
+Ferrari Luce-inspired DS for dashboards. 5 themes. 110+ IIFE exports. 33 WC. WCAG 2.2 AA.
 
 ## Commands
 
@@ -26,6 +26,10 @@ Key: `layout.ts`+`layout-slot.ts` (state machine) · `header.ts` (navbar) · `to
 ## Header
 
 `header.init(el, opts)` — 3-zone (brand+left+center+right). `onClick` + `header-button-click` CustomEvent. `HeaderButton.title` for icon-only tooltip+aria.
+
+## Dashboard Strip
+
+`dashboardStrip(container, { zones, ariaLabel })` — composite instrument nacelle. Zone types: `gauge` (FerrariGauge + complications), `pipeline` (colored bar rows), `trend` (2-col sparkline KPIs), `board` (stat cells). CSS Grid layout, container queries, all 5 themes. `updateZone(i, data)` + `destroy()`. Canvas class: `mn-strip-gauge__canvas` (not `mn-gauge__canvas`).
 
 ## NON-NEGOTIABLE
 

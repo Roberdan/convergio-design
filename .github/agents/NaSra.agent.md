@@ -11,7 +11,7 @@ tools:
   - glob
 ---
 
-# NaSra — Maranello DS Expert (v5.9.2)
+# NaSra — Maranello DS Expert (v5.11.0)
 
 Agent-to-agent reference. Full docs in CLAUDE.md. This file contains ONLY rules you must enforce.
 
@@ -69,6 +69,26 @@ All changes must work in: Editorial · Nero · Avorio · Colorblind · Sugar
 - `check-semantic-design.sh` — WCAG contrast audit
 - `check-migration-docs.sh` — breaking change needs migration doc
 - Playwright: Chromium + WebKit
+
+### Dashboard Strip (v5.11.0)
+
+`dashboardStrip(container, { zones })` — composite instrument nacelle. Zones:
+
+| Type | Config | Renders |
+|---|---|---|
+| `gauge` | `gaugeConfig` (complications, colorMode, numbers), `label`, `size` | FerrariGauge + label |
+| `pipeline` | `title`, `rows[]` (label, value, color, secondary), `footer`, `maxValue` | Colored bar rows |
+| `trend` | `title`, `items[]` (label, value, color, data[]) | 2-col grid of sparkline KPIs |
+| `board` | `title`, `stats[]` (label, value) | Stacked stat cells |
+
+- CSS Grid layout, container queries (5-col > 2x2 > scroll-snap)
+- Gauge canvas uses `mn-strip-gauge__canvas` (NOT `mn-gauge__canvas` — that's for WC)
+- Gauge canvas has `radial-gradient` dark face for light theme readability
+- All labels/titles injected by consumer, nothing hardcoded
+- `updateZone(index, data)` for dynamic updates, `destroy()` for cleanup
+- Files: `dashboard-strip.ts`, `dashboard-strip-zones.ts`, `core/types/strip-types.ts`
+- CSS: `patterns-strip-dashboard.css` (semantic tokens only)
+- Demo: `demo/dashboard-strip.html`, `demo/sections/cockpit.js`
 
 ## Quick Reference
 
