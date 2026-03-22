@@ -6,6 +6,7 @@
 import type { ThemeMode } from './core/types';
 import { setTheme, getTheme } from './core/utils';
 import { escapeHtml } from './core/sanitize';
+import { getLocale } from './locale';
 
 export interface ThemePickerOptions {
   current?: string;
@@ -43,7 +44,9 @@ function buildCard(theme: ThemeData, isActive: boolean): HTMLDivElement {
   card.setAttribute('aria-checked', String(isActive));
   card.setAttribute('tabindex', '0');
   card.setAttribute('data-theme', theme.id);
-  card.setAttribute('aria-label', `${escapeHtml(theme.label)} theme`);
+  const themeLocale = getLocale().themes;
+  const locLabel = themeLocale[theme.id as keyof typeof themeLocale] || theme.label;
+  card.setAttribute('aria-label', `${escapeHtml(locLabel)} theme`);
 
   const header = document.createElement('div');
   header.className = 'mn-theme-picker__header';
@@ -55,7 +58,7 @@ function buildCard(theme: ThemeData, isActive: boolean): HTMLDivElement {
 
   const name = document.createElement('span');
   name.className = 'mn-theme-picker__name';
-  name.textContent = theme.label;
+  name.textContent = locLabel;
   header.appendChild(name);
 
   card.appendChild(header);

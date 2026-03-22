@@ -6,6 +6,7 @@
 import type { A11ySettings } from './core/types';
 import { createElement } from './core/utils';
 import { icons } from './icons';
+import { getLocale } from './locale';
 
 const STORAGE_KEY = 'mn-a11y';
 
@@ -132,9 +133,11 @@ function makeToggle(
 }
 
 export function buildPanel(settings: A11ySettings): A11yPanelRefs {
+  const loc = getLocale().a11y;
+
   const fab = createElement('button', 'mn-a11y-fab', {
-    'aria-label': 'Display settings',
-    title: 'Display settings',
+    'aria-label': `${loc.display} settings`,
+    title: `${loc.display} settings`,
   });
   fab.innerHTML = slidersIcon();
 
@@ -144,12 +147,12 @@ export function buildPanel(settings: A11ySettings): A11yPanelRefs {
   });
 
   const title = createElement('div', 'mn-a11y-panel__title');
-  title.innerHTML = `${slidersIcon()} Display`;
+  title.innerHTML = `${slidersIcon()} ${loc.display}`;
   panel.appendChild(title);
 
   // Font-size group
   const fsGroup = createElement('div', 'mn-a11y-panel__group');
-  fsGroup.appendChild(createElement('div', 'mn-a11y-panel__label', { text: 'Text Size' }));
+  fsGroup.appendChild(createElement('div', 'mn-a11y-panel__label', { text: loc.textSize }));
   const fsRow = createElement('div', 'mn-a11y-panel__size-btns');
   const sizeButtons: Record<string, HTMLButtonElement> = {};
 
@@ -175,7 +178,7 @@ export function buildPanel(settings: A11ySettings): A11yPanelRefs {
 
   // Line-spacing group
   const lsGroup = createElement('div', 'mn-a11y-panel__group');
-  lsGroup.appendChild(createElement('div', 'mn-a11y-panel__label', { text: 'Line Spacing' }));
+  lsGroup.appendChild(createElement('div', 'mn-a11y-panel__label', { text: loc.lineSpacing }));
   const lsRow = createElement('div', 'mn-a11y-panel__size-btns');
   const lsButtons: Record<string, HTMLButtonElement> = {};
 
@@ -200,13 +203,13 @@ export function buildPanel(settings: A11ySettings): A11yPanelRefs {
   panel.appendChild(lsGroup);
 
   panel.appendChild(createElement('div', 'mn-a11y-panel__divider'));
-  panel.appendChild(makeToggle(settings, 'Dyslexia Font', 'dyslexiaFont'));
-  panel.appendChild(makeToggle(settings, 'Reduced Motion', 'reducedMotion'));
-  panel.appendChild(makeToggle(settings, 'High Contrast', 'highContrast'));
-  panel.appendChild(makeToggle(settings, 'Focus Indicators', 'focusVisible'));
+  panel.appendChild(makeToggle(settings, loc.dyslexiaFont, 'dyslexiaFont'));
+  panel.appendChild(makeToggle(settings, loc.reducedMotion, 'reducedMotion'));
+  panel.appendChild(makeToggle(settings, loc.highContrast, 'highContrast'));
+  panel.appendChild(makeToggle(settings, loc.focusIndicators, 'focusVisible'));
   panel.appendChild(createElement('div', 'mn-a11y-panel__divider'));
 
-  const resetBtn = createElement('button', 'mn-a11y-panel__reset', { text: 'Reset to Defaults' });
+  const resetBtn = createElement('button', 'mn-a11y-panel__reset', { text: loc.resetDefaults });
   panel.appendChild(resetBtn);
 
   return { fab, panel, sizeButtons, lsButtons, resetBtn };

@@ -91,6 +91,14 @@ export type { HeaderOptions, HeaderController, HeaderBrand, HeaderButton, Header
 export { themePicker } from './theme-picker';
 export type { ThemePickerOptions, ThemePickerController } from './theme-picker';
 
+// Filter panel
+export { filterPanel } from './filter-panel';
+export type { FilterPanelOptions, FilterPanelColumn, FilterPanelItem, FilterPanelController } from './filter-panel';
+
+// Locale (i18n)
+export { setLocale, getLocale, resetLocale } from './locale';
+export type { MnLocale } from './locale';
+
 // Charts (all chart types + helpers)
 export * from './charts';
 

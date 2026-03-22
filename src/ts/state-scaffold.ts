@@ -1,3 +1,5 @@
+import { getLocale } from './locale';
+
 export interface StateScaffoldOptions {
   state: 'loading' | 'empty' | 'error' | 'partial' | 'no-results' | 'ready';
   message?: string;
@@ -115,7 +117,7 @@ export class StateScaffold {
 
   private renderEmpty(): void {
     const panel = this.buildMessageState(
-      this.options.message || 'No data available yet.',
+      this.options.message || getLocale().stateScaffold.empty,
       this.options.onAction,
       this.options.actionLabel,
       'Take action',
@@ -125,9 +127,9 @@ export class StateScaffold {
 
   private renderError(): void {
     const panel = this.buildMessageState(
-      this.options.message || 'Something went wrong. Please try again.',
+      this.options.message || getLocale().stateScaffold.error,
       this.options.onRetry,
-      'Retry',
+      getLocale().stateScaffold.retry,
       'Retry',
     );
     this.status.appendChild(panel);
@@ -141,7 +143,7 @@ export class StateScaffold {
 
     const text = document.createElement('p');
     text.className = 'mn-scaffold__message';
-    text.textContent = this.options.message || 'Some data may be unavailable right now.';
+    text.textContent = this.options.message || getLocale().stateScaffold.partial;
     banner.appendChild(text);
 
     this.status.appendChild(banner);
@@ -153,7 +155,7 @@ export class StateScaffold {
 
   private renderNoResults(): void {
     const panel = this.buildMessageState(
-      this.options.message || 'No results match your filters.',
+      this.options.message || getLocale().stateScaffold.noResults,
       this.options.onAction,
       this.options.actionLabel,
       'Clear filters',

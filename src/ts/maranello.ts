@@ -24,6 +24,7 @@ import { systemStatus } from './system-status';
 import { profileMenu } from './profile-menu';
 import { header } from './header';
 import { themePicker } from './theme-picker';
+import { filterPanel } from './filter-panel';
 import { FerrariGauge } from './gauge-engine';
 import { buildGaugePalette } from './gauge-engine-palette';
 import { createGauge, createGaugesInContainer, redrawAll, reinitAll, GAUGE_SIZES } from './gauge-engine-class';
@@ -52,6 +53,7 @@ import { manettino, steppedRotary } from './controls-ferrari-dials';
 import { initDropdown, initTabs } from './controls-dialogs';
 import { initRotary, initSlider } from './controls-drag';
 import { a11yPanel } from './a11y-panel';
+import { setLocale, getLocale, resetLocale } from './locale';
 import { okrPanel } from './okr-panel';
 import { emit, on, off, bind, autoBind, onDrillDown } from './data-binding-events';
 import { updateGauge, bindChart, autoBindSliders, bindControl } from './data-binding-ui';
@@ -89,6 +91,9 @@ M.themeRotary = themeRotary;
 M.getAccent = getAccent;
 M.cssVar = cssVar;
 M.palette = palette;
+M.setLocale = setLocale;
+M.getLocale = getLocale;
+M.resetLocale = resetLocale;
 
 // Shared helpers
 M.clamp = clamp;
@@ -122,6 +127,7 @@ M.systemStatus = systemStatus;
 M.profileMenu = profileMenu;
 M.header = { init: header };
 M.themePicker = themePicker;
+M.filterPanel = filterPanel;
 
 // Gauge
 M.FerrariGauge = FerrariGauge;
@@ -149,6 +155,12 @@ M.hBarChart = hBarChart;
 M.okrPanel = okrPanel;
 M.gridLayout = gridLayout;
 M.createLayout = createLayout;
+
+// Auto-restore saved theme before first render
+try {
+  var _savedTheme = localStorage.getItem('mn-theme');
+  if (_savedTheme) setTheme(_savedTheme as Parameters<typeof setTheme>[0]);
+} catch (_e) { /* storage may be blocked */ }
 
 // Lazy layout singleton — opt-in via data-mn-auto-layout attribute
 function _initLayout(): void {

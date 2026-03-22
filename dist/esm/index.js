@@ -144,9 +144,9 @@ var NavigationModel = class {
       }
     }
     if (removed) {
-      const current = this.current();
-      if (current) {
-        this.notify(current, "remove");
+      const current2 = this.current();
+      if (current2) {
+        this.notify(current2, "remove");
       } else {
         this.notify({ viewId, timestamp: Date.now() }, "remove");
       }
@@ -525,6 +525,54 @@ var PanelOrchestrator = class {
   }
 };
 
+// src/ts/locale.ts
+var defaults = {
+  themes: {
+    editorial: "Editorial",
+    nero: "Nero",
+    avorio: "Avorio",
+    colorblind: "Colorblind",
+    sugar: "Sugar"
+  },
+  filterPanel: {
+    saveDefault: "SAVE AS DEFAULT",
+    clear: "CLEAR"
+  },
+  a11y: {
+    display: "Display",
+    textSize: "Text Size",
+    lineSpacing: "Line Spacing",
+    dyslexiaFont: "Dyslexia Font",
+    reducedMotion: "Reduced Motion",
+    highContrast: "High Contrast",
+    focusIndicators: "Focus Indicators",
+    resetDefaults: "Reset to Defaults"
+  },
+  stateScaffold: {
+    loading: "Loading...",
+    noResults: "No results match your filters.",
+    retry: "Retry",
+    error: "Something went wrong. Please try again.",
+    empty: "No data available yet.",
+    partial: "Some data may be unavailable right now."
+  }
+};
+var current = JSON.parse(JSON.stringify(defaults));
+function setLocale(locale) {
+  current = {
+    themes: { ...defaults.themes, ...locale.themes },
+    filterPanel: { ...defaults.filterPanel, ...locale.filterPanel },
+    a11y: { ...defaults.a11y, ...locale.a11y },
+    stateScaffold: { ...defaults.stateScaffold, ...locale.stateScaffold }
+  };
+}
+function getLocale() {
+  return current;
+}
+function resetLocale() {
+  current = JSON.parse(JSON.stringify(defaults));
+}
+
 // src/ts/state-scaffold.ts
 var VALID_STATES = ["loading", "empty", "error", "partial", "no-results", "ready"];
 var StateScaffold = class {
@@ -608,7 +656,7 @@ var StateScaffold = class {
   }
   renderEmpty() {
     const panel = this.buildMessageState(
-      this.options.message || "No data available yet.",
+      this.options.message || getLocale().stateScaffold.empty,
       this.options.onAction,
       this.options.actionLabel,
       "Take action"
@@ -617,9 +665,9 @@ var StateScaffold = class {
   }
   renderError() {
     const panel = this.buildMessageState(
-      this.options.message || "Something went wrong. Please try again.",
+      this.options.message || getLocale().stateScaffold.error,
       this.options.onRetry,
-      "Retry",
+      getLocale().stateScaffold.retry,
       "Retry"
     );
     this.status.appendChild(panel);
@@ -631,7 +679,7 @@ var StateScaffold = class {
     banner.setAttribute("aria-live", "polite");
     const text = document.createElement("p");
     text.className = "mn-scaffold__message";
-    text.textContent = this.options.message || "Some data may be unavailable right now.";
+    text.textContent = this.options.message || getLocale().stateScaffold.partial;
     banner.appendChild(text);
     this.status.appendChild(banner);
   }
@@ -640,7 +688,7 @@ var StateScaffold = class {
   }
   renderNoResults() {
     const panel = this.buildMessageState(
-      this.options.message || "No results match your filters.",
+      this.options.message || getLocale().stateScaffold.noResults,
       this.options.onAction,
       this.options.actionLabel,
       "Clear filters"
@@ -1179,12 +1227,12 @@ function setFacetDisabled(section, disabled) {
 function isOptionElement(el5) {
   return el5.classList.contains("mn-facet__option-input") || el5.classList.contains("mn-facet__option-button");
 }
-function focusOption(current, direction) {
-  const body = current.closest(".mn-facet__body");
+function focusOption(current2, direction) {
+  const body = current2.closest(".mn-facet__body");
   if (!body) return;
   const options = Array.from(body.querySelectorAll(".mn-facet__option-input, .mn-facet__option-button"));
   if (!options.length) return;
-  const idx = options.indexOf(current);
+  const idx = options.indexOf(current2);
   const next = idx < 0 ? options[0] : options[(idx + direction + options.length) % options.length];
   next.focus();
 }
@@ -1895,15 +1943,15 @@ var editors = {
     btnMinus.type = "button";
     btnMinus.textContent = "\u2212";
     const display = createElement("span", "mn-detail-panel__score-value");
-    let current = parseInt(String(val ?? ""), 10) || (field.min ?? 0);
-    display.textContent = String(current);
+    let current2 = parseInt(String(val ?? ""), 10) || (field.min ?? 0);
+    display.textContent = String(current2);
     const btnPlus = createElement("button", "mn-detail-panel__score-btn");
     btnPlus.type = "button";
     btnPlus.textContent = "+";
     function update(delta) {
-      current = Math.max(field.min ?? 0, Math.min(field.max ?? 5, current + delta));
-      display.textContent = String(current);
-      onChange(current);
+      current2 = Math.max(field.min ?? 0, Math.min(field.max ?? 5, current2 + delta));
+      display.textContent = String(current2);
+      onChange(current2);
     }
     btnMinus.addEventListener("click", () => update(-1));
     btnPlus.addEventListener("click", () => update(1));
@@ -3078,9 +3126,9 @@ var navIcons = {
   minimize: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>',
   expand: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
   collapse: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
-  funnel: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
-  gantt: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="3" x2="4" y2="21"/><rect x="6" y="5.5" width="8" height="3" rx="1"/><rect x="6" y="10.5" width="13" height="3" rx="1"/><rect x="6" y="15.5" width="5" height="3" rx="1"/></svg>',
-  table: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="12" y1="9" x2="12" y2="21"/></svg>',
+  funnel: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>',
+  gantt: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="4" rx="1"/><rect x="3" y="10" width="12" height="4" rx="1"/><rect x="3" y="17" width="15" height="4" rx="1"/></svg>',
+  table: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>',
   heatmap: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="6" height="6" rx="0.5"/><rect x="9" y="2" width="6" height="6" rx="0.5"/><rect x="16" y="2" width="6" height="6" rx="0.5"/><rect x="2" y="9" width="6" height="6" rx="0.5"/><rect x="9" y="9" width="6" height="6" rx="0.5"/><rect x="16" y="9" width="6" height="6" rx="0.5"/><rect x="2" y="16" width="6" height="6" rx="0.5"/><rect x="9" y="16" width="6" height="6" rx="0.5"/><rect x="16" y="16" width="6" height="6" rx="0.5"/></svg>',
   grid: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>'
 };
@@ -3149,13 +3197,13 @@ var objectIcons = {
   mail: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>',
   message: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
   calendar: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
-  link: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+  link: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>',
   tag: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
   star: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
   file: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>',
   folder: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
   image: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
-  clock: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+  clock: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
   globe: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
   compass: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" opacity="0.15" stroke="currentColor"/></svg>',
   bolt: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
@@ -3293,28 +3341,28 @@ function initThemeToggle(toggleId, gaugeInstances = [], onAutoContrast) {
       }
     };
   }
-  let current = getTheme();
-  toggle.innerHTML = themeIcon(current);
-  toggle.title = LABELS[current];
-  toggle.setAttribute("aria-label", LABELS[current]);
+  let current2 = getTheme();
+  toggle.innerHTML = themeIcon(current2);
+  toggle.title = LABELS[current2];
+  toggle.setAttribute("aria-label", LABELS[current2]);
   function applyTheme() {
-    toggle.innerHTML = themeIcon(current);
-    toggle.title = LABELS[current];
-    toggle.setAttribute("aria-label", LABELS[current]);
+    toggle.innerHTML = themeIcon(current2);
+    toggle.title = LABELS[current2];
+    toggle.setAttribute("aria-label", LABELS[current2]);
     requestAnimationFrame(() => {
       gaugeInstances.forEach((g) => g.redraw());
       if (onAutoContrast) onAutoContrast(".mn-treemap__cell");
     });
   }
   const onClick = () => {
-    current = cycleTheme();
+    current2 = cycleTheme();
     applyTheme();
   };
   toggle.addEventListener("click", onClick);
   return {
-    getMode: () => current,
+    getMode: () => current2,
     setMode: (mode) => {
-      current = mode;
+      current2 = mode;
       setTheme(mode);
       applyTheme();
     },
@@ -3399,8 +3447,8 @@ function themeRotary(opts) {
   }
   root.setAttribute("aria-activedescendant", `${rotaryId}-${getTheme()}`);
   root.addEventListener("keydown", (e) => {
-    const current = getTheme();
-    const idx = THEME_POSITIONS.findIndex((p) => p.mode === current);
+    const current2 = getTheme();
+    const idx = THEME_POSITIONS.findIndex((p) => p.mode === current2);
     let next = idx;
     switch (e.key) {
       case "ArrowRight":
@@ -3437,12 +3485,12 @@ function themeRotary(opts) {
     opts.onChange?.(mode);
   }
   function updateVisual() {
-    const current = getTheme();
-    const angle = angleForTheme(current);
+    const current2 = getTheme();
+    const angle = angleForTheme(current2);
     pointer.style.transform = `translateX(-50%) rotate(${angle}deg)`;
-    root.setAttribute("aria-activedescendant", `${rotaryId}-${current}`);
+    root.setAttribute("aria-activedescendant", `${rotaryId}-${current2}`);
     for (const [mode, el5] of labels) {
-      const active = mode === current;
+      const active = mode === current2;
       el5.classList.toggle("mn-theme-rotary__pos--active", active);
       el5.setAttribute("aria-checked", String(active));
     }
@@ -4313,7 +4361,9 @@ function buildCard(theme, isActive) {
   card.setAttribute("aria-checked", String(isActive));
   card.setAttribute("tabindex", "0");
   card.setAttribute("data-theme", theme.id);
-  card.setAttribute("aria-label", `${escapeHtml(theme.label)} theme`);
+  const themeLocale = getLocale().themes;
+  const locLabel = themeLocale[theme.id] || theme.label;
+  card.setAttribute("aria-label", `${escapeHtml(locLabel)} theme`);
   const header2 = document.createElement("div");
   header2.className = "mn-theme-picker__header";
   const radio = document.createElement("span");
@@ -4322,7 +4372,7 @@ function buildCard(theme, isActive) {
   header2.appendChild(radio);
   const name = document.createElement("span");
   name.className = "mn-theme-picker__name";
-  name.textContent = theme.label;
+  name.textContent = locLabel;
   header2.appendChild(name);
   card.appendChild(header2);
   const preview = document.createElement("div");
@@ -4354,8 +4404,8 @@ function buildCard(theme, isActive) {
   return card;
 }
 function themePicker(container, options) {
-  const current = options?.current ?? getTheme();
-  let selected = THEMES.some((t) => t.id === current) ? current : "editorial";
+  const current2 = options?.current ?? getTheme();
+  let selected = THEMES.some((t) => t.id === current2) ? current2 : "editorial";
   const grid = document.createElement("div");
   grid.className = "mn-theme-picker" + (options?.compact ? " mn-theme-picker--compact" : "");
   grid.setAttribute("role", "radiogroup");
@@ -4786,6 +4836,270 @@ function header(container, options) {
     destroy() {
       cleanups.forEach((fn) => fn());
       nav.remove();
+    }
+  };
+}
+
+// src/ts/filter-panel-dom.ts
+function buildItem(item, selected) {
+  const row = createElement("div", "mn-filter-panel__item", {
+    role: "option",
+    tabindex: "-1"
+  });
+  if (selected) {
+    row.setAttribute("aria-selected", "true");
+    row.classList.add("mn-filter-panel__item--selected");
+  } else {
+    row.setAttribute("aria-selected", "false");
+  }
+  if (item.color) {
+    const dot = createElement("span", "mn-filter-panel__dot");
+    if (isValidColor(item.color)) {
+      dot.style.backgroundColor = item.color;
+    }
+    row.appendChild(dot);
+  }
+  const label = createElement("span", "mn-filter-panel__label");
+  label.textContent = item.label;
+  row.appendChild(label);
+  if (item.count !== void 0) {
+    const count = createElement("span", "mn-filter-panel__count");
+    count.textContent = String(item.count);
+    row.appendChild(count);
+  }
+  const check = createElement("span", "mn-filter-panel__check");
+  check.setAttribute("aria-hidden", "true");
+  row.appendChild(check);
+  return row;
+}
+function buildColumn(col) {
+  const wrapper = createElement("div", "mn-filter-panel__column");
+  const title = createElement("div", "mn-filter-panel__column-title");
+  title.textContent = col.title;
+  wrapper.appendChild(title);
+  const list = createElement("div", "mn-filter-panel__list", {
+    role: "listbox",
+    "aria-label": col.title
+  });
+  if (col.type === "multi-select") {
+    list.setAttribute("aria-multiselectable", "true");
+  }
+  const itemEls = [];
+  for (const item of col.items) {
+    const row = buildItem(item, item.selected === true);
+    itemEls.push(row);
+    list.appendChild(row);
+  }
+  wrapper.appendChild(list);
+  return { el: wrapper, itemEls };
+}
+function buildFilterPanel(columns, onSave, onClear) {
+  const el5 = createElement("div", "mn-filter-panel", {
+    role: "dialog",
+    "aria-label": "Filter panel"
+  });
+  const colsWrap = createElement("div", "mn-filter-panel__columns");
+  const columnEls = [];
+  const itemEls = [];
+  for (const col of columns) {
+    const result = buildColumn(col);
+    columnEls.push(result.el);
+    itemEls.push(result.itemEls);
+    colsWrap.appendChild(result.el);
+  }
+  el5.appendChild(colsWrap);
+  const footer = createElement("div", "mn-filter-panel__footer");
+  const saveBtn = createElement("button", "mn-filter-panel__save-btn", {
+    type: "button"
+  });
+  saveBtn.textContent = "SAVE AS DEFAULT";
+  saveBtn.addEventListener("click", onSave);
+  footer.appendChild(saveBtn);
+  const clearBtn = createElement("button", "mn-filter-panel__clear-btn", {
+    type: "button"
+  });
+  clearBtn.textContent = "CLEAR";
+  clearBtn.addEventListener("click", onClear);
+  footer.appendChild(clearBtn);
+  el5.appendChild(footer);
+  return { el: el5, columnEls, itemEls };
+}
+
+// src/ts/filter-panel.ts
+function collectFilters(columns) {
+  const result = {};
+  for (const col of columns) {
+    const selected = col.items.filter((i) => i.selected === true);
+    if (col.type === "single-select") {
+      result[col.id] = selected.length > 0 ? selected[0].value : "";
+    } else {
+      result[col.id] = selected.map((i) => i.value);
+    }
+  }
+  return result;
+}
+function positionPanel(panel, anchor) {
+  const rect = anchor.getBoundingClientRect();
+  panel.style.position = "fixed";
+  panel.style.top = rect.bottom + 4 + "px";
+  panel.style.left = rect.left + "px";
+  requestAnimationFrame(() => {
+    const pRect = panel.getBoundingClientRect();
+    if (pRect.right > window.innerWidth - 8) {
+      panel.style.left = Math.max(8, window.innerWidth - pRect.width - 8) + "px";
+    }
+    if (pRect.bottom > window.innerHeight - 8) {
+      panel.style.top = rect.top - pRect.height - 4 + "px";
+    }
+  });
+}
+function handleSingleSelect(col, itemIdx, itemEls) {
+  for (let i = 0; i < col.items.length; i++) {
+    const wasSelected = col.items[i].selected === true;
+    const nowSelected = i === itemIdx;
+    col.items[i].selected = nowSelected;
+    if (wasSelected && !nowSelected) {
+      itemEls[i].classList.remove("mn-filter-panel__item--selected");
+      itemEls[i].setAttribute("aria-selected", "false");
+    } else if (nowSelected) {
+      itemEls[i].classList.add("mn-filter-panel__item--selected");
+      itemEls[i].setAttribute("aria-selected", "true");
+    }
+  }
+}
+function handleMultiSelect(col, itemIdx, itemEls) {
+  const item = col.items[itemIdx];
+  const next = !(item.selected === true);
+  item.selected = next;
+  const el5 = itemEls[itemIdx];
+  if (next) {
+    el5.classList.add("mn-filter-panel__item--selected");
+    el5.setAttribute("aria-selected", "true");
+  } else {
+    el5.classList.remove("mn-filter-panel__item--selected");
+    el5.setAttribute("aria-selected", "false");
+  }
+}
+function filterPanel(anchor, options) {
+  const columns = options.columns;
+  let panelEl = null;
+  let allItemEls = [];
+  let open = false;
+  let focusColIdx = 0;
+  let focusRowIdx = -1;
+  function onSave() {
+    if (options.onSaveDefault) options.onSaveDefault(collectFilters(columns));
+  }
+  function onClear() {
+    for (const col of columns) {
+      for (const item of col.items) item.selected = false;
+    }
+    for (let c = 0; c < allItemEls.length; c++) {
+      for (let r = 0; r < allItemEls[c].length; r++) {
+        allItemEls[c][r].classList.remove("mn-filter-panel__item--selected");
+        allItemEls[c][r].setAttribute("aria-selected", "false");
+      }
+    }
+    if (options.onClear) options.onClear();
+    if (options.onFilterChange) options.onFilterChange(collectFilters(columns));
+  }
+  function setFocus(colIdx, rowIdx) {
+    if (!allItemEls.length) return;
+    focusColIdx = Math.max(0, Math.min(colIdx, allItemEls.length - 1));
+    const colItems = allItemEls[focusColIdx];
+    if (!colItems.length) return;
+    focusRowIdx = (rowIdx % colItems.length + colItems.length) % colItems.length;
+    colItems[focusRowIdx].focus();
+  }
+  function onKeyDown(e) {
+    if (!open) return;
+    switch (e.key) {
+      case "Escape":
+        e.preventDefault();
+        doClose();
+        anchor.focus();
+        break;
+      case "ArrowDown":
+        e.preventDefault();
+        setFocus(focusColIdx, focusRowIdx + 1);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setFocus(focusColIdx, focusRowIdx - 1);
+        break;
+      case "Tab":
+        if (e.shiftKey) {
+          if (focusColIdx > 0) {
+            e.preventDefault();
+            setFocus(focusColIdx - 1, 0);
+          }
+        } else {
+          if (focusColIdx < allItemEls.length - 1) {
+            e.preventDefault();
+            setFocus(focusColIdx + 1, 0);
+          }
+        }
+        break;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        if (focusRowIdx >= 0 && allItemEls[focusColIdx]) {
+          allItemEls[focusColIdx][focusRowIdx].click();
+        }
+        break;
+    }
+  }
+  function onOutsideClick(e) {
+    const target = e.target;
+    if (target && panelEl && !panelEl.contains(target) && !anchor.contains(target)) {
+      doClose();
+    }
+  }
+  function doOpen() {
+    if (open) return;
+    open = true;
+    focusColIdx = 0;
+    focusRowIdx = -1;
+    const dom = buildFilterPanel(columns, onSave, onClear);
+    panelEl = dom.el;
+    allItemEls = dom.itemEls;
+    for (let c = 0; c < columns.length; c++) {
+      for (let r = 0; r < allItemEls[c].length; r++) {
+        const colIdx = c;
+        const rowIdx = r;
+        allItemEls[c][r].addEventListener("click", () => {
+          if (columns[colIdx].type === "single-select") {
+            handleSingleSelect(columns[colIdx], rowIdx, allItemEls[colIdx]);
+          } else {
+            handleMultiSelect(columns[colIdx], rowIdx, allItemEls[colIdx]);
+          }
+          if (options.onFilterChange) options.onFilterChange(collectFilters(columns));
+        });
+      }
+    }
+    document.body.appendChild(panelEl);
+    positionPanel(panelEl, anchor);
+    document.addEventListener("keydown", onKeyDown, true);
+    document.addEventListener("mousedown", onOutsideClick, true);
+  }
+  function doClose() {
+    if (!open) return;
+    open = false;
+    document.removeEventListener("keydown", onKeyDown, true);
+    document.removeEventListener("mousedown", onOutsideClick, true);
+    if (panelEl && panelEl.parentNode) {
+      panelEl.parentNode.removeChild(panelEl);
+    }
+    panelEl = null;
+    allItemEls = [];
+  }
+  return {
+    open: doOpen,
+    close: doClose,
+    isOpen: () => open,
+    getFilters: () => collectFilters(columns),
+    destroy() {
+      doClose();
     }
   };
 }
@@ -6506,10 +6820,10 @@ function attachDatePickerKeys(picker, ctx) {
     if (handled) e.preventDefault();
   });
 }
-function navigateDay(ctx, current, delta) {
+function navigateDay(ctx, current2, delta) {
   let y = ctx.getViewYear();
   let m = ctx.getViewMonth();
-  let target = current + delta;
+  let target = current2 + delta;
   if (target < 1) {
     m--;
     if (m < 0) {
@@ -7155,8 +7469,8 @@ function safeNumber(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : 0;
 }
-function pct(current, target) {
-  const c = safeNumber(current), t = safeNumber(target);
+function pct(current2, target) {
+  const c = safeNumber(current2), t = safeNumber(target);
   return t <= 0 ? 0 : clamp(c / t * 100, 0, 100);
 }
 function statusFromProgress(p) {
@@ -7166,8 +7480,8 @@ function statusFromProgress(p) {
 function statusLabel(s) {
   return s === "on-track" ? "ON TRACK" : s === "at-risk" ? "AT RISK" : "BEHIND";
 }
-function formatKR(current, target, unit) {
-  return String(current) + "/" + String(target) + (unit || "");
+function formatKR(current2, target, unit) {
+  return String(current2) + "/" + String(target) + (unit || "");
 }
 function el4(tag, className, attrs) {
   const node = document.createElement(tag);
@@ -7342,13 +7656,13 @@ function createHero(stats, period) {
   return section;
 }
 function createKRRow(kr, objectiveStatus) {
-  const current = safeNumber(kr.current), target = safeNumber(kr.target);
-  const completion = pct(current, target);
+  const current2 = safeNumber(kr.current), target = safeNumber(kr.target);
+  const completion = pct(current2, target);
   const status = statusFromProgress(completion);
   const row = el4("li", "mn-okr__kr");
   const top = el4("div", "mn-okr__kr-head");
   top.appendChild(el4("span", "mn-okr__kr-title", { text: kr.title || "Untitled KR" }));
-  top.appendChild(el4("span", "mn-okr__kr-metric", { text: formatKR(current, target, kr.unit || "") }));
+  top.appendChild(el4("span", "mn-okr__kr-metric", { text: formatKR(current2, target, kr.unit || "") }));
   const track = el4("div", "mn-okr__kr-track");
   const bar = el4("div", `mn-okr__kr-bar mn-okr__kr-bar--${status}`);
   bar.dataset.target = completion.toFixed(2);
@@ -7506,16 +7820,16 @@ function initNavTracking(opts) {
     console.warn("[Maranello] initNavTracking: no nav links found for selector:", linkSelector);
   }
   const handleScroll = throttle(() => {
-    let current = "";
+    let current2 = "";
     sections.forEach((section) => {
       if (window.scrollY >= section.offsetTop - offsetPx) {
-        current = section.getAttribute("id") ?? "";
+        current2 = section.getAttribute("id") ?? "";
       }
     });
     navLinks.forEach((link) => {
       link.classList.toggle(
         activeClass,
-        link.getAttribute("href") === `#${current}`
+        link.getAttribute("href") === `#${current2}`
       );
     });
   }, 100);
@@ -8368,9 +8682,10 @@ function makeToggle(settings, label, key) {
   return row;
 }
 function buildPanel(settings) {
+  const loc = getLocale().a11y;
   const fab = createElement("button", "mn-a11y-fab", {
-    "aria-label": "Display settings",
-    title: "Display settings"
+    "aria-label": `${loc.display} settings`,
+    title: `${loc.display} settings`
   });
   fab.innerHTML = slidersIcon();
   const panel = createElement("div", "mn-a11y-panel", {
@@ -8378,10 +8693,10 @@ function buildPanel(settings) {
     "aria-label": "Accessibility settings"
   });
   const title = createElement("div", "mn-a11y-panel__title");
-  title.innerHTML = `${slidersIcon()} Display`;
+  title.innerHTML = `${slidersIcon()} ${loc.display}`;
   panel.appendChild(title);
   const fsGroup = createElement("div", "mn-a11y-panel__group");
-  fsGroup.appendChild(createElement("div", "mn-a11y-panel__label", { text: "Text Size" }));
+  fsGroup.appendChild(createElement("div", "mn-a11y-panel__label", { text: loc.textSize }));
   const fsRow = createElement("div", "mn-a11y-panel__size-btns");
   const sizeButtons = {};
   for (const key of Object.keys(SIZES)) {
@@ -8404,7 +8719,7 @@ function buildPanel(settings) {
   fsGroup.appendChild(fsRow);
   panel.appendChild(fsGroup);
   const lsGroup = createElement("div", "mn-a11y-panel__group");
-  lsGroup.appendChild(createElement("div", "mn-a11y-panel__label", { text: "Line Spacing" }));
+  lsGroup.appendChild(createElement("div", "mn-a11y-panel__label", { text: loc.lineSpacing }));
   const lsRow = createElement("div", "mn-a11y-panel__size-btns");
   const lsButtons = {};
   for (const key of Object.keys(LINE_SPACINGS)) {
@@ -8427,12 +8742,12 @@ function buildPanel(settings) {
   lsGroup.appendChild(lsRow);
   panel.appendChild(lsGroup);
   panel.appendChild(createElement("div", "mn-a11y-panel__divider"));
-  panel.appendChild(makeToggle(settings, "Dyslexia Font", "dyslexiaFont"));
-  panel.appendChild(makeToggle(settings, "Reduced Motion", "reducedMotion"));
-  panel.appendChild(makeToggle(settings, "High Contrast", "highContrast"));
-  panel.appendChild(makeToggle(settings, "Focus Indicators", "focusVisible"));
+  panel.appendChild(makeToggle(settings, loc.dyslexiaFont, "dyslexiaFont"));
+  panel.appendChild(makeToggle(settings, loc.reducedMotion, "reducedMotion"));
+  panel.appendChild(makeToggle(settings, loc.highContrast, "highContrast"));
+  panel.appendChild(makeToggle(settings, loc.focusIndicators, "focusVisible"));
   panel.appendChild(createElement("div", "mn-a11y-panel__divider"));
-  const resetBtn = createElement("button", "mn-a11y-panel__reset", { text: "Reset to Defaults" });
+  const resetBtn = createElement("button", "mn-a11y-panel__reset", { text: loc.resetDefaults });
   panel.appendChild(resetBtn);
   return { fab, panel, sizeButtons, lsButtons, resetBtn };
 }
@@ -8643,18 +8958,18 @@ function initRotary(el5, options) {
   const pointer = el5.querySelector(".mn-rotary__pointer");
   const valueEl = el5.querySelector(".mn-rotary__value");
   if (!housing || !pointer) throw new Error("Rotary: missing .mn-rotary__housing or __pointer");
-  let current = opts.initial;
+  let current2 = opts.initial;
   const totalSteps = opts.steps.length;
   const angleRange = 240, startAngle = -120;
   function setStep(idx) {
     idx = clamp(idx, 0, totalSteps - 1);
-    current = idx;
+    current2 = idx;
     const angle = startAngle + idx / (totalSteps - 1) * angleRange;
     pointer.style.transform = `rotate(${angle}deg)`;
     if (valueEl) valueEl.textContent = opts.steps[idx];
     opts.onChange?.(opts.steps[idx], idx);
   }
-  setStep(current);
+  setStep(current2);
   let dragging = false, centerX = 0, centerY = 0;
   function getCenter() {
     const rect = housing.getBoundingClientRect();
@@ -8700,28 +9015,28 @@ function initRotary(el5, options) {
   document.addEventListener("mouseup", onEnd);
   document.addEventListener("touchend", onEnd);
   housing.addEventListener("click", () => {
-    if (!dragging) setStep((current + 1) % totalSteps);
+    if (!dragging) setStep((current2 + 1) % totalSteps);
   });
   el5.setAttribute("tabindex", "0");
   el5.setAttribute("role", "slider");
   el5.setAttribute("aria-valuemin", "0");
   el5.setAttribute("aria-valuemax", String(totalSteps - 1));
-  el5.setAttribute("aria-valuenow", String(current));
-  el5.setAttribute("aria-valuetext", opts.steps[current]);
+  el5.setAttribute("aria-valuenow", String(current2));
+  el5.setAttribute("aria-valuetext", opts.steps[current2]);
   el5.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight" || e.key === "ArrowUp") {
       e.preventDefault();
-      setStep(current + 1);
+      setStep(current2 + 1);
     } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
       e.preventDefault();
-      setStep(current - 1);
+      setStep(current2 - 1);
     }
-    el5.setAttribute("aria-valuenow", String(current));
-    el5.setAttribute("aria-valuetext", opts.steps[current]);
+    el5.setAttribute("aria-valuenow", String(current2));
+    el5.setAttribute("aria-valuetext", opts.steps[current2]);
   });
   return {
     setStep,
-    getValue: () => opts.steps[current],
+    getValue: () => opts.steps[current2],
     destroy: () => {
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("touchmove", onMove);
@@ -8756,12 +9071,12 @@ function initSlider(el5, options) {
     track.appendChild(thumb);
   }
   const fillEl = fill, thumbEl = thumb;
-  let current = opts.value, dragging = false;
+  let current2 = opts.value, dragging = false;
   el5.setAttribute("tabindex", "0");
   el5.setAttribute("role", "slider");
   el5.setAttribute("aria-valuemin", String(opts.min));
   el5.setAttribute("aria-valuemax", String(opts.max));
-  el5.setAttribute("aria-valuenow", String(current));
+  el5.setAttribute("aria-valuenow", String(current2));
   if (opts.label) el5.setAttribute("aria-label", opts.label);
   function pctFromValue(v) {
     return (v - opts.min) / (opts.max - opts.min) * 100;
@@ -8771,12 +9086,12 @@ function initSlider(el5, options) {
     return Math.round(raw / opts.step) * opts.step;
   }
   function render5() {
-    const pct3 = pctFromValue(current);
+    const pct3 = pctFromValue(current2);
     fillEl.style.width = `${pct3}%`;
     thumbEl.style.left = `${pct3}%`;
-    if (valueEl) valueEl.textContent = String(current);
-    el5.setAttribute("aria-valuenow", String(current));
-    if (opts.label) el5.setAttribute("aria-valuetext", `${current}${opts.unit}`);
+    if (valueEl) valueEl.textContent = String(current2);
+    el5.setAttribute("aria-valuenow", String(current2));
+    if (opts.label) el5.setAttribute("aria-valuetext", `${current2}${opts.unit}`);
   }
   function getPointerX(e) {
     if ("touches" in e) {
@@ -8789,11 +9104,11 @@ function initSlider(el5, options) {
     const rect = track.getBoundingClientRect();
     const pct3 = clamp((clientX - rect.left) / rect.width * 100, 0, 100);
     const newVal = valueFromPct(pct3);
-    if (newVal !== current) {
-      current = newVal;
+    if (newVal !== current2) {
+      current2 = newVal;
       render5();
-      opts.onChange?.(current);
-      eventBus.emit("slider-change", { element: el5, value: current });
+      opts.onChange?.(current2);
+      eventBus.emit("slider-change", { element: el5, value: current2 });
     }
   }
   function onStart(e) {
@@ -8819,21 +9134,21 @@ function initSlider(el5, options) {
   el5.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight" || e.key === "ArrowUp") {
       e.preventDefault();
-      current = Math.min(opts.max, current + opts.step);
+      current2 = Math.min(opts.max, current2 + opts.step);
       render5();
-      opts.onChange?.(current);
+      opts.onChange?.(current2);
     } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
       e.preventDefault();
-      current = Math.max(opts.min, current - opts.step);
+      current2 = Math.max(opts.min, current2 - opts.step);
       render5();
-      opts.onChange?.(current);
+      opts.onChange?.(current2);
     }
   });
   render5();
   return {
-    getValue: () => current,
+    getValue: () => current2,
     setValue: (v) => {
-      current = clamp(v, opts.min, opts.max);
+      current2 = clamp(v, opts.min, opts.max);
       render5();
     }
   };
@@ -8990,14 +9305,14 @@ function gridLayout(container, template = "masonry-auto", options) {
   }
   const host = target;
   const opts = { gap: "", padding: "", animate: true, ...options };
-  let current = template;
+  let current2 = template;
   host.classList.add("mn-grid-template");
   if (opts.gap) host.style.gap = opts.gap;
   if (opts.padding) host.style.padding = opts.padding;
   function applyTemplate(name) {
     TEMPLATES.forEach((item) => host.classList.remove(CLASS_PREFIX + item));
     host.classList.add(CLASS_PREFIX + name);
-    current = name;
+    current2 = name;
     if (opts.animate) {
       const { children } = host;
       for (let index = 0; index < children.length; index += 1) {
@@ -9012,10 +9327,10 @@ function gridLayout(container, template = "masonry-auto", options) {
       }
     }
   }
-  applyTemplate(current);
+  applyTemplate(current2);
   return {
     setTemplate: applyTemplate,
-    getTemplate: () => current,
+    getTemplate: () => current2,
     destroy: () => {
       host.classList.remove("mn-grid-template");
       TEMPLATES.forEach((item) => host.classList.remove(CLASS_PREFIX + item));
@@ -9816,7 +10131,7 @@ function bulletChart(canvas, opts) {
 }
 
 // src/ts/notification-center.ts
-function buildItem(n, onRemove, onAction) {
+function buildItem2(n, onRemove, onAction) {
   const el5 = document.createElement("div");
   const typeCls = `mn-notif-item--${n.type ?? "default"}`;
   const unreadCls = n.read ? "" : " mn-notif-item--unread";
@@ -9896,7 +10211,7 @@ function notificationCenter(triggerEl, opts) {
   function renderAll() {
     list.innerHTML = "";
     for (const n of notifications) {
-      list.appendChild(buildItem(n, removeItem, opts?.onAction));
+      list.appendChild(buildItem2(n, removeItem, opts?.onAction));
     }
     updateBadge();
     updateEmpty();
@@ -9940,7 +10255,7 @@ function notificationCenter(triggerEl, opts) {
           list.querySelector(`[data-notif-id="${removed.id}"]`)?.remove();
         }
       }
-      const el5 = buildItem(n, removeItem, opts?.onAction);
+      const el5 = buildItem2(n, removeItem, opts?.onAction);
       list.prepend(el5);
       updateBadge();
       updateEmpty();
@@ -10401,13 +10716,13 @@ function decisionMatrix(el5, opts) {
   }
   function openEdit(td, altId, critId) {
     if (activeInput) commitEdit();
-    const current = alternatives.find((a) => a.id === altId)?.scores[critId] ?? 5;
+    const current2 = alternatives.find((a) => a.id === altId)?.scores[critId] ?? 5;
     td.textContent = "";
     const input = document.createElement("input");
     input.type = "number";
     input.min = "1";
     input.max = "10";
-    input.value = String(current);
+    input.value = String(current2);
     input.className = "mn-decision-matrix__edit-input";
     input.dataset.alt = altId;
     input.dataset.crit = critId;
@@ -10905,7 +11220,7 @@ function nineBoxMatrix(el5, opts) {
           `${yLabel}: ${yAxis[cy - 1]}, ${xLabel}: ${xAxis[cx - 1]}`
         );
         for (const item of items.filter((i) => i.x === cx && i.y === cy)) {
-          cell.appendChild(buildItem2(item));
+          cell.appendChild(buildItem3(item));
         }
         grid.appendChild(cell);
       }
@@ -10923,7 +11238,7 @@ function nineBoxMatrix(el5, opts) {
     el5.appendChild(root);
     bindEvents();
   }
-  function buildItem2(item) {
+  function buildItem3(item) {
     const div = makeDiv("mn-nine-box__item");
     if (selectedId === item.id) div.classList.add("mn-nine-box__item--selected");
     div.setAttribute("role", "button");
@@ -11609,18 +11924,18 @@ function tokenMeter(el5, usage, opts) {
     showBreakdown: opts?.showBreakdown ?? true,
     animate: opts?.animate ?? true
   };
-  let current = usage ?? { prompt: 0, completion: 0 };
-  render4(el5, current, resolved);
+  let current2 = usage ?? { prompt: 0, completion: 0 };
+  render4(el5, current2, resolved);
   return {
     update(next) {
-      current = next;
+      current2 = next;
       resolved.showCost = opts?.showCost ?? next.costPerMToken !== void 0;
-      updateDom(el5, current, resolved.showCost);
-      opts?.onChange?.(current);
+      updateDom(el5, current2, resolved.showCost);
+      opts?.onChange?.(current2);
     },
     reset() {
-      current = { prompt: 0, completion: 0 };
-      render4(el5, current, resolved);
+      current2 = { prompt: 0, completion: 0 };
+      render4(el5, current2, resolved);
     },
     destroy() {
       el5.innerHTML = "";
@@ -12545,8 +12860,8 @@ function agentCostBreakdown(el5, rows, opts) {
         </table>
       </div></div>`;
   }
-  let current = rows.slice();
-  renderAll(current);
+  let current2 = rows.slice();
+  renderAll(current2);
   if (sortable) {
     el5.addEventListener("click", (e) => {
       const th = e.target.closest(".mn-cost-breakdown__th");
@@ -12554,7 +12869,7 @@ function agentCostBreakdown(el5, rows, opts) {
       const key = th.dataset.sort;
       sort.dir = sort.key === key && sort.dir === "asc" ? "desc" : "asc";
       sort.key = key;
-      renderAll(current);
+      renderAll(current2);
     }, { signal: ac.signal });
   }
   if (opts?.onSelect) {
@@ -12562,14 +12877,14 @@ function agentCostBreakdown(el5, rows, opts) {
       const tr = e.target.closest("tbody tr[data-id]");
       if (!tr) return;
       const id = tr.dataset.id;
-      const row = current.find((r) => r.id === id);
+      const row = current2.find((r) => r.id === id);
       if (row) opts.onSelect(row);
     }, { signal: ac.signal });
   }
   return {
     update(newRows) {
-      current = newRows.slice();
-      renderAll(current);
+      current2 = newRows.slice();
+      renderAll(current2);
     },
     destroy() {
       ac.abort();
@@ -14183,6 +14498,9 @@ M.themeRotary = themeRotary;
 M.getAccent = getAccent;
 M.cssVar = cssVar;
 M.palette = palette;
+M.setLocale = setLocale;
+M.getLocale = getLocale;
+M.resetLocale = resetLocale;
 M.clamp = clamp;
 M.lerp = lerp;
 M.hiDpiCanvas = hiDpiCanvas;
@@ -14210,6 +14528,7 @@ M.systemStatus = systemStatus;
 M.profileMenu = profileMenu;
 M.header = { init: header };
 M.themePicker = themePicker;
+M.filterPanel = filterPanel;
 M.FerrariGauge = FerrariGauge;
 M.buildGaugePalette = buildGaugePalette;
 M.createGauge = createGauge;
@@ -14233,6 +14552,12 @@ M.hBarChart = hBarChart;
 M.okrPanel = okrPanel;
 M.gridLayout = gridLayout;
 M.createLayout = createLayout;
+try {
+  _savedTheme = localStorage.getItem("mn-theme");
+  if (_savedTheme) setTheme(_savedTheme);
+} catch (_e) {
+}
+var _savedTheme;
 function _initLayout() {
   const gridEl = document.getElementById("mn-grid");
   if (gridEl && gridEl.hasAttribute("data-mn-auto-layout")) {
@@ -14417,6 +14742,7 @@ export {
   editors,
   emit,
   eventBus,
+  filterPanel,
   flipCounter,
   formatDate,
   formatDateSimple,
@@ -14430,6 +14756,7 @@ export {
   getFieldInput,
   getIcon,
   getInitials,
+  getLocale,
   getMarkerColors,
   getTheme,
   getVisibleProjected,
@@ -14512,10 +14839,12 @@ export {
   renderSkeleton,
   renderSourceCards,
   renderers,
+  resetLocale,
   resolveContainer3 as resolveContainer,
   riskMatrix,
   saveSettings,
   sectionCard,
+  setLocale,
   setTheme,
   settingsPanel,
   showTip,
