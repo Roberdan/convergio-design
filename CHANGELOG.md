@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.11.1] - 2026-03-22
+
+### Fixed
+- Gauge center value font 47% larger (18px -> 26px on sm) for readability
+- Strip text uses `--mn-text-muted` instead of `--mn-text-tertiary` for Nero contrast
+
 ## [5.11.0] - 2026-03-22
 
 ### Added
