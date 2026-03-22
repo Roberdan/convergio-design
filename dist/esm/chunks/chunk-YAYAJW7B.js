@@ -1,7 +1,7 @@
-/* Maranello Luce Design v5.8.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v5.9.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 import {
   eventBus
-} from "./chunk-V5TJ7VXV.js";
+} from "./chunk-AGCJWPKX.js";
 
 // src/ts/forms-validate.ts
 var validators = {
@@ -470,4 +470,4 @@ export {
   initForms,
   forms
 };
-//# sourceMappingURL=chunk-5BW2LX6Z.js.map
+//# sourceMappingURL=chunk-YAYAJW7B.js.map

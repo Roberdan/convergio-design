@@ -1,4 +1,4 @@
-/* Maranello Luce Design v5.8.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v5.9.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 "use strict";
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -14215,59 +14215,136 @@ function gridLayout(container, template = "masonry-auto", options) {
   };
 }
 
+// src/ts/layout-slot.ts
+var SlotState = class {
+  constructor(domId, initial, panelId) {
+    this.domId = domId;
+    this.viewDriven = false;
+    this.manualRender = null;
+    this.locked = false;
+    this.visible = initial;
+    this.saved = initial;
+    this.panelId = panelId;
+  }
+  /** Write hidden to DOM. */
+  sync() {
+    const el5 = document.getElementById(this.domId);
+    if (el5 && el5.hidden !== !this.visible) el5.hidden = !this.visible;
+  }
+  /** Save state before fullpage. */
+  save() {
+    this.saved = this.visible;
+  }
+  /** Restore state after fullpage. */
+  restore() {
+    this.visible = this.saved;
+  }
+  /** Apply view config: undefined = don't touch (close if view-driven), false = close, object = open + render. */
+  applyConfig(cfg) {
+    if (cfg === void 0) {
+      if (this.viewDriven) {
+        this.visible = false;
+        this.viewDriven = false;
+      }
+      return;
+    }
+    if (cfg === false) {
+      this.visible = false;
+      this.viewDriven = false;
+      this.panelId = void 0;
+      this.locked = true;
+      return;
+    }
+    this.visible = true;
+    this.viewDriven = true;
+    this.locked = false;
+    if (cfg.id) this.panelId = cfg.id;
+    if (cfg.render) this.render(cfg.render);
+  }
+  /** Toggle visibility (manual). Returns false if blocked. */
+  toggle(config) {
+    if (this.locked) return false;
+    this.visible = !this.visible;
+    this.viewDriven = false;
+    if (config && config.id) this.panelId = config.id;
+    if (config && config.render) this.manualRender = config.render;
+    this.sync();
+    if (this.visible) {
+      const fn = config && config.render || this.manualRender;
+      if (fn) this.render(fn);
+    }
+    return true;
+  }
+  /** Open slot (manual). Returns false if blocked. */
+  open(config) {
+    if (this.locked) return false;
+    this.visible = true;
+    this.viewDriven = false;
+    if (config && config.render) this.manualRender = config.render;
+    this.sync();
+    const fn = config && config.render || this.manualRender;
+    if (fn) this.render(fn);
+    return true;
+  }
+  /** Close slot. */
+  close() {
+    this.visible = false;
+    this.viewDriven = false;
+    this.sync();
+  }
+  /** Call render on DOM element. */
+  render(fn) {
+    const el5 = document.getElementById(this.domId);
+    if (el5) fn(el5);
+  }
+};
+
 // src/ts/layout.ts
+function initVisible(domId, init, key, fallback) {
+  if (init && typeof init[key] === "boolean") return init[key];
+  const el5 = document.getElementById(domId);
+  return el5 ? !el5.hidden : fallback;
+}
 function createLayout(gridEl, options) {
   const maybeGrid = gridEl ?? document.getElementById("mn-grid");
-  if (!maybeGrid) {
-    throw new Error("createLayout: grid element not found");
-  }
+  if (!maybeGrid) throw new Error("createLayout: grid element not found");
   const grid = maybeGrid;
-  const onStateChange = options && options.onStateChange;
+  const onChange = options && options.onStateChange;
   const init = options && options.initialState;
   const views = /* @__PURE__ */ new Map();
-  const buttonCleanups = [];
-  const initStrip = document.getElementById("mn-slot-strip");
-  const initLeft = document.getElementById("mn-slot-left");
-  const initRight = document.getElementById("mn-slot-right");
+  const btnCleanups = [];
+  const strip = new SlotState("mn-slot-strip", initVisible("mn-slot-strip", init, "strip", true), init && init.stripPanelId);
+  const left = new SlotState("mn-slot-left", initVisible("mn-slot-left", init, "left", false), init && init.leftPanelId);
+  const right = new SlotState("mn-slot-right", initVisible("mn-slot-right", init, "right", false), init && init.rightPanelId);
   const state = {
     view: init && init.view ? init.view : "",
     fullpage: false,
-    strip: init && typeof init.strip === "boolean" ? init.strip : initStrip ? !initStrip.hidden : true,
-    left: init && typeof init.left === "boolean" ? init.left : initLeft ? !initLeft.hidden : false,
-    right: init && typeof init.right === "boolean" ? init.right : initRight ? !initRight.hidden : false
+    strip: strip.visible,
+    left: left.visible,
+    right: right.visible
   };
-  let leftPanelId = init && init.leftPanelId ? init.leftPanelId : void 0;
-  let rightPanelId = init && init.rightPanelId ? init.rightPanelId : void 0;
-  let stripPanelId = init && init.stripPanelId ? init.stripPanelId : void 0;
   if (init) {
-    if (initStrip) initStrip.hidden = !state.strip;
-    if (initLeft) initLeft.hidden = !state.left;
-    if (initRight) initRight.hidden = !state.right;
+    strip.sync();
+    left.sync();
+    right.sync();
   }
-  let leftViewDriven = false;
-  let rightViewDriven = false;
-  let stripViewDriven = false;
-  let leftManualRender = null;
-  let rightManualRender = null;
-  let stripManualRender = null;
-  let leftLocked = false;
-  let rightLocked = false;
-  let savedStrip = state.strip;
-  let savedLeft = state.left;
-  let savedRight = state.right;
-  function setSlotHidden(slotId, hidden) {
-    const el5 = document.getElementById(slotId);
-    if (el5 && el5.hidden !== hidden) el5.hidden = hidden;
+  function syncState() {
+    state.strip = strip.visible;
+    state.left = left.visible;
+    state.right = right.visible;
   }
-  function syncDOM() {
-    setSlotHidden("mn-slot-left", !state.left);
-    setSlotHidden("mn-slot-right", !state.right);
-    if (state.fullpage) {
-      grid.classList.add("mn-layout--fullpage");
-      setSlotHidden("mn-slot-strip", true);
-    } else {
-      grid.classList.remove("mn-layout--fullpage");
-    }
+  function persistState() {
+    const s = { view: state.view, strip: state.strip, left: state.left, right: state.right };
+    if (left.panelId) s.leftPanelId = left.panelId;
+    if (right.panelId) s.rightPanelId = right.panelId;
+    if (strip.panelId) s.stripPanelId = strip.panelId;
+    return s;
+  }
+  function fireEvent() {
+    grid.dispatchEvent(new CustomEvent("layout-changed", { detail: { ...state }, bubbles: true }));
+    if (onChange) onChange(persistState());
+  }
+  function syncCenter() {
     const center = document.getElementById("mn-slot-center");
     if (center && state.view) {
       const children = center.children;
@@ -14279,173 +14356,78 @@ function createLayout(gridEl, options) {
       }
     }
   }
-  function persistState() {
-    const s = {
-      view: state.view,
-      strip: state.strip,
-      left: state.left,
-      right: state.right
-    };
-    if (leftPanelId) s.leftPanelId = leftPanelId;
-    if (rightPanelId) s.rightPanelId = rightPanelId;
-    if (stripPanelId) s.stripPanelId = stripPanelId;
-    return s;
-  }
-  function fireEvent() {
-    const detail = { ...state };
-    grid.dispatchEvent(
-      new CustomEvent("layout-changed", { detail, bubbles: true })
-    );
-    if (onStateChange) onStateChange(persistState());
-  }
-  function applyState() {
-    syncDOM();
-    fireEvent();
-  }
-  function renderToSlot(slotId, render5) {
-    const el5 = document.getElementById(slotId);
-    if (el5) render5(el5);
-  }
-  function applySlotConfig(cfg, slotId, setOpen, setViewDriven, wasViewDriven) {
-    if (cfg === void 0) {
-      if (wasViewDriven) {
-        setOpen(false);
-        setViewDriven(false);
-      }
-      return;
-    }
-    if (cfg === false) {
-      setOpen(false);
-      setViewDriven(false);
-      return;
-    }
-    setOpen(true);
-    setViewDriven(true);
-    if (cfg.render) renderToSlot(slotId, cfg.render);
-  }
-  const controller = {
+  const ctrl = {
     register(viewId, config) {
       views.set(viewId, config);
     },
     showView(viewId) {
       const config = views.get(viewId);
-      if (!config) {
-        throw new Error(`createLayout.showView: unknown view "${viewId}"`);
-      }
+      if (!config) throw new Error(`createLayout.showView: unknown view "${viewId}"`);
       if (state.fullpage && !config.fullpage) {
-        state.strip = savedStrip;
-        state.left = savedLeft;
-        state.right = savedRight;
-        setSlotHidden("mn-slot-strip", !state.strip);
+        strip.restore();
+        left.restore();
+        right.restore();
+        strip.sync();
       }
       if (!state.fullpage && config.fullpage) {
-        savedStrip = state.strip;
-        savedLeft = state.left;
-        savedRight = state.right;
+        strip.save();
+        left.save();
+        right.save();
       }
       state.view = viewId;
       if (config.fullpage) {
         state.fullpage = true;
-        state.strip = false;
-        state.left = false;
-        state.right = false;
+        strip.visible = false;
+        left.visible = false;
+        right.visible = false;
+        left.sync();
+        right.sync();
+        const el5 = document.getElementById("mn-slot-strip");
+        if (el5) el5.hidden = true;
+        grid.classList.add("mn-layout--fullpage");
       } else {
         state.fullpage = false;
-        applySlotConfig(
-          config.left,
-          "mn-slot-left",
-          (v) => {
-            state.left = v;
-          },
-          (v) => {
-            leftViewDriven = v;
-          },
-          leftViewDriven
-        );
-        if (typeof config.left === "object" && config.left && config.left.id) {
-          leftPanelId = config.left.id;
-        } else if (config.left === void 0 && leftViewDriven) {
-        } else if (config.left === false) {
-          leftPanelId = void 0;
-        }
-        applySlotConfig(
-          config.right,
-          "mn-slot-right",
-          (v) => {
-            state.right = v;
-          },
-          (v) => {
-            rightViewDriven = v;
-          },
-          rightViewDriven
-        );
-        if (typeof config.right === "object" && config.right && config.right.id) {
-          rightPanelId = config.right.id;
-        } else if (config.right === false) {
-          rightPanelId = void 0;
-        }
-        leftLocked = config.left === false;
-        rightLocked = config.right === false;
+        grid.classList.remove("mn-layout--fullpage");
+        left.applyConfig(config.left);
+        right.applyConfig(config.right);
+        left.sync();
+        right.sync();
       }
-      applyState();
+      syncState();
+      syncCenter();
+      fireEvent();
       if (config.center) {
-        renderToSlot("mn-slot-center", config.center);
+        const center = document.getElementById("mn-slot-center");
+        if (center) config.center(center);
       }
     },
-    // Independent toggles — each writes ONLY its own slot, never others
     toggleStrip(config) {
       if (state.fullpage) return;
-      state.strip = !state.strip;
-      stripViewDriven = false;
-      if (config && config.id) stripPanelId = config.id;
-      if (config && config.render) stripManualRender = config.render;
-      setSlotHidden("mn-slot-strip", !state.strip);
+      strip.toggle(config);
+      syncState();
       fireEvent();
-      if (state.strip) {
-        const render5 = config && config.render || stripManualRender;
-        if (render5) renderToSlot("mn-slot-strip", render5);
-      }
     },
     toggleLeft(config) {
-      if (state.fullpage || leftLocked) return;
-      state.left = !state.left;
-      leftViewDriven = false;
-      if (config && config.id) leftPanelId = config.id;
-      if (config && config.render) leftManualRender = config.render;
-      setSlotHidden("mn-slot-left", !state.left);
+      if (state.fullpage || left.locked) return;
+      left.toggle(config);
+      syncState();
       fireEvent();
-      if (state.left) {
-        const render5 = config && config.render || leftManualRender;
-        if (render5) renderToSlot("mn-slot-left", render5);
-      }
     },
     toggleRight(config) {
-      if (state.fullpage || rightLocked) return;
-      state.right = !state.right;
-      rightViewDriven = false;
-      if (config && config.id) rightPanelId = config.id;
-      if (config && config.render) rightManualRender = config.render;
-      setSlotHidden("mn-slot-right", !state.right);
+      if (state.fullpage || right.locked) return;
+      right.toggle(config);
+      syncState();
       fireEvent();
-      if (state.right) {
-        const render5 = config && config.render || rightManualRender;
-        if (render5) renderToSlot("mn-slot-right", render5);
-      }
     },
     openRight(config) {
-      if (state.fullpage || rightLocked) return;
-      state.right = true;
-      rightViewDriven = false;
-      if (config && config.render) rightManualRender = config.render;
-      setSlotHidden("mn-slot-right", !state.right);
+      if (state.fullpage || right.locked) return;
+      right.open(config);
+      syncState();
       fireEvent();
-      const render5 = config && config.render || rightManualRender;
-      if (render5) renderToSlot("mn-slot-right", render5);
     },
     closeRight() {
-      state.right = false;
-      rightViewDriven = false;
-      setSlotHidden("mn-slot-right", !state.right);
+      right.close();
+      syncState();
       fireEvent();
     },
     wireButtons() {
@@ -14454,25 +14436,22 @@ function createLayout(gridEl, options) {
         const btn = document.getElementById(config.buttonId);
         if (!btn) continue;
         const handler = () => {
-          controller.showView(viewId);
+          ctrl.showView(viewId);
         };
         btn.addEventListener("click", handler);
-        buttonCleanups.push(() => btn.removeEventListener("click", handler));
+        btnCleanups.push(() => btn.removeEventListener("click", handler));
       }
     },
     get state() {
       return Object.freeze({ ...state });
     },
     destroy() {
-      for (const cleanup of buttonCleanups) cleanup();
-      buttonCleanups.length = 0;
+      for (const fn of btnCleanups) fn();
+      btnCleanups.length = 0;
       views.clear();
-      leftManualRender = null;
-      rightManualRender = null;
-      stripManualRender = null;
     }
   };
-  return controller;
+  return ctrl;
 }
 
 // src/ts/search-drawer.ts
@@ -19522,5 +19501,5 @@ M.charts = {
 registerExtras(M);
 
 // src/ts/index.ts
-var VERSION = "5.8.0";
+var VERSION = "5.9.0";
 //# sourceMappingURL=index.cjs.map

@@ -1,9 +1,9 @@
-/* Maranello Luce Design v5.8.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v5.9.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 import {
   cssVar,
   debounce,
   getAccent
-} from "./chunk-CEAL4MYA.js";
+} from "./chunk-KCFTYNYL.js";
 
 // src/ts/gauge-engine-palette.ts
 function buildGaugePalette(accent) {
@@ -1286,4 +1286,4 @@ export {
   speedoPalette,
   speedometer
 };
-//# sourceMappingURL=chunk-NFTJABGY.js.map
+//# sourceMappingURL=chunk-HMJIBVU7.js.map

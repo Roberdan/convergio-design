@@ -7,18 +7,14 @@
  *
  * Slot independence: each toggle affects ONLY its slot.
  * showView() only touches slots declared in the view config.
- * Manual toggles persist across view switches unless overridden by config.
+ * Strip is exclusively controlled by toggleStrip() — showView never touches it.
  */
-/** Slot routing config: object with optional render callback. */
-export interface SlotConfig {
-    id?: string;
-    render?: (slot: HTMLElement) => void;
-}
+import type { SlotConfig } from './layout-slot';
+export type { SlotConfig } from './layout-slot';
 export interface LayoutViewConfig {
     label: string;
     fullpage?: boolean;
     buttonId?: string;
-    /** Slot routing — undefined: don't touch, false: force closed, object: open + render */
     left?: false | SlotConfig;
     right?: false | SlotConfig;
     strip?: false | SlotConfig;
@@ -31,7 +27,6 @@ export interface LayoutState {
     left: boolean;
     right: boolean;
 }
-/** Serializable state snapshot for persistence. */
 export interface LayoutPersistState {
     view: string;
     strip: boolean;
@@ -42,9 +37,7 @@ export interface LayoutPersistState {
     stripPanelId?: string;
 }
 export interface LayoutOptions {
-    /** Called on every state change — consumer decides where to persist. */
     onStateChange?: (state: LayoutPersistState) => void;
-    /** Initial state from persistence layer — overrides DOM hidden attrs. */
     initialState?: Partial<LayoutPersistState>;
 }
 export interface LayoutController {
@@ -59,5 +52,4 @@ export interface LayoutController {
     readonly state: Readonly<LayoutState>;
     destroy(): void;
 }
-/** Create a layout controller bound to a grid element. */
 export declare function createLayout(gridEl?: HTMLElement, options?: LayoutOptions): LayoutController;
