@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.6.1] - 2026-03-22
+
+### Fixed
+- `toggleLeft/Right/Strip` accept optional `SlotConfig` — `toggleLeft({ render: fn })` opens + renders
+- Manual toggle render callbacks persist across view switches — reopen re-renders same content
+- `syncDOM()` only writes `hidden` when value differs from DOM — eliminates strip opening as side effect of toggleLeft
+
 ## [5.6.0] - 2026-03-22
 
 ### Added
