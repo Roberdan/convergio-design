@@ -14,7 +14,9 @@ export interface HeaderBrand {
 
 export interface HeaderButton {
   id: string;
-  label: string;
+  label?: string;
+  /** Tooltip + aria-label. Falls back to label if omitted. */
+  title?: string;
   icon?: string;
   active?: boolean;
   onClick?: () => void;
@@ -62,9 +64,10 @@ function createButton(btn: HeaderButton): HTMLButtonElement {
   el.type = 'button';
   el.className = 'mn-header__btn';
   el.dataset.headerId = btn.id;
-  if (btn.label) {
-    el.title = btn.label;
-    el.setAttribute('aria-label', btn.label);
+  const a11y = btn.title || btn.label || '';
+  if (a11y) {
+    el.title = a11y;
+    el.setAttribute('aria-label', a11y);
   }
   if (btn.active) el.classList.add('mn-header__btn--active');
   if (btn.icon) {
@@ -73,13 +76,15 @@ function createButton(btn: HeaderButton): HTMLButtonElement {
     iconSpan.innerHTML = btn.icon;
     el.appendChild(iconSpan);
   }
-  const labelSpan = document.createElement('span');
-  labelSpan.textContent = btn.label;
-  el.appendChild(labelSpan);
+  if (btn.label) {
+    const labelSpan = document.createElement('span');
+    labelSpan.textContent = btn.label;
+    el.appendChild(labelSpan);
+  }
   if (btn.onClick) el.addEventListener('click', btn.onClick);
   el.addEventListener('click', () => {
     el.dispatchEvent(new CustomEvent('header-button-click', {
-      detail: { id: btn.id, label: btn.label },
+      detail: { id: btn.id, label: btn.label || btn.title || '' },
       bubbles: true,
     }));
   });
