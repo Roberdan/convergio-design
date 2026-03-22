@@ -53,6 +53,7 @@ import { customerJourney } from './customer-journey';
 import { adminShell } from './admin-shell';
 import { sectionCard } from './section-card';
 import { settingsPanel } from './settings-panel';
+import { dashboardStrip } from './dashboard-strip';
 import { dateRangePicker } from './date-range-picker';
 import { bulletChart } from './charts-bullet';
 import { notificationCenter } from './notification-center';
@@ -199,4 +200,7 @@ export function registerExtras(M: Record<string, unknown>): void {
   M.adminShell = adminShell;
   M.sectionCard = sectionCard;
   M.settingsPanel = settingsPanel;
+
+  // v5.10 — Dashboard Strip
+  M.dashboardStrip = dashboardStrip;
 }

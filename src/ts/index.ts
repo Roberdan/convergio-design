@@ -1,6 +1,6 @@
 /** Maranello Luce Design - Main ES module entry point. Public API surface. */
 
-export const VERSION = '5.10.0';
+export const VERSION = '5.11.0';
 
 // Core types (all shared interfaces)
 export * from './core/types';
@@ -86,6 +86,17 @@ export type { ProfileMenuUser, ProfileMenuOptions, ProfileMenuController } from 
 // Header (3-zone navbar)
 export { header } from './header';
 export type { HeaderOptions, HeaderController, HeaderBrand, HeaderButton, HeaderSearch, HeaderProfile } from './header';
+export { headerV2 } from './header-v2';
+export type {
+  HeaderV2Options,
+  HeaderV2Controller,
+  HeaderV2Brand,
+  HeaderV2Group,
+  HeaderV2Action,
+  HeaderV2Search,
+  HeaderV2Status,
+  HeaderV2Profile,
+} from './header-v2';
 
 // Theme picker
 export { themePicker } from './theme-picker';

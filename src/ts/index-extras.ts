@@ -74,3 +74,7 @@ export { sectionCard } from './section-card';
 export type { SectionCardOpts, SectionCardController } from './section-card';
 export { settingsPanel } from './settings-panel';
 export type { SettingsPanelSection, SettingsPanelOpts, SettingsPanelController } from './settings-panel';
+
+// v5.10 — Dashboard Strip
+export { dashboardStrip } from './dashboard-strip';
+export type { DashboardStripOptions, DashboardStripController, StripZone, StripGaugeZone, StripPipelineZone, StripTrendZone, StripBoardZone, StripPipelineRow, StripTrendItem, StripBoardStat } from './core/types';

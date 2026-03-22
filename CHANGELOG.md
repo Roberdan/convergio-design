@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.11.0] - 2026-03-22
+
+### Added
+- `dashboardStrip(container, options)` — composite instrument nacelle with configurable zones (gauge, pipeline, trend, board)
+- Fully parametrizable: gauge configs (`complications`, `colorMode`, `numbers`), pipeline rows (label, value, color, secondary), trend sparklines (label, value, color, data[]), board stats (label, value)
+- CSS Grid layout with container queries: 5-column wide, 2x2 medium (<=1000px), horizontal scroll-snap narrow (<=600px)
+- Trend zone uses 2-column grid (2x2 for 4 items, auto-flow for any count)
+- All titles aligned at top across sections; semantic tokens for all 5 themes
+- IIFE: `Maranello.dashboardStrip()` | ES: `import { dashboardStrip }`
+- Demo page: `demo/dashboard-strip.html`
+
 ## [5.10.0] - 2026-03-22
 
 ### Added
