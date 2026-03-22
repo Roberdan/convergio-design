@@ -44,16 +44,21 @@ export function createLayout(gridEl?: HTMLElement): LayoutController {
   const views = new Map<string, LayoutViewConfig>();
   const buttonCleanups: Array<() => void> = [];
 
+  // Read initial hidden state from DOM — no flash, no override
+  const initStrip = document.getElementById('mn-slot-strip');
+  const initLeft = document.getElementById('mn-slot-left');
+  const initRight = document.getElementById('mn-slot-right');
+
   const state: LayoutState = {
     view: '',
     fullpage: false,
-    strip: true,
-    left: false,
-    right: false,
+    strip: initStrip ? !initStrip.hidden : true,
+    left: initLeft ? !initLeft.hidden : false,
+    right: initRight ? !initRight.hidden : false,
   };
 
   // Sidebar state saved when entering fullpage, restored on exit
-  let savedStrip = true;
+  let savedStrip = state.strip;
 
   /**
    * Sync DOM to match internal state. Uses document.getElementById
@@ -100,9 +105,6 @@ export function createLayout(gridEl?: HTMLElement): LayoutController {
     syncDOM();
     fireEvent();
   }
-
-  // Initial DOM sync — left and right hidden, strip visible
-  syncDOM();
 
   const controller: LayoutController = {
     register(viewId: string, config: LayoutViewConfig): void {
