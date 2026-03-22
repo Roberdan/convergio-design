@@ -1,4 +1,4 @@
-/* Maranello Luce Design v4.14.1 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v5.8.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 import {
   closeDetailPanel,
   closeDrawer,
@@ -11,9 +11,9 @@ import {
   steppedRotary,
   toggleLever,
   toggleNotifications
-} from "../chunks/chunk-EVANFVNW.js";
-import "../chunks/chunk-GNZ7B5YQ.js";
-import "../chunks/chunk-L4ZBSMBL.js";
+} from "../chunks/chunk-SRNZMB4X.js";
+import "../chunks/chunk-CEAL4MYA.js";
+import "../chunks/chunk-V5TJ7VXV.js";
 export {
   closeDetailPanel,
   closeDrawer,

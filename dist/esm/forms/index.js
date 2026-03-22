@@ -1,4 +1,4 @@
-/* Maranello Luce Design v4.14.1 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v5.8.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 import {
   addValidator,
   defaultMessages,
@@ -17,8 +17,8 @@ import {
   validateField,
   validateForm,
   validators
-} from "../chunks/chunk-YYP2Y6SS.js";
-import "../chunks/chunk-L4ZBSMBL.js";
+} from "../chunks/chunk-5BW2LX6Z.js";
+import "../chunks/chunk-V5TJ7VXV.js";
 export {
   addValidator,
   defaultMessages,

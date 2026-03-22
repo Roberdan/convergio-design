@@ -1,9 +1,9 @@
-/* Maranello Luce Design v4.14.1 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v5.8.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 import {
   cssVar,
   escapeHtml,
   isValidColor
-} from "./chunk-GNZ7B5YQ.js";
+} from "./chunk-CEAL4MYA.js";
 
 // src/ts/charts-helpers.ts
 var dpr = window.devicePixelRatio || 1;
@@ -1262,4 +1262,4 @@ export {
   chartInteract,
   sparklineInteract
 };
-//# sourceMappingURL=chunk-GKVW5363.js.map
+//# sourceMappingURL=chunk-MUGYD5YB.js.map

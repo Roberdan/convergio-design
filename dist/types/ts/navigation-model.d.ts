@@ -3,7 +3,7 @@ export interface ViewEntry {
     params?: Record<string, unknown>;
     timestamp: number;
 }
-export type NavigateAction = 'push' | 'pop' | 'replace';
+export type NavigateAction = 'push' | 'pop' | 'replace' | 'remove' | 'clear';
 export type NavigateCallback = (entry: ViewEntry, action: NavigateAction) => void;
 export declare class NavigationModel {
     private readonly stack;

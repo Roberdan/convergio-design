@@ -1,4 +1,4 @@
-/* Maranello Luce Design v4.14.1 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v5.8.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 "use strict";
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -341,12 +341,27 @@ var NavigationModel = class {
     return this.stack.slice();
   }
   remove(viewId) {
+    let removed = false;
     for (let i = this.stack.length - 1; i >= 0; i--) {
-      if (this.stack[i].viewId === viewId) this.stack.splice(i, 1);
+      if (this.stack[i].viewId === viewId) {
+        this.stack.splice(i, 1);
+        removed = true;
+      }
+    }
+    if (removed) {
+      const current = this.current();
+      if (current) {
+        this.notify(current, "remove");
+      } else {
+        this.notify({ viewId, timestamp: Date.now() }, "remove");
+      }
     }
   }
   clear() {
+    if (this.stack.length === 0) return;
+    const last = this.stack[this.stack.length - 1];
     this.stack.length = 0;
+    this.notify(last, "clear");
   }
   onNavigate(cb) {
     const handler = (detail) => {
@@ -362,7 +377,7 @@ var NavigationModel = class {
     };
   }
   destroy() {
-    this.clear();
+    this.stack.length = 0;
     this.callbacks.clear();
     this.bus.removeAll();
   }
@@ -708,7 +723,11 @@ var VALID_STATES = ["loading", "empty", "error", "partial", "no-results", "ready
 var StateScaffold = class {
   constructor(container, options) {
     this.events = null;
-    const initial = options?.state && VALID_STATES.includes(options.state) ? options.state : "loading";
+    const validInitial = options?.state && VALID_STATES.includes(options.state);
+    if (!validInitial && options?.state) {
+      console.warn(`StateScaffold: invalid initial state "${options.state}". Falling back to "loading". Valid states: ${VALID_STATES.join(", ")}`);
+    }
+    const initial = validInitial ? options.state : "loading";
     this.container = container;
     this.options = { ...options, state: initial };
     this.state = initial;
@@ -14183,48 +14202,109 @@ function gridLayout(container, template = "masonry-auto", options) {
 }
 
 // src/ts/layout.ts
-function createLayout(gridEl) {
+function createLayout(gridEl, options) {
   const maybeGrid = gridEl ?? document.getElementById("mn-grid");
   if (!maybeGrid) {
     throw new Error("createLayout: grid element not found");
   }
   const grid = maybeGrid;
-  const slots = {
-    grid,
-    strip: grid.querySelector("#mn-slot-strip"),
-    left: grid.querySelector("#mn-slot-left"),
-    center: grid.querySelector("#mn-slot-center"),
-    right: grid.querySelector("#mn-slot-right")
-  };
+  const onStateChange = options && options.onStateChange;
+  const init = options && options.initialState;
   const views = /* @__PURE__ */ new Map();
   const buttonCleanups = [];
+  const initStrip = document.getElementById("mn-slot-strip");
+  const initLeft = document.getElementById("mn-slot-left");
+  const initRight = document.getElementById("mn-slot-right");
   const state = {
-    view: "",
+    view: init && init.view ? init.view : "",
     fullpage: false,
-    strip: true,
-    left: false,
-    right: false
+    strip: init && typeof init.strip === "boolean" ? init.strip : initStrip ? !initStrip.hidden : true,
+    left: init && typeof init.left === "boolean" ? init.left : initLeft ? !initLeft.hidden : false,
+    right: init && typeof init.right === "boolean" ? init.right : initRight ? !initRight.hidden : false
   };
-  let savedStrip = true;
+  let leftPanelId = init && init.leftPanelId ? init.leftPanelId : void 0;
+  if (init) {
+    if (initStrip) initStrip.hidden = !state.strip;
+    if (initLeft) initLeft.hidden = !state.left;
+    if (initRight) initRight.hidden = !state.right;
+  }
+  let leftViewDriven = false;
+  let rightViewDriven = false;
+  let stripViewDriven = false;
+  let leftManualRender = null;
+  let rightManualRender = null;
+  let stripManualRender = null;
+  let leftLocked = false;
+  let rightLocked = false;
+  let savedStrip = state.strip;
+  let savedLeft = state.left;
+  let savedRight = state.right;
+  function setSlotHidden(slotId, hidden) {
+    const el5 = document.getElementById(slotId);
+    if (el5 && el5.hidden !== hidden) el5.hidden = hidden;
+  }
   function syncDOM() {
-    if (slots.strip) slots.strip.hidden = !state.strip;
-    if (slots.left) slots.left.hidden = !state.left;
-    if (slots.right) slots.right.hidden = !state.right;
-    grid.classList.toggle("mn-layout--fullpage", state.fullpage);
+    setSlotHidden("mn-slot-left", !state.left);
+    setSlotHidden("mn-slot-right", !state.right);
+    if (state.fullpage) {
+      grid.classList.add("mn-layout--fullpage");
+      setSlotHidden("mn-slot-strip", true);
+    } else {
+      grid.classList.remove("mn-layout--fullpage");
+    }
+    const center = document.getElementById("mn-slot-center");
+    if (center && state.view) {
+      const children = center.children;
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        if (child.dataset && "view" in child.dataset) {
+          child.hidden = child.dataset.view !== state.view;
+        }
+      }
+    }
+  }
+  function persistState() {
+    const s = {
+      view: state.view,
+      strip: state.strip,
+      left: state.left,
+      right: state.right
+    };
+    if (leftPanelId) s.leftPanelId = leftPanelId;
+    return s;
   }
   function fireEvent() {
+    const detail = { ...state };
     grid.dispatchEvent(
-      new CustomEvent("layout-changed", {
-        detail: { ...state },
-        bubbles: true
-      })
+      new CustomEvent("layout-changed", { detail, bubbles: true })
     );
+    if (onStateChange) onStateChange(persistState());
   }
   function applyState() {
     syncDOM();
     fireEvent();
   }
-  syncDOM();
+  function renderToSlot(slotId, render5) {
+    const el5 = document.getElementById(slotId);
+    if (el5) render5(el5);
+  }
+  function applySlotConfig(cfg, slotId, setOpen, setViewDriven, wasViewDriven) {
+    if (cfg === void 0) {
+      if (wasViewDriven) {
+        setOpen(false);
+        setViewDriven(false);
+      }
+      return;
+    }
+    if (cfg === false) {
+      setOpen(false);
+      setViewDriven(false);
+      return;
+    }
+    setOpen(true);
+    setViewDriven(true);
+    if (cfg.render) renderToSlot(slotId, cfg.render);
+  }
   const controller = {
     register(viewId, config) {
       views.set(viewId, config);
@@ -14236,44 +14316,112 @@ function createLayout(gridEl) {
       }
       if (state.fullpage && !config.fullpage) {
         state.strip = savedStrip;
+        state.left = savedLeft;
+        state.right = savedRight;
+        setSlotHidden("mn-slot-strip", !state.strip);
       }
       if (!state.fullpage && config.fullpage) {
         savedStrip = state.strip;
+        savedLeft = state.left;
+        savedRight = state.right;
       }
       state.view = viewId;
-      state.right = false;
       if (config.fullpage) {
         state.fullpage = true;
         state.strip = false;
         state.left = false;
+        state.right = false;
       } else {
         state.fullpage = false;
+        applySlotConfig(
+          config.left,
+          "mn-slot-left",
+          (v) => {
+            state.left = v;
+          },
+          (v) => {
+            leftViewDriven = v;
+          },
+          leftViewDriven
+        );
+        if (typeof config.left === "object" && config.left && config.left.id) {
+          leftPanelId = config.left.id;
+        } else if (config.left === void 0 && leftViewDriven) {
+        } else if (config.left === false) {
+          leftPanelId = void 0;
+        }
+        applySlotConfig(
+          config.right,
+          "mn-slot-right",
+          (v) => {
+            state.right = v;
+          },
+          (v) => {
+            rightViewDriven = v;
+          },
+          rightViewDriven
+        );
+        leftLocked = config.left === false;
+        rightLocked = config.right === false;
       }
       applyState();
+      if (config.center) {
+        renderToSlot("mn-slot-center", config.center);
+      }
     },
-    toggleStrip() {
+    // Independent toggles — each writes ONLY its own slot, never others
+    toggleStrip(config) {
       if (state.fullpage) return;
       state.strip = !state.strip;
-      applyState();
+      stripViewDriven = false;
+      if (config && config.render) stripManualRender = config.render;
+      setSlotHidden("mn-slot-strip", !state.strip);
+      fireEvent();
+      if (state.strip) {
+        const render5 = config && config.render || stripManualRender;
+        if (render5) renderToSlot("mn-slot-strip", render5);
+      }
     },
-    toggleLeft() {
-      if (state.fullpage) return;
+    toggleLeft(config) {
+      if (state.fullpage || leftLocked) return;
       state.left = !state.left;
-      applyState();
+      leftViewDriven = false;
+      if (config && config.id) leftPanelId = config.id;
+      if (config && config.render) leftManualRender = config.render;
+      setSlotHidden("mn-slot-left", !state.left);
+      fireEvent();
+      if (state.left) {
+        const render5 = config && config.render || leftManualRender;
+        if (render5) renderToSlot("mn-slot-left", render5);
+      }
     },
-    toggleRight() {
-      if (state.fullpage) return;
+    toggleRight(config) {
+      if (state.fullpage || rightLocked) return;
       state.right = !state.right;
-      applyState();
+      rightViewDriven = false;
+      if (config && config.render) rightManualRender = config.render;
+      setSlotHidden("mn-slot-right", !state.right);
+      fireEvent();
+      if (state.right) {
+        const render5 = config && config.render || rightManualRender;
+        if (render5) renderToSlot("mn-slot-right", render5);
+      }
     },
-    openRight() {
-      if (state.fullpage) return;
+    openRight(config) {
+      if (state.fullpage || rightLocked) return;
       state.right = true;
-      applyState();
+      rightViewDriven = false;
+      if (config && config.render) rightManualRender = config.render;
+      setSlotHidden("mn-slot-right", !state.right);
+      fireEvent();
+      const render5 = config && config.render || rightManualRender;
+      if (render5) renderToSlot("mn-slot-right", render5);
     },
     closeRight() {
       state.right = false;
-      applyState();
+      rightViewDriven = false;
+      setSlotHidden("mn-slot-right", !state.right);
+      fireEvent();
     },
     wireButtons() {
       for (const [viewId, config] of views) {
@@ -14294,6 +14442,9 @@ function createLayout(gridEl) {
       for (const cleanup of buttonCleanups) cleanup();
       buttonCleanups.length = 0;
       views.clear();
+      leftManualRender = null;
+      rightManualRender = null;
+      stripManualRender = null;
     }
   };
   return controller;
@@ -15384,6 +15535,9 @@ function confidenceChart(canvas, opts) {
 }
 
 // src/ts/decision-matrix.ts
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
 function clamp2(v, lo, hi) {
   return Math.max(lo, Math.min(hi, v));
 }
@@ -15417,7 +15571,7 @@ function rankAlternatives(alts, criteria) {
   return ranks;
 }
 function decisionMatrix(el5, opts) {
-  let alternatives = structuredClone(opts.alternatives);
+  let alternatives = deepClone(opts.alternatives);
   const { criteria, editable = false, onChange } = opts;
   let activeInput = null;
   function commitEdit() {
@@ -15428,7 +15582,7 @@ function decisionMatrix(el5, opts) {
     const alt = alternatives.find((a) => a.id === altId);
     if (alt) {
       alt.scores[critId] = val;
-      onChange?.(structuredClone(alternatives));
+      onChange?.(deepClone(alternatives));
     }
     activeInput = null;
     render5();
@@ -15502,11 +15656,11 @@ function decisionMatrix(el5, opts) {
   render5();
   return {
     update(alts) {
-      alternatives = structuredClone(alts);
+      alternatives = deepClone(alts);
       render5();
     },
     getScores() {
-      return structuredClone(alternatives);
+      return deepClone(alternatives);
     },
     destroy() {
       el5.innerHTML = "";
@@ -19343,5 +19497,5 @@ M.charts = {
 registerExtras(M);
 
 // src/ts/index.ts
-var VERSION = "4.20.0";
+var VERSION = "5.8.0";
 //# sourceMappingURL=index.cjs.map

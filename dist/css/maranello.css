@@ -17643,38 +17643,67 @@
     overflow: hidden;
   }
 
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body:has( > #mn-grid) {
+    flex-direction: column;
+    display: flex;
+  }
+
+  body:has( > #mn-grid) > .mn-header {
+    flex: none;
+  }
+
+  body:has( > #mn-grid) > #mn-grid {
+    flex: auto;
+    min-height: 0;
+  }
+
   #mn-slot-strip {
+    background: var(--mn-surface-raised);
+    border-bottom: 1px solid var(--mn-border);
     grid-area: strip;
+    padding: .75rem 1.25rem;
   }
 
   #mn-slot-left {
+    background: var(--mn-surface);
+    border-right: 1px solid var(--mn-border);
     grid-area: left;
+    padding: 1rem;
     overflow-y: auto;
   }
 
   #mn-slot-center {
+    background: var(--mn-surface);
     grid-area: center;
     overflow-y: auto;
   }
 
   #mn-slot-right {
+    background: var(--mn-surface);
+    border-left: 1px solid var(--mn-border);
     grid-area: right;
+    padding: 1rem;
     overflow-y: auto;
   }
 
-  #mn-grid:has(#mn-slot-left:not([hidden])) {
+  #mn-grid:has(#mn-slot-strip:not([hidden])):has(#mn-slot-left:not([hidden])) {
     grid-template-columns: 260px 1fr;
     grid-template-areas: "strip strip"
                          "left center";
   }
 
-  #mn-grid:has(#mn-slot-right:not([hidden])) {
+  #mn-grid:has(#mn-slot-strip:not([hidden])):has(#mn-slot-right:not([hidden])) {
     grid-template-columns: 1fr minmax(320px, 30%);
     grid-template-areas: "strip strip"
                          "center right";
   }
 
-  #mn-grid:has(#mn-slot-left:not([hidden])):has(#mn-slot-right:not([hidden])) {
+  #mn-grid:has(#mn-slot-strip:not([hidden])):has(#mn-slot-left:not([hidden])):has(#mn-slot-right:not([hidden])) {
     grid-template-columns: 260px 1fr minmax(320px, 30%);
     grid-template-areas: "strip strip strip"
                          "left center right";
@@ -17686,14 +17715,17 @@
   }
 
   #mn-grid:has(#mn-slot-strip[hidden]):has(#mn-slot-left:not([hidden])) {
+    grid-template-columns: 260px 1fr;
     grid-template-areas: "left center";
   }
 
   #mn-grid:has(#mn-slot-strip[hidden]):has(#mn-slot-right:not([hidden])) {
+    grid-template-columns: 1fr minmax(320px, 30%);
     grid-template-areas: "center right";
   }
 
   #mn-grid:has(#mn-slot-strip[hidden]):has(#mn-slot-left:not([hidden])):has(#mn-slot-right:not([hidden])) {
+    grid-template-columns: 260px 1fr minmax(320px, 30%);
     grid-template-areas: "left center right";
   }
 
