@@ -177,9 +177,11 @@
       ]
     });
 
-    // Update button
+    // Update button — simulates async data reload
     document.getElementById('btn-update').addEventListener('click', function () {
       if (!fullStrip) return;
+
+      // Simulate async API call — update pipeline
       fullStrip.updateZone(1, {
         rows: [
           { label: 'PROSPECT', value: Math.floor(Math.random() * 60 + 20), color: '#FFC72C', secondary: Math.floor(Math.random() * 80 + 30) + 'd' },
@@ -192,6 +194,28 @@
         ],
         footer: { label: 'E2E', value: Math.floor(Math.random() * 100 + 100) + 'd' }
       });
+
+      // Simulate delayed API — update trend after 500ms
+      setTimeout(function() {
+        fullStrip.updateZone(2, {
+          items: [
+            { label: 'PROSPECTS', value: Math.floor(Math.random() * 40 + 20), color: '#DC0000', data: Array.from({length:6}, function() { return Math.floor(Math.random() * 50 + 10); }) },
+            { label: 'IN FLIGHT', value: Math.floor(Math.random() * 60 + 40), color: '#448AFF', data: Array.from({length:6}, function() { return Math.floor(Math.random() * 60 + 30); }) },
+            { label: 'CLOSED', value: Math.floor(Math.random() * 80 + 60), color: '#00A651', data: Array.from({length:6}, function() { return Math.floor(Math.random() * 80 + 40); }) },
+            { label: 'ON HOLD', value: Math.floor(Math.random() * 15 + 3), color: '#9e9e9e', data: Array.from({length:6}, function() { return Math.floor(Math.random() * 15 + 2); }) }
+          ]
+        });
+      }, 500);
+
+      // Simulate slowest API — update board after 1s
+      setTimeout(function() {
+        fullStrip.updateZone(3, {
+          stats: [
+            { label: 'ENGAGEMENTS', value: Math.floor(Math.random() * 200 + 250) },
+            { label: 'FTE', value: Math.floor(Math.random() * 100 + 200) }
+          ]
+        });
+      }, 1000);
     });
   </script>
 </body>
