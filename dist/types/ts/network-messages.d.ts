@@ -25,6 +25,7 @@ export interface NetworkMessagesOptions {
     height?: number;
     particleTrail?: boolean;
     glowEffect?: boolean;
+    onNodeClick?: (node: NetNode) => void;
 }
 export interface NetworkMessagesController {
     send: (msg: NetMessage) => void;

@@ -4994,6 +4994,25 @@ function networkMessages(container, opts = { nodes: [], connections: [] }) {
   const point = (node) => ({ x: node.x * canvas.clientWidth, y: node.y * canvas.clientHeight });
   const ro = window.ResizeObserver ? new ResizeObserver(resize) : null;
   const mo = new MutationObserver(() => draw(16));
+  canvas.addEventListener("click", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    let hit = null;
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      const n = nodes[i], nx = n.x * w, ny = n.y * h;
+      if (Math.hypot(mx - nx, my - ny) <= (n.size ?? 10) + 3) {
+        hit = n;
+        break;
+      }
+    }
+    if (!hit) return;
+    if (options.onNodeClick) options.onNodeClick(hit);
+    canvas.dispatchEvent(new CustomEvent("mn-network-node-click", {
+      detail: { node: hit },
+      bubbles: true
+    }));
+  });
   function resize() {
     const width = options.width ?? Math.max(320, host.clientWidth || 640);
     const height = options.height ?? Math.max(220, host.clientHeight || 320);
@@ -11255,6 +11274,17 @@ function buildRow(row, rowIdx2, opts, state, tbody) {
       eventBus.emit("table-action", detail);
       tr.dispatchEvent(new CustomEvent("mn:table-action", { detail, bubbles: true }));
     });
+    if (opts.onCellClick) {
+      td.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const value = row[col.key];
+        opts.onCellClick(row, col, value);
+        tr.dispatchEvent(new CustomEvent("mn:table-cell-click", {
+          detail: { row, column: col, value },
+          bubbles: true
+        }));
+      });
+    }
     tr.appendChild(td);
   });
   tr.addEventListener("click", () => {
@@ -20060,5 +20090,5 @@ M.charts = {
 registerExtras(M);
 
 // src/ts/index.ts
-var VERSION = "5.11.3";
+var VERSION = "5.12.0";
 //# sourceMappingURL=index.cjs.map

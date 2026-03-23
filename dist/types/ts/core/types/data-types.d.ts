@@ -28,6 +28,7 @@ export interface DataTableOptions<RowT = Record<string, unknown>> {
     compact?: boolean;
     emptyMessage?: string;
     onRowClick?: (row: RowT, index: number) => void;
+    onCellClick?: (row: RowT, column: DataTableColumn<RowT>, value: unknown) => void;
     onDrillDown?: (row: RowT, event: Event) => void;
     onSort?: (key: string, direction: 'asc' | 'desc') => void;
     onFilter?: (filters: Record<string, string>) => void;
