@@ -80,6 +80,16 @@ export function buildRow<RowT extends Record<string, unknown>>(
       eventBus.emit('table-action', detail);
       tr.dispatchEvent(new CustomEvent('mn:table-action', { detail, bubbles: true }));
     });
+    if (opts.onCellClick) {
+      td.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const value = row[col.key];
+        opts.onCellClick!(row, col, value);
+        tr.dispatchEvent(new CustomEvent('mn:table-cell-click', {
+          detail: { row, column: col, value }, bubbles: true,
+        }));
+      });
+    }
     tr.appendChild(td);
   });
 

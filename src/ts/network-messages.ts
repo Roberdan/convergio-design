@@ -8,6 +8,7 @@ export interface NetMessage { from: string; to: string; color?: string; speed?: 
 export interface NetworkMessagesOptions {
   nodes: NetNode[]; connections: { from: string; to: string; color?: string }[];
   width?: number; height?: number; particleTrail?: boolean; glowEffect?: boolean;
+  onNodeClick?: (node: NetNode) => void;
 }
 export interface NetworkMessagesController {
   send: (msg: NetMessage) => void; burst: (msgs: NetMessage[]) => void;
@@ -65,6 +66,22 @@ export function networkMessages(
   const ro = window.ResizeObserver ? new ResizeObserver(resize) : null;
   const mo = new MutationObserver(() => draw(16));
 
+  canvas.addEventListener('click', (e: MouseEvent) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    let hit: NetNode | null = null;
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      const n = nodes[i], nx = n.x * w, ny = n.y * h;
+      if (Math.hypot(mx - nx, my - ny) <= (n.size ?? 10) + 3) { hit = n; break; }
+    }
+    if (!hit) return;
+    if (options.onNodeClick) options.onNodeClick(hit);
+    canvas.dispatchEvent(new CustomEvent('mn-network-node-click', {
+      detail: { node: hit }, bubbles: true,
+    }));
+  });
+
   function resize(): void {
     const width = options.width ?? Math.max(320, host.clientWidth || 640);
     const height = options.height ?? Math.max(220, host.clientHeight || 320);
@@ -73,20 +90,12 @@ export function networkMessages(
 
   function drawParticle(color: string, x: number, y: number, radius: number, label?: string): void {
     ctx.save();
-    if (options.glowEffect) {
-      ctx.shadowColor = color;
-      ctx.shadowBlur = radius * 3;
-    }
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.fill();
+    if (options.glowEffect) { ctx.shadowColor = color; ctx.shadowBlur = radius * 3; }
+    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.fill();
     if (label) {
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = '#05070c';
+      ctx.shadowBlur = 0; ctx.fillStyle = '#05070c';
       ctx.font = `600 ${Math.max(9, radius * 2.1)}px Inter, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText(label.slice(0, 3), x, y + 0.5);
     }
     ctx.restore();
@@ -130,22 +139,13 @@ export function networkMessages(
 
     for (let i = flashes.length - 1; i >= 0; i--) {
       const flash = flashes[i];
-      flash.life -= dt * 0.0026;
-      flash.radius += dt * 0.05;
-      if (flash.life <= 0) {
-        flashes.splice(i, 1);
-        continue;
-      }
+      flash.life -= dt * 0.0026; flash.radius += dt * 0.05;
+      if (flash.life <= 0) { flashes.splice(i, 1); continue; }
       ctx.save();
       ctx.strokeStyle = alpha(flash.color, flash.life * 0.75);
       ctx.lineWidth = 1.5 + flash.life * 2;
-      if (options.glowEffect) {
-        ctx.shadowColor = flash.color;
-        ctx.shadowBlur = 10 * flash.life;
-      }
-      ctx.beginPath();
-      ctx.arc(flash.x, flash.y, flash.radius, 0, Math.PI * 2);
-      ctx.stroke();
+      if (options.glowEffect) { ctx.shadowColor = flash.color; ctx.shadowBlur = 10 * flash.life; }
+      ctx.beginPath(); ctx.arc(flash.x, flash.y, flash.radius, 0, Math.PI * 2); ctx.stroke();
       ctx.restore();
     }
 
