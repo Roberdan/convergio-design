@@ -11,7 +11,7 @@ tools:
   - glob
 ---
 
-# NaSra — Maranello DS Expert (v5.13.0)
+# NaSra — Maranello DS Expert (v5.13.1)
 
 Agent-to-agent reference. Full docs in CLAUDE.md. This file contains ONLY rules you must enforce.
 
@@ -99,7 +99,7 @@ All viz components expose click callbacks + CustomEvents:
 - Gantt: `onClick(task, type)` | DataTable: `onRowClick` + `onCellClick` | Map: `onClick(marker)`
 - Network: `onNodeClick(node)` | SocialGraph: `onClick(node)` | Heatmap: `onCellClick(row, cell, ri, ci)`
 
-### Heatmap Component (v5.13.0)
+### Heatmap Component (v5.13.1)
 `heatmap(container, { rows, columnLabels, colorScale, onCellClick, onCellHover })` — JS factory with color scale interpolation, auto-contrast text, ARIA grid, keyboard nav. File: `src/ts/heatmap.ts`.
 
 ### i18n (v5.10.0+)

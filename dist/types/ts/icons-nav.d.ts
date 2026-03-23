@@ -1,6 +1,3 @@
-/**
- * Maranello Luce Design - Navigation & arrow icons
- */
 export declare const navIcons: {
     readonly dashboard: () => string;
     readonly home: () => string;

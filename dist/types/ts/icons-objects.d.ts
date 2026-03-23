@@ -1,6 +1,3 @@
-/**
- * Maranello Luce Design - Object, people, and misc icons
- */
 export declare const objectIcons: {
     readonly user: () => string;
     readonly users: () => string;

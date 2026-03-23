@@ -1,6 +1,3 @@
-/**
- * Maranello Luce Design - Action & editing icons
- */
 export declare const actionIcons: {
     readonly refresh: () => string;
     readonly settings: () => string;

@@ -1,6 +1,3 @@
-/**
- * Maranello Luce Design - Data visualization & chart icons
- */
 export declare const dataIcons: {
     readonly gauge: () => string;
     readonly trendUp: () => string;

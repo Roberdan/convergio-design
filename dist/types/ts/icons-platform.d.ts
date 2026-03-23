@@ -1,6 +1,3 @@
-/**
- * Maranello Luce Design - Platform, hardware, CLI, and orchestration icons
- */
 export declare const platformIcons: {
     readonly apple: () => string;
     readonly windows: () => string;

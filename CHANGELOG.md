@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.13.1] - 2026-03-23
+
+### Fixed
+- AGENT.md and metadata-alignment test pinned to stale v5.9.2 version
+- IIFE bundle size reduced ~19KB (449KB, under 450KB limit) via SVG icon wrapper deduplication
+
 ## [5.13.0] - 2026-03-23
 
 ### Added

@@ -1,4 +1,4 @@
-/* Maranello Luce Design v5.9.0 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
+/* Maranello Luce Design v5.13.1 | MPL-2.0 | github.com/Roberdan/MaranelloLuceDesign */
 import {
   SERIES,
   applyChartA11y,
@@ -19,7 +19,7 @@ import {
   radar,
   sparkline,
   sparklineInteract
-} from "./chunks/chunk-OBX6K5Q2.js";
+} from "./chunks/chunk-JOA2BMHD.js";
 import {
   FerrariGauge,
   SPEEDO_FONT,
@@ -31,10 +31,10 @@ import {
   speedoPalette,
   speedometer,
   valueToAngle
-} from "./chunks/chunk-I47JUNZS.js";
+} from "./chunks/chunk-KZHNLLFF.js";
 import {
   gantt
-} from "./chunks/chunk-6Q27UAXQ.js";
+} from "./chunks/chunk-QFV2MX7R.js";
 import {
   closeDetailPanel,
   closeDrawer,
@@ -47,7 +47,7 @@ import {
   steppedRotary,
   toggleLever,
   toggleNotifications
-} from "./chunks/chunk-BHELW2UI.js";
+} from "./chunks/chunk-HW3VUORX.js";
 import {
   ALLOWED_BIND_PROPERTIES,
   clamp,
@@ -69,7 +69,7 @@ import {
   sanitizeSvg,
   setTheme,
   throttle
-} from "./chunks/chunk-KCFTYNYL.js";
+} from "./chunks/chunk-FO3D2CED.js";
 import {
   addValidator,
   defaultMessages,
@@ -88,11 +88,11 @@ import {
   validateField,
   validateForm,
   validators
-} from "./chunks/chunk-YAYAJW7B.js";
+} from "./chunks/chunk-2Q5AXHRB.js";
 import {
   EventBus,
   eventBus
-} from "./chunks/chunk-AGCJWPKX.js";
+} from "./chunks/chunk-WBOK36LK.js";
 
 // src/ts/navigation-model.ts
 var NavigationModel = class {
@@ -3124,177 +3124,183 @@ var Z_INDEX = {
   TOOLTIP: "--z-tooltip"
 };
 
+// src/ts/icon-svg.ts
+var D = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"';
+function svg(inner, strokeWidth = 1.5) {
+  return `<svg ${D} stroke-width="${strokeWidth}">${inner}</svg>`;
+}
+
 // src/ts/icons-nav.ts
 var navIcons = {
-  dashboard: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="4" rx="1"/><rect x="14" y="11" width="7" height="10" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>',
-  home: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
-  menu: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
-  chevronRight: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>',
-  chevronDown: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
-  chevronLeft: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>',
-  chevronUp: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>',
-  arrowUp: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>',
-  arrowDown: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>',
-  arrowLeft: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
-  arrowRight: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
-  externalLink: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
-  sidebar: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>',
-  panelRight: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>',
-  columns: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>',
-  maximize: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>',
-  minimize: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>',
-  expand: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
-  collapse: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
-  funnel: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>',
-  gantt: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="4" rx="1"/><rect x="3" y="10" width="12" height="4" rx="1"/><rect x="3" y="17" width="15" height="4" rx="1"/></svg>',
-  table: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>',
-  heatmap: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="6" height="6" rx="0.5"/><rect x="9" y="2" width="6" height="6" rx="0.5"/><rect x="16" y="2" width="6" height="6" rx="0.5"/><rect x="2" y="9" width="6" height="6" rx="0.5"/><rect x="9" y="9" width="6" height="6" rx="0.5"/><rect x="16" y="9" width="6" height="6" rx="0.5"/><rect x="2" y="16" width="6" height="6" rx="0.5"/><rect x="9" y="16" width="6" height="6" rx="0.5"/><rect x="16" y="16" width="6" height="6" rx="0.5"/></svg>',
-  grid: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>'
+  dashboard: () => svg('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="4" rx="1"/><rect x="14" y="11" width="7" height="10" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>'),
+  home: () => svg('<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>'),
+  menu: () => svg('<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>'),
+  chevronRight: () => svg('<polyline points="9 18 15 12 9 6"/>'),
+  chevronDown: () => svg('<polyline points="6 9 12 15 18 9"/>'),
+  chevronLeft: () => svg('<polyline points="15 18 9 12 15 6"/>'),
+  chevronUp: () => svg('<polyline points="18 15 12 9 6 15"/>'),
+  arrowUp: () => svg('<line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>'),
+  arrowDown: () => svg('<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>'),
+  arrowLeft: () => svg('<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>'),
+  arrowRight: () => svg('<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>'),
+  externalLink: () => svg('<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>'),
+  sidebar: () => svg('<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/>'),
+  panelRight: () => svg('<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/>'),
+  columns: () => svg('<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/>'),
+  maximize: () => svg('<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>'),
+  minimize: () => svg('<polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/>'),
+  expand: () => svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>'),
+  collapse: () => svg('<circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/>'),
+  funnel: () => svg('<path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/>'),
+  gantt: () => svg('<rect x="3" y="3" width="18" height="4" rx="1"/><rect x="3" y="10" width="12" height="4" rx="1"/><rect x="3" y="17" width="15" height="4" rx="1"/>'),
+  table: () => svg('<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>'),
+  heatmap: () => svg('<rect x="2" y="2" width="6" height="6" rx="0.5"/><rect x="9" y="2" width="6" height="6" rx="0.5"/><rect x="16" y="2" width="6" height="6" rx="0.5"/><rect x="2" y="9" width="6" height="6" rx="0.5"/><rect x="9" y="9" width="6" height="6" rx="0.5"/><rect x="16" y="9" width="6" height="6" rx="0.5"/><rect x="2" y="16" width="6" height="6" rx="0.5"/><rect x="9" y="16" width="6" height="6" rx="0.5"/><rect x="16" y="16" width="6" height="6" rx="0.5"/>'),
+  grid: () => svg('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>')
 };
 
 // src/ts/icons-status.ts
 var statusIcons = {
-  checkCircle: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
-  alertTriangle: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-  alertCircle: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-  info: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
-  atRisk: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>',
-  completed: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>',
-  blocked: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>',
-  loader: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>',
-  shield: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
-  shieldCheck: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>'
+  checkCircle: () => svg('<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>'),
+  alertTriangle: () => svg('<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'),
+  alertCircle: () => svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'),
+  info: () => svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'),
+  atRisk: () => svg('<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r="1" fill="currentColor"/>'),
+  completed: () => svg('<circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/>'),
+  blocked: () => svg('<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>'),
+  loader: () => svg('<line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>'),
+  shield: () => svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'),
+  shieldCheck: () => svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>')
 };
 
 // src/ts/icons-actions.ts
 var actionIcons = {
-  refresh: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>',
-  settings: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>',
-  close: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
-  edit: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
-  copy: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
-  trash: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
-  download: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
-  upload: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
-  plus: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
-  minus: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>',
-  filter: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
-  sort: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>',
-  search: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
-  sliders: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>',
-  eye: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
-  eyeOff: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+  refresh: () => svg('<polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>'),
+  settings: () => svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>'),
+  close: () => svg('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'),
+  edit: () => svg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'),
+  copy: () => svg('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+  trash: () => svg('<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>'),
+  download: () => svg('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>'),
+  upload: () => svg('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>'),
+  plus: () => svg('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>'),
+  minus: () => svg('<line x1="5" y1="12" x2="19" y2="12"/>'),
+  filter: () => svg('<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>'),
+  sort: () => svg('<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>'),
+  search: () => svg('<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>'),
+  sliders: () => svg('<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>'),
+  eye: () => svg('<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'),
+  eyeOff: () => svg('<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>')
 };
 
 // src/ts/icons-data.ts
 var dataIcons = {
-  gauge: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12"/><path d="M12 12l4-8"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>',
-  trendUp: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
-  trendDown: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>',
-  barChart: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
-  toggleOn: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="16" cy="12" r="4" fill="currentColor"/></svg>',
-  toggleOff: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="8" cy="12" r="4"/></svg>',
-  kpi: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/><circle cx="12" cy="7" r="2"/><circle cx="18" cy="2" r="1" fill="currentColor"/></svg>',
-  impact: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>',
-  pipeline: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/><rect x="16" y="15" width="6" height="6" rx="1"/><path d="M8 6h1l3 3"/><path d="M15 12h1l3 3"/></svg>',
-  orgChart: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><rect x="2" y="18" width="6" height="4" rx="1"/><rect x="9" y="18" width="6" height="4" rx="1"/><rect x="16" y="18" width="6" height="4" rx="1"/><line x1="12" y1="6" x2="12" y2="14"/><line x1="5" y1="14" x2="19" y2="14"/><line x1="5" y1="14" x2="5" y2="18"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="19" y1="14" x2="19" y2="18"/></svg>',
-  treeView: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="10" y2="6"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="6" y1="18" x2="10" y2="18"/><rect x="10" y="3" width="10" height="6" rx="1"/><rect x="10" y="9" width="10" height="6" rx="1"/><rect x="10" y="15" width="10" height="6" rx="1"/></svg>'
+  gauge: () => svg('<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12"/><path d="M12 12l4-8"/><circle cx="12" cy="12" r="2" fill="currentColor"/>'),
+  trendUp: () => svg('<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>'),
+  trendDown: () => svg('<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>'),
+  barChart: () => svg('<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>'),
+  toggleOn: () => svg('<rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="16" cy="12" r="4" fill="currentColor"/>'),
+  toggleOff: () => svg('<rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="8" cy="12" r="4"/>'),
+  kpi: () => svg('<path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/><circle cx="12" cy="7" r="2"/><circle cx="18" cy="2" r="1" fill="currentColor"/>'),
+  impact: () => svg('<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/>'),
+  pipeline: () => svg('<rect x="2" y="3" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/><rect x="16" y="15" width="6" height="6" rx="1"/><path d="M8 6h1l3 3"/><path d="M15 12h1l3 3"/>'),
+  orgChart: () => svg('<rect x="8" y="2" width="8" height="4" rx="1"/><rect x="2" y="18" width="6" height="4" rx="1"/><rect x="9" y="18" width="6" height="4" rx="1"/><rect x="16" y="18" width="6" height="4" rx="1"/><line x1="12" y1="6" x2="12" y2="14"/><line x1="5" y1="14" x2="19" y2="14"/><line x1="5" y1="14" x2="5" y2="18"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="19" y1="14" x2="19" y2="18"/>'),
+  treeView: () => svg('<line x1="6" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="10" y2="6"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="6" y1="18" x2="10" y2="18"/><rect x="10" y="3" width="10" height="6" rx="1"/><rect x="10" y="9" width="10" height="6" rx="1"/><rect x="10" y="15" width="10" height="6" rx="1"/>')
 };
 
 // src/ts/icons-objects.ts
 var objectIcons = {
-  user: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
-  users: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
-  userGroup: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-  briefcase: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>',
-  admin: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
-  key: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>',
-  lock: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
-  unlock: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>',
-  bell: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
-  bellDot: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><circle cx="18" cy="4" r="3" fill="currentColor" stroke="none"/></svg>',
-  mail: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>',
-  message: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
-  calendar: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
-  link: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>',
-  tag: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
-  star: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-  file: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>',
-  folder: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
-  image: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
-  clock: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
-  globe: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
-  compass: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" opacity="0.15" stroke="currentColor"/></svg>',
-  bolt: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
-  zap: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
-  command: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>',
-  terminal: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>',
+  user: () => svg('<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>'),
+  users: () => svg('<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>'),
+  userGroup: () => svg('<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
+  briefcase: () => svg('<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>'),
+  admin: () => svg('<path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>'),
+  key: () => svg('<path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>'),
+  lock: () => svg('<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'),
+  unlock: () => svg('<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>'),
+  bell: () => svg('<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>'),
+  bellDot: () => svg('<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><circle cx="18" cy="4" r="3" fill="currentColor" stroke="none"/>'),
+  mail: () => svg('<rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/>'),
+  message: () => svg('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'),
+  calendar: () => svg('<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>'),
+  link: () => svg('<path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>'),
+  tag: () => svg('<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>'),
+  star: () => svg('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>'),
+  file: () => svg('<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>'),
+  folder: () => svg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'),
+  image: () => svg('<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>'),
+  clock: () => svg('<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>'),
+  globe: () => svg('<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'),
+  compass: () => svg('<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" opacity="0.15" stroke="currentColor"/>'),
+  bolt: () => svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
+  zap: () => svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
+  command: () => svg('<path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/>'),
+  terminal: () => svg('<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>'),
   // Generic domain icons (renamed from ISE-specific)
-  activity: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
-  qualityCheck: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>',
-  report: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg>',
-  capacity: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/><circle cx="6" cy="6" r="1" fill="currentColor"/><circle cx="6" cy="15" r="1" fill="currentColor"/><rect x="12" y="12" width="6" height="3" rx="0.5" fill="currentColor" opacity="0.3"/></svg>',
-  agent: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="10" r="1.5" fill="currentColor"/><circle cx="15" cy="10" r="1.5" fill="currentColor"/><path d="M9 15c0 0 1.5 2 3 2s3-2 3-2"/></svg>',
-  accelerator: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
-  deliverable: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
-  layers: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
-  experiment: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v7.4a2 2 0 01-.6 1.4L4 17.2a2 2 0 00-.6 1.4V20a1 1 0 001 1h15.2a1 1 0 001-1v-1.4a2 2 0 00-.6-1.4L14.6 11.8a2 2 0 01-.6-1.4V3"/><circle cx="10" cy="16" r="1" fill="currentColor"/><circle cx="14" cy="18" r="1" fill="currentColor"/></svg>',
-  mic: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0014 0v-1"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>'
+  activity: () => svg('<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>'),
+  qualityCheck: () => svg('<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>'),
+  report: () => svg('<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/>'),
+  capacity: () => svg('<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/><circle cx="6" cy="6" r="1" fill="currentColor"/><circle cx="6" cy="15" r="1" fill="currentColor"/><rect x="12" y="12" width="6" height="3" rx="0.5" fill="currentColor" opacity="0.3"/>'),
+  agent: () => svg('<rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="10" r="1.5" fill="currentColor"/><circle cx="15" cy="10" r="1.5" fill="currentColor"/><path d="M9 15c0 0 1.5 2 3 2s3-2 3-2"/>'),
+  accelerator: () => svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
+  deliverable: () => svg('<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>'),
+  layers: () => svg('<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>'),
+  experiment: () => svg('<path d="M9 3h6"/><path d="M10 3v7.4a2 2 0 01-.6 1.4L4 17.2a2 2 0 00-.6 1.4V20a1 1 0 001 1h15.2a1 1 0 001-1v-1.4a2 2 0 00-.6-1.4L14.6 11.8a2 2 0 01-.6-1.4V3"/><circle cx="10" cy="16" r="1" fill="currentColor"/><circle cx="14" cy="18" r="1" fill="currentColor"/>'),
+  mic: () => svg('<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0014 0v-1"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/>')
 };
 
 // src/ts/icons-platform.ts
 var platformIcons = {
-  apple: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.2 6.2c.9-1.1 1.3-2.2 1.2-3.2-1.2.1-2.4.8-3.2 1.8-.7.9-1.2 2.1-1.1 3.2 1.2.1 2.3-.6 3.1-1.8z"/><path d="M12.2 8.5c-1.6 0-2.3.8-3.5.8S6.7 8.5 5.5 8.6C3.4 8.8 1.7 10.6 1.7 13c0 1.8.7 3.8 1.8 5.3 1 1.4 2.1 3 3.6 2.9 1.4-.1 1.9-.9 3.6-.9s2.1.9 3.6.9c1.6 0 2.5-1.5 3.5-2.9.8-1.1 1.2-2.2 1.4-2.8-2.7-1-3.1-4.9-.5-6.4-.7-1-1.9-1.6-3.1-1.6-1.5-.1-2.6.9-3.4.9z"/></svg>',
-  windows: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5l8-1v8H3zM13 3.2l8-1.2V11h-8zM3 13h8v8l-8-1zM13 13h8v10l-8-1.2z"/></svg>',
-  linux: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="8" rx="4.5" ry="5.5"/><ellipse cx="12" cy="8.5" rx="2" ry="2.5" fill="currentColor" stroke="none" opacity="0.3"/><circle cx="10.2" cy="7.2" r="0.5" fill="currentColor" stroke="none"/><circle cx="13.8" cy="7.2" r="0.5" fill="currentColor" stroke="none"/><path d="M10.5 9.5q1.5 1 3 0"/><path d="M9 13.5c-2 1-3.5 2.5-3.5 5a1 1 0 001 1h11a1 1 0 001-1c0-2.5-1.5-4-3.5-5"/><ellipse cx="12" cy="15.5" rx="2.5" ry="2" fill="currentColor" stroke="none" opacity="0.15"/><path d="M9.5 13c0 1 .8 2.5 2.5 2.5s2.5-1.5 2.5-2.5"/><path d="M10 19.5l-1 2"/><path d="M14 19.5l1 2"/></svg>',
-  android: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.5a4 4 0 0 1 8 0V17a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"/><path d="M9.2 7.2L7.8 5.6M14.8 7.2l1.4-1.6M6 12v4M18 12v4"/><circle cx="10.3" cy="11.7" r=".4" fill="currentColor" stroke="none"/><circle cx="13.7" cy="11.7" r=".4" fill="currentColor" stroke="none"/></svg>',
-  cpu: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1.5"/><rect x="10" y="10" width="4" height="4" rx=".6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>',
-  memory: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="2"/><path d="M7 8v8M11 8v8M15 8v8M19 8v8M5 19v2M9 19v2M13 19v2M17 19v2"/></svg>',
-  disk: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M18 17h.01"/></svg>',
-  network: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 12h8M17.6 7.4l-3.2 3.2M17.6 16.6l-3.2-3.2"/></svg>',
-  wifi: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0"/><circle cx="12" cy="19" r="1" fill="currentColor" stroke="none"/></svg>',
-  bluetooth: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l8 6-8 6V6zM8 12l8-6M8 12l8 6"/></svg>',
-  usb: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M12 3l-2 2M12 3l2 2M12 15l-3 3M12 15l3 3"/><circle cx="9" cy="19" r="1"/><rect x="14.5" y="17.5" width="3" height="3" rx=".5"/><path d="M12 10h5"/></svg>',
-  server: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01M11 7h7M11 17h7"/></svg>',
-  database: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="7" ry="2.5"/><path d="M5 5.5v13c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-13"/><path d="M5 10c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5M5 14.5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"/></svg>',
-  cloud: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 8.5a3.5 3.5 0 1 1 .8 6.9H7z"/></svg>',
-  cloudSync: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 8.5a3.5 3.5 0 1 1 .8 6.9H7z"/><path d="M9.5 14a2.8 2.8 0 0 1 4.6-1.5M14.5 15.8A2.8 2.8 0 0 1 10 17"/><path d="M14.1 10.9l.2 1.8-1.8.2M9.9 18.1l-.2-1.8 1.8-.2"/></svg>',
-  terminal: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M12.5 15H17"/></svg>',
-  code: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/></svg>',
-  git: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M8 6h8M12 8v8"/></svg>',
-  gitPull: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="5" r="2"/><circle cx="18" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><path d="M8 5h6a4 4 0 0 1 4 4v4M6 7v10M10 13l-4 4-4-4" transform="translate(4 0)"/></svg>',
-  gitMerge: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="12" r="2"/><path d="M8 5h2a6 6 0 0 1 6 6M8 19h2a6 6 0 0 0 6-6"/></svg>',
-  gitCommit: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="3"/></svg>',
-  deploy: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l3 6 6 3-6 3-3 6-3-6-6-3 6-3z"/><path d="M12 9v6"/></svg>',
-  pipeline: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="4" height="4" rx="1"/><rect x="10" y="10" width="4" height="4" rx="1"/><rect x="17" y="15" width="4" height="4" rx="1"/><path d="M7 7h3M14 12h3"/></svg>',
-  docker: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="3" height="3"/><rect x="8" y="10" width="3" height="3"/><rect x="11" y="10" width="3" height="3"/><rect x="8" y="7" width="3" height="3"/><path d="M4 14h12c1.9 0 3.2-.9 4-2.5.3-.5.5-1 .7-1.6-1-.2-1.7-.8-2.2-1.6-.9.5-1.4 1.2-1.6 2.1H4z"/></svg>',
-  brain: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5a3 3 0 0 0-5 2v1a2.5 2.5 0 0 0 1.5 4.5V14a3 3 0 0 0 3 3h1.2M15 5a3 3 0 0 1 5 2v1a2.5 2.5 0 0 1-1.5 4.5V14a3 3 0 0 1-3 3h-1.2"/><path d="M9.7 8.5a2.3 2.3 0 0 1 4.6 0v7a2.3 2.3 0 0 1-4.6 0z"/></svg>',
-  robot: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="7" width="14" height="11" rx="3"/><path d="M12 3v4M2 12h3M19 12h3"/><circle cx="9.5" cy="12" r="1"/><circle cx="14.5" cy="12" r="1"/><path d="M9 15h6"/></svg>',
-  sparkle: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8zM19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9zM5 14l.9 2.1L8 17l-2.1.9L5 20l-.9-2.1L2 17l2.1-.9z"/></svg>',
-  wand: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20L20 4M14 4h2M18 2v2M18 6v2M20 4h2M6 14h2M10 12v2M10 16v2M12 14h2"/></svg>',
-  lightbulb: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M8.5 14.5a6 6 0 1 1 7 0c-.8.7-1.2 1.6-1.4 2.5h-4.2c-.2-.9-.6-1.8-1.4-2.5z"/></svg>',
-  ideaJar: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8M9 4v2h6V4M7 9h10l-1 10a2 2 0 0 1-2 1H10a2 2 0 0 1-2-1z"/><path d="M10 12l1 .7L12 12l1 .7L14 12M11 15h2"/><path d="M12 8.5v-1M9.5 9.2l-.7-.7M14.5 9.2l.7-.7"/></svg>',
-  nightAgent: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3a7 7 0 1 0 7 7 6 6 0 0 1-7-7z"/><circle cx="10" cy="15.5" r="2.2"/><path d="M10 11.8v1.2M10 18v1.2M6.9 15.5h1.2M11.9 15.5h1.2M7.8 13.3l.8.8M11.4 16.9l.8.8M7.8 17.7l.8-.8M11.4 14.1l.8-.8"/></svg>',
-  moonClock: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3a7 7 0 1 0 7 7 6 6 0 0 1-7-7z"/><circle cx="9" cy="16" r="4"/><path d="M9 14v2.5l1.8 1"/></svg>',
-  autopilot: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 10V4M10.3 13l-5.6 2.4M13.7 13l5.6 2.4"/></svg>',
-  delegate: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L21 3l-8.5 18-2.5-7z"/><path d="M10 14l11-11"/></svg>',
-  start: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="8,6 18,12 8,18"/></svg>',
-  pause: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="6" width="3" height="12"/><rect x="14" y="6" width="3" height="12"/></svg>',
-  stop: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1"/></svg>',
-  reset: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/></svg>',
-  cancel: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>',
-  runNow: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5,4 12,8.5 5,13"/><circle cx="15.5" cy="15.5" r="5.5"/><path d="M15.5 13v2.8l1.8 1"/></svg>',
-  fixOn: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5a4 4 0 0 0-5.8 4.9L3 16.1V21h4.9l5.8-5.7a4 4 0 0 0 4.9-5.8l-2.6 2.6-2.4-.5-.5-2.4z"/><path d="M13.5 18.5l2 2 5-5"/></svg>',
-  mesh: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="2"/><circle cx="12" cy="7" r="2"/><circle cx="18" cy="17" r="2"/><path d="M7.7 15.9l2.6-5.8M13.7 9.9l2.6 5.8M8 17h8"/></svg>',
-  coordinator: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="4"/><path d="M12 4l1.3 2.7 3 .4-2.2 2.1.5 2.9-2.6-1.4-2.6 1.4.5-2.9-2.2-2.1 3-.4z"/><path d="M6 20h12"/></svg>',
-  worker: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="3"/><path d="M8 6v-2M8 14v-2M5 9H3M13 9h-2M5.9 6.9L4.5 5.5M10.1 11.1l1.4 1.4M5.9 11.1l-1.4 1.4M10.1 6.9l1.4-1.4"/><path d="M12 20h9M12 16h6"/></svg>',
-  sync: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-5V2M4 17h5v5"/><path d="M6.5 8.5A7 7 0 0 1 18 7M17.5 15.5A7 7 0 0 1 6 17"/></svg>',
-  discover: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="5"/><path d="M13.5 13.5L20 20"/><circle cx="8" cy="10" r=".6" fill="currentColor" stroke="none"/><circle cx="12" cy="8" r=".6" fill="currentColor" stroke="none"/><circle cx="11.5" cy="12.5" r=".6" fill="currentColor" stroke="none"/><path d="M8.6 9.8l2.8-1.5M8.6 10.2l2.3 2"/></svg>',
-  push: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M4 14v6h16v-6"/></svg>',
-  addPeer: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="14" r="3"/><circle cx="16" cy="14" r="3"/><path d="M11 14h2M16 5v6M13 8h6"/></svg>',
-  moon: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
-  sun: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>',
-  contrast: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20" fill="currentColor" stroke="none"/></svg>'
+  apple: () => svg('<path d="M14.2 6.2c.9-1.1 1.3-2.2 1.2-3.2-1.2.1-2.4.8-3.2 1.8-.7.9-1.2 2.1-1.1 3.2 1.2.1 2.3-.6 3.1-1.8z"/><path d="M12.2 8.5c-1.6 0-2.3.8-3.5.8S6.7 8.5 5.5 8.6C3.4 8.8 1.7 10.6 1.7 13c0 1.8.7 3.8 1.8 5.3 1 1.4 2.1 3 3.6 2.9 1.4-.1 1.9-.9 3.6-.9s2.1.9 3.6.9c1.6 0 2.5-1.5 3.5-2.9.8-1.1 1.2-2.2 1.4-2.8-2.7-1-3.1-4.9-.5-6.4-.7-1-1.9-1.6-3.1-1.6-1.5-.1-2.6.9-3.4.9z"/>'),
+  windows: () => svg('<path d="M3 4.5l8-1v8H3zM13 3.2l8-1.2V11h-8zM3 13h8v8l-8-1zM13 13h8v10l-8-1.2z"/>'),
+  linux: () => svg('<ellipse cx="12" cy="8" rx="4.5" ry="5.5"/><ellipse cx="12" cy="8.5" rx="2" ry="2.5" fill="currentColor" stroke="none" opacity="0.3"/><circle cx="10.2" cy="7.2" r="0.5" fill="currentColor" stroke="none"/><circle cx="13.8" cy="7.2" r="0.5" fill="currentColor" stroke="none"/><path d="M10.5 9.5q1.5 1 3 0"/><path d="M9 13.5c-2 1-3.5 2.5-3.5 5a1 1 0 001 1h11a1 1 0 001-1c0-2.5-1.5-4-3.5-5"/><ellipse cx="12" cy="15.5" rx="2.5" ry="2" fill="currentColor" stroke="none" opacity="0.15"/><path d="M9.5 13c0 1 .8 2.5 2.5 2.5s2.5-1.5 2.5-2.5"/><path d="M10 19.5l-1 2"/><path d="M14 19.5l1 2"/>', 1.3),
+  android: () => svg('<path d="M8 10.5a4 4 0 0 1 8 0V17a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"/><path d="M9.2 7.2L7.8 5.6M14.8 7.2l1.4-1.6M6 12v4M18 12v4"/><circle cx="10.3" cy="11.7" r=".4" fill="currentColor" stroke="none"/><circle cx="13.7" cy="11.7" r=".4" fill="currentColor" stroke="none"/>'),
+  cpu: () => svg('<rect x="7" y="7" width="10" height="10" rx="1.5"/><rect x="10" y="10" width="4" height="4" rx=".6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>'),
+  memory: () => svg('<rect x="3" y="8" width="18" height="8" rx="2"/><path d="M7 8v8M11 8v8M15 8v8M19 8v8M5 19v2M9 19v2M13 19v2M17 19v2"/>'),
+  disk: () => svg('<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M18 17h.01"/>'),
+  network: () => svg('<circle cx="5" cy="12" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 12h8M17.6 7.4l-3.2 3.2M17.6 16.6l-3.2-3.2"/>'),
+  wifi: () => svg('<path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0"/><circle cx="12" cy="19" r="1" fill="currentColor" stroke="none"/>'),
+  bluetooth: () => svg('<path d="M8 6l8 6-8 6V6zM8 12l8-6M8 12l8 6"/>'),
+  usb: () => svg('<path d="M12 3v12M12 3l-2 2M12 3l2 2M12 15l-3 3M12 15l3 3"/><circle cx="9" cy="19" r="1"/><rect x="14.5" y="17.5" width="3" height="3" rx=".5"/><path d="M12 10h5"/>'),
+  server: () => svg('<rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01M11 7h7M11 17h7"/>'),
+  database: () => svg('<ellipse cx="12" cy="5.5" rx="7" ry="2.5"/><path d="M5 5.5v13c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-13"/><path d="M5 10c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5M5 14.5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"/>'),
+  cloud: () => svg('<path d="M7 18a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 8.5a3.5 3.5 0 1 1 .8 6.9H7z"/>'),
+  cloudSync: () => svg('<path d="M7 18a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 8.5a3.5 3.5 0 1 1 .8 6.9H7z"/><path d="M9.5 14a2.8 2.8 0 0 1 4.6-1.5M14.5 15.8A2.8 2.8 0 0 1 10 17"/><path d="M14.1 10.9l.2 1.8-1.8.2M9.9 18.1l-.2-1.8 1.8-.2"/>'),
+  terminal: () => svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M12.5 15H17"/>'),
+  code: () => svg('<path d="M8 8l-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>'),
+  git: () => svg('<circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M8 6h8M12 8v8"/>'),
+  gitPull: () => svg('<circle cx="6" cy="5" r="2"/><circle cx="18" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><path d="M8 5h6a4 4 0 0 1 4 4v4M6 7v10M10 13l-4 4-4-4" transform="translate(4 0)"/>'),
+  gitMerge: () => svg('<circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="12" r="2"/><path d="M8 5h2a6 6 0 0 1 6 6M8 19h2a6 6 0 0 0 6-6"/>'),
+  gitCommit: () => svg('<path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="3"/>'),
+  deploy: () => svg('<path d="M12 3l3 6 6 3-6 3-3 6-3-6-6-3 6-3z"/><path d="M12 9v6"/>'),
+  pipeline: () => svg('<rect x="3" y="5" width="4" height="4" rx="1"/><rect x="10" y="10" width="4" height="4" rx="1"/><rect x="17" y="15" width="4" height="4" rx="1"/><path d="M7 7h3M14 12h3"/>'),
+  docker: () => svg('<rect x="5" y="10" width="3" height="3"/><rect x="8" y="10" width="3" height="3"/><rect x="11" y="10" width="3" height="3"/><rect x="8" y="7" width="3" height="3"/><path d="M4 14h12c1.9 0 3.2-.9 4-2.5.3-.5.5-1 .7-1.6-1-.2-1.7-.8-2.2-1.6-.9.5-1.4 1.2-1.6 2.1H4z"/>'),
+  brain: () => svg('<path d="M9 5a3 3 0 0 0-5 2v1a2.5 2.5 0 0 0 1.5 4.5V14a3 3 0 0 0 3 3h1.2M15 5a3 3 0 0 1 5 2v1a2.5 2.5 0 0 1-1.5 4.5V14a3 3 0 0 1-3 3h-1.2"/><path d="M9.7 8.5a2.3 2.3 0 0 1 4.6 0v7a2.3 2.3 0 0 1-4.6 0z"/>'),
+  robot: () => svg('<rect x="5" y="7" width="14" height="11" rx="3"/><path d="M12 3v4M2 12h3M19 12h3"/><circle cx="9.5" cy="12" r="1"/><circle cx="14.5" cy="12" r="1"/><path d="M9 15h6"/>'),
+  sparkle: () => svg('<path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8zM19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9zM5 14l.9 2.1L8 17l-2.1.9L5 20l-.9-2.1L2 17l2.1-.9z"/>'),
+  wand: () => svg('<path d="M4 20L20 4M14 4h2M18 2v2M18 6v2M20 4h2M6 14h2M10 12v2M10 16v2M12 14h2"/>'),
+  lightbulb: () => svg('<path d="M9 18h6M10 22h4M8.5 14.5a6 6 0 1 1 7 0c-.8.7-1.2 1.6-1.4 2.5h-4.2c-.2-.9-.6-1.8-1.4-2.5z"/>'),
+  ideaJar: () => svg('<path d="M8 4h8M9 4v2h6V4M7 9h10l-1 10a2 2 0 0 1-2 1H10a2 2 0 0 1-2-1z"/><path d="M10 12l1 .7L12 12l1 .7L14 12M11 15h2"/><path d="M12 8.5v-1M9.5 9.2l-.7-.7M14.5 9.2l.7-.7"/>'),
+  nightAgent: () => svg('<path d="M14 3a7 7 0 1 0 7 7 6 6 0 0 1-7-7z"/><circle cx="10" cy="15.5" r="2.2"/><path d="M10 11.8v1.2M10 18v1.2M6.9 15.5h1.2M11.9 15.5h1.2M7.8 13.3l.8.8M11.4 16.9l.8.8M7.8 17.7l.8-.8M11.4 14.1l.8-.8"/>'),
+  moonClock: () => svg('<path d="M14 3a7 7 0 1 0 7 7 6 6 0 0 1-7-7z"/><circle cx="9" cy="16" r="4"/><path d="M9 14v2.5l1.8 1"/>'),
+  autopilot: () => svg('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 10V4M10.3 13l-5.6 2.4M13.7 13l5.6 2.4"/>'),
+  delegate: () => svg('<path d="M3 11.5L21 3l-8.5 18-2.5-7z"/><path d="M10 14l11-11"/>'),
+  start: () => svg('<polygon points="8,6 18,12 8,18"/>'),
+  pause: () => svg('<rect x="7" y="6" width="3" height="12"/><rect x="14" y="6" width="3" height="12"/>'),
+  stop: () => svg('<rect x="7" y="7" width="10" height="10" rx="1"/>'),
+  reset: () => svg('<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/>'),
+  cancel: () => svg('<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>'),
+  runNow: () => svg('<polygon points="5,4 12,8.5 5,13"/><circle cx="15.5" cy="15.5" r="5.5"/><path d="M15.5 13v2.8l1.8 1"/>'),
+  fixOn: () => svg('<path d="M14.5 5.5a4 4 0 0 0-5.8 4.9L3 16.1V21h4.9l5.8-5.7a4 4 0 0 0 4.9-5.8l-2.6 2.6-2.4-.5-.5-2.4z"/><path d="M13.5 18.5l2 2 5-5"/>'),
+  mesh: () => svg('<circle cx="6" cy="17" r="2"/><circle cx="12" cy="7" r="2"/><circle cx="18" cy="17" r="2"/><path d="M7.7 15.9l2.6-5.8M13.7 9.9l2.6 5.8M8 17h8"/>'),
+  coordinator: () => svg('<circle cx="12" cy="13" r="4"/><path d="M12 4l1.3 2.7 3 .4-2.2 2.1.5 2.9-2.6-1.4-2.6 1.4.5-2.9-2.2-2.1 3-.4z"/><path d="M6 20h12"/>'),
+  worker: () => svg('<circle cx="8" cy="9" r="3"/><path d="M8 6v-2M8 14v-2M5 9H3M13 9h-2M5.9 6.9L4.5 5.5M10.1 11.1l1.4 1.4M5.9 11.1l-1.4 1.4M10.1 6.9l1.4-1.4"/><path d="M12 20h9M12 16h6"/>'),
+  sync: () => svg('<path d="M20 7h-5V2M4 17h5v5"/><path d="M6.5 8.5A7 7 0 0 1 18 7M17.5 15.5A7 7 0 0 1 6 17"/>'),
+  discover: () => svg('<circle cx="10" cy="10" r="5"/><path d="M13.5 13.5L20 20"/><circle cx="8" cy="10" r=".6" fill="currentColor" stroke="none"/><circle cx="12" cy="8" r=".6" fill="currentColor" stroke="none"/><circle cx="11.5" cy="12.5" r=".6" fill="currentColor" stroke="none"/><path d="M8.6 9.8l2.8-1.5M8.6 10.2l2.3 2"/>'),
+  push: () => svg('<path d="M12 3v12M8 7l4-4 4 4"/><path d="M4 14v6h16v-6"/>'),
+  addPeer: () => svg('<circle cx="8" cy="14" r="3"/><circle cx="16" cy="14" r="3"/><path d="M11 14h2M16 5v6M13 8h6"/>'),
+  moon: () => svg('<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'),
+  sun: () => svg('<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>'),
+  contrast: () => svg('<circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20" fill="currentColor" stroke="none"/>')
 };
 
 // src/ts/icons.ts
@@ -3320,10 +3326,10 @@ function renderIcon(target, name, opts) {
   if (!el5 || !icons[name]) return;
   const sizeClass = opts?.size ? ` mn-icon--${opts.size}` : "";
   const extraClass = opts?.class ? ` ${opts.class}` : "";
-  const svg = icons[name]();
+  const svg2 = icons[name]();
   const safeLabel = opts?.ariaLabel ? escapeHtml(opts.ariaLabel).replace(/"/g, "&quot;") : "";
   const ariaAttr = safeLabel ? `role="img" aria-label="${safeLabel}"` : 'aria-hidden="true"';
-  const a11ySvg = svg.replace("<svg ", `<svg ${ariaAttr} `);
+  const a11ySvg = svg2.replace("<svg ", `<svg ${ariaAttr} `);
   el5.innerHTML = `<span class="mn-icon${sizeClass}${extraClass}">${a11ySvg}</span>`;
 }
 function iconCatalog() {
@@ -7389,9 +7395,9 @@ function funnel(container, options) {
     const barH = dynH > 0 ? Math.max(28, Math.floor((dynH - PAD * 2 - (rows - 1) * 24) / rows)) : BAR_H;
     const gap = dynH > 0 ? 24 : GAP;
     const svgH = PAD * 2 + rows * barH + (rows - 1) * gap;
-    const svg = svgEl("svg", { viewBox: "0 0 " + VB_W + " " + svgH, preserveAspectRatio: "xMidYMid meet" });
-    svg.style.width = "100%";
-    svg.style.height = dynH > 0 ? "100%" : "auto";
+    const svg2 = svgEl("svg", { viewBox: "0 0 " + VB_W + " " + svgH, preserveAspectRatio: "xMidYMid meet" });
+    svg2.style.width = "100%";
+    svg2.style.height = dynH > 0 ? "100%" : "auto";
     pipe.forEach((stageRaw, i) => {
       const stage = isValidColor(stageRaw.color) ? stageRaw : { ...stageRaw, color: "var(--mn-border-strong)" };
       const barW = Math.max(PIPE_W * MIN_BAR, stage.count / maxC * PIPE_W);
@@ -7401,9 +7407,9 @@ function funnel(container, options) {
         const ns = pipe[i + 1];
         const nW = Math.max(PIPE_W * MIN_BAR, ns.count / maxC * PIPE_W);
         const nX = PIPE_L + (PIPE_W - nW) / 2;
-        svg.appendChild(svgEl("path", { d: trapPath(barX, barW, nX, nW, y + barH, y + barH + gap), fill: stage.color, opacity: "0.12" }));
+        svg2.appendChild(svgEl("path", { d: trapPath(barX, barW, nX, nW, y + barH, y + barH + gap), fill: stage.color, opacity: "0.12" }));
         const rate = reach[i] > 0 ? Math.round(reach[i + 1] / reach[i] * 100) : 0;
-        svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + barH + gap / 2 + 1, "text-anchor": "middle", "dominant-baseline": "middle", "font-size": 9, style: "font-family:var(--font-display,'Barlow Condensed',sans-serif)", fill: "var(--mn-text-muted)", "font-weight": "500" }, "\u2193 " + rate + "%"));
+        svg2.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + barH + gap / 2 + 1, "text-anchor": "middle", "dominant-baseline": "middle", "font-size": 9, style: "font-family:var(--font-display,'Barlow Condensed',sans-serif)", fill: "var(--mn-text-muted)", "font-weight": "500" }, "\u2193 " + rate + "%"));
       }
       const bar = svgEl("rect", { x: barX, y, width: barW, height: barH, rx: RAD, fill: stage.color });
       bar.classList.add("mn-funnel__bar");
@@ -7412,16 +7418,16 @@ function funnel(container, options) {
         bar.style.opacity = "0";
         bar.style.transform = "translateX(-12px)";
       }
-      svg.appendChild(bar);
+      svg2.appendChild(bar);
       const tc = autoTextColor(stage.color);
-      svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + Math.round(barH * 0.37), "text-anchor": "middle", "font-size": 11, style: "font-family:var(--font-body,'Inter',sans-serif)", fill: tc, "font-weight": "600" }, stage.label));
+      svg2.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + Math.round(barH * 0.37), "text-anchor": "middle", "font-size": 11, style: "font-family:var(--font-body,'Inter',sans-serif)", fill: tc, "font-weight": "600" }, stage.label));
       let cTxt = String(stage.count);
       if (total > 0) cTxt += " (" + Math.round(stage.count / total * 100) + "%)";
-      svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + Math.round(barH * 0.76), "text-anchor": "middle", "font-size": 14, style: "font-family:var(--font-display,'Barlow Condensed',sans-serif)", fill: tc, "font-weight": "700" }, cTxt));
+      svg2.appendChild(svgText({ x: PIPE_L + PIPE_W / 2, y: y + Math.round(barH * 0.76), "text-anchor": "middle", "font-size": 14, style: "font-family:var(--font-display,'Barlow Condensed',sans-serif)", fill: tc, "font-weight": "700" }, cTxt));
       const holdClr = isValidColor(data.onHold?.color || "") ? data.onHold.color : "#ea580c";
       const wdClr = isValidColor(data.withdrawn?.color || "") ? data.withdrawn.color : "#666";
-      if (stage.holdCount && stage.holdCount > 0) renderExitPill(svg, barX, y, "left", stage.holdCount, holdClr, "\u23F8");
-      if (stage.withdrawnCount && stage.withdrawnCount > 0) renderExitPill(svg, barX + barW, y, "right", stage.withdrawnCount, wdClr, "\u2715");
+      if (stage.holdCount && stage.holdCount > 0) renderExitPill(svg2, barX, y, "left", stage.holdCount, holdClr, "\u23F8");
+      if (stage.withdrawnCount && stage.withdrawnCount > 0) renderExitPill(svg2, barX + barW, y, "right", stage.withdrawnCount, wdClr, "\u2715");
       const hit = svgEl("rect", { x: barX, y, width: barW, height: barH, fill: "transparent", cursor: "pointer", "pointer-events": "all" });
       hit.addEventListener("mouseenter", () => {
         bar.style.filter = "brightness(1.3)";
@@ -7431,12 +7437,12 @@ function funnel(container, options) {
         bar.style.filter = "";
       });
       hit.addEventListener("click", () => {
-        svg.querySelectorAll(".mn-funnel__sel").forEach((el5) => el5.remove());
+        svg2.querySelectorAll(".mn-funnel__sel").forEach((el5) => el5.remove());
         const sel = svgEl("rect", { x: barX - 2, y: y - 2, width: barW + 4, height: barH + 4, fill: "none", stroke: "#FFC72C", "stroke-width": "2", rx: "6", class: "mn-funnel__sel" });
-        svg.appendChild(sel);
+        svg2.appendChild(sel);
         if (opts.onClick) opts.onClick(stage);
       });
-      svg.appendChild(hit);
+      svg2.appendChild(hit);
       if (opts.animate) {
         setTimeout(() => {
           bar.style.transition = "opacity 0.35s ease, transform 0.35s ease";
@@ -7448,25 +7454,25 @@ function funnel(container, options) {
     const legendY = svgH - 4;
     if (data.onHold && data.onHold.count > 0) {
       const ohLegClr = isValidColor(data.onHold.color) ? data.onHold.color : "#ea580c";
-      svg.appendChild(svgEl("circle", { cx: PIPE_L, cy: legendY, r: 4, fill: ohLegClr, opacity: "0.8" }));
-      svg.appendChild(svgText({ x: PIPE_L + 8, y: legendY + 3, "font-size": 9, style: "font-family:var(--font-body,'Inter',sans-serif)", fill: "var(--mn-text-muted)", "font-weight": "500" }, "\u23F8 On Hold: " + data.onHold.count));
+      svg2.appendChild(svgEl("circle", { cx: PIPE_L, cy: legendY, r: 4, fill: ohLegClr, opacity: "0.8" }));
+      svg2.appendChild(svgText({ x: PIPE_L + 8, y: legendY + 3, "font-size": 9, style: "font-family:var(--font-body,'Inter',sans-serif)", fill: "var(--mn-text-muted)", "font-weight": "500" }, "\u23F8 On Hold: " + data.onHold.count));
     }
     if (data.withdrawn && data.withdrawn.count > 0) {
       const wdLegClr = isValidColor(data.withdrawn.color) ? data.withdrawn.color : "#666";
-      svg.appendChild(svgEl("circle", { cx: PIPE_L + PIPE_W / 2 + 20, cy: legendY, r: 4, fill: wdLegClr, opacity: "0.8" }));
-      svg.appendChild(svgText({ x: PIPE_L + PIPE_W / 2 + 28, y: legendY + 3, "font-size": 9, style: "font-family:var(--font-body,'Inter',sans-serif)", fill: "var(--mn-text-muted)", "font-weight": "500" }, "\u2715 Withdrawn: " + data.withdrawn.count));
+      svg2.appendChild(svgEl("circle", { cx: PIPE_L + PIPE_W / 2 + 20, cy: legendY, r: 4, fill: wdLegClr, opacity: "0.8" }));
+      svg2.appendChild(svgText({ x: PIPE_L + PIPE_W / 2 + 28, y: legendY + 3, "font-size": 9, style: "font-family:var(--font-body,'Inter',sans-serif)", fill: "var(--mn-text-muted)", "font-weight": "500" }, "\u2715 Withdrawn: " + data.withdrawn.count));
     }
-    root.appendChild(svg);
+    root.appendChild(svg2);
   }
-  function renderExitPill(svg, anchorX, barY, side, count, color, icon) {
+  function renderExitPill(svg2, anchorX, barY, side, count, color, icon) {
     const isLeft = side === "left";
     const cy = barY + BAR_H / 2;
     const pillX = isLeft ? anchorX - EXIT_GAP - EXIT_R * 2 - 20 : anchorX + EXIT_GAP;
     const lineEnd = isLeft ? pillX + EXIT_R * 2 + 20 : pillX;
-    svg.appendChild(svgEl("line", { x1: anchorX, y1: cy, x2: lineEnd, y2: cy, stroke: color, "stroke-width": "1.5", "stroke-dasharray": "3 2", opacity: "0.5" }));
+    svg2.appendChild(svgEl("line", { x1: anchorX, y1: cy, x2: lineEnd, y2: cy, stroke: color, "stroke-width": "1.5", "stroke-dasharray": "3 2", opacity: "0.5" }));
     const pw = EXIT_R * 2 + 20, ph = 20;
-    svg.appendChild(svgEl("rect", { x: pillX, y: cy - ph / 2, width: pw, height: ph, rx: ph / 2, fill: color, opacity: "0.18" }));
-    svg.appendChild(svgText({ x: pillX + pw / 2, y: cy + 3.5, "text-anchor": "middle", "font-size": 10, style: "font-family:var(--font-display,'Barlow Condensed',sans-serif)", fill: color, "font-weight": "600" }, icon + " " + count));
+    svg2.appendChild(svgEl("rect", { x: pillX, y: cy - ph / 2, width: pw, height: ph, rx: ph / 2, fill: color, opacity: "0.18" }));
+    svg2.appendChild(svgText({ x: pillX + pw / 2, y: cy + 3.5, "text-anchor": "middle", "font-size": 10, style: "font-family:var(--font-display,'Barlow Condensed',sans-serif)", fill: color, "font-weight": "600" }, icon + " " + count));
   }
   host.innerHTML = "";
   host.appendChild(root);
@@ -7534,9 +7540,9 @@ function ringTemplate(size, stroke, percent, color, centerText, trackClass, prog
   const circ = 2 * Math.PI * radius;
   const bounded = clamp(safeNumber(percent), 0, 100);
   const off2 = circ - bounded / 100 * circ;
-  let svg = `<svg class="mn-okr__ring" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle class="${trackClass}" cx="${cx}" cy="${cx}" r="${radius}" stroke-width="${stroke}"></circle><circle class="${progressClass}" cx="${cx}" cy="${cx}" r="${radius}" stroke-width="${stroke}" stroke="${safeColor3}" data-circumference="${circ.toFixed(2)}" data-target-offset="${off2.toFixed(2)}" stroke-dasharray="${circ.toFixed(2)}" stroke-dashoffset="${circ.toFixed(2)}"></circle>`;
-  if (centerText != null) svg += `<text class="mn-okr__ring-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">${escapeHtml(String(centerText))}</text>`;
-  return svg + "</svg>";
+  let svg2 = `<svg class="mn-okr__ring" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle class="${trackClass}" cx="${cx}" cy="${cx}" r="${radius}" stroke-width="${stroke}"></circle><circle class="${progressClass}" cx="${cx}" cy="${cx}" r="${radius}" stroke-width="${stroke}" stroke="${safeColor3}" data-circumference="${circ.toFixed(2)}" data-target-offset="${off2.toFixed(2)}" stroke-dasharray="${circ.toFixed(2)}" stroke-dashoffset="${circ.toFixed(2)}"></circle>`;
+  if (centerText != null) svg2 += `<text class="mn-okr__ring-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">${escapeHtml(String(centerText))}</text>`;
+  return svg2 + "</svg>";
 }
 function heroGaugeSVG(percent, color) {
   const safeColor3 = isValidColor(color) ? color : "#999";
@@ -8235,11 +8241,17 @@ function off(name, handler) {
 // src/ts/icons-az.ts
 var azIcons = {
   /** Generic project board icon (was: engagement). */
-  project: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="M3 9h6"/><path d="M3 14h6"/><circle cx="16" cy="12" r="3"/><path d="M16 9v0"/></svg>',
+  project: () => svg(
+    '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="M3 9h6"/><path d="M3 14h6"/><circle cx="16" cy="12" r="3"/><path d="M16 9v0"/>'
+  ),
   /** Generic workspace/location icon (was: studio). */
-  workspace: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><line x1="9" y1="10" x2="9" y2="10.01"/><line x1="15" y1="10" x2="15" y2="10.01"/></svg>',
+  workspace: () => svg(
+    '<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><line x1="9" y1="10" x2="9" y2="10.01"/><line x1="15" y1="10" x2="15" y2="10.01"/>'
+  ),
   /** Now/Next dual-panel icon. */
-  nowNext: () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="8" height="14" rx="1"/><rect x="14" y="5" width="8" height="14" rx="1"/><circle cx="6" cy="10" r="2" fill="currentColor" opacity="0.4"/><path d="M17 10l2 2-2 2"/></svg>'
+  nowNext: () => svg(
+    '<rect x="2" y="5" width="8" height="14" rx="1"/><rect x="14" y="5" width="8" height="14" rx="1"/><circle cx="6" cy="10" r="2" fill="currentColor" opacity="0.4"/><path d="M17 10l2 2-2 2"/>'
+  )
 };
 
 // src/ts/detail-panel-ui.ts
@@ -13610,12 +13622,12 @@ function drawConnectors(el5, _phases) {
   const elRect = el5.getBoundingClientRect();
   const w = el5.scrollWidth;
   const h = el5.scrollHeight;
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.classList.add("mn-journey__connectors");
-  svg.setAttribute("aria-hidden", "true");
-  svg.setAttribute("width", String(w));
-  svg.setAttribute("height", String(h));
-  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  const svg2 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg2.classList.add("mn-journey__connectors");
+  svg2.setAttribute("aria-hidden", "true");
+  svg2.setAttribute("width", String(w));
+  svg2.setAttribute("height", String(h));
+  svg2.setAttribute("viewBox", `0 0 ${w} ${h}`);
   const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
   const marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
   marker.setAttribute("id", "mn-journey-arrow");
@@ -13629,7 +13641,7 @@ function drawConnectors(el5, _phases) {
   arrowPath.style.fill = "var(--mn-info)";
   marker.appendChild(arrowPath);
   defs.appendChild(marker);
-  svg.appendChild(defs);
+  svg2.appendChild(defs);
   for (let i = 0; i < phaseEls.length - 1; i++) {
     const srcCards = phaseEls[i].querySelectorAll(".mn-journey__card");
     const dstCards = phaseEls[i + 1].querySelectorAll(".mn-journey__card");
@@ -13650,9 +13662,9 @@ function drawConnectors(el5, _phases) {
     line.setAttribute("stroke-dasharray", "6 4");
     line.setAttribute("stroke-width", "2.5");
     line.setAttribute("marker-end", "url(#mn-journey-arrow)");
-    svg.appendChild(line);
+    svg2.appendChild(line);
   }
-  el5.appendChild(svg);
+  el5.appendChild(svg2);
 }
 
 // src/ts/customer-journey.ts

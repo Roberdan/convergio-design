@@ -1,6 +1,3 @@
-/**
- * Maranello Luce Design - Status & feedback icons
- */
 export declare const statusIcons: {
     readonly checkCircle: () => string;
     readonly alertTriangle: () => string;
