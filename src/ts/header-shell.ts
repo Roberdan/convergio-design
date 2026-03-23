@@ -9,10 +9,9 @@ export type { HeaderShellAction, HeaderShellFilterGroup, HeaderShellOptions, Hea
 export interface HeaderShellController { getState(): HeaderShellState; setQuery(query: string): void; setFilter(groupId: string, values: string[]): void; destroy(): void; }
 function getInitialActiveActionId(sections: HeaderShellSection[]): string {
   for (const section of sections) {
-    if (section.type !== 'actions') continue;
-    const presentation = section.presentation || (section.role === 'pre' ? 'segmented' : 'cluster');
-    if (presentation !== 'segmented') continue;
-    const active = section.items.find((action) => action.active);
+    const active = section.type === 'actions' && (section.presentation || (section.role === 'pre' ? 'segmented' : 'cluster')) === 'segmented'
+      ? section.items.find((action) => action.active)
+      : undefined;
     if (active) return active.id;
   }
   return '';
@@ -38,11 +37,7 @@ function buildAction(action: HeaderShellAction, role: 'pre' | 'post', isSelectab
   el.setAttribute('aria-label', title);
   if (action.title) el.title = action.title;
   applySvg(el, action.icon, 'mn-header-shell__icon');
-  if (action.label) {
-    const label = document.createElement('span');
-    label.textContent = action.label;
-    el.appendChild(label);
-  }
+  if (action.label) { const label = document.createElement('span'); label.textContent = action.label; el.appendChild(label); }
   if (isActive) el.classList.add('mn-header-shell__action--active');
   if (action.pressed) el.setAttribute('aria-pressed', 'true');
   if (action.disabled) el.disabled = true;
@@ -93,10 +88,7 @@ function buildFilters(host: HTMLElement, groups: HeaderShellFilterGroup[] | unde
   return panel;
 }
 function applySelection(buttons: NodeListOf<HTMLButtonElement>, activeId: string): void {
-  buttons.forEach((button) => {
-    if (button.dataset.headerShellActionId === activeId) button.classList.add('mn-header-shell__action--active');
-    else button.classList.remove('mn-header-shell__action--active');
-  });
+  buttons.forEach((button) => button.dataset.headerShellActionId === activeId ? button.classList.add('mn-header-shell__action--active') : button.classList.remove('mn-header-shell__action--active'));
 }
 export function headerShell(container: HTMLElement, options: HeaderShellOptions): HeaderShellController {
   const sections = normalizeSections(options.sections || []);
@@ -183,12 +175,7 @@ export function headerShell(container: HTMLElement, options: HeaderShellOptions)
       input.className = 'mn-header-shell__search-input';
       input.type = 'search';
       input.placeholder = section.placeholder || 'Search';
-      const emitSearch = (): void => {
-        state.query = input.value;
-        const detail = { query: input.value };
-        options.callbacks?.onSearch?.(detail);
-        emitShellEvent(nav, 'header-shell-search', detail);
-      };
+      const emitSearch = (): void => { state.query = input.value; const detail = { query: input.value }; options.callbacks?.onSearch?.(detail); emitShellEvent(nav, 'header-shell-search', detail); };
       input.addEventListener('input', emitSearch);
       input.addEventListener('search', emitSearch);
       search.appendChild(input);
@@ -206,10 +193,12 @@ export function headerShell(container: HTMLElement, options: HeaderShellOptions)
       const wrap = document.createElement('div');
       wrap.className = 'mn-header-shell__theme';
       wrap.setAttribute('data-shell-role', 'theme');
-      if (section.modes && section.modes.length) wrap.setAttribute('data-theme-modes', section.modes.join(','));
+      const modes = section.modes && section.modes.length ? section.modes : undefined;
+      const mode = modes && modes.indexOf(state.themeMode) === -1 ? modes[0] : state.themeMode;
       const toggle = document.createElement('mn-theme-toggle');
-      if (section.modes && section.modes.length) toggle.setAttribute('modes', section.modes.join(','));
-      toggle.setAttribute('mode', state.themeMode);
+      state.themeMode = mode;
+      if (modes) { const value = modes.join(','); wrap.setAttribute('data-theme-modes', value); toggle.setAttribute('modes', value); }
+      toggle.setAttribute('mode', mode);
       toggle.addEventListener('mn-theme-change', (event) => {
         const detail = (event as CustomEvent<{ theme?: ThemeMode }>).detail;
         const mode = detail && detail.theme ? detail.theme : state.themeMode;

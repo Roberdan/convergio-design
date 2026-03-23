@@ -24,4 +24,12 @@ describe('mn-theme-toggle', () => {
     button?.click();
     expect(document.body.classList.contains('mn-avorio')).toBe(true);
   });
+
+  it('falls back to the first allowed mode when the current theme is outside the configured subset', async () => {
+    await import('../../src/wc/mn-theme-toggle.js');
+    const toggle = document.createElement('mn-theme-toggle');
+    toggle.setAttribute('modes', 'nero,avorio');
+    document.body.appendChild(toggle);
+    expect(document.body.classList.contains('mn-nero')).toBe(true);
+  });
 });

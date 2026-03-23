@@ -138,6 +138,12 @@ describe('headerShell', () => {
     expect(ctrl.getState().themeMode).toBe('avorio');
     expect(host.querySelector('.mn-profile-trigger')).not.toBeNull();
     ctrl.destroy();
+    document.body.className = '';
+    const nextHost = document.createElement('div');
+    const nextCtrl = headerShell(nextHost, { sections: [{ type: 'theme', modes: ['nero', 'avorio'] }] });
+    expect((nextHost.querySelector('mn-theme-toggle') as HTMLElement).getAttribute('mode')).toBe('nero');
+    expect(nextCtrl.getState().themeMode).toBe('nero');
+    nextCtrl.destroy();
   });
 
   it('supports grouped filter organization with multi-select and controller updates', () => {

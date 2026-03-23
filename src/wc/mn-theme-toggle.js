@@ -69,7 +69,7 @@ class MnThemeToggle extends HTMLElement {
     const attr = this.getAttribute('mode');
     let saved = null;
     try { saved = localStorage.getItem('mn-theme'); } catch (_) { /* storage blocked */ }
-    const mode = attr || saved || this._getTheme();
+    const mode = this._normalizeMode(attr || saved || this._getTheme());
     if (mode) {
       const idx = this._allModes.indexOf(mode);
       if (idx >= 0) this._idx = idx;
@@ -85,11 +85,13 @@ class MnThemeToggle extends HTMLElement {
     if (!this.isConnected || oldVal === newVal) return;
     if (name === 'modes') {
       this._syncModes();
+      const idx = this._allModes.indexOf(this._normalizeMode(this._allModes[this._idx]));
+      if (idx >= 0) this._idx = idx;
       this._applyTheme(false);
       return;
     }
     if (name === 'mode') {
-      const idx = this._allModes.indexOf(newVal);
+      const idx = this._allModes.indexOf(this._normalizeMode(newVal));
       if (idx >= 0) {
         this._idx = idx;
         this._applyTheme(false);
@@ -130,6 +132,10 @@ class MnThemeToggle extends HTMLElement {
     const requested = attr.split(',').map((mode) => mode.trim()).filter(Boolean);
     const nextModes = this._allModes.filter((mode) => requested.indexOf(mode) !== -1);
     this._modes = nextModes.length ? nextModes : this._allModes.slice();
+  }
+
+  _normalizeMode(mode) {
+    return this._modes.indexOf(mode) !== -1 ? mode : this._modes[0];
   }
 
   _applyTheme(emit) {
