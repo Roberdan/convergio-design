@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.12.0] - 2026-03-23
+
+### Added
+- Data Table: `onCellClick(row, column, value)` callback + `mn:table-cell-click` CustomEvent
+- Network: `onNodeClick(node)` callback + `mn-network-node-click` CustomEvent
+- All viz components now fill parent by default (width+height 100%) with CSS var overrides
+
 ## [5.11.3] - 2026-03-23
 
 ### Fixed
