@@ -78,3 +78,7 @@ export type { SettingsPanelSection, SettingsPanelOpts, SettingsPanelController }
 // v5.10 — Dashboard Strip
 export { dashboardStrip } from './dashboard-strip';
 export type { DashboardStripOptions, DashboardStripController, StripZone, StripGaugeZone, StripPipelineZone, StripTrendZone, StripBoardZone, StripPipelineRow, StripTrendItem, StripBoardStat } from './core/types';
+
+// Capacity Heatmap
+export { heatmap } from './heatmap';
+export type { HeatmapCell, HeatmapRow, HeatmapOptions, HeatmapController } from './heatmap';

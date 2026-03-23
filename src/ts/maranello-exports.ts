@@ -54,6 +54,7 @@ import { adminShell } from './admin-shell';
 import { sectionCard } from './section-card';
 import { settingsPanel } from './settings-panel';
 import { dashboardStrip } from './dashboard-strip';
+import { heatmap } from './heatmap';
 import { dateRangePicker } from './date-range-picker';
 import { bulletChart } from './charts-bullet';
 import { notificationCenter } from './notification-center';
@@ -203,4 +204,7 @@ export function registerExtras(M: Record<string, unknown>): void {
 
   // v5.10 — Dashboard Strip
   M.dashboardStrip = dashboardStrip;
+
+  // Capacity Heatmap
+  M.heatmap = heatmap;
 }

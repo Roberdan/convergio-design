@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.13.0] - 2026-03-23
+
+### Added
+- `heatmap(container, options)` — new JS component for capacity/impact heatmaps with color scale interpolation, `onCellClick(row, cell, ri, ci)` + `mn-heatmap-cell-click` CustomEvent, `onCellHover`, keyboard nav, ARIA grid, auto-contrast text, `update(rows)` for async data
+- IIFE: `Maranello.heatmap()` | ES: `import { heatmap }`
+
 ## [5.12.0] - 2026-03-23
 
 ### Added
