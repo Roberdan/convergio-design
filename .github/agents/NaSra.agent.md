@@ -118,7 +118,7 @@ Official reusable Maranello app-header surface:
 - Theme subsets use `theme.modes`
 - External filter boards coordinate via `whenReady()`, `getState()`, `setQuery()`, `setFilter()`
 - `filterButtonLabel` is consumer metadata for external menus, not built-in shell chrome
-- DO NOT assume `window.Maranello.headerShell` exists; the imperative API is ESM/CJS only to preserve the IIFE size gate
+- IIFE: `window.Maranello.headerShell(container, options)` — available like every other component
 
 ### Documentation Duties
 When changing shared APIs or contracts, update the matching docs in the same change:
