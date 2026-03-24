@@ -38,7 +38,7 @@ Official rich app-header surface for Maranello.
 
 - Web Component: `import 'maranello-luce-design-business/wc/mn-header-shell'`
 - Imperative: `import { headerShell } from 'maranello-luce-design-business'`
-- IIFE note: `window.Maranello.headerShell` is intentionally **not** exposed; use the WC module or ESM/CJS import instead.
+- IIFE: `window.Maranello.headerShell(container, options)`
 - Demo/reference: `demo/header-responsive.html`
 
 ### Sections

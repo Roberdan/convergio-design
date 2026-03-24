@@ -15228,6 +15228,7 @@ M.loginScreen = loginScreen;
 M.systemStatus = systemStatus;
 M.profileMenu = profileMenu;
 M.header = { init: header };
+M.headerShell = headerShell;
 M.themePicker = themePicker;
 M.filterPanel = filterPanel;
 M.FerrariGauge = FerrariGauge;

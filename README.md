@@ -87,7 +87,7 @@ Three independent layers. Use together or separately.
 
 - Start from `AGENT.md` when you need the package map, import paths, or repo-safe integration rules.
 - Use `mn-header-shell` as the official reusable Maranello app header surface. It is the same shell used in `demo/header-responsive.html`.
-- The imperative `headerShell(container, options)` API is exported from the ESM/CJS package. It is intentionally **not** exposed on `window.Maranello` to keep the IIFE bundle under the CI size gate.
+- The imperative `headerShell(container, options)` API is available everywhere: ESM/CJS import, Web Component `<mn-header-shell>`, and IIFE via `window.Maranello.headerShell(container, options)`.
 - Treat header shell data as consumer-owned: the shell emits query/filter/action/theme state, while the app decides what records to filter, count, persist, and render.
 - If you change the shell contract, keep `README.md`, `AGENT.md`, `.github/agents/NaSra.agent.md`, `demo/header-responsive.html`, and `demo/header-responsive-shell.js` aligned.
 
