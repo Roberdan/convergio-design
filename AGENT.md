@@ -463,8 +463,8 @@ Demo: `demo/sections/agentic.js` (trace, meter, streaming) and `demo/sections/fi
 
 ```html
 <body class="mn-nero">
-<link rel="stylesheet" href="@maranello/tokens/css">
-<link rel="stylesheet" href="@maranello/elements/css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@maranello/tokens/dist/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@maranello/elements/dist/elements.css">
 <div class="mn-section-dark"><div class="mn-container">
   <h2 class="mn-title-section">Ops</h2>
   <div class="mn-grid-3">

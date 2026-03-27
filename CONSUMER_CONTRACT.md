@@ -61,11 +61,13 @@ The default theme is Editorial. Consumers testing theme cycling must account for
 ```ts
 import { setTheme, cycleTheme, palette } from '@maranello/tokens';
 import '@maranello/tokens/css';
-import '@maranello/tokens/bridge-shadcn'; // optional: shadcn/ui integration
+import '@maranello/tokens/bridge-shadcn'; // optional: side-effect CSS import (works in Vite/Next.js bundlers)
 
 setTheme('nero');
 const tokens = palette(); // read live semantic token values
 ```
+
+> `bridge-shadcn` is a CSS file. In plain CSS, use `@import '@maranello/tokens/bridge-shadcn';`. The JS `import` above is a side-effect import that bundlers (Vite, Next.js, Webpack) resolve as CSS injection.
 
 ### Step 2 — Use Elements
 

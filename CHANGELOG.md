@@ -12,7 +12,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed Presentation Runtime: AppShellController, ViewRegistry, NavigationModel, PanelOrchestrator, StateScaffold
 - Removed: loginScreen, mn-app-shell WC, mn-state-scaffold WC, mn-login WC
 - DashboardRenderer no longer depends on StateScaffold (uses lightweight WidgetScaffold)
-- Package is now private monorepo — install `@maranello/tokens` and `@maranello/elements` separately
+- Root package is private (monorepo); individual packages `@maranello/tokens` and `@maranello/elements` are published to npm
 
 ### Added
 - `@maranello/tokens` — CSS variables, 5 themes, setTheme/cycleTheme, shadcn/ui bridge
