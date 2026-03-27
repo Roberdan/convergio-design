@@ -34,8 +34,19 @@ Consumer code calls Maranello with pre-resolved data + pre-bound callbacks. It n
 | **Responsive adaptation** | CSS breakpoints, `autoResize()`, fluid canvas |
 | **Accessibility** | WCAG 2.2 AA, `<mn-a11y>` FAB, focus trapping in modals |
 | **Themes** | Token system, `setTheme()`, `cycleTheme()` |
+| **Kanban rendering** | `kanbanBoard()` — column/card layout, drag-drop UX, keyboard navigation, WCAG compliance. Consumer owns: card data, action callbacks (`onMove`, `onCardClick`) |
+| **Voice state machine** | `voiceManager()` — voice input lifecycle, adapter framework, aiChat integration. Consumer owns: speech recognition API keys, adapter implementations |
+| **Realtime adapter** | `createRealtimeAdapter()` — GPT Realtime API reference adapter. Consumer owns: `apiKey`, custom `wsUrl`, event handlers |
 
 Consumer code never writes CSS that overrides `mn-app-shell`, `mn-panel-view`, `mn-scaffold`, or `mn-dashboard-*` internals.
+
+### Theme Cycling Order
+
+`cycleTheme()` rotates through themes in this fixed order:
+
+Editorial > Nero > Avorio > Colorblind > Sugar > (loop)
+
+The default theme is Editorial. Consumers testing theme cycling must account for all 5 themes.
 
 ---
 

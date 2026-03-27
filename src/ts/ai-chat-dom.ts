@@ -24,6 +24,7 @@ export interface AIChatOptions {
   activeAgent?: string | null;
   onAgentChange?: (agentId: string, agent: AIChatAgent) => void;
   onVoice?: (isListening: boolean) => void;
+  voiceAdapter?: import('./voice-input').VoiceAdapter;
 }
 
 export interface AIChatController {
@@ -145,6 +146,7 @@ export interface ChatUIState {
   clear?: () => void;
   toggleAgentGrid?: (forceState?: boolean) => void;
   onDocumentClick?: (e: MouseEvent) => void;
+  destroyMessages?: () => void;
 }
 
 export function buildUI(container: HTMLElement, opts: Required<AIChatOptions>): ChatUIElements {

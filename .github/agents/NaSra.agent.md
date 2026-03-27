@@ -11,7 +11,7 @@ tools:
   - glob
 ---
 
-# NaSra — Maranello DS Expert (v5.15.2)
+# NaSra — Maranello DS Expert (v5.16.0)
 
 Agent-to-agent reference. Full docs in CLAUDE.md. This file contains ONLY rules you must enforce.
 
@@ -65,7 +65,7 @@ All changes must work in: Editorial · Nero · Avorio · Colorblind · Sugar
 - Grid `:has()` rules must check strip state independently
 
 ### CI Gates
-- IIFE < 450KB, no emoji, no hardcoded colors, `mn-` prefix
+- IIFE < 500KB, no emoji, no hardcoded colors, `mn-` prefix
 - `check-semantic-design.sh` — WCAG contrast audit
 - `check-migration-docs.sh` — breaking change needs migration doc
 - Playwright: Chromium + WebKit
@@ -108,7 +108,7 @@ All viz components expose click callbacks + CustomEvents:
 ### Filter Panel (v5.10.0+)
 `filterPanel(anchor, { columns, onFilterChange, onSaveDefault, onClear })` — multi-column dropdown, single/multi-select, color dots, counts. File: `src/ts/filter-panel.ts`.
 
-### Header Shell (v5.15.2)
+### Header Shell (v5.16.0)
 Official reusable Maranello app-header surface:
 - WC: `<mn-header-shell>` from `src/wc/mn-header-shell.js`
 - Imperative: `headerShell(container, options)` from `src/ts/header-shell.ts`

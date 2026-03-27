@@ -11,7 +11,7 @@
 | P2 | Zero emoji — SVG icons only, stroke-based, consistent style | Visual coherence |
 | P3 | Italian token naming — Ferrari heritage (nero, avorio, grigio, giallo, rosso) | Cultural provenance |
 | P4 | mn- prefix on ALL CSS classes | Namespace isolation |
-| P5 | 4 themes always — nero, avorio, editorial, colorblind | "Impact must reach every mind and body" |
+| P5 | 5 themes always — nero, avorio, editorial, colorblind, sugar | "Impact must reach every mind and body" |
 | P6 | Max 250 lines per file — split if exceeds | Small loops, ship early |
 | P7 | Zero runtime dependencies — vanilla TS + CSS only | Safety rails precede scale |
 | P8 | Every component works without JS (CSS layer first) | Progressive enhancement |
@@ -48,7 +48,7 @@
 
 | Rule | Requirement |
 |------|-------------|
-| T1 | Every component must render correctly in ALL 4 themes |
+| T1 | Every component must render correctly in ALL 5 themes |
 | T2 | Use CSS custom properties (--var), never hardcoded colors |
 | T3 | Theme applied via body class: mn-nero, mn-avorio, mn-colorblind |
 | T4 | Colorblind theme must pass WCAG AA for deuteranopia + protanopia |
@@ -90,7 +90,7 @@
 |------|--------|
 | 1 | CSS in src/css/<name>.css, wrapped in @layer |
 | 2 | Import in barrel (layouts.css, components.css, etc.) |
-| 3 | Works in all 4 themes — verify visually |
+| 3 | Works in all 5 themes — verify visually |
 | 4 | TS logic in src/ts/<name>.ts if needed |
 | 5 | Export from src/ts/index.ts |
 | 6 | WC in src/wc/mn-<name>.js if needed |
@@ -109,7 +109,7 @@
 | Hardcoded colors | #hex or rgb() in src/css/ (except tokens.css) |
 | TypeScript strict | Any TS error |
 | Unit tests | Any failure |
-| Bundle size | IIFE > 256KB |
+| Bundle size | IIFE > 500KB |
 | Scrub check | VirtualBPM, ISE, FightTheStroke (except donation) in src/demo |
 
 ## Versioning

@@ -57,6 +57,15 @@ export { buildUI, ICON_SPARK, getIcon, renderContent, formatTime } from './ai-ch
 export type { AIChatOptions, AIChatMessage, AIChatAgent, AIChatResponse, AIChatController } from './ai-chat-dom';
 export { initMessages } from './ai-chat-messages';
 
+// Kanban board
+export { kanbanBoard } from './kanban-board';
+export type { KanbanOptions, KanbanController, KanbanColumn, KanbanCard } from './kanban-board';
+
+// Voice input
+export { voiceManager, createRealtimeAdapter } from './voice-input';
+export type { VoiceAdapter, VoiceState, VoiceManagerController, VoiceManagerOptions, VoiceStartConfig, VoiceEvents } from './voice-input';
+export type { RealtimeAdapterOptions } from './voice-input-realtime';
+
 // System status
 export { systemStatus } from './system-status';
 

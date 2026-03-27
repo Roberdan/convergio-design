@@ -2,7 +2,7 @@
 
 **Status:** Accepted  
 **Date:** 2026-03-14  
-**Context:** MaranelloLuceDesign needed mobile/tablet support without breaking existing desktop layouts.
+**Context:** convergio-design needed mobile/tablet support without breaking existing desktop layouts.
 
 ## Decisions
 

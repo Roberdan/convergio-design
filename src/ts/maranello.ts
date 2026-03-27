@@ -40,6 +40,8 @@ import { initSidebarToggle, initSidebarToggleAuto } from './sidebar-toggle';
 import { createDetailPanel } from './detail-panel';
 import { registerDatePicker, editors } from './detail-panel-editors';
 import { aiChat } from './ai-chat-iife';
+import { voiceManager, createRealtimeAdapter } from './voice-input';
+import { kanbanBoard } from './kanban-board';
 import { flipCounter } from './flip-counter';
 import { progressRing } from './progress-ring';
 import { cruiseLever, toggleLever } from './controls-ferrari';
@@ -142,6 +144,9 @@ M.mapView = mapView;
 M.mapboxView = mapboxView;
 M.funnel = funnel;
 M.aiChat = aiChat;
+M.voiceManager = voiceManager;
+M.createRealtimeAdapter = createRealtimeAdapter;
+M.kanbanBoard = kanbanBoard;
 M.flipCounter = flipCounter;
 M.progressRing = progressRing;
 M.networkMessages = networkMessages;
@@ -242,5 +247,4 @@ M.charts = { sparkline, donut, barChart, areaChart, radar, halfGauge, bubble, li
 
 // W3/W4 draw primitives and map internals
 registerExtras(M);
-
 export { M as Maranello };

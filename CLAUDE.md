@@ -1,7 +1,7 @@
-<!-- v5.15.2 | 2026-03-26 -->
-# MaranelloLuceDesign
+<!-- v5.16.0 | 2026-03-27 -->
+# convergio-design
 
-Ferrari Luce-inspired DS for dashboards. 5 themes. 115+ IIFE exports. 35 WC. WCAG 2.2 AA.
+Ferrari Luce-inspired DS for dashboards. 5 themes. 115+ IIFE exports. 36 WC. WCAG 2.2 AA.
 
 ## Commands
 
@@ -60,7 +60,7 @@ All fill parent by default (100% width/height). Override via CSS vars: `--mn-gan
 
 **Code:** Max 250 lines/file. `@layer` CSS. No `innerHTML` with user data. `isValidColor()` for colors.
 
-**CI:** IIFE<450KB, no emoji, mn- prefix, no hardcoded colors, WCAG audit, migration docs gate, Chromium+WebKit.
+**CI:** IIFE<500KB, no emoji, mn- prefix, no hardcoded colors, WCAG audit, migration docs gate, Chromium+WebKit.
 
 ## Releases
 

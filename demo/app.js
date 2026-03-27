@@ -24,6 +24,7 @@ const SECTIONS = new Map([
   ['cockpit',        () => import('./sections/cockpit.js').then(m => m.createCockpitSection)],
   ['telemetry',      () => import('./sections/telemetry.js').then(m => m.createTelemetrySection)],
   ['gantt',          () => import('./sections/gantt.js').then(m => m.createGanttSection)],
+  ['kanban',         () => import('./sections/kanban.js').then(m => m.createKanbanSection)],
   ['icons',          () => import('./sections/icons.js').then(m => m.createIconsSection)],
   ['animations',     () => import('./sections/animations.js').then(m => m.createAnimationsSection)],
   ['heatmap',        () => import('./sections/heatmap.js').then(m => m.createHeatmapSection)],
@@ -53,6 +54,7 @@ const SECTIONS = new Map([
   ['finops',            () => import('./sections/finops.js').then(m => m.createFinOpsSection)],
   ['customer-journey',  () => import('./sections/customer-journey.js').then(m => m.createCustomerJourneySection)],
   ['admin-components',  () => import('./sections/admin-components.js').then(m => m.createAdminComponentsSection)],
+  ['voice',             () => import('./sections/voice.js').then(m => m.createVoiceSection)],
 ]);
 
 const SECTION_KEYS = [...SECTIONS.keys()];
@@ -61,7 +63,7 @@ const SECTION_LABELS = {
   'hero': 'Home', 'tokens': 'Tokens', 'cards': 'Cards', 'dashboard': 'Dashboard', 'dashboard-classic': 'Dash Classic',
   'charts': 'Charts', 'network': 'Network', 'controls': 'Controls', 'forms': 'Forms',
   'tables': 'Tables', 'gauges': 'Gauges', 'cockpit': 'Cockpit', 'telemetry': 'Telemetry',
-  'gantt': 'Gantt', 'icons': 'Icons', 'animations': 'Anim', 'heatmap': 'Heatmap',
+  'gantt': 'Gantt', 'kanban': 'Kanban', 'icons': 'Icons', 'animations': 'Anim', 'heatmap': 'Heatmap',
   'treemap': 'Treemap', 'layouts': 'Layouts', 'detail-panel': 'Detail',
   'interactive': 'Chat', 'okr': 'OKR', 'map': 'Map', 'social-graph': 'Social',
   'advanced': 'Advanced', 'mesh-network': 'Mesh', 'convergio': 'Convergio',
@@ -77,6 +79,7 @@ const SECTION_LABELS = {
   'finops': 'FinOps',
   'customer-journey': 'Journey',
   'admin-components': 'Admin WC',
+  'voice': 'Voice Input',
 };
 
 function safeErr(name, err) {

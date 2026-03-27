@@ -73,6 +73,15 @@ Full API detail for all components: [`docs/api-contracts-v4.md`](docs/api-contra
 | `SectionCardOpts` | `sectionCard()` | `title`, `action?`, `padding?`, `variant?`, `className?` |
 | `SettingsPanelOpts` | `settingsPanel()` | `sections[]` (`title`, `description?`, `items[]`) |
 | `SettingsItemType` | `settingsPanel()` | `toggle`\|`text`\|`select`\|`range`\|`radio`\|`info`\|`action`\|`custom` |
+| `KanbanColumn` | `kanbanBoard()` | `id`, `title`, `color?` |
+| `KanbanCard` | `kanbanBoard()` | `id`, `columnId`, `title`, `subtitle?`, `tags?`, `priority?` |
+| `KanbanOptions` | `kanbanBoard()` | `columns`, `cards`, `onMove?`, `onCardClick?` |
+| `KanbanController` | `kanbanBoard()` | `addCard()`, `removeCard()`, `moveCard()`, `updateCard()`, `getState()`, `destroy()` |
+| `VoiceAdapter` | `voiceManager()` | `name`, `start()`, `stop()`, `isSupported()`, `destroy()` |
+| `VoiceStartConfig` | `voiceManager()` | `locale?`, `continuous?`, `interimResults?` |
+| `VoiceManagerOptions` | `voiceManager()` | `adapter`, `events?`, `locale?` |
+| `VoiceManagerController` | `voiceManager()` | `start()`, `stop()`, `toggle()`, `getState()`, `setAdapter()`, `destroy()` |
+| `RealtimeAdapterOptions` | `createRealtimeAdapter()` | `apiKey?`, `model?`, `wsUrl?`, `events?` |
 
 ## Presentation Runtime
 

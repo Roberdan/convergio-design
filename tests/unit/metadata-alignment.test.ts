@@ -8,10 +8,10 @@ function readFile(rel: string): string {
   return readFileSync(join(ROOT, rel), 'utf8');
 }
 
-describe('metadata alignment — v5.15.2', () => {
-  it('AGENT.md references v5.15.2', () => {
+describe('metadata alignment — v5.16.0', () => {
+  it('AGENT.md references v5.16.0', () => {
     const content = readFile('AGENT.md');
-    expect(content).toContain('v5.15.2');
+    expect(content).toContain('v5.16.0');
   });
 
   it('AGENT.md references 5 themes', () => {
@@ -19,20 +19,20 @@ describe('metadata alignment — v5.15.2', () => {
     expect(content).toMatch(/5 themes/i);
   });
 
-  it('AGENT.md references 35 WC tags', () => {
+  it('AGENT.md references 36 WC tags', () => {
     const content = readFile('AGENT.md');
-    expect(content).toContain('35');
+    expect(content).toContain('36');
   });
 
-  it('NaSra.agent.md references v5.15.2', () => {
+  it('NaSra.agent.md references v5.16.0', () => {
     const content = readFile('.github/agents/NaSra.agent.md');
-    expect(content).toContain('v5.15.2');
+    expect(content).toContain('v5.16.0');
   });
 
-  it('CLAUDE.md header references v5.15.2', () => {
+  it('CLAUDE.md header references v5.16.0', () => {
     const content = readFile('CLAUDE.md');
     const firstLine = content.split('\n')[0];
-    expect(firstLine).toContain('v5.15.2');
+    expect(firstLine).toContain('v5.16.0');
   });
 
   it('hero.js does not reference MIT license', () => {

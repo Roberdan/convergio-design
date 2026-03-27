@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.16.0] - 2026-03-27
+
+### Added
+- `kanbanBoard()` component — drag-drop kanban board with columns, cards, keyboard navigation, all 5 themes
+- `<mn-kanban-board>` Web Component wrapper with attribute API and CustomEvent support
+- `voiceManager()` — generic multi-provider voice input framework with VoiceAdapter interface
+- `createRealtimeAdapter()` — reference GPT Realtime API voice adapter
+- Voice framework integration with `aiChat` — `voiceAdapter` option for built-in speech-to-text
+- `cycleTheme()` order documented in CONSUMER_CONTRACT.md
+
+### Changed
+- IIFE bundle size limit updated from 256KB to 500KB in CONSTITUTION.md
+- CONSTITUTION.md theme count updated from 4 to 5 (Sugar was missing)
+
+### Fixed
+- 3 remaining `MaranelloLuceDesign` references updated to `convergio-design`
+
 ## [5.15.2] - 2026-03-26
 
 ### Fixed
