@@ -1,0 +1,548 @@
+plan:
+  name: "Kanban Board + Voice Adapter Framework + Housekeeping"
+  project: maranello
+  version: "5.16.0"
+  description: |
+    Three feature areas plus housekeeping for v5.16.0:
+    (1) Kanban Board — headless TS component with columns, cards, drag-drop reordering,
+        CSS Grid layout, Web Component wrapper, WCAG 2.2 AA, all 5 themes.
+    (2) Voice Adapter Framework — generic multi-provider, multi-platform voice input
+        framework with VoiceAdapter interface, VoiceManager controller, GPT Realtime
+        reference adapter, aiChat integration, i18n locale awareness. Consumer owns
+        speech recognition; DS provides the framework.
+    (3) Housekeeping — rename sync (3 files), cycleTheme docs, CONSTITUTION limit fix.
+
+requirements:
+  - id: F-01
+    title: "Kanban headless logic"
+    description: "kanbanBoard(container, opts) factory with columns, cards, drag-drop, state management. Split across max-250-line files."
+  - id: F-02
+    title: "Kanban CSS"
+    description: "components-kanban.css — CSS Grid layout, BEM mn-kanban*, @layer components, semantic tokens, all 5 themes"
+  - id: F-03
+    title: "Kanban Web Component"
+    description: "<mn-kanban-board> wrapper with attribute API, dual-mode ESM + CDN fallback"
+  - id: F-04
+    title: "Kanban IIFE export"
+    description: "window.Maranello.kanbanBoard registered in maranello.ts, exported from index.ts"
+  - id: F-05
+    title: "Kanban WCAG 2.2 AA"
+    description: "Keyboard nav (arrow/tab/enter/escape), aria-grabbed, role=listbox, 4.5:1 contrast, 44px touch targets, prefers-reduced-motion"
+  - id: F-06
+    title: "Kanban unit tests"
+    description: "tests/unit/kanban-board.test.ts — factory, columns, cards, drag-drop state, a11y attributes, destroy cleanup"
+  - id: F-07
+    title: "Voice adapter framework"
+    description: "VoiceAdapter interface + VoiceManager controller — multi-provider, multi-platform, state machine (idle/listening/processing/error)"
+  - id: F-08
+    title: "Voice GPT Realtime reference adapter"
+    description: "Built-in adapter skeleton for OpenAI Realtime API as reference implementation"
+  - id: F-09
+    title: "Voice CSS"
+    description: "components-voice.css — states (idle/listening/processing/error), pulse animation, all 5 themes, prefers-reduced-motion"
+  - id: F-10
+    title: "Voice aiChat integration"
+    description: "Wire VoiceManager into existing voiceBtn in ai-chat, onTranscript injects text into input"
+  - id: F-11
+    title: "Voice i18n"
+    description: "Locale from getLocale() passed to VoiceAdapter.start({ locale })"
+  - id: F-12
+    title: "Voice unit tests"
+    description: "tests/unit/voice-input.test.ts — adapter interface, VoiceManager states, i18n locale, destroy cleanup"
+  - id: F-13
+    title: "Rename sync"
+    description: "Fix 3 remaining MaranelloLuceDesign refs in CLAUDE.md, ADR 0001, DEPENDENCY_GRAPH.md"
+  - id: F-14
+    title: "cycleTheme order documented"
+    description: "CONSUMER_CONTRACT.md documents cycling order: Editorial > Nero > Avorio > Colorblind > Sugar"
+  - id: F-15
+    title: "CONSTITUTION IIFE limit update"
+    description: "Update 256KB to 500KB in CONSTITUTION.md CI enforcement section, update 4 themes to 5 themes"
+  - id: F-16
+    title: "CHANGELOG v5.16.0"
+    description: "CHANGELOG.md entry with Added section for kanban + voice, Changed for IIFE limit"
+  - id: F-17
+    title: "Version bump"
+    description: "package.json version 5.15.2 -> 5.16.0"
+  - id: F-18
+    title: "Build + test green"
+    description: "npm run build, npm run test:unit, npx tsc --noEmit all pass"
+  - id: F-19
+    title: "IIFE under 500KB"
+    description: "Post-build IIFE bundle stays under 500KB"
+
+acceptance_invariants:
+  - "test -f src/ts/kanban-board.ts"
+  - "test -f src/css/components-kanban.css"
+  - "test -f src/wc/mn-kanban-board.js"
+  - "grep -q 'kanbanBoard' src/ts/maranello.ts"
+  - "grep -q 'kanbanBoard' src/ts/index.ts"
+  - "grep -q 'mn-kanban-board' src/wc/index.ts"
+  - "grep -q 'mn-kanban' src/css/components-kanban.css"
+  - "grep -q '@layer components' src/css/components-kanban.css"
+  - "grep -q 'prefers-reduced-motion' src/css/components-kanban.css"
+  - "test -f src/ts/voice-input.ts"
+  - "test -f src/css/components-voice.css"
+  - "grep -q 'VoiceAdapter' src/ts/voice-input.ts"
+  - "grep -q 'getLocale' src/ts/voice-input.ts"
+  - "! grep -rq 'MaranelloLuceDesign' src/ docs/ CLAUDE.md"
+  - "grep -q 'cycleTheme' CONSUMER_CONTRACT.md"
+  - "grep -q '500' CONSTITUTION.md"
+  - "grep -q '5.16.0' package.json"
+  - "grep -q '5.16.0' CHANGELOG.md"
+  - "npm run build"
+  - "npm run test:unit"
+  - "npx tsc --noEmit"
+
+waves:
+  - id: W1
+    name: "Housekeeping + CSS Foundations"
+    parallel: true
+    tasks:
+      - id: T1-01
+        title: "Fix MaranelloLuceDesign references"
+        description: |
+          Fix 3 remaining MaranelloLuceDesign references:
+          1. CLAUDE.md line 2 title — change to "convergio-design"
+          2. docs/adr/0001-responsive-mobile-adaptation.md line 5 — update context reference
+          3. docs/DEPENDENCY_GRAPH.md line 7 — update section header
+          Also grep for any other occurrences in src/, docs/, demo/ and fix them.
+        requirements: [F-13]
+        executor: task-executor
+        model: claude-sonnet-4-6
+        effort: S
+        verify:
+          - "! grep -rq 'MaranelloLuceDesign' src/ docs/ CLAUDE.md"
+          - "grep -q 'convergio-design' CLAUDE.md"
+
+      - id: T1-02
+        title: "Document cycleTheme order in CONSUMER_CONTRACT.md"
+        description: |
+          Document cycleTheme cycling order in CONSUMER_CONTRACT.md.
+          In the "What Maranello Owns" table row for Themes, add a note about cycling order.
+          Add a new subsection under the Themes API section:
+          ### Theme Cycling Order
+          `cycleTheme()` rotates through: Editorial > Nero > Avorio > Colorblind > Sugar > (loop).
+          The default theme is Editorial. Consumers testing theme cycling must account for all 5 themes.
+        requirements: [F-14]
+        executor: task-executor
+        model: claude-sonnet-4-6
+        effort: S
+        verify:
+          - "grep -q 'Editorial.*Nero.*Avorio.*Colorblind.*Sugar' CONSUMER_CONTRACT.md"
+          - "grep -q 'cycleTheme' CONSUMER_CONTRACT.md"
+
+      - id: T1-03
+        title: "Update CONSTITUTION.md limits and theme count"
+        description: |
+          Update CONSTITUTION.md:
+          1. CI enforcement section: Change IIFE bundle size limit from 256KB to 500KB.
+          2. P5 principle: Update "4 themes" to "5 themes" — Sugar was added in v5.11 but
+             CONSTITUTION still says "4 themes always — nero, avorio, editorial, colorblind".
+             Update to: "5 themes always — nero, avorio, editorial, colorblind, sugar"
+          3. Check any other stale "4 theme" references in the file and update to 5.
+        requirements: [F-15]
+        executor: task-executor
+        model: claude-sonnet-4-6
+        effort: S
+        verify:
+          - "grep -q '500' CONSTITUTION.md"
+          - "! grep -q '256KB' CONSTITUTION.md"
+
+      - id: T1-04
+        title: "Kanban Board CSS"
+        description: |
+          Create src/css/components-kanban.css — full Kanban Board CSS.
+
+          Follow existing patterns from components-dividers-tags-cards.css and components-agent-cost.css.
+
+          Structure:
+          @layer components {
+            .mn-kanban { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap; overflow-x: auto; }
+            .mn-kanban__column { display: flex; flex-direction: column; background: color-mix(); border-radius; padding; min-height: 200px; }
+            .mn-kanban__column-header { font-weight 600; display: flex; justify-content: space-between; }
+            .mn-kanban__column-count { badge with card count }
+            .mn-kanban__cards { flex: 1; display: flex; flex-direction: column; gap; min-height: 44px; }
+            .mn-kanban__card { background: var(--mn-surface); border; border-radius; padding; cursor: grab; transition; }
+            .mn-kanban__card:hover { shadow lift }
+            .mn-kanban__card:focus-visible { focus ring 2px var(--mn-accent) }
+            .mn-kanban__card--dragging { opacity: 0.5; cursor: grabbing; }
+            .mn-kanban__card-title, card-subtitle, card-tags, card-tag, card-priority
+            .mn-kanban__drop-zone { dashed border var(--mn-accent) when drag over }
+            .mn-kanban--empty { empty state placeholder }
+          }
+
+          Must include: All semantic tokens, spacing tokens, @media (prefers-reduced-motion: reduce),
+          mobile-first responsive, focus ring, min 44px touch targets, max 250 lines.
+          Also import this file in the appropriate CSS barrel.
+        requirements: [F-02, F-05]
+        executor: task-executor
+        model: claude-sonnet-4-6
+        effort: M
+        verify:
+          - "test -f src/css/components-kanban.css"
+          - "grep -q '@layer components' src/css/components-kanban.css"
+          - "grep -q 'mn-kanban' src/css/components-kanban.css"
+          - "grep -q 'prefers-reduced-motion' src/css/components-kanban.css"
+          - "grep -q 'mn-accent' src/css/components-kanban.css"
+          - "grep -q 'mn-surface' src/css/components-kanban.css"
+          - "grep -q 'focus-visible' src/css/components-kanban.css"
+
+  - id: W2
+    name: "Kanban Core Logic + Voice Adapter Framework"
+    parallel: true
+    tasks:
+      - id: T2-01
+        title: "Kanban headless logic (3 files)"
+        depends_on: [T1-04]
+        description: |
+          Create kanban board headless logic — split across max-250-line files.
+
+          Files to create:
+          1. src/ts/kanban-board.ts — main factory, types, public API (~200 lines)
+          2. src/ts/kanban-board-drag.ts — drag-drop logic with mouse/touch/keyboard (~200 lines)
+          3. src/ts/kanban-board-dom.ts — DOM rendering, column/card creation (~200 lines)
+
+          Reference existing patterns:
+          - src/ts/controls-drag.ts for drag handling (getClientPoint, mouse/touch unified)
+          - src/ts/panel-orchestrator.ts for DOM reordering (placeholder node strategy)
+          - src/ts/data-table.ts or src/ts/filter-panel.ts for factory pattern
+
+          API (kanban-board.ts):
+          export interface KanbanColumn { id: string; title: string; color?: string; }
+          export interface KanbanCard { id: string; columnId: string; title: string; subtitle?: string; tags?: string[]; priority?: 'low' | 'medium' | 'high' | 'critical'; }
+          export interface KanbanOptions { columns; cards; onMove?; onCardClick?; }
+          export interface KanbanController { addCard; removeCard; moveCard; updateCard; getState; destroy; }
+          export function kanbanBoard(container: HTMLElement | string, opts: KanbanOptions): KanbanController;
+
+          kanban-board-drag.ts: Mouse/touch unified via getClientPoint, drag state machine (idle->dragging->idle),
+          ghost clone, drop-zone highlighting, keyboard grab/reposition with arrows, prefers-reduced-motion, destroy.
+
+          kanban-board-dom.ts: renderColumn, renderCard, updateCard, ARIA (role=listbox on cards container,
+          role=option on cards, aria-grabbed, tabindex=0). escapeHtml() for user text.
+
+          NON-NEGOTIABLE: No structuredClone/Object.hasOwn/Array.at() (Safari). es2020. Named exports. JSDoc.
+          No hardcoded colors. Max 250 lines/file. Fail-loud on empty data.
+        requirements: [F-01, F-05]
+        executor: task-executor
+        model: claude-opus-4-6
+        effort: L
+        verify:
+          - "test -f src/ts/kanban-board.ts"
+          - "test -f src/ts/kanban-board-drag.ts"
+          - "test -f src/ts/kanban-board-dom.ts"
+          - "grep -q 'export function kanbanBoard' src/ts/kanban-board.ts"
+          - "grep -q 'export interface KanbanController' src/ts/kanban-board.ts"
+          - "grep -q 'destroy' src/ts/kanban-board.ts"
+          - "grep -q 'aria-grabbed' src/ts/kanban-board-dom.ts"
+          - "wc -l < src/ts/kanban-board.ts | xargs test 250 -ge"
+          - "wc -l < src/ts/kanban-board-drag.ts | xargs test 250 -ge"
+          - "wc -l < src/ts/kanban-board-dom.ts | xargs test 250 -ge"
+
+      - id: T2-02
+        title: "Voice adapter framework + GPT Realtime adapter"
+        description: |
+          Create voice adapter framework — split across max-250-line files.
+
+          Files to create:
+          1. src/ts/voice-input.ts — VoiceAdapter interface, VoiceManager, state machine (~200 lines)
+          2. src/ts/voice-input-realtime.ts — GPT Realtime reference adapter (~150 lines)
+
+          Reference: src/ts/ai-chat-dom.ts (voiceBtn), src/ts/ai-chat-messages.ts (toggleVoice), src/ts/core/i18n.ts (getLocale)
+
+          voice-input.ts must re-export createRealtimeAdapter from voice-input-realtime for barrel:
+          export { createRealtimeAdapter } from './voice-input-realtime';
+
+          Core types:
+          export type VoiceState = 'idle' | 'listening' | 'processing' | 'error';
+          export interface VoiceEvents { onStateChange?; onTranscript?(text, isFinal); onError?; }
+          export interface VoiceStartConfig { locale?; continuous?; interimResults?; }
+          export interface VoiceAdapter { name; start(config); stop(); isSupported(); destroy(); }
+          export interface VoiceManagerOptions { adapter; events?; locale?; }
+          export interface VoiceManagerController { start; stop; toggle; getState; setAdapter; destroy; }
+          export function voiceManager(opts: VoiceManagerOptions): VoiceManagerController;
+
+          VoiceManager: state machine idle->listening->processing->idle, error auto-recover 3s,
+          getLocale() default, fail-loud on unsupported adapter.
+
+          voice-input-realtime.ts — GPT Realtime reference:
+          export interface RealtimeAdapterOptions { apiKey?; model?; wsUrl?; }
+          export function createRealtimeAdapter(opts: RealtimeAdapterOptions): VoiceAdapter;
+          WebSocket to OpenAI Realtime API, session config with locale, onTranscript events.
+
+          NON-NEGOTIABLE: Safari compat, es2020, named exports, JSDoc, max 250 lines, zero deps.
+        requirements: [F-07, F-08, F-11]
+        executor: task-executor
+        model: claude-opus-4-6
+        effort: L
+        verify:
+          - "test -f src/ts/voice-input.ts"
+          - "test -f src/ts/voice-input-realtime.ts"
+          - "grep -q 'export interface VoiceAdapter' src/ts/voice-input.ts"
+          - "grep -q 'export function voiceManager' src/ts/voice-input.ts"
+          - "grep -q 'VoiceState' src/ts/voice-input.ts"
+          - "grep -q 'getLocale' src/ts/voice-input.ts"
+          - "grep -q 'createRealtimeAdapter' src/ts/voice-input-realtime.ts"
+          - "grep -q 'WebSocket' src/ts/voice-input-realtime.ts"
+          - "wc -l < src/ts/voice-input.ts | xargs test 250 -ge"
+          - "wc -l < src/ts/voice-input-realtime.ts | xargs test 250 -ge"
+
+      - id: T2-03
+        title: "Voice CSS"
+        description: |
+          Create src/css/components-voice.css — Voice input component CSS.
+
+          @layer components {
+            .mn-voice { position: relative; display: inline-flex; }
+            .mn-voice__btn { min 44px touch target; border-radius: 50%; background: transparent; }
+            .mn-voice__btn:hover { color: var(--mn-accent); }
+            .mn-voice__btn:focus-visible { focus ring }
+            .mn-voice--idle, --listening (pulse, mn-error color), --processing (spin, mn-info),
+            --error (mn-error, opacity 0.5)
+            .mn-voice__waveform { flex bars animation }
+            .mn-voice__transcript { italic preview text }
+            @keyframes mn-voice-pulse, mn-voice-wave
+            @media (prefers-reduced-motion: reduce) { disable all animations }
+          }
+
+          Semantic tokens only. Import in CSS barrel. Max 250 lines.
+        requirements: [F-09]
+        executor: task-executor
+        model: claude-sonnet-4-6
+        effort: M
+        verify:
+          - "test -f src/css/components-voice.css"
+          - "grep -q '@layer components' src/css/components-voice.css"
+          - "grep -q 'mn-voice' src/css/components-voice.css"
+          - "grep -q 'mn-voice--listening' src/css/components-voice.css"
+          - "grep -q 'mn-voice--processing' src/css/components-voice.css"
+          - "grep -q 'mn-voice--error' src/css/components-voice.css"
+          - "grep -q 'prefers-reduced-motion' src/css/components-voice.css"
+
+  - id: W3
+    name: "Integration, Web Components, Registration"
+    parallel: true
+    tasks:
+      - id: T3-01
+        title: "Kanban WC + IIFE registration"
+        depends_on: [T2-01]
+        description: |
+          Create Kanban Board Web Component + register kanban in all entry points.
+
+          1. Create src/wc/mn-kanban-board.js — follow pattern from mn-data-table.js:
+             Extend HTMLElement, attachShadow open, observedAttributes ['columns', 'cards'],
+             cssLink for tokens + components-kanban, dual-mode ESM + window.Maranello fallback,
+             public API: addCard, removeCard, moveCard, getState.
+             CustomEvents: 'mn-kanban-card-moved' {cardId, fromCol, toCol, position},
+             'mn-kanban-card-click' {card}. Max 250 lines.
+
+          2. src/ts/index.ts: export kanbanBoard + types from './kanban-board'
+          3. src/ts/maranello.ts: import kanbanBoard, add M.kanbanBoard = kanbanBoard
+          4. src/wc/index.ts: add 'mn-kanban-board' to WC_TAGS, add import in registerAll
+        requirements: [F-03, F-04]
+        executor: task-executor
+        model: claude-opus-4-6
+        effort: M
+        verify:
+          - "test -f src/wc/mn-kanban-board.js"
+          - "grep -q 'kanbanBoard' src/ts/index.ts"
+          - "grep -q 'kanbanBoard' src/ts/maranello.ts"
+          - "grep -q 'mn-kanban-board' src/wc/index.ts"
+          - "grep -q 'mn-kanban-card-moved' src/wc/mn-kanban-board.js"
+          - "wc -l < src/wc/mn-kanban-board.js | xargs test 250 -ge"
+
+      - id: T3-02
+        title: "Voice aiChat integration + exports registration"
+        depends_on: [T2-02]
+        description: |
+          Wire voice framework into aiChat + register voice exports.
+
+          1. src/ts/ai-chat-messages.ts: update toggleVoice() to accept optional VoiceManagerController.
+             If provided, delegate start/stop. On transcript, inject text into chat input textarea.
+             Update CSS class to mn-voice--listening/processing/error states.
+
+          2. src/ts/ai-chat-dom.ts: add optional voiceAdapter?: VoiceAdapter to AIChatOptions.
+             If provided, create VoiceManager internally and wire to voiceBtn.
+
+          3. src/ts/index.ts: export voiceManager, createRealtimeAdapter, all voice types
+             from './voice-input' (which re-exports createRealtimeAdapter)
+
+          4. src/ts/maranello.ts: M.voiceManager = voiceManager; M.createRealtimeAdapter = createRealtimeAdapter;
+
+          Read existing ai-chat-dom.ts, ai-chat-messages.ts, ai-chat-iife.ts BEFORE changes.
+          Minimal changes — do not refactor beyond integration needs.
+        requirements: [F-10, F-11]
+        executor: task-executor
+        model: claude-opus-4-6
+        effort: M
+        verify:
+          - "grep -q 'voiceManager' src/ts/index.ts"
+          - "grep -q 'voiceManager' src/ts/maranello.ts"
+          - "grep -q 'createRealtimeAdapter' src/ts/maranello.ts"
+          - "grep -q 'VoiceAdapter\\|voiceAdapter' src/ts/ai-chat-dom.ts"
+
+  - id: W4
+    name: "Unit Tests"
+    parallel: true
+    tasks:
+      - id: T4-01
+        title: "Kanban board unit tests"
+        depends_on: [T3-01]
+        description: |
+          Create tests/unit/kanban-board.test.ts — comprehensive kanban tests.
+          Follow patterns from tests/unit/controls.test.ts (vitest + happy-dom, dynamic imports).
+
+          Test cases: factory creates mn-kanban container, renders correct columns/cards,
+          addCard/removeCard/moveCard/updateCard work, getState returns frozen copy,
+          destroy removes listeners + DOM, ARIA attributes (role=option, role=listbox, aria-grabbed),
+          empty columns trigger console.warn, onCardClick fires, keyboard Enter/Space triggers grab.
+
+          Use realistic data: "Requirements", "In Progress", "Code Review", "Done" columns.
+          Cards: "Implement authentication flow", "Database migration v3", etc.
+          Max 250 lines.
+        requirements: [F-06]
+        executor: task-executor
+        model: claude-sonnet-4-6
+        effort: M
+        verify:
+          - "test -f tests/unit/kanban-board.test.ts"
+          - "grep -q 'kanbanBoard' tests/unit/kanban-board.test.ts"
+          - "grep -q 'addCard' tests/unit/kanban-board.test.ts"
+          - "grep -q 'removeCard' tests/unit/kanban-board.test.ts"
+          - "grep -q 'moveCard' tests/unit/kanban-board.test.ts"
+          - "grep -q 'destroy' tests/unit/kanban-board.test.ts"
+          - "grep -q 'aria' tests/unit/kanban-board.test.ts"
+
+      - id: T4-02
+        title: "Voice input unit tests"
+        depends_on: [T3-02]
+        description: |
+          Create tests/unit/voice-input.test.ts — comprehensive voice tests.
+          Follow patterns from tests/unit/controls.test.ts.
+
+          Test cases: voiceManager creates controller with idle state, start/stop/toggle transitions,
+          onStateChange fires, onTranscript receives text, error auto-recovery,
+          setAdapter swaps at runtime, destroy cleans up, getLocale integration (default + custom locale),
+          createRealtimeAdapter returns valid VoiceAdapter, isSupported checks WebSocket,
+          unsupported adapter triggers console.warn.
+
+          Mock WebSocket for realtime tests. Use real locale codes (en-US, it-IT).
+          Max 250 lines.
+        requirements: [F-12]
+        executor: task-executor
+        model: claude-sonnet-4-6
+        effort: M
+        verify:
+          - "test -f tests/unit/voice-input.test.ts"
+          - "grep -q 'voiceManager' tests/unit/voice-input.test.ts"
+          - "grep -q 'VoiceAdapter' tests/unit/voice-input.test.ts"
+          - "grep -q 'createRealtimeAdapter' tests/unit/voice-input.test.ts"
+          - "grep -q 'destroy' tests/unit/voice-input.test.ts"
+          - "grep -q 'locale' tests/unit/voice-input.test.ts"
+
+  - id: W5
+    name: "Release Closure"
+    parallel: false
+    tasks:
+      - id: TF-tests
+        title: "Full test suite + build verification"
+        depends_on: [T4-01, T4-02]
+        description: |
+          Run full test suite and verify all pass.
+          1. npm run test:unit — all vitest tests green
+          2. npx tsc --noEmit — no type errors
+          3. npm run build — clean build
+          4. Verify IIFE bundle under 500KB: stat -f%z dist/iife/maranello.min.js (< 512000)
+          5. If any test fails, fix the issue in the appropriate source file.
+        requirements: [F-18, F-19]
+        executor: task-executor
+        model: claude-sonnet-4-6
+        effort: M
+        verify:
+          - "npm run test:unit"
+          - "npx tsc --noEmit"
+          - "npm run build"
+          - "test $(stat -f%z dist/iife/maranello.min.js) -lt 512000"
+
+      - id: TF-doc
+        title: "Version bump + CHANGELOG + ADR"
+        depends_on: [TF-tests]
+        description: |
+          1. package.json version: "5.15.2" -> "5.16.0"
+          2. Update CLAUDE.md if it references version number
+          3. CHANGELOG.md entry:
+
+          ## [5.16.0] - 2026-03-27
+
+          ### Added
+          - `kanbanBoard()` component — drag-drop kanban board with columns, cards, keyboard navigation, all 5 themes
+          - `<mn-kanban-board>` Web Component wrapper with attribute API and CustomEvent support
+          - `voiceManager()` — generic multi-provider voice input framework with VoiceAdapter interface
+          - `createRealtimeAdapter()` — reference GPT Realtime API voice adapter
+          - Voice framework integration with `aiChat` — voiceAdapter option for built-in speech-to-text
+          - `cycleTheme()` order documented in CONSUMER_CONTRACT.md
+
+          ### Changed
+          - IIFE bundle size limit updated from 256KB to 500KB in CONSTITUTION.md
+          - CONSTITUTION.md theme count updated from 4 to 5
+
+          ### Fixed
+          - 3 remaining `MaranelloLuceDesign` references updated to `convergio-design`
+
+          4. Create docs/adr/NNNN-kanban-voice-v5.16.0.md (find next ADR number):
+             ADR documenting kanban as headless+WC, voice as adapter framework (consumer-owned speech),
+             GPT Realtime as reference. Decision: consumer boundary at speech recognition API.
+        requirements: [F-16, F-17]
+        executor: task-executor
+        model: claude-sonnet-4-6
+        effort: S
+        verify:
+          - "grep -q '5.16.0' package.json"
+          - "grep -q '5.16.0' CHANGELOG.md"
+          - "grep -q 'kanbanBoard' CHANGELOG.md"
+          - "grep -q 'voiceManager' CHANGELOG.md"
+          - "ls docs/adr/*kanban* 2>/dev/null | grep -q '.'"
+
+      - id: TF-pr
+        title: "Final build verification"
+        depends_on: [TF-doc]
+        description: |
+          Final build verification.
+          1. npm run build — full clean build with new version
+          2. npm run test:unit — all tests pass
+          3. npx tsc --noEmit — no type errors
+          4. grep -rn 'MaranelloLuceDesign' src/ docs/ CLAUDE.md (must be empty)
+          5. Verify IIFE < 500KB
+          6. Verify all new files exist and are non-empty
+          7. Run all acceptance_invariants from plan
+        requirements: [F-18, F-19]
+        executor: task-executor
+        model: claude-sonnet-4-6
+        effort: S
+        verify:
+          - "npm run build"
+          - "npm run test:unit"
+          - "npx tsc --noEmit"
+          - "! grep -rq 'MaranelloLuceDesign' src/ docs/ CLAUDE.md"
+          - "test $(stat -f%z dist/iife/maranello.min.js) -lt 512000"
+
+      - id: TF-deploy-verify
+        title: "Version verification"
+        depends_on: [TF-pr]
+        description: |
+          Verify v5.16.0 is correctly set everywhere.
+          1. package.json has "version": "5.16.0"
+          2. CHANGELOG.md has ## [5.16.0] entry
+          3. dist/iife/maranello.min.js contains version banner "v5.16.0"
+          4. New exports accessible: grep kanbanBoard/voiceManager/createRealtimeAdapter in dist/esm/index.js
+          5. WC registry includes mn-kanban-board
+          6. Report final bundle size
+        requirements: [F-17, F-18, F-19]
+        executor: task-executor
+        model: claude-sonnet-4-6
+        effort: S
+        verify:
+          - "grep -q '\"version\": \"5.16.0\"' package.json"
+          - "grep -q '5.16.0' CHANGELOG.md"
+          - "grep -q 'kanbanBoard' dist/esm/index.js"
+          - "grep -q 'voiceManager' dist/esm/index.js"

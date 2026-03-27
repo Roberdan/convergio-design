@@ -4,7 +4,7 @@ Source: `/VirtualBPM/docs/design/ts/` (77 files)
 
 ## File Classification
 
-### DS-Generic (61 files -- migrate to MaranelloLuceDesign)
+### DS-Generic (61 files -- migrate to convergio-design)
 
 | Module | Files | Internal Namespace | Depends On |
 |--------|-------|--------------------|------------|

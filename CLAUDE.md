@@ -1,7 +1,7 @@
-<!-- v5.15.2 | 2026-03-26 -->
-# MaranelloLuceDesign
+<!-- v5.16.0 | 2026-03-27 -->
+# convergio-design
 
-Ferrari Luce-inspired DS for dashboards. 5 themes. 115+ IIFE exports. 35 WC. WCAG 2.2 AA.
+Ferrari Luce-inspired DS for dashboards. 5 themes. 115+ IIFE exports. 36 WC. WCAG 2.2 AA.
 
 ## Commands
 

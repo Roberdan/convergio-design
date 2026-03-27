@@ -28,6 +28,11 @@ export type { LoginScreenOptions, LoginScreenController, LoginHealthData, LoginS
 export { buildUI, ICON_SPARK, getIcon, renderContent, formatTime } from './ai-chat-dom';
 export type { AIChatOptions, AIChatMessage, AIChatAgent, AIChatResponse, AIChatController } from './ai-chat-dom';
 export { initMessages } from './ai-chat-messages';
+export { kanbanBoard } from './kanban-board';
+export type { KanbanOptions, KanbanController, KanbanColumn, KanbanCard } from './kanban-board';
+export { voiceManager, createRealtimeAdapter } from './voice-input';
+export type { VoiceAdapter, VoiceState, VoiceManagerController, VoiceManagerOptions, VoiceStartConfig, VoiceEvents } from './voice-input';
+export type { RealtimeAdapterOptions } from './voice-input-realtime';
 export { systemStatus } from './system-status';
 export { profileMenu } from './profile-menu';
 export type { ProfileMenuUser, ProfileMenuOptions, ProfileMenuController } from './profile-menu';

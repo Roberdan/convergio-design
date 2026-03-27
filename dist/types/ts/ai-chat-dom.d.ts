@@ -34,6 +34,7 @@ export interface AIChatOptions {
     activeAgent?: string | null;
     onAgentChange?: (agentId: string, agent: AIChatAgent) => void;
     onVoice?: (isListening: boolean) => void;
+    voiceAdapter?: import('./voice-input').VoiceAdapter;
 }
 export interface AIChatController {
     open: () => void;

@@ -4073,6 +4073,211 @@ function buildUI(container, opts) {
   };
 }
 
+// src/ts/voice-input-realtime.ts
+var DEFAULT_WS_URL = "wss://api.openai.com/v1/realtime";
+var DEFAULT_MODEL = "gpt-4o-realtime-preview";
+function parseServerEvent(raw) {
+  try {
+    var parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object" && typeof parsed.type === "string") {
+      return parsed;
+    }
+    return null;
+  } catch (_e) {
+    return null;
+  }
+}
+function buildWsUrl(base, model) {
+  var sep = base.indexOf("?") === -1 ? "?" : "&";
+  return base + sep + "model=" + encodeURIComponent(model);
+}
+function createRealtimeAdapter(opts) {
+  var ws = null;
+  var events = opts.events || null;
+  var apiKey = opts.apiKey || "";
+  var model = opts.model || DEFAULT_MODEL;
+  var wsUrl = opts.wsUrl || DEFAULT_WS_URL;
+  function sendJson(data) {
+    if (ws && ws.readyState === 1) {
+      ws.send(JSON.stringify(data));
+    }
+  }
+  function handleMessage(raw) {
+    var evt = parseServerEvent(raw);
+    if (!evt) return;
+    var type = evt.type;
+    if (type === "response.audio_transcript.delta") {
+      var delta = evt.delta || "";
+      if (events && typeof events.onTranscript === "function") {
+        events.onTranscript(delta, false);
+      }
+    } else if (type === "response.audio_transcript.done") {
+      var transcript = evt.transcript || "";
+      if (events && typeof events.onTranscript === "function") {
+        events.onTranscript(transcript, true);
+      }
+    } else if (type === "error") {
+      var errObj = evt.error;
+      var errMsg = errObj && typeof errObj.message === "string" ? errObj.message : "Unknown realtime error";
+      if (events && typeof events.onError === "function") {
+        events.onError(new Error(errMsg));
+      }
+    }
+  }
+  function closeWebSocket() {
+    if (ws) {
+      ws.onopen = null;
+      ws.onmessage = null;
+      ws.onerror = null;
+      ws.onclose = null;
+      if (ws.readyState === 0 || ws.readyState === 1) {
+        ws.close();
+      }
+      ws = null;
+    }
+  }
+  var adapter = {
+    name: "gpt-realtime",
+    start: function start(config) {
+      closeWebSocket();
+      var url = buildWsUrl(wsUrl, model);
+      var protocols = apiKey ? ["realtime", "openai-insecure-api-key." + apiKey, "openai-beta.realtime-v1"] : ["realtime", "openai-beta.realtime-v1"];
+      ws = new WebSocket(url, protocols);
+      ws.onopen = function() {
+        sendJson({
+          type: "session.update",
+          session: {
+            modalities: ["text", "audio"],
+            input_audio_transcription: { model: "whisper-1" },
+            turn_detection: { type: "server_vad" },
+            instructions: "Locale: " + (config.locale || "en-US")
+          }
+        });
+      };
+      ws.onmessage = function(ev) {
+        if (typeof ev.data === "string") {
+          handleMessage(ev.data);
+        }
+      };
+      ws.onerror = function() {
+        if (events && typeof events.onError === "function") {
+          events.onError(new Error("WebSocket connection error"));
+        }
+        if (events && typeof events.onStateChange === "function") {
+          events.onStateChange("error");
+        }
+      };
+      ws.onclose = function() {
+        if (events && typeof events.onStateChange === "function") {
+          events.onStateChange("error");
+        }
+      };
+    },
+    stop: function stop() {
+      closeWebSocket();
+    },
+    isSupported: function isSupported() {
+      return typeof WebSocket !== "undefined";
+    },
+    destroy: function destroy() {
+      closeWebSocket();
+    }
+  };
+  return adapter;
+}
+
+// src/ts/voice-input.ts
+function voiceManager(opts) {
+  let adapter = opts.adapter;
+  const events = opts.events;
+  let state = "idle";
+  let recoveryTimer = null;
+  function getLocaleString() {
+    if (opts.locale) return opts.locale;
+    if (typeof navigator !== "undefined" && navigator.language) {
+      return navigator.language;
+    }
+    return "en-US";
+  }
+  function setState(next) {
+    state = next;
+    if (events && typeof events.onStateChange === "function") {
+      events.onStateChange(next);
+    }
+  }
+  function clearRecoveryTimer() {
+    if (recoveryTimer !== null) {
+      clearTimeout(recoveryTimer);
+      recoveryTimer = null;
+    }
+  }
+  function transitionToError(error) {
+    setState("error");
+    if (events && typeof events.onError === "function") {
+      events.onError(error);
+    }
+    clearRecoveryTimer();
+    recoveryTimer = setTimeout(function() {
+      recoveryTimer = null;
+      setState("idle");
+    }, 3e3);
+  }
+  function start() {
+    if (state === "listening" || state === "processing") return;
+    if (!adapter.isSupported()) {
+      var msg = 'VoiceManager: adapter "' + adapter.name + '" is not supported in this environment';
+      console.warn(msg);
+      transitionToError(new Error(msg));
+      return;
+    }
+    clearRecoveryTimer();
+    setState("listening");
+    adapter.start({
+      locale: getLocaleString(),
+      continuous: true,
+      interimResults: true
+    });
+  }
+  function stop() {
+    if (state === "idle") return;
+    clearRecoveryTimer();
+    adapter.stop();
+    setState("idle");
+  }
+  function toggle() {
+    if (state === "idle") {
+      start();
+    } else {
+      stop();
+    }
+  }
+  function getState() {
+    return state;
+  }
+  function setAdapter(next) {
+    if (state === "listening" || state === "processing") {
+      adapter.stop();
+      setState("idle");
+    }
+    adapter = next;
+  }
+  function destroy() {
+    if (state === "listening" || state === "processing") {
+      adapter.stop();
+    }
+    clearRecoveryTimer();
+    state = "idle";
+  }
+  return {
+    start,
+    stop,
+    toggle,
+    getState,
+    setAdapter,
+    destroy
+  };
+}
+
 // src/ts/ai-chat-messages.ts
 function initMessages(state, els, opts) {
   const { messages } = state;
@@ -4251,9 +4456,27 @@ function initMessages(state, els, opts) {
     els.panel.classList.toggle("mn-chat-panel--wide", next === "wide");
     els.panel.classList.toggle("mn-chat-panel--full", next === "full");
   }
+  var voiceMgr = opts.voiceAdapter ? voiceManager({
+    adapter: opts.voiceAdapter,
+    events: {
+      onTranscript(text, isFinal) {
+        inputEl.value = isFinal ? text : inputEl.value + text;
+      },
+      onStateChange(vs) {
+        var wrap = voiceBtn.parentElement || voiceBtn;
+        wrap.classList.remove("mn-voice--listening", "mn-voice--processing", "mn-voice--error");
+        if (vs !== "idle") wrap.classList.add("mn-voice--" + vs);
+        state.isListening = vs === "listening";
+      }
+    }
+  }) : null;
   function toggleVoice() {
-    state.isListening = !state.isListening;
-    voiceBtn.classList.toggle("mn-chat-voice--active", state.isListening);
+    if (voiceMgr) {
+      voiceMgr.toggle();
+    } else {
+      state.isListening = !state.isListening;
+      voiceBtn.classList.toggle("mn-chat-voice--active", state.isListening);
+    }
     if (typeof opts.onVoice === "function") opts.onVoice(state.isListening);
   }
   function clear2() {
@@ -4293,6 +4516,477 @@ function initMessages(state, els, opts) {
     if (!(e.target instanceof Node) || !els.panel.contains(e.target)) return;
     if (agentSelector.contains(e.target) || agentGrid.contains(e.target)) return;
     toggleAgentGrid(false);
+  };
+}
+
+// src/ts/kanban-board-dom.ts
+function esc(s) {
+  return escapeHtml(s);
+}
+function renderBoard(container, columns, cards) {
+  const board = document.createElement("div");
+  board.className = "mn-kanban";
+  for (const col of columns) {
+    const colEl = document.createElement("div");
+    colEl.className = "mn-kanban__column";
+    colEl.setAttribute("data-column-id", col.id);
+    const header2 = document.createElement("div");
+    header2.className = "mn-kanban__column-header";
+    const titleSpan = document.createElement("span");
+    titleSpan.textContent = esc(col.title);
+    const colCards = cards.filter((c) => c.columnId === col.id);
+    const countBadge = document.createElement("span");
+    countBadge.className = "mn-kanban__column-count";
+    countBadge.textContent = String(colCards.length);
+    header2.appendChild(titleSpan);
+    header2.appendChild(countBadge);
+    colEl.appendChild(header2);
+    const cc = document.createElement("div");
+    cc.className = "mn-kanban__cards";
+    cc.setAttribute("role", "listbox");
+    cc.setAttribute("aria-label", col.title);
+    for (const card of colCards) cc.appendChild(renderCard(card));
+    colEl.appendChild(cc);
+    board.appendChild(colEl);
+  }
+  container.appendChild(board);
+}
+function renderCard(card) {
+  const el5 = document.createElement("div");
+  el5.className = "mn-kanban__card";
+  el5.setAttribute("tabindex", "0");
+  el5.setAttribute("role", "option");
+  el5.setAttribute("aria-grabbed", "false");
+  el5.setAttribute("data-card-id", card.id);
+  if (card.priority) {
+    const prio = document.createElement("span");
+    prio.className = "mn-kanban__card-priority mn-kanban__card-priority--" + card.priority;
+    el5.appendChild(prio);
+  }
+  const title = document.createElement("div");
+  title.className = "mn-kanban__card-title";
+  title.textContent = esc(card.title);
+  el5.appendChild(title);
+  if (card.subtitle) {
+    const sub = document.createElement("div");
+    sub.className = "mn-kanban__card-subtitle";
+    sub.textContent = esc(card.subtitle);
+    el5.appendChild(sub);
+  }
+  if (card.tags && card.tags.length > 0) {
+    const wrap = document.createElement("div");
+    wrap.className = "mn-kanban__card-tags";
+    for (const tag of card.tags) {
+      const t = document.createElement("span");
+      t.className = "mn-kanban__card-tag";
+      t.textContent = esc(tag);
+      wrap.appendChild(t);
+    }
+    el5.appendChild(wrap);
+  }
+  return el5;
+}
+function updateCardDom(container, cardId, updates) {
+  const cardEl = container.querySelector('[data-card-id="' + cardId + '"]');
+  if (!cardEl) {
+    console.warn("kanban: card not found in DOM: " + cardId);
+    return;
+  }
+  if (updates.title !== void 0) {
+    const titleEl = cardEl.querySelector(".mn-kanban__card-title");
+    if (titleEl) titleEl.textContent = esc(updates.title);
+  }
+  if (updates.subtitle !== void 0) {
+    let subEl = cardEl.querySelector(".mn-kanban__card-subtitle");
+    if (updates.subtitle) {
+      if (!subEl) {
+        subEl = document.createElement("div");
+        subEl.className = "mn-kanban__card-subtitle";
+        const titleEl = cardEl.querySelector(".mn-kanban__card-title");
+        if (titleEl && titleEl.nextSibling) cardEl.insertBefore(subEl, titleEl.nextSibling);
+        else cardEl.appendChild(subEl);
+      }
+      subEl.textContent = esc(updates.subtitle);
+    } else if (subEl) {
+      subEl.remove();
+    }
+  }
+  if (updates.priority !== void 0) {
+    let prioEl = cardEl.querySelector(".mn-kanban__card-priority");
+    if (updates.priority) {
+      if (!prioEl) {
+        prioEl = document.createElement("span");
+        cardEl.insertBefore(prioEl, cardEl.firstChild);
+      }
+      prioEl.className = "mn-kanban__card-priority mn-kanban__card-priority--" + updates.priority;
+    } else if (prioEl) {
+      prioEl.remove();
+    }
+  }
+  if (updates.tags !== void 0) {
+    let wrap = cardEl.querySelector(".mn-kanban__card-tags");
+    if (updates.tags && updates.tags.length > 0) {
+      if (!wrap) {
+        wrap = document.createElement("div");
+        wrap.className = "mn-kanban__card-tags";
+        cardEl.appendChild(wrap);
+      }
+      wrap.innerHTML = "";
+      for (const tag of updates.tags) {
+        const t = document.createElement("span");
+        t.className = "mn-kanban__card-tag";
+        t.textContent = esc(tag);
+        wrap.appendChild(t);
+      }
+    } else if (wrap) {
+      wrap.remove();
+    }
+  }
+}
+function removeCardDom(container, cardId) {
+  const cardEl = container.querySelector('[data-card-id="' + cardId + '"]');
+  if (!cardEl) {
+    console.warn("kanban: card not found for removal: " + cardId);
+    return;
+  }
+  const colEl = cardEl.closest(".mn-kanban__column");
+  cardEl.remove();
+  if (colEl) {
+    const colId = colEl.getAttribute("data-column-id");
+    if (colId) updateColumnCount(container, colId, colEl.querySelectorAll(".mn-kanban__card").length);
+  }
+}
+function moveCardDom(container, cardId, toColId, position) {
+  const cardEl = container.querySelector('[data-card-id="' + cardId + '"]');
+  if (!cardEl) {
+    console.warn("kanban: card not found for move: " + cardId);
+    return;
+  }
+  const sourceCol = cardEl.closest(".mn-kanban__column");
+  const targetCol = container.querySelector('[data-column-id="' + toColId + '"]');
+  if (!targetCol) {
+    console.warn("kanban: target column not found: " + toColId);
+    return;
+  }
+  const targetCards = targetCol.querySelector(".mn-kanban__cards");
+  if (!targetCards) return;
+  cardEl.remove();
+  if (position !== void 0 && position >= 0) {
+    const children = targetCards.querySelectorAll(".mn-kanban__card");
+    if (position < children.length) targetCards.insertBefore(cardEl, children[position]);
+    else targetCards.appendChild(cardEl);
+  } else {
+    targetCards.appendChild(cardEl);
+  }
+  if (sourceCol) {
+    const srcId = sourceCol.getAttribute("data-column-id");
+    if (srcId) updateColumnCount(container, srcId, sourceCol.querySelectorAll(".mn-kanban__card").length);
+  }
+  updateColumnCount(container, toColId, targetCol.querySelectorAll(".mn-kanban__card").length);
+}
+function updateColumnCount(container, colId, count) {
+  const colEl = container.querySelector('[data-column-id="' + colId + '"]');
+  if (!colEl) return;
+  const badge = colEl.querySelector(".mn-kanban__column-count");
+  if (badge) badge.textContent = String(count);
+}
+
+// src/ts/kanban-board-drag.ts
+function getClientPoint(e) {
+  if ("touches" in e) {
+    const touch = e.touches[0] ?? e.changedTouches[0];
+    return { x: touch.clientX, y: touch.clientY };
+  }
+  return { x: e.clientX, y: e.clientY };
+}
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+function findCard(target) {
+  if (!(target instanceof HTMLElement)) return null;
+  return target.closest(".mn-kanban__card");
+}
+function findColumnAtPoint(container, x, y) {
+  const cols = container.querySelectorAll(".mn-kanban__cards");
+  for (let i = 0; i < cols.length; i++) {
+    const r = cols[i].getBoundingClientRect();
+    if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return cols[i];
+  }
+  return null;
+}
+function getDropPosition(zone, y) {
+  const cards = zone.querySelectorAll(".mn-kanban__card:not(.mn-kanban__card--ghost)");
+  for (let i = 0; i < cards.length; i++) {
+    const r = cards[i].getBoundingClientRect();
+    if (y < r.top + r.height / 2) return i;
+  }
+  return cards.length;
+}
+function initDrag(container, callbacks) {
+  let dragCard = null;
+  let ghost = null;
+  let sourceColId = "";
+  let activeDropZone = null;
+  let grabbedCard = null;
+  function startDrag(card) {
+    dragCard = card;
+    const col = card.closest(".mn-kanban__column");
+    sourceColId = col ? col.getAttribute("data-column-id") || "" : "";
+    card.classList.add("mn-kanban__card--dragging");
+    if (!prefersReducedMotion()) {
+      ghost = document.createElement("div");
+      ghost.className = "mn-kanban__card mn-kanban__card--ghost";
+      ghost.style.height = card.offsetHeight + "px";
+      if (card.parentElement) card.parentElement.insertBefore(ghost, card);
+    }
+  }
+  function moveDrag(x, y) {
+    if (!dragCard) return;
+    const zone = findColumnAtPoint(container, x, y);
+    if (zone !== activeDropZone) {
+      if (activeDropZone) activeDropZone.classList.remove("mn-kanban__drop-zone");
+      activeDropZone = zone;
+      if (activeDropZone) activeDropZone.classList.add("mn-kanban__drop-zone");
+    }
+  }
+  function endDrag(_x, y) {
+    if (!dragCard) return;
+    const cardId = dragCard.getAttribute("data-card-id") || "";
+    dragCard.classList.remove("mn-kanban__card--dragging");
+    if (ghost && ghost.parentElement) ghost.parentElement.removeChild(ghost);
+    ghost = null;
+    if (activeDropZone) {
+      activeDropZone.classList.remove("mn-kanban__drop-zone");
+      const tCol = activeDropZone.closest(".mn-kanban__column");
+      const toColId = tCol ? tCol.getAttribute("data-column-id") || "" : "";
+      const pos = getDropPosition(activeDropZone, y);
+      activeDropZone = null;
+      if (toColId && cardId) callbacks.onMove(cardId, sourceColId, toColId, pos);
+    } else {
+      activeDropZone = null;
+    }
+    dragCard = null;
+    sourceColId = "";
+  }
+  function cancelDrag() {
+    if (dragCard) dragCard.classList.remove("mn-kanban__card--dragging");
+    if (ghost && ghost.parentElement) ghost.parentElement.removeChild(ghost);
+    ghost = null;
+    if (activeDropZone) activeDropZone.classList.remove("mn-kanban__drop-zone");
+    activeDropZone = null;
+    dragCard = null;
+    sourceColId = "";
+  }
+  function onPointerDown(e) {
+    const card = findCard(e.target);
+    if (!card) return;
+    e.preventDefault();
+    startDrag(card);
+  }
+  function onPointerMove(e) {
+    if (!dragCard) return;
+    const pt = getClientPoint(e);
+    moveDrag(pt.x, pt.y);
+  }
+  function onPointerUp(e) {
+    if (!dragCard) return;
+    const pt = getClientPoint(e);
+    endDrag(pt.x, pt.y);
+  }
+  function onKeyDown(e) {
+    const target = e.target;
+    if (!target) return;
+    const card = findCard(target);
+    if (!card) return;
+    const cardId = card.getAttribute("data-card-id") || "";
+    if (!cardId) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      if (grabbedCard === card) {
+        card.setAttribute("aria-grabbed", "false");
+        grabbedCard = null;
+      } else {
+        if (grabbedCard) grabbedCard.setAttribute("aria-grabbed", "false");
+        card.setAttribute("aria-grabbed", "true");
+        grabbedCard = card;
+      }
+      return;
+    }
+    if (!grabbedCard || grabbedCard !== card) return;
+    const col = card.closest(".mn-kanban__column");
+    if (!col) return;
+    const fromColId = col.getAttribute("data-column-id") || "";
+    const allColumns = Array.from(container.querySelectorAll(".mn-kanban__column"));
+    const colIdx = allColumns.indexOf(col);
+    if (e.key === "ArrowLeft" && colIdx > 0) {
+      e.preventDefault();
+      const prevCol = allColumns[colIdx - 1];
+      const toColId = prevCol.getAttribute("data-column-id") || "";
+      const cardsInTarget = prevCol.querySelectorAll(".mn-kanban__card").length;
+      callbacks.onMove(cardId, fromColId, toColId, cardsInTarget);
+      grabbedCard.setAttribute("aria-grabbed", "false");
+      grabbedCard = null;
+    } else if (e.key === "ArrowRight" && colIdx < allColumns.length - 1) {
+      e.preventDefault();
+      const nextCol = allColumns[colIdx + 1];
+      const toColId = nextCol.getAttribute("data-column-id") || "";
+      const cardsInTarget = nextCol.querySelectorAll(".mn-kanban__card").length;
+      callbacks.onMove(cardId, fromColId, toColId, cardsInTarget);
+      grabbedCard.setAttribute("aria-grabbed", "false");
+      grabbedCard = null;
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const cardsContainer = col.querySelector(".mn-kanban__cards");
+      if (!cardsContainer) return;
+      const siblings = Array.from(cardsContainer.querySelectorAll(".mn-kanban__card"));
+      const idx = siblings.indexOf(card);
+      if (idx > 0) {
+        callbacks.onMove(cardId, fromColId, fromColId, idx - 1);
+      }
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const cardsContainer = col.querySelector(".mn-kanban__cards");
+      if (!cardsContainer) return;
+      const siblings = Array.from(cardsContainer.querySelectorAll(".mn-kanban__card"));
+      const idx = siblings.indexOf(card);
+      if (idx < siblings.length - 1) {
+        callbacks.onMove(cardId, fromColId, fromColId, idx + 1);
+      }
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      grabbedCard.setAttribute("aria-grabbed", "false");
+      grabbedCard = null;
+    }
+  }
+  container.addEventListener("mousedown", onPointerDown);
+  container.addEventListener("touchstart", onPointerDown, { passive: false });
+  document.addEventListener("mousemove", onPointerMove);
+  document.addEventListener("touchmove", onPointerMove, { passive: true });
+  document.addEventListener("mouseup", onPointerUp);
+  document.addEventListener("touchend", onPointerUp);
+  container.addEventListener("keydown", onKeyDown);
+  return {
+    destroy() {
+      cancelDrag();
+      if (grabbedCard) {
+        grabbedCard.setAttribute("aria-grabbed", "false");
+        grabbedCard = null;
+      }
+      container.removeEventListener("mousedown", onPointerDown);
+      container.removeEventListener("touchstart", onPointerDown);
+      document.removeEventListener("mousemove", onPointerMove);
+      document.removeEventListener("touchmove", onPointerMove);
+      document.removeEventListener("mouseup", onPointerUp);
+      document.removeEventListener("touchend", onPointerUp);
+      container.removeEventListener("keydown", onKeyDown);
+    }
+  };
+}
+
+// src/ts/kanban-board.ts
+function deepCopy(arr2) {
+  return JSON.parse(JSON.stringify(arr2));
+}
+function kanbanBoard(container, opts) {
+  const el5 = typeof container === "string" ? document.getElementById(container) : container;
+  if (!el5) {
+    throw new Error("kanban: container not found: " + String(container));
+  }
+  const columns = deepCopy(opts.columns);
+  let cards = deepCopy(opts.cards);
+  if (columns.length === 0) {
+    console.warn("kanban: columns array is empty \u2014 board will be blank");
+  }
+  if (cards.length === 0) {
+    console.warn("kanban: cards array is empty \u2014 board has no cards");
+  }
+  renderBoard(el5, columns, cards);
+  let drag = initDrag(el5, {
+    onMove(cardId, fromCol, toCol, position) {
+      const card = cards.find((c) => c.id === cardId);
+      if (card) {
+        card.columnId = toCol;
+      }
+      moveCardDom(el5, cardId, toCol, position);
+      if (opts.onMove) opts.onMove(cardId, fromCol, toCol, position);
+    }
+  });
+  function onContainerClick(e) {
+    if (!opts.onCardClick) return;
+    const target = e.target;
+    if (!target) return;
+    const cardEl = target.closest(".mn-kanban__card");
+    if (!cardEl) return;
+    const cardId = cardEl.getAttribute("data-card-id");
+    if (!cardId) return;
+    const card = cards.find((c) => c.id === cardId);
+    if (card) {
+      opts.onCardClick(JSON.parse(JSON.stringify(card)));
+    }
+  }
+  el5.addEventListener("click", onContainerClick);
+  return {
+    addCard(card) {
+      const copy = JSON.parse(JSON.stringify(card));
+      cards.push(copy);
+      const colEl = el5.querySelector(
+        '[data-column-id="' + copy.columnId + '"] .mn-kanban__cards'
+      );
+      if (colEl) {
+        colEl.appendChild(renderCard(copy));
+        const count = colEl.querySelectorAll(".mn-kanban__card").length;
+        updateColumnCount(el5, copy.columnId, count);
+      } else {
+        console.warn("kanban: column not found for card: " + copy.columnId);
+      }
+    },
+    removeCard(cardId) {
+      const idx = cards.findIndex((c) => c.id === cardId);
+      if (idx === -1) {
+        console.warn("kanban: card not found: " + cardId);
+        return;
+      }
+      cards.splice(idx, 1);
+      removeCardDom(el5, cardId);
+    },
+    moveCard(cardId, toCol, position) {
+      const card = cards.find((c) => c.id === cardId);
+      if (!card) {
+        console.warn("kanban: card not found for move: " + cardId);
+        return;
+      }
+      const fromCol = card.columnId;
+      card.columnId = toCol;
+      moveCardDom(el5, cardId, toCol, position);
+      if (opts.onMove) opts.onMove(cardId, fromCol, toCol, position ?? -1);
+    },
+    updateCard(cardId, updates) {
+      const card = cards.find((c) => c.id === cardId);
+      if (!card) {
+        console.warn("kanban: card not found for update: " + cardId);
+        return;
+      }
+      if (updates.title !== void 0) card.title = updates.title;
+      if (updates.subtitle !== void 0) card.subtitle = updates.subtitle;
+      if (updates.tags !== void 0) card.tags = updates.tags ? [...updates.tags] : void 0;
+      if (updates.priority !== void 0) card.priority = updates.priority;
+      if (updates.columnId !== void 0) card.columnId = updates.columnId;
+      updateCardDom(el5, cardId, updates);
+    },
+    getState() {
+      return Object.freeze({
+        columns: deepCopy(columns),
+        cards: deepCopy(cards)
+      });
+    },
+    destroy() {
+      if (drag) {
+        drag.destroy();
+        drag = null;
+      }
+      el5.removeEventListener("click", onContainerClick);
+      el5.innerHTML = "";
+    }
   };
 }
 
@@ -9365,7 +10059,7 @@ function initRotary(el5, options) {
     centerX = rect.left + rect.width / 2;
     centerY = rect.top + rect.height / 2;
   }
-  function getClientPoint(e) {
+  function getClientPoint2(e) {
     if ("touches" in e) {
       const touch = e.touches[0] ?? e.changedTouches[0];
       return { x: touch.clientX, y: touch.clientY };
@@ -9373,7 +10067,7 @@ function initRotary(el5, options) {
     return { x: e.clientX, y: e.clientY };
   }
   function angleFromEvent(e) {
-    const point = getClientPoint(e);
+    const point = getClientPoint2(e);
     return Math.atan2(point.y - centerY, point.x - centerX) * (180 / Math.PI) + 90;
   }
   function stepFromAngle(deg) {
@@ -15130,7 +15824,8 @@ function aiChat(container, opts) {
     onAgentChange: opts?.onAgentChange ?? (() => {
     }),
     onVoice: opts?.onVoice ?? (() => {
-    })
+    }),
+    voiceAdapter: opts?.voiceAdapter ?? void 0
   };
   const embedded = full.mode === "embedded";
   const els = buildUI(container, full);
@@ -15338,6 +16033,9 @@ M.mapView = mapView;
 M.mapboxView = mapboxView;
 M.funnel = funnel;
 M.aiChat = aiChat;
+M.voiceManager = voiceManager;
+M.createRealtimeAdapter = createRealtimeAdapter;
+M.kanbanBoard = kanbanBoard;
 M.flipCounter = flipCounter;
 M.progressRing = progressRing;
 M.networkMessages = networkMessages;
@@ -15503,6 +16201,7 @@ export {
   createGauge,
   createGaugesInContainer,
   createLayout,
+  createRealtimeAdapter,
   cruiseLever,
   cssVar,
   customerJourney,
@@ -15579,6 +16278,7 @@ export {
   initTagInput,
   initTagsField,
   initThemeToggle,
+  kanbanBoard,
   kpiScorecard,
   lerp,
   liveGraph,
@@ -15656,6 +16356,7 @@ export {
   validateForm,
   validators,
   valueToAngle,
+  voiceManager,
   waterfallChart
 };
 //# sourceMappingURL=index.js.map

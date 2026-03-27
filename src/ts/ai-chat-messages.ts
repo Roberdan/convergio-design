@@ -1,16 +1,9 @@
-/**
- * Maranello Luce Design - AI Chat message logic
- * Handles message rendering, sending, quick actions, agent switching, voice toggle.
- */
-
-import {
-  ICON_SPARK, getIcon, el, formatTime, renderContent,
-} from './ai-chat-dom';
+/** AI Chat message logic — rendering, sending, quick actions, agent switching, voice toggle. */
+import { ICON_SPARK, getIcon, el, formatTime, renderContent } from './ai-chat-dom';
 import { sanitizeSvg } from './core/sanitize';
-import type {
-  AIChatAgent, AIChatMessage, AIChatOptions, AddMessageOptions,
-  ChatUIElements, ChatUIState, StreamingHandle,
-} from './ai-chat-dom';
+import { voiceManager } from './voice-input';
+import type { VoiceManagerController, VoiceState } from './voice-input';
+import type { AIChatAgent, AIChatMessage, AIChatOptions, AddMessageOptions, ChatUIElements, ChatUIState, StreamingHandle } from './ai-chat-dom';
 
 type HandlerResult = string | { content?: string } | Promise<string | { content?: string }> | null | undefined;
 
@@ -191,9 +184,26 @@ export function initMessages(state: ChatUIState, els: ChatUIElements, opts: Requ
     els.panel.classList.toggle('mn-chat-panel--full', next === 'full');
   }
 
+  var voiceMgr: VoiceManagerController | null = opts.voiceAdapter
+    ? voiceManager({
+        adapter: opts.voiceAdapter,
+        events: {
+          onTranscript(text: string, isFinal: boolean) {
+            inputEl.value = isFinal ? text : inputEl.value + text;
+          },
+          onStateChange(vs: VoiceState) {
+            var wrap = voiceBtn.parentElement || voiceBtn;
+            wrap.classList.remove('mn-voice--listening', 'mn-voice--processing', 'mn-voice--error');
+            if (vs !== 'idle') wrap.classList.add('mn-voice--' + vs);
+            state.isListening = vs === 'listening';
+          },
+        },
+      })
+    : null;
+
   function toggleVoice(): void {
-    state.isListening = !state.isListening;
-    voiceBtn.classList.toggle('mn-chat-voice--active', state.isListening);
+    if (voiceMgr) { voiceMgr.toggle(); }
+    else { state.isListening = !state.isListening; voiceBtn.classList.toggle('mn-chat-voice--active', state.isListening); }
     if (typeof opts.onVoice === 'function') opts.onVoice(state.isListening);
   }
 

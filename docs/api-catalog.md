@@ -12,7 +12,7 @@
 | Sugar | `mn-sugar` | `#000000` | Light grey, rounded corners |
 | Sugar + Colorblind | `mn-sugar mn-colorblind` | `#0072B2` | Cross-theme combination |
 
-## IIFE Exports (107 on `window.Maranello`)
+## IIFE Exports (110 on `window.Maranello`)
 
 > v4.0.0: removed `getGlass`/`setGlass`/`toggleGlass` (glass theme dropped). Added `palette()`.
 
@@ -36,14 +36,14 @@ Detail Panel (5): `createDetailPanel` · `registerDatePicker` · `editors` · `r
 OKR (1): `okrPanel`
 Map (2): `mapView` · `attachEvents`
 Admin (2): `userTable` · `auditLog`
-AI/Agent (4): `agentCostBreakdown` · `agentTrace` · `tokenMeter` · `streamingText`
+AI/Agent (7): `agentCostBreakdown` · `agentTrace` · `tokenMeter` · `streamingText` · `kanbanBoard` · `voiceManager` · `createRealtimeAdapter`
 Strategy (5): `businessModelCanvas` · `bcgMatrix` · `nineBoxMatrix` · `swotMatrix` · `decisionMatrix`
 Analytics (4): `kpiScorecard` · `cohortGrid` · `riskMatrix` · `approvalChain`
 Charts v4.11 (4): `costTimeline` · `waterfallChart` · `confidenceChart` · `bulletChart`
 Inputs (1): `dateRangePicker`
 Feed/Notify (2): `activityFeed` · `notificationCenter`
 
-## Web Components (31)
+## Web Components (32)
 
 | Tag | Attrs |
 |---|---|
@@ -78,6 +78,7 @@ Feed/Notify (2): `activityFeed` · `notificationCenter`
 | `mn-entity-workbench` | `open`, `schema` (JSON), `data` (JSON), `editable` |
 | `mn-async-select` | `placeholder`, `min-chars`, `debounce` |
 | `mn-state-scaffold` | `state` (`loading`\|`empty`\|`error`\|`partial`\|`no-results`), `message`, `action-label` |
+| `mn-kanban-board` | `columns` (JSON), `cards` (JSON) |
 
 ## Accessibility Helpers
 

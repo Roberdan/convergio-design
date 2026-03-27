@@ -17,6 +17,7 @@ export function aiChat(container: HTMLElement, opts?: Partial<AIChatOptions>): A
     activeAgent: opts?.activeAgent ?? null,
     onAgentChange: opts?.onAgentChange ?? (() => {}),
     onVoice: opts?.onVoice ?? (() => {}),
+    voiceAdapter: opts?.voiceAdapter ?? undefined,
   } as Required<AIChatOptions>;
   const embedded = full.mode === 'embedded';
   const els = buildUI(container, full);
