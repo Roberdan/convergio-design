@@ -60,7 +60,7 @@ All fill parent by default (100% width/height). Override via CSS vars: `--mn-gan
 
 **Code:** Max 250 lines/file. `@layer` CSS. No `innerHTML` with user data. `isValidColor()` for colors.
 
-**CI:** IIFE<450KB, no emoji, mn- prefix, no hardcoded colors, WCAG audit, migration docs gate, Chromium+WebKit.
+**CI:** IIFE<500KB, no emoji, mn- prefix, no hardcoded colors, WCAG audit, migration docs gate, Chromium+WebKit.
 
 ## Releases
 

@@ -65,7 +65,7 @@ All changes must work in: Editorial · Nero · Avorio · Colorblind · Sugar
 - Grid `:has()` rules must check strip state independently
 
 ### CI Gates
-- IIFE < 450KB, no emoji, no hardcoded colors, `mn-` prefix
+- IIFE < 500KB, no emoji, no hardcoded colors, `mn-` prefix
 - `check-semantic-design.sh` — WCAG contrast audit
 - `check-migration-docs.sh` — breaking change needs migration doc
 - Playwright: Chromium + WebKit
