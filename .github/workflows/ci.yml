@@ -28,10 +28,13 @@ jobs:
         run: pnpm audit --prod --audit-level=high
 
       - name: Type check
-        run: pnpm exec tsc --noEmit
+        run: cd packages/tokens && pnpm exec tsc --noEmit && cd ../elements && pnpm exec tsc --noEmit
 
       - name: Build
         run: pnpm -r run build
+
+      - name: Build demo (IIFE + CSS for E2E)
+        run: pnpm run build:demo
 
       - name: Unit tests
         run: pnpm -r run test
