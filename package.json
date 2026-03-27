@@ -20,7 +20,8 @@
   },
   "scripts": {
     "build": "pnpm -r run build",
-    "dev": "serve . -l 3000",
+    "build:demo": "pnpm -r run build && node scripts/build-css.mjs && node scripts/build-demo.mjs",
+    "dev": "npm run build:demo && serve . -l 3000",
     "test": "pnpm -r run test",
     "test:unit": "pnpm -r run test:unit",
     "test:e2e": "playwright test --ignore-snapshots",

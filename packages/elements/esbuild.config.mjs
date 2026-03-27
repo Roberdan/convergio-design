@@ -1,4 +1,7 @@
 import { build } from 'esbuild';
+import { readFileSync } from 'fs';
+
+const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
 
 // ESM with code splitting
 await build({
@@ -11,4 +14,21 @@ await build({
   target: 'es2020',
   treeShaking: true,
   external: ['mapbox-gl', '@maranello/tokens'],
+});
+
+// IIFE for CDN / demo page (window.Maranello namespace)
+await build({
+  entryPoints: ['src/ts/maranello.ts'],
+  bundle: true,
+  format: 'iife',
+  globalName: 'Maranello',
+  outfile: 'dist/iife/maranello.min.js',
+  minify: true,
+  sourcemap: true,
+  target: 'es2020',
+  treeShaking: true,
+  external: ['mapbox-gl'],
+  banner: {
+    js: `/* Maranello Luce Design v${pkg.version} | MPL-2.0 */`,
+  },
 });
