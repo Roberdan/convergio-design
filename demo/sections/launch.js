@@ -1,9 +1,9 @@
 export function createLaunchSection() {
   const section = document.createElement('section');
   section.id = 'launch';
-  section.className = 'mn-section-dark';
+  section.className = 'mn-section-accent';
   section.innerHTML = `
-    <section style="min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:linear-gradient(135deg,var(--arancio-caldo,#FF8A3D),var(--rosso-corsa));padding:var(--space-3xl) 0">
+    <section class="mn-launch-inner" style="min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:var(--space-3xl) 0">
       <div style="position:absolute;inset:auto 0 12%;text-align:center;font-family:var(--font-display);font-size:clamp(5rem,18vw,14rem);font-weight:700;letter-spacing:.08em;color:rgba(255,255,255,.08);pointer-events:none">LAUNCH</div>
       <div class="mn-container" style="position:relative;z-index:1;text-align:center;color:var(--mn-text)">
         <div class="mn-label" style="color:rgba(255,255,255,.72);margin-bottom:var(--space-sm)">OPEN SOURCE DASHBOARD KIT</div>

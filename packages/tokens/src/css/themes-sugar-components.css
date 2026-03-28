@@ -204,6 +204,7 @@ body.mn-sugar .mn-dropdown__trigger { background: var(--mn-surface-raised); bord
 body.mn-sugar .mn-avatar-group .mn-avatar, body.mn-sugar .mn-avatar--sm { background: var(--mn-border); color: var(--mn-text); }
 
 /* Launch / accent sections — dark gradient CTA, white text + white buttons */
+body.mn-sugar .mn-launch-inner { background: inherit; }
 body.mn-sugar .mn-section-accent * { color: var(--bianco-puro); }
 body.mn-sugar .mn-section-accent .mn-btn { background: var(--bianco-puro); color: var(--nero-assoluto); border-color: var(--bianco-puro); }
 body.mn-sugar .mn-section-accent .mn-btn--ghost,
