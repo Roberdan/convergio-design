@@ -17,11 +17,11 @@ await build({
 });
 
 // IIFE for CDN / demo page (window.Maranello namespace)
+// maranello.ts assigns to window.Maranello internally — no globalName needed
 await build({
   entryPoints: ['src/ts/maranello.ts'],
   bundle: true,
   format: 'iife',
-  globalName: 'Maranello',
   outfile: 'dist/iife/maranello.min.js',
   minify: true,
   sourcemap: true,
