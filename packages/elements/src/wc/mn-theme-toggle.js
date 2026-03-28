@@ -28,10 +28,10 @@ class MnThemeToggle extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    this._allModes = ['editorial', 'nero', 'avorio', 'colorblind', 'sugar'];
+    this._allModes = ['editorial', 'nero', 'avorio', 'colorblind', 'sugar', 'navy'];
     this._modes = this._allModes.slice();
-    this._icons = ['\u25D1', '\u25CF', '\u25CB', '\u25D0', '\u2B22'];
-    this._labels = ['Editorial (mixed)', 'Full Nero', 'Full Avorio', 'Colorblind-safe', 'Sugar'];
+    this._icons = ['\u25D1', '\u25CF', '\u25CB', '\u25D0', '\u2B22', '\u2693'];
+    this._labels = ['Editorial (mixed)', 'Full Nero', 'Full Avorio', 'Colorblind-safe', 'Sugar', 'Navy'];
     this._idx = 1; // default: nero
 
     const tokens = cssLink("../css/tokens.css");

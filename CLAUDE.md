@@ -1,7 +1,7 @@
 <!-- v6.0.0 | 2026-03-27 -->
 # convergio-design
 
-Ferrari Luce-inspired DS monorepo: `@convergio/design-tokens` + `@convergio/design-elements`. 5 themes. 31 WC. WCAG 2.2 AA.
+Ferrari Luce-inspired DS monorepo: `@convergio/design-tokens` + `@convergio/design-elements`. 6 themes. 31 WC. WCAG 2.2 AA.
 
 ## Commands
 
@@ -29,7 +29,7 @@ Key: `layout.ts`+`layout-slot.ts` (state machine) · `header.ts` (navbar) · `to
 
 ## Dashboard Strip
 
-`dashboardStrip(container, { zones, ariaLabel })` — composite instrument nacelle. Zone types: `gauge` (FerrariGauge + complications), `pipeline` (colored bar rows), `trend` (2-col sparkline KPIs), `board` (stat cells). CSS Grid layout, container queries, all 5 themes. `updateZone(i, data)` + `destroy()`. Canvas class: `mn-strip-gauge__canvas` (not `mn-gauge__canvas`).
+`dashboardStrip(container, { zones, ariaLabel })` — composite instrument nacelle. Zone types: `gauge` (FerrariGauge + complications), `pipeline` (colored bar rows), `trend` (2-col sparkline KPIs), `board` (stat cells). CSS Grid layout, container queries, all 6 themes. `updateZone(i, data)` + `destroy()`. Canvas class: `mn-strip-gauge__canvas` (not `mn-gauge__canvas`).
 
 ## Viz Components
 
@@ -54,7 +54,7 @@ All fill parent by default (100% width/height). Override via CSS vars: `--mn-gan
 
 **Tokens:** Semantic only (`--mn-text/surface/accent`). NEVER primitives in components.
 
-**Themes:** All 5 must work. Avorio=light bg. Sugar accent=black. Colorblind=Okabe-Ito.
+**Themes:** All 6 must work. Avorio=light bg. Sugar accent=black. Colorblind=Okabe-Ito. Navy=deep blue+gold.
 
 **WCAG:** 4.5:1 text, 3:1 UI, 24px targets, focus ring, `prefers-reduced-motion`, canvas `role="img"`+sr-only.
 

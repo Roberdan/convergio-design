@@ -11,9 +11,10 @@ const BODY_CLASSES: Record<ThemeMode, string> = {
   avorio: 'mn-avorio',
   colorblind: 'mn-colorblind',
   sugar: 'mn-sugar',
+  navy: 'mn-navy',
 };
 
-const THEME_ORDER: ThemeMode[] = ['editorial', 'nero', 'avorio', 'colorblind', 'sugar'];
+const THEME_ORDER: ThemeMode[] = ['editorial', 'nero', 'avorio', 'colorblind', 'sugar', 'navy'];
 
 /** Read a CSS custom property value, with fallback.
  *  Reads from document.body so theme overrides (body.mn-sugar, body.mn-avorio)
@@ -30,6 +31,7 @@ export function getTheme(): ThemeMode {
   if (cl.contains('mn-avorio')) return 'avorio';
   if (cl.contains('mn-colorblind')) return 'colorblind';
   if (cl.contains('mn-sugar')) return 'sugar';
+  if (cl.contains('mn-navy')) return 'navy';
   return 'editorial';
 }
 

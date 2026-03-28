@@ -1,6 +1,6 @@
 /**
  * Maranello Luce Design - Grafana-style theme picker
- * Renders preview cards for all 5 themes with radio selection.
+ * Renders preview cards for all 6 themes with radio selection.
  */
 
 import type { ThemeMode } from './core/types';
@@ -35,6 +35,7 @@ const THEMES: ThemeData[] = [
   { id: 'avorio', label: 'Avorio', surface: '#FAF3E6', card: '#FFFFFF', accent: '#DC0000', error: '#DC0000', info: '#448AFF' },
   { id: 'colorblind', label: 'Colorblind', surface: '#111111', card: '#1a1a1a', accent: '#0072B2', error: '#C94000', info: '#0072B2' },
   { id: 'sugar', label: 'Sugar', surface: '#E4E4E8', card: '#FFFFFF', accent: '#000000', error: '#DC0000', info: '#448AFF' },
+  { id: 'navy', label: 'Navy', surface: '#0d2045', card: '#122a55', accent: '#FFC72C', error: '#ff8272', info: '#a5d5fe' },
 ];
 
 function buildCard(theme: ThemeData, isActive: boolean): HTMLDivElement {

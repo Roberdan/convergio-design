@@ -1,6 +1,6 @@
 /**
  * Maranello Luce Design - Theme toggle controller
- * 5-mode cycling: Editorial > Nero > Avorio > Colorblind > Sugar
+ * 6-mode cycling: Editorial > Nero > Avorio > Colorblind > Sugar > Navy
  */
 
 import type { ThemeMode } from './core/types';
@@ -24,6 +24,7 @@ const THEME_ICONS: Record<ThemeMode, () => string> = {
   avorio: platformIcons.sun,
   colorblind: actionIcons.eye,
   sugar: platformIcons.sparkle,
+  navy: platformIcons.moon,
 };
 
 const LABELS: Record<ThemeMode, string> = {
@@ -32,6 +33,7 @@ const LABELS: Record<ThemeMode, string> = {
   avorio: 'Full Avorio',
   colorblind: 'Colorblind-safe',
   sugar: 'Sugar',
+  navy: 'Navy',
 };
 
 function themeIcon(mode: ThemeMode): string {
@@ -42,7 +44,7 @@ function themeIcon(mode: ThemeMode): string {
 
 /**
  * Initialize theme toggle on a button element.
- * Cycles through the five theme modes on click, redrawing gauges after each switch.
+ * Cycles through the six theme modes on click, redrawing gauges after each switch.
  */
 export function initThemeToggle(
   toggleId: string | HTMLElement,

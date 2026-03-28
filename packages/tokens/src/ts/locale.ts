@@ -11,6 +11,7 @@ export interface MnLocale {
     avorio?: string;
     colorblind?: string;
     sugar?: string;
+    navy?: string;
   };
   filterPanel?: {
     saveDefault?: string;
@@ -51,6 +52,7 @@ const defaults: ResolvedMnLocale = {
     avorio: 'Avorio',
     colorblind: 'Colorblind',
     sugar: 'Sugar',
+    navy: 'Navy',
   },
   filterPanel: {
     saveDefault: 'SAVE AS DEFAULT',

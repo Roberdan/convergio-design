@@ -1,6 +1,6 @@
 /**
  * @convergio/design-tokens - Theme management
- * Read, set, and cycle through the five Ferrari Luce themes.
+ * Read, set, and cycle through the six Ferrari Luce themes.
  */
 
 import type { ThemeMode } from './types';
@@ -11,6 +11,7 @@ export const THEME_ORDER: ThemeMode[] = [
   'avorio',
   'colorblind',
   'sugar',
+  'navy',
 ];
 
 export const BODY_CLASSES: Record<ThemeMode, string> = {
@@ -19,6 +20,7 @@ export const BODY_CLASSES: Record<ThemeMode, string> = {
   avorio: 'mn-avorio',
   colorblind: 'mn-colorblind',
   sugar: 'mn-sugar',
+  navy: 'mn-navy',
 };
 
 /** Get the current active theme mode from body classes. */
@@ -28,6 +30,7 @@ export function getTheme(): ThemeMode {
   if (cl.contains('mn-avorio')) return 'avorio';
   if (cl.contains('mn-colorblind')) return 'colorblind';
   if (cl.contains('mn-sugar')) return 'sugar';
+  if (cl.contains('mn-navy')) return 'navy';
   return 'editorial';
 }
 

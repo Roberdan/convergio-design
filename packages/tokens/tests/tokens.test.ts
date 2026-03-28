@@ -20,11 +20,11 @@ describe('Token CSS files', () => {
   ])('%s exists', (f) => { expect(existsSync(resolve(CSS_DIR, f))).toBe(true); });
 });
 
-// 2. themes-base.css contains all 4 non-default theme selectors
+// 2. themes-base.css contains all 5 non-default theme selectors
 describe('themes-base.css', () => {
   it('contains all non-default theme selectors', () => {
     const css = readCss('themes-base.css');
-    for (const s of ['body.mn-nero', 'body.mn-avorio', 'body.mn-colorblind', 'body.mn-sugar'])
+    for (const s of ['body.mn-nero', 'body.mn-avorio', 'body.mn-colorblind', 'body.mn-sugar', 'body.mn-navy'])
       expect(css).toContain(s);
   });
 });
@@ -76,8 +76,8 @@ describe('Token constants', () => {
 
 // 5. ThemeMode compile-time check
 describe('ThemeMode type', () => {
-  it('accepts all five valid theme values matching THEME_ORDER', () => {
-    const themes: ThemeMode[] = ['editorial', 'nero', 'avorio', 'colorblind', 'sugar'];
+  it('accepts all six valid theme values matching THEME_ORDER', () => {
+    const themes: ThemeMode[] = ['editorial', 'nero', 'avorio', 'colorblind', 'sugar', 'navy'];
     expect(THEME_ORDER).toEqual(themes);
   });
 });
@@ -113,13 +113,13 @@ describe('setTheme / getTheme', () => {
 // 7. cycleTheme
 describe('cycleTheme', () => {
   beforeEach(() => { document.body.className = ''; });
-  it('cycles through all 5 themes in order', () => {
+  it('cycles through all 6 themes in order', () => {
     const r: ThemeMode[] = [];
-    for (let i = 0; i < 5; i++) r.push(cycleTheme());
-    expect(r).toEqual(['nero', 'avorio', 'colorblind', 'sugar', 'editorial']);
+    for (let i = 0; i < 6; i++) r.push(cycleTheme());
+    expect(r).toEqual(['nero', 'avorio', 'colorblind', 'sugar', 'navy', 'editorial']);
   });
   it('wraps back to nero after full cycle', () => {
-    setTheme('sugar');
+    setTheme('navy');
     expect(cycleTheme()).toBe('editorial');
     expect(cycleTheme()).toBe('nero');
   });
