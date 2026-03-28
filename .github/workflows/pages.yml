@@ -36,7 +36,7 @@ jobs:
 
       - name: Prepare Pages site
         run: |
-          mkdir -p _site/dist _site/src _site/packages
+          mkdir -p _site/dist _site/src _site/packages/elements/src
           cp -r dist/* _site/dist/
           cp -r src/fonts _site/src/fonts
           cp -r src/assets _site/src/assets
