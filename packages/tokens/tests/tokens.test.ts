@@ -210,7 +210,6 @@ describe('Utility functions', () => {
     vi.useRealTimers();
   });
 });
-
 // 12. EventBus: on/emit/off lifecycle
 describe('EventBus', () => {
   it('emits and receives events with typed detail', () => {
