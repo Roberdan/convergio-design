@@ -18,9 +18,7 @@ body.mn-navy .mn-section-accent {
   background: linear-gradient(135deg, var(--mn-surface-raised), var(--mn-surface));
   color: var(--mn-text);
 }
-body.mn-navy .mn-launch-inner {
-  background: linear-gradient(135deg, var(--mn-surface-raised), var(--mn-surface));
-}
+body.mn-navy .mn-launch-inner { background: inherit; }
 body.mn-navy .mn-section-accent * { color: var(--mn-text); }
 body.mn-navy .mn-section-accent .mn-btn {
   background: var(--mn-accent);
