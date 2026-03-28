@@ -454,4 +454,13 @@ pnpm typecheck         # Type-check all packages
 
 ## License
 
-[MPL-2.0](LICENSE) | (c) Roberdan 2026 | Roberto D'Angelo
+This project is licensed under the [Mozilla Public License 2.0](./LICENSE) —
+use it, modify it, ship it. We want `convergio-design` adopted as widely
+as possible.
+
+The rest of the Convergio ecosystem uses the
+[Convergio Community License](https://github.com/Roberdan/convergio/blob/main/LICENSE).
+
+---
+
+*Built for solopreneurs who dare to build alone.*
