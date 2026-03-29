@@ -66,6 +66,7 @@ export { buildUI, ICON_SPARK, getIcon, renderContent, formatTime } from './ai-ch
 export type {
   AIChatOptions, AIChatMessage, AIChatAgent, AIChatResponse, AIChatController,
 } from './ai-chat-dom';
+export { aiChat } from './ai-chat-iife';
 export { initMessages } from './ai-chat-messages';
 
 // Kanban board
