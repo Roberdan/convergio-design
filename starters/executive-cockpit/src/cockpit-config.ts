@@ -1,0 +1,127 @@
+import type { ShellConfig } from '../../shared-shell/src/index';
+
+export interface KpiCard {
+  id: string;
+  label: string;
+  value: string;
+  trend?: 'up' | 'down' | 'flat';
+  unit?: string;
+}
+
+export interface NarrativeHero {
+  headline: string;
+  summary: string;
+}
+
+export interface BoardSummary {
+  id: string;
+  title: string;
+  columns: string[];
+  rows: number;
+}
+
+export interface CockpitConfig extends ShellConfig {
+  heroKpis: KpiCard[];
+  narrativeHero?: NarrativeHero;
+  boardSummaries?: BoardSummary[];
+  drillDownPaths?: Record<string, string>;
+}
+
+const DEFAULT_HERO_KPIS: KpiCard[] = [
+  { id: 'revenue', label: 'Revenue YTD', value: '$4.2B', trend: 'up', unit: 'USD' },
+  { id: 'ebitda', label: 'EBITDA Margin', value: '23.4%', trend: 'up' },
+  { id: 'cash', label: 'Free Cash Flow', value: '$820M', trend: 'flat', unit: 'USD' },
+  { id: 'headcount', label: 'Headcount', value: '12,400', trend: 'down' },
+  { id: 'nps', label: 'Customer NPS', value: '68', trend: 'up' },
+];
+
+const DEFAULT_BOARD_SUMMARIES: BoardSummary[] = [
+  {
+    id: 'q2-portfolio',
+    title: 'Q2 Portfolio Health',
+    columns: ['Division', 'Status', 'Revenue', 'Variance'],
+    rows: 6,
+  },
+  {
+    id: 'risk-register',
+    title: 'Risk Register',
+    columns: ['Risk', 'Likelihood', 'Impact', 'Owner', 'Due'],
+    rows: 8,
+  },
+  {
+    id: 'initiatives',
+    title: 'Strategic Initiatives',
+    columns: ['Initiative', 'Phase', 'Budget', 'Lead', 'Target'],
+    rows: 5,
+  },
+];
+
+const DEFAULT_DRILL_DOWN_PATHS: Record<string, string> = {
+  revenue: '/revenue',
+  ebitda: '/revenue#ebitda',
+  cash: '/operations#cashflow',
+  headcount: '/people',
+  nps: '/portfolio#customer',
+};
+
+export function createCockpitConfig(overrides?: Partial<CockpitConfig>): CockpitConfig {
+  const base: CockpitConfig = {
+    id: 'executive-cockpit',
+    title: 'Executive Cockpit',
+    subtitle: 'CEO / CFO decision-oriented view',
+    mode: 'cockpit',
+    defaultTheme: 'editorial',
+    toolbarActions: [
+      { id: 'search', label: 'Search' },
+      { id: 'export', label: 'Export' },
+      { id: 'profile', label: 'Profile' },
+    ],
+    quickActions: [
+      { id: 'refresh', label: 'Refresh data' },
+      { id: 'share', label: 'Share view' },
+    ],
+    panel: {
+      title: 'Executive summary',
+      description: 'High-signal board-ready metrics and portfolio narratives.',
+      tabs: [
+        { id: 'overview', label: 'Overview' },
+        { id: 'revenue', label: 'Revenue' },
+        { id: 'operations', label: 'Operations' },
+        { id: 'portfolio', label: 'Portfolio' },
+        { id: 'people', label: 'People' },
+      ],
+    },
+    featureFlags: {
+      agentPanel: true,
+      detailPanel: true,
+      executiveStrip: true,
+      commandPalette: true,
+    },
+    heroKpis: DEFAULT_HERO_KPIS,
+    narrativeHero: {
+      headline: 'Q2 on track: revenue ahead of plan, margin expanding',
+      summary:
+        'Group revenue of $4.2B is 3% ahead of the Q2 plan, driven by strong performance in ' +
+        'the Americas and APAC segments. EBITDA margin improved 180 bps year-on-year. ' +
+        'Free cash flow conversion remains solid at 94%. Headcount reduction programme ' +
+        'is progressing in line with the restructuring timeline.',
+    },
+    boardSummaries: DEFAULT_BOARD_SUMMARIES,
+    drillDownPaths: DEFAULT_DRILL_DOWN_PATHS,
+  };
+
+  if (!overrides) {
+    return Object.freeze({ ...base }) as CockpitConfig;
+  }
+
+  return Object.freeze({
+    ...base,
+    ...overrides,
+    heroKpis: overrides.heroKpis ?? base.heroKpis,
+    boardSummaries: overrides.boardSummaries ?? base.boardSummaries,
+    drillDownPaths: overrides.drillDownPaths ?? base.drillDownPaths,
+    featureFlags: { ...base.featureFlags, ...overrides.featureFlags },
+    toolbarActions: overrides.toolbarActions ?? base.toolbarActions,
+    quickActions: overrides.quickActions ?? base.quickActions,
+  }) as CockpitConfig;
+}
