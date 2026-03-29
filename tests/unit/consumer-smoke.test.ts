@@ -82,7 +82,7 @@ beforeAll(() => {
   run(ELEMENTS_DIR, 'npm', ['pack', '--silent', '--pack-destination', packsDir]);
   writeConsumerFixture(appDir);
   run(appDir, 'npm', ['install', '--silent']);
-});
+}, 120_000);
 
 afterAll(() => {
   rmSync(smoke.tempDir, { recursive: true, force: true });
