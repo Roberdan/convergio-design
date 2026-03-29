@@ -24,6 +24,14 @@ export type {
   TelemetryEvent,
 } from './adapters';
 export { hasPermission } from './adapters';
+export type {
+  AIActionSurface,
+  AICommandPalette,
+  AICommandSurfaces,
+  AIPanel,
+  AISuggestion,
+} from './ai-surfaces';
+export { createDefaultAISurfaces } from './ai-surfaces';
 export type { DeployAssets, DeployTarget, EnvVar } from './deploy';
 export { generateDeployAssets, listDeployTargets } from './deploy';
 export { createSharedShellFiles } from './next-template';
