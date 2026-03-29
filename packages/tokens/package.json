@@ -20,7 +20,8 @@
   "scripts": {
     "build": "node esbuild.config.mjs && tsc --emitDeclarationOnly && node ../../scripts/fix-dts-imports.mjs dist/types && npm run build:css",
     "build:css": "mkdir -p dist/css && cp src/css/*.css dist/css/",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:unit": "vitest run"
   },
   "license": "MPL-2.0"
 }

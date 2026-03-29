@@ -71,7 +71,8 @@
   "scripts": {
     "build": "node esbuild.config.mjs && node ../../scripts/build-wc.mjs && tsc --emitDeclarationOnly && node ../../scripts/fix-dts-imports.mjs dist/types && npm run build:css && node ../../scripts/generate-ckb.mjs",
     "build:css": "node ../../scripts/build-css.mjs && cp -r ../../dist/css dist/css",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:unit": "vitest run"
   },
   "license": "MPL-2.0"
 }
