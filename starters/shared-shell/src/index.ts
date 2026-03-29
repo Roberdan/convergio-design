@@ -1,12 +1,13 @@
-export * from './config/shell-schema';
-export * from './config/navigation-schema';
-export * from './layout/app-shell';
-export * from './layout/slot-renderer';
-export * from './providers/app-shell-provider';
-export * from './ai/agent-panel';
-export * from './server/ai/route';
-export * from './server/auth/session';
-export * from './server/rbac/policies';
-export * from './server/features/flags';
-export * from './server/telemetry/tracker';
-export * from './server/api/client';
+export type {
+  SharedShellAction,
+  SharedShellConfig,
+  SharedShellContentConfig,
+  SharedShellController,
+  SharedShellDetailPanelConfig,
+  SharedShellHeaderConfig,
+  SharedShellNavItem,
+  SharedShellNavSection,
+  SharedShellState,
+} from './contracts';
+export { createSharedShellFiles } from './next-template';
+export { renderSharedShell } from './runtime';
