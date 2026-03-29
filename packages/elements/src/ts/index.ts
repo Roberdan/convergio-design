@@ -240,3 +240,8 @@ export type { LayoutController, LayoutViewConfig, LayoutState } from './layout';
 
 // v4.5-v4.9 components
 export * from './index-extras';
+
+// Semantic registry (agent-driven composition)
+export { queryByWorkflow, queryByIntent, listWorkflows, getStarterForWorkflow } from './semantic-registry';
+export type { WorkflowEntry, ComponentRef, StarterRef, SemanticQuery, SemanticResult } from './semantic-registry';
+
