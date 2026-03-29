@@ -57,20 +57,10 @@ if (existsSync(maranelloSrc)) {
   console.warn('CSS: maranello.css not found — skipping bundle');
 }
 
-// 2. Bundle index.css (readable, imports inlined)
-// index.css uses bare-specifier @import '@convergio/design-tokens/css' for package consumers.
-// LightningCSS cannot resolve bare specifiers, so skip if it fails.
+// 2. Bundle index.css (readable, all imports inlined including tokens)
 const indexSrc = join(srcDir, 'index.css');
 if (existsSync(indexSrc)) {
-  try {
-    bundleCSS(indexSrc, join(outDir, 'index.css'));
-  } catch (err) {
-    if (err.data === 'ResolverError') {
-      console.warn('CSS: index.css uses bare-specifier imports — skipping (use maranello.css instead)');
-    } else {
-      throw err;
-    }
-  }
+  bundleCSS(indexSrc, join(outDir, 'index.css'));
 } else {
   console.warn('CSS: index.css not found — skipping bundle');
 }

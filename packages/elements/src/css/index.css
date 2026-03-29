@@ -1,14 +1,16 @@
 /**
  * @convergio/design-elements — CSS aggregator
  * Import this single file to get all component/layout styles.
- * Tokens are sourced from the @convergio/design-tokens peer dependency.
+ * Tokens are resolved from the sibling @convergio/design-tokens package at build time.
+ * The published dist/css/index.css will have everything inlined.
  * Layer order controls cascade precedence.
  */
 
 @layer tokens, base, components, controls, forms, charts, layouts, extended, patterns, themes, utilities;
 
-/* ── Layer: tokens (from @convergio/design-tokens peer) ── */
-@import '@convergio/design-tokens/css';
+/* ── Layer: tokens (resolved from sibling package at build time) ── */
+@import '../../../tokens/src/css/tokens.css';
+@import '../../../tokens/src/css/themes.css';
 
 /* ── Layer: base ── */
 @import './base.css';
@@ -145,19 +147,14 @@
 @import './composition.css';
 @import './animations.css';
 
-/* ── Layer: themes ── */
-@import './themes-base.css';
-@import './themes-avorio-components.css';
-@import './themes-colorblind-components.css';
-@import './themes-colorblind-layouts.css';
-@import './themes-sugar-components.css';
-@import './themes-sugar-colorblind.css';
+/* ── Layer: themes (from @convergio/design-tokens) ── */
+@import '../../../tokens/src/css/themes.css';
 
 /* ── Layer: utilities ── */
 @import './utilities.css';
 
 /* ── Responsive overrides (after utilities, mobile-first) ── */
-@import './responsive-tokens.css';
+@import '../../../tokens/src/css/responsive-tokens.css';
 @import './responsive-layouts.css';
 @import './responsive-data.css';
 @import './responsive-forms.css';

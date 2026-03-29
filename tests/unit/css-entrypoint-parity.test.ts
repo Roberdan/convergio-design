@@ -71,19 +71,10 @@ describe('CSS entrypoint parity', () => {
     expect(existsSync(maranelloPath)).toBe(true);
   });
 
-  it('index.css includes all theme files from maranello.css', () => {
+  it('index.css includes themes from tokens package', () => {
     const indexContent = readFileSync(indexPath, 'utf8');
-    const themeFiles = [
-      'themes-base.css',
-      'themes-avorio-components.css',
-      'themes-colorblind-components.css',
-      'themes-colorblind-layouts.css',
-      'themes-sugar-components.css',
-      'themes-sugar-colorblind.css',
-    ];
-    for (const f of themeFiles) {
-      expect(indexContent).toContain(f);
-    }
+    // Themes are sourced from @convergio/design-tokens, not local theme files
+    expect(indexContent).toContain('tokens/src/css/themes.css');
   });
 
   it('index.css includes all responsive files', () => {
