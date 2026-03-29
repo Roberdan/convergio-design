@@ -1,4 +1,4 @@
-<!-- v4.19.2 | 2026-03-20 -->
+<!-- v6.1.1 | 2026-03-29 -->
 # Contributing
 
 ## Constitution
@@ -12,7 +12,7 @@ Key rules:
 - All CSS rules inside `@layer` blocks
 - Max 250 lines per file
 - No hardcoded colors — use tokens from `tokens.css`
-- Works in all 5 themes (nero, avorio, editorial, colorblind, sugar)
+- Works in all 6 themes (nero, avorio, editorial, colorblind, sugar, navy)
 - `prefers-reduced-motion` respected
 
 ## Setup
@@ -58,12 +58,13 @@ Requirements: Node 20+, npm 10+.
 
 ## Theme Compliance
 
-Every component must work in all 5 themes. Test by switching `<body>` class:
+Every component must work in all 6 themes. Test by switching `<body>` class:
 - `mn-nero` — dark mode
 - `mn-avorio` — warm light, Ferrari red accent
 - (default) — editorial mixed dark/light
 - `mn-colorblind` — Okabe-Ito accessible palette
 - `mn-sugar` — light grey, rounded, black accent
+- `mn-navy` — deep blue dark, gold accent
 - `mn-sugar.mn-colorblind` — Sugar + colorblind combined
 
 Use only CSS custom properties for colors. NEVER hardcode #hex values (except in tokens.css).
@@ -83,7 +84,7 @@ Before submitting a PR:
 
 - [ ] One feature/fix per PR
 - [ ] Build, unit tests, and typecheck pass
-- [ ] Works across all 5 themes (including sugar + sugar+colorblind)
+- [ ] Works across all 6 themes (including navy and sugar+colorblind)
 - [ ] Accessibility checklist is complete
 - [ ] `CHANGELOG.md` updated under `[Unreleased]`
 - [ ] If breaking changes: `docs/migrations/vX.Y.Z.md` created (see [Breaking Changes](#breaking-changes))

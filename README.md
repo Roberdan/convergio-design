@@ -2,7 +2,7 @@
 
 Ferrari Luce-inspired design system for AI agent dashboards. Zero runtime dependencies. 6 adaptive themes. WCAG 2.2 AA. Framework-agnostic.
 
-**v6.1.0** | [Live Demo](https://roberdan.github.io/convergio-design/) | [CHANGELOG](CHANGELOG.md)
+**v6.2.0** | [Live Demo](https://roberdan.github.io/convergio-design/) | [CHANGELOG](CHANGELOG.md)
 
 ## Install
 
@@ -98,6 +98,46 @@ Two packages in a pnpm monorepo. Use together or separately.
 | `./gauge` | FerrariGauge engine |
 | `./controls` | Ferrari controls (manettino, rotary, lever, slider) |
 | `./forms` | Form validation, live validation, tag input, file upload, steps |
+| `./knowledge` | Component Knowledge Base (CKB) — machine-readable catalog |
+
+## Component Knowledge Base (CKB)
+
+The CKB is a machine-readable JSON catalog of every component, data shape, composition pattern, and API-to-component mapping hint. It enables AI agents to automatically select and compose the right components for any backend.
+
+```ts
+// Import the CKB programmatically
+import ckb from '@convergio/design-elements/knowledge';
+
+console.log(ckb.webComponents.length);        // 31 Web Components
+console.log(ckb.compositionRules.length);      // 12 composition patterns
+console.log(ckb.mappingHints.length);          // 10 API→component mappings
+console.log(ckb.themes.length);               // 6 themes
+```
+
+The CKB is auto-generated from source at build time via `scripts/generate-ckb.mjs`. See [ADR-0010](docs/adr/0010-component-knowledge-base.md) for the design rationale.
+
+### CKB Contents
+
+| Section | What | Use case |
+|---------|------|----------|
+| `webComponents` | 31 WC tags with attributes, events, bestFor | Component selection |
+| `tsModules` | 79 TS modules with exports and types | API integration |
+| `compositionRules` | 12 patterns (e.g., Filterable Table, AI Chat) | Component composition |
+| `mappingHints` | 10 API shape → component heuristics | Automated UI generation |
+| `themes` | 6 themes with accent/surface/variant | Theme configuration |
+| `constraints` | Safari compat, WCAG, SSR rules | Quality guardrails |
+
+## Convergio Ecosystem
+
+This design system is part of the [Convergio](https://github.com/Roberdan/convergio) platform:
+
+| Component | Role |
+|-----------|------|
+| **convergio-design** (this repo) | Design system — tokens, components, CKB |
+| **ConvergioPlatform** | Control plane — daemon, agents, MCP, orchestration |
+| **convergio-web** | Web + desktop UI (Next.js + Tauri) |
+
+The `nasra-app-builder` agent in ConvergioPlatform uses the CKB to analyze any repo's backend, map APIs to design system components, and generate/fix/rebuild UIs automatically.
 
 ## Agent / Automation Notes
 

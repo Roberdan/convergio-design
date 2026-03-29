@@ -1,4 +1,4 @@
-<!-- v6.1.0 | 2026-03-28 -->
+<!-- v6.2.0 | 2026-03-29 -->
 # convergio-design
 
 Ferrari Luce-inspired DS monorepo: `@convergio/design-tokens` + `@convergio/design-elements`. 6 themes. 31 WC. WCAG 2.2 AA.

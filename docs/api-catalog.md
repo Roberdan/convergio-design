@@ -1,7 +1,7 @@
 <!-- Reference catalog — not loaded in context, use for lookup -->
-# API Catalog — v4.19.2
+# API Catalog — v6.1.1
 
-## Themes (5)
+## Themes (6)
 
 | Theme | Body class | Accent | Notes |
 |---|---|---|---|
@@ -10,6 +10,7 @@
 | Avorio | `mn-avorio` | `#DC0000` | Warm ivory light — danger btn is outline |
 | Colorblind | `mn-colorblind` | `#0072B2` | Okabe-Ito accessible palette |
 | Sugar | `mn-sugar` | `#000000` | Light grey, rounded corners |
+| Navy | `mn-navy` | `#FFC72C` | Deep blue dark dashboard |
 | Sugar + Colorblind | `mn-sugar mn-colorblind` | `#0072B2` | Cross-theme combination |
 
 ## IIFE Exports (110 on `window.Maranello`)
@@ -61,7 +62,6 @@ Feed/Notify (2): `activityFeed` · `notificationCenter`
 | `mn-modal` | `open`, `title` |
 | `mn-toast` | `title`, `message`, `type`, `duration` |
 | `mn-command-palette` | `items`, `placeholder` |
-| `mn-login` | `health-url`, `title`, `subtitle` |
 | `mn-chat` | `title`, `welcome-message`, `avatar`, `quick-actions` |
 | `mn-system-status` | `services`, `poll-interval`, `version`, `environment` |
 | `mn-profile` | `name`, `email`, `avatar-url`, `sections` |
@@ -102,7 +102,6 @@ Backward compatible: omitting `data` uses text-only sr-only span (v4.0 behavior)
 | `mn-sidebar` | App sidebar navigation | `layouts-sidebar.css` |
 | `mn-heatmap`, `mn-cap-grid`, `mn-cap-heatmap` | Heatmap / capacity grid | `layouts-heatmap.css`, `layouts-capacity-heatmap.css` |
 | `mn-chat-*` | AI chat panel, messages | `layouts-chat-login.css` |
-| `mn-login` | Login screen | `layouts-chat-login.css` |
 | `mn-drawer` | Slide-out drawer | `layouts-toolbar-drawer.css` |
 | `mn-table`, `mn-dt-*` | Data table | `layouts-data-table-*.css` |
 | `mn-detail-panel` | Detail/edit panel | `layouts-detail-panel.css` |

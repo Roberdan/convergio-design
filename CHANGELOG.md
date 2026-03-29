@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.2.0] - 2026-03-29
+
+### Added
+- **Component Knowledge Base (CKB)** — machine-readable JSON catalog of all 31 WC + 79 TS modules, auto-generated from source at build time (`scripts/generate-ckb.mjs`)
+- CKB includes 12 composition rules (e.g., Filterable Table, AI Chat, App Shell) and 10 API-to-component mapping hints
+- CKB published as `@convergio/design-elements/knowledge` npm export path
+- CKB JSON Schema: `packages/elements/src/knowledge/ckb-schema.json`
+- ADR-0010: Component Knowledge Base — design rationale and architecture decision
+- CKB unit tests (26 assertions covering structure, WC coverage, composition rules, mapping hints, themes, constraints)
+- Convergio Ecosystem section in README — documents relationship with ConvergioPlatform and convergio-web
+- CKB import path documented in AGENT.md
+
+### Fixed
+- CONTRIBUTING.md: "5 themes" updated to "6 themes" (3 occurrences) with Navy added to theme list
+- docs/api-catalog.md: theme count updated from 5 to 6, Navy theme added to table
+- docs/api-catalog.md: stale `mn-login` WC entry removed (component was removed in v6.0.0)
+
 ## [6.1.1] - 2026-03-28
 
 ### Fixed

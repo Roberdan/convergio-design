@@ -1,9 +1,10 @@
 # Maranello Luce Design — Agent Reference
 
-> Ferrari Luce-inspired design system monorepo: `@convergio/design-tokens` + `@convergio/design-elements`. Zero deps. 6 themes. 31 WC tags. v6.1.0
+> Ferrari Luce-inspired design system monorepo: `@convergio/design-tokens` + `@convergio/design-elements`. Zero deps. 6 themes. 31 WC tags. v6.2.0
 > Repo: github.com/Roberdan/convergio-design
 > Demo: roberdan.github.io/convergio-design/
 > AI Expert: @NaSra (see `.github/agents/NaSra.agent.md`)
+> CKB: `@convergio/design-elements/knowledge` — machine-readable component catalog
 
 ## Install
 
@@ -34,12 +35,13 @@ npm install @convergio/design-tokens @convergio/design-elements
 | `@convergio/design-elements/gantt` | Gantt timeline renderer |
 | `@convergio/design-elements/register-all` | All 31 Web Component tags |
 | `@convergio/design-elements/wc/mn-*` | Individual Web Components |
+| `@convergio/design-elements/knowledge` | CKB — machine-readable component catalog (JSON) |
 
 CDN (no build):
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@convergio/design-tokens@6.1.0/dist/css/index.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@convergio/design-elements@6.1.0/dist/css/index.css">
-<script src="https://cdn.jsdelivr.net/npm/@convergio/design-elements@6.1.0/dist/iife/maranello.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@convergio/design-tokens@6.2.0/dist/css/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@convergio/design-elements@6.2.0/dist/css/index.css">
+<script src="https://cdn.jsdelivr.net/npm/@convergio/design-elements@6.2.0/dist/iife/maranello.min.js"></script>
 ```
 IIFE attaches the public browser namespace to `window.Maranello`.
 
