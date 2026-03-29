@@ -51,32 +51,26 @@ describe('createCockpitConfig', () => {
     expect(config.drillDownPaths?.['headcount']).toBe('/people');
   });
 
-  it('sets cockpit mode and editorial theme by default', () => {
+  it('extends SharedShellConfig with required shell fields', () => {
     const config = createCockpitConfig();
-    expect(config.mode).toBe('cockpit');
-    expect(config.defaultTheme).toBe('editorial');
+    expect(config.appName).toBe('Executive Cockpit');
+    expect(config.themes).toContain('editorial');
+    expect(config.header.brandLabel).toBe('Convergio');
   });
 
-  it('includes CEO/CFO nav tabs: Overview, Revenue, Operations, Portfolio, People', () => {
+  it('includes CEO/CFO nav items: Overview, Revenue, Operations, Portfolio, People', () => {
     const config = createCockpitConfig();
-    const tabIds = config.panel?.tabs?.map((t) => t.id) ?? [];
-    expect(tabIds).toContain('overview');
-    expect(tabIds).toContain('revenue');
-    expect(tabIds).toContain('operations');
-    expect(tabIds).toContain('portfolio');
-    expect(tabIds).toContain('people');
-  });
-
-  it('enables executiveStrip and agentPanel feature flags', () => {
-    const config = createCockpitConfig();
-    expect(config.featureFlags.executiveStrip).toBe(true);
-    expect(config.featureFlags.agentPanel).toBe(true);
+    const navIds = config.navigation.flatMap((s) => s.items.map((i) => i.id));
+    expect(navIds).toContain('overview');
+    expect(navIds).toContain('revenue');
+    expect(navIds).toContain('operations');
+    expect(navIds).toContain('portfolio');
+    expect(navIds).toContain('people');
   });
 
   it('merges overrides into the base config', () => {
-    const config = createCockpitConfig({ title: 'CFO Dashboard', id: 'cfo-view' });
-    expect(config.title).toBe('CFO Dashboard');
-    expect(config.id).toBe('cfo-view');
+    const config = createCockpitConfig({ appName: 'CFO Dashboard' });
+    expect(config.appName).toBe('CFO Dashboard');
     expect(config.heroKpis.length).toBeGreaterThan(0);
   });
 
@@ -87,17 +81,6 @@ describe('createCockpitConfig', () => {
     const config = createCockpitConfig({ heroKpis: customKpis });
     expect(config.heroKpis).toHaveLength(1);
     expect(config.heroKpis[0].id).toBe('capex');
-    expect(config.mode).toBe('cockpit');
-  });
-
-  it('allows overriding feature flags partially', () => {
-    const config = createCockpitConfig({ featureFlags: { agentPanel: false } });
-    expect(config.featureFlags.agentPanel).toBe(false);
-    expect(config.featureFlags.executiveStrip).toBe(true);
-  });
-
-  it('returns a frozen config object', () => {
-    const config = createCockpitConfig();
-    expect(Object.isFrozen(config)).toBe(true);
+    expect(config.narrativeHero).toBeDefined();
   });
 });

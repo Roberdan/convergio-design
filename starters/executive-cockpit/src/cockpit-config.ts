@@ -1,4 +1,4 @@
-import type { ShellConfig } from '../../shared-shell/src/index';
+import type { SharedShellConfig } from '../../shared-shell/src/contracts';
 
 export interface KpiCard {
   id: string;
@@ -20,7 +20,7 @@ export interface BoardSummary {
   rows: number;
 }
 
-export interface CockpitConfig extends ShellConfig {
+export interface CockpitConfig extends SharedShellConfig {
   heroKpis: KpiCard[];
   narrativeHero?: NarrativeHero;
   boardSummaries?: BoardSummary[];
@@ -66,62 +66,57 @@ const DEFAULT_DRILL_DOWN_PATHS: Record<string, string> = {
 
 export function createCockpitConfig(overrides?: Partial<CockpitConfig>): CockpitConfig {
   const base: CockpitConfig = {
-    id: 'executive-cockpit',
-    title: 'Executive Cockpit',
-    subtitle: 'CEO / CFO decision-oriented view',
-    mode: 'cockpit',
-    defaultTheme: 'editorial',
-    toolbarActions: [
-      { id: 'search', label: 'Search' },
-      { id: 'export', label: 'Export' },
-      { id: 'profile', label: 'Profile' },
-    ],
-    quickActions: [
-      { id: 'refresh', label: 'Refresh data' },
-      { id: 'share', label: 'Share view' },
-    ],
-    panel: {
-      title: 'Executive summary',
-      description: 'High-signal board-ready metrics and portfolio narratives.',
-      tabs: [
-        { id: 'overview', label: 'Overview' },
-        { id: 'revenue', label: 'Revenue' },
-        { id: 'operations', label: 'Operations' },
-        { id: 'portfolio', label: 'Portfolio' },
-        { id: 'people', label: 'People' },
+    appName: 'Executive Cockpit',
+    appDescription: 'CEO / CFO decision-oriented view',
+    currentPath: '/overview',
+    themes: ['editorial', 'avorio', 'navy'],
+    header: {
+      brandLabel: 'Convergio',
+      productLabel: 'Executive',
+      homeHref: '/',
+      primaryActions: [
+        { id: 'refresh', label: 'Refresh Data', href: '/refresh' },
+        { id: 'share', label: 'Share View', href: '/share' },
       ],
+      searchPlaceholder: 'Search KPIs, divisions, initiatives',
     },
-    featureFlags: {
-      agentPanel: true,
-      detailPanel: true,
-      executiveStrip: true,
-      commandPalette: true,
+    navigation: [
+      {
+        id: 'executive',
+        label: 'Executive',
+        items: [
+          { id: 'overview', label: 'Overview', href: '/overview' },
+          { id: 'revenue', label: 'Revenue', href: '/revenue' },
+          { id: 'operations', label: 'Operations', href: '/operations' },
+          { id: 'portfolio', label: 'Portfolio', href: '/portfolio' },
+          { id: 'people', label: 'People', href: '/people' },
+        ],
+      },
+    ],
+    content: {
+      title: 'Executive Overview',
+      eyebrow: 'Board-ready metrics',
+      body: '<section data-slot="primary">Hero KPIs and narrative summaries</section>',
     },
     heroKpis: DEFAULT_HERO_KPIS,
     narrativeHero: {
       headline: 'Q2 on track: revenue ahead of plan, margin expanding',
       summary:
-        'Group revenue of $4.2B is 3% ahead of the Q2 plan, driven by strong performance in ' +
-        'the Americas and APAC segments. EBITDA margin improved 180 bps year-on-year. ' +
-        'Free cash flow conversion remains solid at 94%. Headcount reduction programme ' +
-        'is progressing in line with the restructuring timeline.',
+        'Group revenue of $4.2B is 3% ahead of the Q2 plan, driven by strong ' +
+        'performance in the Americas and APAC segments. EBITDA margin improved ' +
+        '180 bps year-on-year. Free cash flow conversion remains solid at 94%.',
     },
     boardSummaries: DEFAULT_BOARD_SUMMARIES,
     drillDownPaths: DEFAULT_DRILL_DOWN_PATHS,
   };
 
-  if (!overrides) {
-    return Object.freeze({ ...base }) as CockpitConfig;
-  }
+  if (!overrides) return base;
 
-  return Object.freeze({
+  return {
     ...base,
     ...overrides,
     heroKpis: overrides.heroKpis ?? base.heroKpis,
     boardSummaries: overrides.boardSummaries ?? base.boardSummaries,
     drillDownPaths: overrides.drillDownPaths ?? base.drillDownPaths,
-    featureFlags: { ...base.featureFlags, ...overrides.featureFlags },
-    toolbarActions: overrides.toolbarActions ?? base.toolbarActions,
-    quickActions: overrides.quickActions ?? base.quickActions,
-  }) as CockpitConfig;
+  };
 }

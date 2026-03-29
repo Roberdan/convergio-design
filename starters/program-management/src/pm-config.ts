@@ -1,4 +1,4 @@
-import type { SharedShellConfig } from '../../shared-shell/dist/types/index';
+import type { SharedShellConfig } from '../../shared-shell/src/contracts';
 
 export interface CommandRailItem {
   id: string;

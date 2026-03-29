@@ -1,4 +1,4 @@
-import type { ShellConfig } from '../../shared-shell/src/config/shell-schema';
+import type { SharedShellConfig } from '../../shared-shell/src/contracts';
 
 export interface StripZoneConfig {
   type: 'gauge' | 'pipeline' | 'trend' | 'board';
@@ -26,7 +26,7 @@ export interface FilterConfig {
   type: 'select' | 'daterange' | 'search';
 }
 
-export interface OpsDashboardConfig extends ShellConfig {
+export interface OpsDashboardConfig extends SharedShellConfig {
   dashboardStrip: StripZoneConfig[];
   alerts?: AlertConfig;
   statusBoard?: StatusBoardConfig;
@@ -34,33 +34,11 @@ export interface OpsDashboardConfig extends ShellConfig {
   filters?: FilterConfig[];
 }
 
-const DEFAULT_TOOLBAR_ACTIONS = [
-  { id: 'refresh', label: 'Refresh', tone: 'default' as const },
-  { id: 'export', label: 'Export', tone: 'default' as const },
-  { id: 'settings', label: 'Settings', tone: 'default' as const },
-];
-
 const DEFAULT_STRIP_ZONES: StripZoneConfig[] = [
-  {
-    type: 'gauge',
-    label: 'CPU Utilization',
-    dataEndpoint: '/api/metrics/cpu',
-  },
-  {
-    type: 'pipeline',
-    label: 'CI/CD Pipeline',
-    dataEndpoint: '/api/pipelines/status',
-  },
-  {
-    type: 'trend',
-    label: 'Error Rate (1h)',
-    dataEndpoint: '/api/metrics/error-rate',
-  },
-  {
-    type: 'board',
-    label: 'Service Health',
-    dataEndpoint: '/api/services/health',
-  },
+  { type: 'gauge', label: 'CPU Utilization', dataEndpoint: '/api/metrics/cpu' },
+  { type: 'pipeline', label: 'CI/CD Pipeline', dataEndpoint: '/api/pipelines/status' },
+  { type: 'trend', label: 'Error Rate (1h)', dataEndpoint: '/api/metrics/error-rate' },
+  { type: 'board', label: 'Service Health', dataEndpoint: '/api/services/health' },
 ];
 
 const DEFAULT_FILTERS: FilterConfig[] = [
@@ -84,21 +62,44 @@ export function createOpsDashboardConfig(
   overrides: Partial<OpsDashboardConfig> = {},
 ): OpsDashboardConfig {
   const base: OpsDashboardConfig = {
-    id: 'ops-dashboard',
-    title: 'IT Operations Center',
-    subtitle: 'Real-time infrastructure and service monitoring',
-    mode: 'dashboard',
-    defaultTheme: 'nero',
-    toolbarActions: DEFAULT_TOOLBAR_ACTIONS,
-    quickActions: [
-      { id: 'new-incident', label: 'New Incident', tone: 'danger' },
-      { id: 'runbook', label: 'Runbook', tone: 'default' },
+    appName: 'IT Operations Center',
+    appDescription: 'Real-time infrastructure and service monitoring',
+    currentPath: '/overview',
+    themes: ['nero', 'editorial', 'navy'],
+    header: {
+      brandLabel: 'Convergio',
+      productLabel: 'Ops Center',
+      homeHref: '/',
+      primaryActions: [
+        { id: 'new-incident', label: 'New Incident', href: '/incidents/new' },
+        { id: 'runbook', label: 'Runbook', href: '/runbooks' },
+      ],
+      searchPlaceholder: 'Search services, incidents, alerts',
+    },
+    navigation: [
+      {
+        id: 'monitoring',
+        label: 'Monitoring',
+        items: [
+          { id: 'overview', label: 'Overview', href: '/overview' },
+          { id: 'incidents', label: 'Incidents', href: '/incidents' },
+          { id: 'deployments', label: 'Deployments', href: '/deployments' },
+        ],
+      },
+      {
+        id: 'infrastructure',
+        label: 'Infrastructure',
+        items: [
+          { id: 'services', label: 'Services', href: '/services' },
+          { id: 'nodes', label: 'Nodes', href: '/nodes' },
+          { id: 'alerts', label: 'Alerts', href: '/alerts' },
+        ],
+      },
     ],
-    featureFlags: {
-      agentPanel: false,
-      detailPanel: true,
-      executiveStrip: true,
-      commandPalette: true,
+    content: {
+      title: 'Operations Overview',
+      eyebrow: 'Infrastructure health',
+      body: '<section data-slot="primary">Dashboard strip and live metrics</section>',
     },
     dashboardStrip: DEFAULT_STRIP_ZONES,
     alerts: DEFAULT_ALERT_CONFIG,
@@ -110,11 +111,6 @@ export function createOpsDashboardConfig(
   return {
     ...base,
     ...overrides,
-    toolbarActions: overrides.toolbarActions ?? base.toolbarActions,
-    featureFlags: {
-      ...base.featureFlags,
-      ...(overrides.featureFlags ?? {}),
-    },
     dashboardStrip: overrides.dashboardStrip ?? base.dashboardStrip,
     filters: overrides.filters ?? base.filters,
   };
