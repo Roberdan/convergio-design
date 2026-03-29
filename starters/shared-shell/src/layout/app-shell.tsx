@@ -37,6 +37,7 @@ export function AppShell({
   agent,
 }: AppShellProps) {
   const hasDetail = !!detail && shell.featureFlags.detailPanel !== false;
+  const hasAgent = !!agent && shell.featureFlags.agentPanel !== false;
   const hasSecondary = !!secondary;
   const hasBottom = !!bottom;
   const shellClass = [
@@ -65,7 +66,7 @@ export function AppShell({
       {secondary ? <aside className="mn-app-shell__secondary">{secondary}</aside> : null}
       {hasDetail ? <aside className="mn-app-shell__detail">{detail}</aside> : null}
       {bottom ? <section className="mn-app-shell__bottom">{bottom}</section> : null}
-      {agent ? <aside data-shell-role="agent">{agent}</aside> : null}
+      {hasAgent ? <aside data-shell-role="agent">{agent}</aside> : null}
     </div>
   );
 }

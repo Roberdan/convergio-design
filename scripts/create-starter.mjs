@@ -8,7 +8,7 @@ const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 const args = process.argv.slice(2);
 
 if (args.includes('--help') || args.length < 4) {
-  console.log('Usage: node scripts/create-starter.mjs --template <id> --target <dir>');
+  console.log('Usage: node scripts/create-starter.mjs --template <id> --target <dir-in-workspace>');
   process.exit(0);
 }
 
@@ -39,6 +39,12 @@ if (!entry) {
 
 const sourceDir = resolve(root, entry.path);
 const targetDir = resolve(root, target);
+const targetPathFromWorkspaceRoot = relative(root, targetDir);
+
+if (!targetPathFromWorkspaceRoot || targetPathFromWorkspaceRoot.startsWith('..')) {
+  console.error(`Target must stay inside this workspace so starter workspace dependencies remain valid: ${targetDir}`);
+  process.exit(1);
+}
 
 function shouldCopy(sourcePath) {
   const pathFromTemplateRoot = relative(sourceDir, sourcePath);
