@@ -12,7 +12,8 @@
   "references": [
     { "path": "packages/tokens" },
     { "path": "packages/elements" },
-    { "path": "starters/shared-shell" }
+    { "path": "starters/shared-shell" },
+    { "path": "starters/workspace" }
   ],
   "include": []
 }
