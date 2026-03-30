@@ -3,901 +3,418 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ConvergIO Operations</title>
+  <title>Ops Dashboard — Maranello Luce Design</title>
   <link rel="icon" href="../src/assets/favicon.svg">
   <link rel="stylesheet" href="../src/fonts/local-fonts.css">
   <link rel="stylesheet" href="../dist/css/maranello.css">
   <style>
-    /* ── Shell theme vars ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
     body {
-      --shell-bg: #0a0a0a; --shell-nav: #141414; --shell-card: #171717;
-      --shell-card-2: #1d1d1d; --shell-border: #262626;
-      --shell-text: #eee; --shell-muted: #9a9a9a; --shell-ghost: #666;
-      --shell-accent: #FFC72C; --shell-accent-text: #111;
-      margin: 0; background: var(--mn-surface); color: var(--mn-text);
+      background: var(--mn-surface);
+      color: var(--mn-text);
       font-family: var(--font-body, sans-serif);
-    }
-    body.mn-avorio {
-      --shell-bg: #f5efe4; --shell-nav: #f8f1e6; --shell-card: #fffaf4;
-      --shell-card-2: #fffdf8; --shell-border: #d9cbb7;
-      --shell-text: #241f19; --shell-muted: #7b6d5a; --shell-ghost: #8e7f6b;
-      --shell-accent: #b7410e; --shell-accent-text: #fff8ef;
-    }
-    body.mn-colorblind { --shell-accent: #0072B2; --shell-accent-text: #fff; }
-    body.mn-sugar {
-      --shell-bg: #f4f4f6; --shell-nav: #fff; --shell-card: #fff;
-      --shell-card-2: #ffffff; --shell-border: #d8d8de;
-      --shell-text: #111; --shell-muted: #666; --shell-ghost: #888;
-      --shell-accent: #111; --shell-accent-text: #fff;
+      overflow: hidden;
     }
 
-    /* ── Root layout ── */
-    #app-root { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-    #app-body {
+    .app {
       display: grid;
-      grid-template-columns: 240px 1fr;
-      flex: 1 1 0; min-height: 0; overflow: hidden;
+      grid-template-rows: 52px 1fr;
+      grid-template-columns: 260px 1fr;
+      grid-template-areas: "header header" "sidebar main";
+      height: 100vh;
+      transition: grid-template-columns 0.2s ease;
     }
-    #app-body.detail-open { grid-template-columns: 240px 1fr 380px; }
+    .app.is-collapsed { grid-template-columns: 0px 1fr; }
 
-    /* ── Navbar ── */
-    #navbar { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(12px); }
-    body.mn-avorio #navbar, body.mn-sugar #navbar {
-      background: color-mix(in srgb, var(--shell-nav) 96%, transparent);
-    }
-    #navbar .mn-header-shell { gap: 12px; background: var(--shell-nav); border-bottom-color: var(--shell-border); }
-    #navbar .mn-header-shell__brand { color: var(--shell-text); font-size: 1rem; }
-    #navbar .mn-header-shell__brand-logo {
-      width: 28px; height: 28px;
-      filter: drop-shadow(0 0 8px color-mix(in srgb, var(--shell-accent) 35%, transparent));
-    }
-    #navbar .mn-header-shell__actions--segmented,
-    #navbar .mn-header-shell__actions--cluster {
-      border-color: var(--shell-border); border-radius: 14px;
-      background: var(--shell-card);
-      box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 4%, transparent);
-    }
-    #navbar .mn-header-shell__action {
-      min-width: 44px; min-height: 44px; border-radius: 10px; color: var(--shell-muted);
-    }
-    #navbar .mn-header-shell__action:hover {
-      background: color-mix(in srgb, var(--shell-card-2) 92%, var(--shell-accent) 8%);
-      color: var(--shell-text);
-    }
-    #navbar .mn-header-shell__action--active {
-      background: color-mix(in srgb, var(--shell-accent) 20%, transparent);
-      color: var(--shell-accent);
-    }
-    #navbar .mn-header-shell__action:disabled { opacity: .35; cursor: not-allowed; }
-    #navbar .mn-header-shell__icon svg {
-      width: 20px; height: 20px; fill: none; stroke: currentColor;
-      stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
-    }
-    #navbar .mn-header-shell__search {
-      width: 100%; min-width: 0; min-height: 52px; padding: 8px 12px;
-      gap: 12px; border-color: var(--shell-border); border-radius: 14px;
-      background: var(--shell-card);
-    }
-    #navbar .mn-header-shell__search-input {
-      flex: 1 1 14rem; min-width: 10rem; color: var(--shell-text); font-size: 1rem;
-    }
-    #navbar .mn-header-shell__search-input::placeholder {
-      color: color-mix(in srgb, var(--shell-muted) 78%, transparent);
-    }
-    #navbar .mn-header-shell__shortcut {
-      border-color: #444; background: #262626; color: #999; font-size: 0.875rem;
-    }
-    body.mn-avorio #navbar .mn-header-shell__shortcut,
-    body.mn-sugar  #navbar .mn-header-shell__shortcut {
-      border-color: var(--shell-border); background: var(--shell-card-2); color: var(--shell-muted);
-    }
-    #navbar .mn-header-shell__filters { display: none; }
-    #navbar .mn-header-shell__filter-group legend {
-      color: var(--shell-ghost); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
-    }
-    #navbar .mn-header-shell__filter-option {
-      min-height: 36px; border-color: var(--shell-border); background: transparent; color: var(--shell-text);
-    }
-    #navbar .mn-header-shell__filter-option.is-selected {
-      color: var(--shell-accent);
-      border-color: color-mix(in srgb, var(--shell-accent) 55%, var(--shell-border));
-      background: color-mix(in srgb, var(--shell-accent) 12%, transparent);
-    }
-    #navbar .mn-header-shell__theme { padding-left: 14px; border-left-color: var(--shell-border); }
-    #navbar .mn-profile-trigger {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: color-mix(in srgb, var(--shell-accent) 18%, transparent);
-      color: var(--shell-accent); font-weight: 700;
-      display: inline-flex; align-items: center; justify-content: center;
-      border: 1px solid color-mix(in srgb, var(--shell-accent) 30%, var(--shell-border));
-    }
-    .mn-bell-badge {
-      position: absolute; top: -6px; right: -8px;
-      background: var(--mn-error, #dc2626); color: #fff;
-      font-size: 0.6rem; font-weight: 700; line-height: 1;
-      border-radius: 8px; padding: 2px 5px; pointer-events: none;
-      font-family: var(--font-mono, monospace);
-    }
-
-    /* ── Sidebar ── */
-    #sidebar {
-      background: var(--mn-surface-raised); border-right: 1px solid var(--mn-border);
-      display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; min-height: 0;
-    }
-    .sidebar-label {
-      font-family: var(--font-display); font-size: 0.6rem; text-transform: uppercase;
-      letter-spacing: 0.1em; color: var(--mn-text-muted); padding: 0.875rem 0.875rem 0.3rem;
-    }
-    .service-list { list-style: none; margin: 0; padding: 0 0.5rem 0.5rem; }
-    .service-item {
-      display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.6rem;
-      border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 0.68rem;
-      color: var(--mn-text); cursor: pointer; transition: background 0.12s;
-      border: none; background: transparent; width: 100%; text-align: left; min-height: 36px;
-    }
-    .service-item:hover { background: var(--mn-surface-sunken); }
-    .service-item:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: 1px; }
-    .service-item.is-active { background: var(--mn-surface-sunken); color: var(--mn-accent); }
-    .svc-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .svc-dot--ok    { background: var(--mn-success); }
-    .svc-dot--warn  { background: var(--mn-warning); }
-    .svc-dot--error { background: var(--mn-error); }
-    .health-card {
-      margin: 0.75rem 0.625rem; padding: 0.75rem 0.875rem;
-      background: var(--mn-surface-sunken); border: 1px solid var(--mn-border);
-      border-radius: var(--radius-md);
-    }
-    .health-card-title {
-      font-family: var(--font-display); font-size: 0.6rem; text-transform: uppercase;
-      letter-spacing: 0.08em; color: var(--mn-text-muted); margin-bottom: 0.35rem;
-    }
-    .health-pct {
-      font-family: var(--font-mono); font-size: 1.5rem; font-weight: 700;
-      color: var(--mn-success); line-height: 1;
-    }
-    .health-sublabel { font-size: 0.65rem; color: var(--mn-text-muted); margin: 0.2rem 0 0.5rem; }
-    .health-bar-track { height: 4px; background: var(--mn-border); border-radius: 2px; overflow: hidden; }
-    .health-bar-fill { height: 100%; background: var(--mn-success); border-radius: 2px; }
-
-    /* ── Main area ── */
-    #main-area { overflow-y: auto; min-height: 0; background: var(--mn-surface); }
-    .view { display: flex; flex-direction: column; min-height: 100%; }
-    .view[hidden] { display: none; }
-    .strip-mount { padding: 1rem 1.5rem 0; }
-    .charts-row {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
-      padding: 1rem 1.5rem 1.5rem;
-    }
-    .chart-card {
-      background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
-      border-radius: var(--radius-lg); padding: 1rem 1.25rem 0.875rem;
-    }
-    .chart-card-label {
-      font-family: var(--font-display); font-size: 0.65rem; text-transform: uppercase;
-      letter-spacing: 0.08em; color: var(--mn-text-muted); margin-bottom: 0.625rem;
-    }
-    .chart-card canvas { display: block; width: 100%; height: 120px; }
-    .table-mount { padding: 1.25rem 1.5rem; min-height: 400px; }
-    .status-mount { padding: 1.25rem 1.5rem; }
-
-    /* ── Detail panel ── */
-    #detail-panel {
-      background: var(--mn-surface-raised); border-left: 1px solid var(--mn-border);
-      display: flex; flex-direction: column; overflow: hidden; min-height: 0;
-    }
-    #detail-panel[hidden] { display: none; }
-    .detail-topbar {
-      display: flex; align-items: center; gap: 0.75rem; justify-content: space-between;
-      padding: 0.875rem 1rem 0.75rem; border-bottom: 1px solid var(--mn-border); flex-shrink: 0;
-    }
-    .detail-title {
-      font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700;
-      color: var(--mn-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .detail-close-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 32px; height: 32px; min-width: 32px; border: 1px solid var(--mn-border);
-      border-radius: var(--radius-md); background: transparent;
-      color: var(--mn-text-muted); cursor: pointer; transition: border-color 0.12s, color 0.12s;
-    }
-    .detail-close-btn:hover { border-color: var(--mn-accent); color: var(--mn-text); }
-    .detail-close-btn:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: 2px; }
-    .detail-close-btn svg {
-      width: 16px; height: 16px; stroke: currentColor; stroke-width: 2;
-      stroke-linecap: round; fill: none;
-    }
-    .detail-tabs-bar {
-      display: flex; padding: 0 1rem;
-      border-bottom: 1px solid var(--mn-border); flex-shrink: 0;
-    }
-    .detail-tab-btn {
-      padding: 0.6rem 0.875rem; border: none; background: transparent;
-      font-family: var(--font-display); font-size: 0.68rem; text-transform: uppercase;
-      letter-spacing: 0.06em; color: var(--mn-text-muted); cursor: pointer;
-      border-bottom: 2px solid transparent; margin-bottom: -1px;
-      transition: color 0.12s, border-color 0.12s; min-height: 40px;
-    }
-    .detail-tab-btn:hover { color: var(--mn-text); }
-    .detail-tab-btn[aria-selected="true"] {
-      color: var(--mn-accent); border-bottom-color: var(--mn-accent);
-    }
-    .detail-tab-btn:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: 2px; }
-    .detail-pane { flex: 1 1 0; overflow-y: auto; padding: 1rem; }
-    .detail-pane[hidden] { display: none; }
-    .detail-row {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      padding: 0.5rem 0; border-bottom: 1px solid var(--mn-border); font-size: 0.8rem;
-      gap: 0.5rem;
-    }
-    .detail-row:last-child { border-bottom: none; }
-    .detail-row-key { color: var(--mn-text-muted); font-family: var(--font-mono); flex-shrink: 0; }
-    .detail-row-val { color: var(--mn-text); font-family: var(--font-mono); text-align: right; }
-    .detail-timeline-item {
-      display: flex; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--mn-border);
-    }
-    .detail-timeline-item:last-child { border-bottom: none; }
-    .detail-tl-dot {
-      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-      margin-top: 0.3rem; background: var(--mn-accent);
-    }
-    .detail-tl-text { font-size: 0.78rem; color: var(--mn-text); line-height: 1.45; }
-    .detail-tl-time { font-size: 0.65rem; color: var(--mn-text-muted); font-family: var(--font-mono); margin-top: 0.15rem; }
-    .detail-related-item {
-      display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0;
+    .header {
+      grid-area: header;
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 16px; height: 52px;
+      background: var(--mn-surface-raised);
       border-bottom: 1px solid var(--mn-border);
-      font-size: 0.78rem; font-family: var(--font-mono); color: var(--mn-text-muted);
+      z-index: 10;
     }
-    .detail-related-item:last-child { border-bottom: none; }
-    .detail-related-id { color: var(--mn-accent); flex-shrink: 0; }
+    .header__left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .header__center { flex: 1; display: flex; justify-content: center; }
+    .header__right { display: flex; align-items: center; gap: 6px; }
 
-    /* ── Inline badges ── */
-    .sev-badge, .st-badge, .env-badge {
+    .icon-btn {
       display: inline-flex; align-items: center; justify-content: center;
-      padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700;
-      font-family: var(--font-mono); text-transform: uppercase;
-      letter-spacing: 0.05em; white-space: nowrap;
+      width: 36px; height: 36px; border: none; background: none;
+      color: var(--mn-text-muted); border-radius: var(--radius-md);
+      cursor: pointer; transition: background 0.12s, color 0.12s; flex-shrink: 0;
     }
-    .sev-badge--critical { background: color-mix(in srgb, var(--mn-error)   18%, transparent); color: var(--mn-error); }
-    .sev-badge--warning  { background: color-mix(in srgb, var(--mn-warning) 18%, transparent); color: var(--mn-warning); }
-    .sev-badge--info     { background: color-mix(in srgb, var(--mn-info)    18%, transparent); color: var(--mn-info); }
-    .st-badge--open     { background: color-mix(in srgb, var(--mn-error)    15%, transparent); color: var(--mn-error); }
-    .st-badge--ack      { background: color-mix(in srgb, var(--mn-warning)  15%, transparent); color: var(--mn-warning); }
-    .st-badge--resolved { background: color-mix(in srgb, var(--mn-success)  15%, transparent); color: var(--mn-success); }
-    .st-badge--running  { background: color-mix(in srgb, var(--mn-accent)   15%, transparent); color: var(--mn-accent); }
-    .st-badge--success  { background: color-mix(in srgb, var(--mn-success)  15%, transparent); color: var(--mn-success); }
-    .st-badge--failed   { background: color-mix(in srgb, var(--mn-error)    15%, transparent); color: var(--mn-error); }
-    .st-badge--pending  { background: color-mix(in srgb, var(--mn-text-muted) 15%, transparent); color: var(--mn-text-muted); }
-    .env-badge--prod    { background: color-mix(in srgb, var(--mn-error)    12%, transparent); color: var(--mn-error); }
-    .env-badge--staging { background: color-mix(in srgb, var(--mn-warning)  12%, transparent); color: var(--mn-warning); }
-    .env-badge--dev     { background: color-mix(in srgb, var(--mn-info)     12%, transparent); color: var(--mn-info); }
+    .icon-btn:hover { background: color-mix(in srgb, var(--mn-accent) 10%, transparent); color: var(--mn-text); }
+    .icon-btn:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .icon-btn svg { width: 18px; height: 18px; }
 
-    /* ── Responsive ── */
-    @media (max-width: 1200px) {
-      #app-body { grid-template-columns: 200px 1fr; }
-      #app-body.detail-open { grid-template-columns: 200px 1fr 320px; }
+    .breadcrumb { font-size: 0.85rem; color: var(--mn-text-muted); white-space: nowrap; }
+    .breadcrumb__current { color: var(--mn-text); font-weight: 600; }
+
+    .search-bar {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%; max-width: 480px; padding: 0 14px; height: 36px;
+      background: var(--mn-surface); border: 1px solid var(--mn-border);
+      border-radius: var(--radius-lg); color: var(--mn-text-muted);
+      cursor: text; transition: border-color 0.15s, box-shadow 0.15s;
     }
-    @media (max-width: 860px) {
-      #app-body, #app-body.detail-open { grid-template-columns: 1fr; }
-      #sidebar { display: none; }
-      .charts-row { grid-template-columns: 1fr; }
-      #navbar .mn-header-shell__shortcut { display: none; }
+    .search-bar:hover { border-color: color-mix(in srgb, var(--mn-accent) 40%, var(--mn-border)); }
+    .search-bar:focus-within { border-color: var(--mn-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--mn-accent) 15%, transparent); }
+    .search-bar svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.5; }
+    .search-bar__input {
+      flex: 1; border: none; background: none; color: var(--mn-text);
+      font-size: 0.85rem; font-family: var(--font-body, sans-serif); outline: none;
     }
-    @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+    .search-bar__input::placeholder { color: var(--mn-text-muted); }
+    .search-bar__kbd {
+      font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600;
+      color: var(--mn-text-muted); background: var(--mn-surface-raised);
+      border: 1px solid var(--mn-border); border-radius: 4px; padding: 2px 6px;
+    }
+
+    .theme-select {
+      font-size: 0.8rem; padding: 4px 8px; height: 32px;
+      border-radius: var(--radius-md); border: 1px solid var(--mn-border);
+      background: var(--mn-surface); color: var(--mn-text); font-family: inherit; cursor: pointer;
+    }
+    .theme-select:focus-visible { outline: 2px solid var(--mn-accent); }
+
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--mn-accent); color: var(--mn-surface);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+      flex-shrink: 0; cursor: pointer;
+    }
+
+    .sidebar {
+      grid-area: sidebar;
+      background: var(--mn-surface-raised);
+      border-right: 1px solid var(--mn-border);
+      display: flex; flex-direction: column;
+      padding: 16px 12px; overflow-y: auto; overflow-x: hidden;
+      min-width: 0; transition: opacity 0.2s ease, padding 0.2s ease;
+    }
+    .app.is-collapsed .sidebar { opacity: 0; padding: 0; pointer-events: none; }
+    .sidebar__brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
+      color: var(--mn-text); padding: 0 8px 12px;
+    }
+    .sidebar__version {
+      font-size: 0.65rem; font-weight: 600;
+      background: var(--mn-accent); color: var(--mn-surface);
+      padding: 1px 7px; border-radius: 10px; margin-left: auto;
+    }
+    .sidebar__group-label {
+      font-family: var(--font-display); font-size: 0.6rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--mn-text-muted); margin: 20px 0 4px; padding-left: 10px;
+    }
+    .sidebar__group-label:first-of-type { margin-top: 4px; }
+    .sidebar__nav { display: flex; flex-direction: column; gap: 1px; }
+    .sidebar__link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; border-radius: var(--radius-md);
+      font-size: 0.84rem; color: var(--mn-text);
+      cursor: pointer; border: none; background: none;
+      width: 100%; text-align: left; font-family: inherit;
+      transition: background 0.12s; min-height: 34px;
+    }
+    .sidebar__link:hover { background: color-mix(in srgb, var(--mn-accent) 8%, transparent); }
+    .sidebar__link:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .sidebar__link.is-active {
+      background: color-mix(in srgb, var(--mn-accent) 15%, transparent);
+      color: var(--mn-accent); font-weight: 600;
+    }
+    .sidebar__link svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.6; }
+    .sidebar__link.is-active svg { opacity: 1; }
+    .sidebar__link-text { flex: 1; }
+    .sidebar__badge {
+      font-size: 0.65rem; font-weight: 600; min-width: 18px; text-align: center;
+      padding: 1px 6px; border-radius: 10px;
+      background: var(--mn-accent); color: var(--mn-surface);
+    }
+    .sidebar__spacer { flex: 1; }
+    .sidebar__footer {
+      padding-top: 12px; border-top: 1px solid var(--mn-border); margin-top: 8px;
+      display: flex; flex-direction: column; gap: 1px;
+    }
+    .sidebar__footer-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 10px; border-radius: var(--radius-md);
+      font-size: 0.8rem; color: var(--mn-text-muted);
+      cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: inherit;
+    }
+    .sidebar__footer-link svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.5; }
+    .sidebar__footer-link:hover { color: var(--mn-text); background: color-mix(in srgb, var(--mn-accent) 6%, transparent); }
+
+    .main { grid-area: main; overflow-y: auto; padding: 24px 28px; }
+
+    .mn-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .mn-col-3 { grid-column: span 3; } .mn-col-4 { grid-column: span 4; }
+    .mn-col-6 { grid-column: span 6; } .mn-col-8 { grid-column: span 8; }
+    .mn-col-12 { grid-column: span 12; }
+
+    .mn-cell {
+      background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
+      border-radius: var(--radius-md); padding: 16px; min-height: 120px;
+      display: flex; flex-direction: column;
+    }
+    .mn-cell__label {
+      font-family: var(--font-display); font-size: 0.6rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--mn-text-muted); margin-bottom: 12px;
+    }
+    .mn-cell__body { flex: 1; position: relative; min-height: 0; }
+
+    .status-bar {
+      display: flex; align-items: center; gap: 12px;
+      grid-column: span 12; padding: 12px 16px;
+      background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
+      border-radius: var(--radius-md); font-size: 0.8rem;
+    }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--mn-success); flex-shrink: 0;
+    }
+    .status-bar__text { color: var(--mn-text); font-weight: 600; }
+    .status-bar__meta { color: var(--mn-text-muted); margin-left: auto; font-family: var(--font-mono); font-size: 0.75rem; }
+
+    @media (max-width: 1100px) {
+      .mn-col-3, .mn-col-4, .mn-col-6, .mn-col-8 { grid-column: span 6; }
+    }
+    @media (max-width: 768px) {
+      .app { grid-template-columns: 0px 1fr; }
+      .app .sidebar { opacity: 0; padding: 0; pointer-events: none; }
+      .mn-col-3,.mn-col-4,.mn-col-6,.mn-col-8,.mn-col-12 { grid-column: span 12; }
+      .main { padding: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .app, .sidebar, .icon-btn, .sidebar__link, .search-bar { transition: none; }
+    }
   </style>
 </head>
-<body class="mn-nero">
+<body>
+  <script>try { var t = localStorage.getItem('mn-theme'); if (t && t !== 'editorial') document.body.classList.add('mn-' + t); } catch(e) {}</script>
 
-<div id="app-root">
-  <header id="navbar" role="banner"></header>
-
-  <div id="app-body">
-
-    <!-- ── Sidebar ── -->
-    <nav id="sidebar" aria-label="Service navigation">
-      <div class="sidebar-label" aria-hidden="true">Services</div>
-      <ul class="service-list" role="list" id="service-list" aria-label="Services"></ul>
-      <div class="sidebar-label" aria-hidden="true">System Health</div>
-      <div class="health-card" aria-label="System health 99.97% uptime over 30 days">
-        <div class="health-card-title">Uptime (30 d)</div>
-        <div class="health-pct" aria-label="99.97 percent">99.97%</div>
-        <div class="health-sublabel">Last incident: 18 days ago</div>
-        <div class="health-bar-track" role="presentation">
-          <div class="health-bar-fill" style="width:99.97%"></div>
-        </div>
+  <div class="app" id="app-shell">
+    <header class="header" role="banner">
+      <div class="header__left">
+        <button class="icon-btn" id="sidebar-toggle" aria-label="Toggle sidebar" title="Toggle sidebar"></button>
+        <span class="breadcrumb">Operations <span style="opacity:0.4;margin:0 4px">&#8250;</span> <span class="breadcrumb__current">Overview</span></span>
       </div>
-    </nav>
-
-    <!-- ── Main area ── -->
-    <main id="main-area" role="main" aria-label="Main content">
-
-      <section id="view-dashboard" class="view" aria-label="Dashboard">
-        <div class="strip-mount">
-          <div id="strip-zone" aria-label="Operations instrument strip"></div>
-        </div>
-        <div class="charts-row">
-          <div class="chart-card">
-            <div class="chart-card-label">Request Throughput (req/s)</div>
-            <canvas id="sparkline-canvas" role="img" aria-label="Request throughput over the last 10 intervals"></canvas>
-          </div>
-          <div class="chart-card">
-            <div class="chart-card-label">Errors by Service</div>
-            <canvas id="bar-canvas" role="img" aria-label="Error counts per service"></canvas>
-          </div>
-        </div>
-      </section>
-
-      <section id="view-alerts" class="view" hidden aria-label="Alerts">
-        <div class="table-mount" id="alerts-table-mount"></div>
-      </section>
-
-      <section id="view-deployments" class="view" hidden aria-label="Deployments">
-        <div class="table-mount" id="deploys-table-mount"></div>
-      </section>
-
-      <section id="view-infrastructure" class="view" hidden aria-label="Infrastructure">
-        <div class="status-mount" id="infra-status-mount"></div>
-      </section>
-
-    </main>
-
-    <!-- ── Detail panel ── -->
-    <aside id="detail-panel" hidden aria-label="Item detail">
-      <div class="detail-topbar">
-        <span class="detail-title" id="detail-panel-title">Detail</span>
-        <button class="detail-close-btn" id="detail-close-btn" type="button" aria-label="Close detail panel">
-          <svg viewBox="0 0 16 16" aria-hidden="true">
-            <line x1="12" y1="4" x2="4" y2="12"/>
-            <line x1="4" y1="4" x2="12" y2="12"/>
-          </svg>
-        </button>
+      <div class="header__center">
+        <label class="search-bar">
+          <span id="search-icon"></span>
+          <input type="text" class="search-bar__input" placeholder="Search..." aria-label="Search">
+          <kbd class="search-bar__kbd"></kbd>
+        </label>
       </div>
-      <div class="detail-tabs-bar" role="tablist" aria-label="Detail section tabs" id="detail-tablist">
-        <button class="detail-tab-btn" type="button" role="tab" data-pane="dp-details"
-          aria-selected="true" aria-controls="dp-details">Details</button>
-        <button class="detail-tab-btn" type="button" role="tab" data-pane="dp-timeline"
-          aria-selected="false" aria-controls="dp-timeline">Timeline</button>
-        <button class="detail-tab-btn" type="button" role="tab" data-pane="dp-related"
-          aria-selected="false" aria-controls="dp-related">Related</button>
+      <div class="header__right">
+        <select class="theme-select" id="theme-picker" aria-label="Theme">
+          <option value="editorial">Editorial</option><option value="nero">Nero</option>
+          <option value="avorio">Avorio</option><option value="colorblind">Colorblind</option>
+          <option value="sugar">Sugar</option><option value="navy">Navy</option>
+        </select>
+        <button class="icon-btn" id="btn-bell" aria-label="Notifications" title="Notifications"></button>
+        <button class="icon-btn" id="btn-settings" aria-label="Settings" title="Settings"></button>
+        <div class="avatar" title="Ravi Kumar" aria-label="User menu">RK</div>
       </div>
-      <div class="detail-pane" id="dp-details"  role="tabpanel" tabindex="0"></div>
-      <div class="detail-pane" id="dp-timeline" role="tabpanel" tabindex="0" hidden></div>
-      <div class="detail-pane" id="dp-related"  role="tabpanel" tabindex="0" hidden></div>
+    </header>
+
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+      <div class="sidebar__brand">
+        <img src="../src/assets/favicon.svg" alt="" width="22" height="22">
+        <span>Ops Center</span>
+        <span class="sidebar__version">v6.5</span>
+      </div>
+      <div class="sidebar__group-label">Monitor</div>
+      <nav class="sidebar__nav">
+        <button class="sidebar__link is-active" data-page="overview"><span id="ic-dashboard"></span><span class="sidebar__link-text">Overview</span></button>
+        <button class="sidebar__link" data-page="services"><span id="ic-server"></span><span class="sidebar__link-text">Services</span></button>
+        <button class="sidebar__link" data-page="alerts"><span id="ic-bell"></span><span class="sidebar__link-text">Alerts</span><span class="sidebar__badge">5</span></button>
+      </nav>
+      <div class="sidebar__group-label">Infrastructure</div>
+      <nav class="sidebar__nav">
+        <button class="sidebar__link" data-page="compute"><span id="ic-cpu"></span><span class="sidebar__link-text">Compute</span></button>
+        <button class="sidebar__link" data-page="network"><span id="ic-network"></span><span class="sidebar__link-text">Network</span></button>
+        <button class="sidebar__link" data-page="storage"><span id="ic-database"></span><span class="sidebar__link-text">Storage</span></button>
+      </nav>
+      <div class="sidebar__group-label">Tools</div>
+      <nav class="sidebar__nav">
+        <button class="sidebar__link" data-page="deploy"><span id="ic-deploy"></span><span class="sidebar__link-text">Deployments</span></button>
+        <button class="sidebar__link" data-page="logs"><span id="ic-terminal"></span><span class="sidebar__link-text">Logs</span></button>
+      </nav>
+      <div class="sidebar__spacer"></div>
+      <div class="sidebar__footer">
+        <button class="sidebar__footer-link"><span id="ic-settings"></span>Settings</button>
+      </div>
     </aside>
 
-  </div><!-- #app-body -->
-</div><!-- #app-root -->
+    <main class="main" id="main-content">
+      <div class="mn-grid">
+        <div class="status-bar">
+          <span class="status-dot"></span>
+          <span class="status-bar__text">All systems operational</span>
+          <span class="status-bar__meta">uptime 99.97%</span>
+        </div>
+        <div class="mn-cell mn-col-12"><div class="mn-cell__label">Infrastructure gauges</div><div class="mn-cell__body" id="cell-strip"></div></div>
+        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Request rate</div><div class="mn-cell__body" id="cell-spark1"></div></div>
+        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Error rate</div><div class="mn-cell__body" id="cell-spark2"></div></div>
+        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Latency p99</div><div class="mn-cell__body" id="cell-spark3"></div></div>
+        <div class="mn-cell mn-col-6"><div class="mn-cell__label">Service status</div><div class="mn-cell__body" id="cell-status"></div></div>
+        <div class="mn-cell mn-col-6"><div class="mn-cell__label">Errors by service</div><div class="mn-cell__body" id="cell-bar" style="display:flex;align-items:center;justify-content:center"></div></div>
+        <div class="mn-cell mn-col-8"><div class="mn-cell__label">Recent incidents</div><div class="mn-cell__body" id="cell-table"></div></div>
+        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Deploy log</div><div class="mn-cell__body" id="cell-activity"></div></div>
+      </div>
+    </main>
+  </div>
 
-<script src="../dist/iife/maranello.min.js"></script>
-<script type="module" src="../packages/elements/dist/wc/mn-header-shell.js"></script>
-<script>
-(function () {
-  'use strict';
-  var M = window.Maranello;
-  if (!M) return;
+  <script src="../dist/iife/maranello.min.js"></script>
+  <script>
+    (function () {
 
-  /* ── Fictional data ── */
-  var SERVICES = [
-    { id: 'api-gateway',  label: 'API Gateway',    status: 'ok'    },
-    { id: 'auth-service', label: 'Auth Service',   status: 'ok'    },
-    { id: 'user-db',      label: 'User Database',  status: 'ok'    },
-    { id: 'redis-cache',  label: 'Redis Cache',    status: 'warn'  },
-    { id: 'task-queue',   label: 'Task Queue',     status: 'error' },
-    { id: 'blob-storage', label: 'Blob Storage',   status: 'ok'    }
-  ];
+      var M = window.Maranello;
+      if (!M) return;
 
-  var ALERTS = [
-    { id:'ALT-001', severity:'critical', service:'task-queue',   message:'Queue depth exceeded 10k messages',     time:'2m ago',      status:'open',     assignee:'Omar Eriksson',    node:'tq-node-03',    region:'us-east-1'  },
-    { id:'ALT-002', severity:'critical', service:'task-queue',   message:'Consumer lag above 30s threshold',      time:'4m ago',      status:'ack',      assignee:'Yuki Tanaka',      node:'tq-node-01',    region:'us-east-1'  },
-    { id:'ALT-003', severity:'warning',  service:'redis-cache',  message:'Memory usage at 87% of capacity',       time:'11m ago',     status:'ack',      assignee:'Fatima Al-Rashid', node:'cache-02',      region:'eu-west-1'  },
-    { id:'ALT-004', severity:'warning',  service:'redis-cache',  message:'Eviction rate climbing (LRU policy)',   time:'18m ago',     status:'open',     assignee:'Pavel Novak',      node:'cache-01',      region:'eu-west-1'  },
-    { id:'ALT-005', severity:'info',     service:'api-gateway',  message:'P99 latency 340ms on /v2/search',       time:'23m ago',     status:'open',     assignee:'Omar Eriksson',    node:'gw-prod-2',     region:'us-east-1'  },
-    { id:'ALT-006', severity:'info',     service:'auth-service', message:'Token refresh rate increased 12%',      time:'35m ago',     status:'resolved', assignee:'Yuki Tanaka',      node:'auth-pod-4',    region:'ap-south-1' },
-    { id:'ALT-007', severity:'critical', service:'user-db',      message:'Replication lag 8s on replica-2',       time:'41m ago',     status:'ack',      assignee:'Fatima Al-Rashid', node:'db-replica-2',  region:'eu-west-1'  },
-    { id:'ALT-008', severity:'warning',  service:'blob-storage', message:'Upload timeout rate 0.4%',              time:'52m ago',     status:'open',     assignee:'Pavel Novak',      node:'blob-us-3',     region:'us-east-1'  },
-    { id:'ALT-009', severity:'info',     service:'api-gateway',  message:'SSL cert expiry in 14 days',            time:'1h ago',      status:'open',     assignee:'Omar Eriksson',    node:'gw-prod-1',     region:'us-east-1'  },
-    { id:'ALT-010', severity:'info',     service:'task-queue',   message:'Worker autoscale triggered',            time:'1h 10m ago',  status:'resolved', assignee:'Yuki Tanaka',      node:'tq-asg-01',     region:'us-east-1'  },
-    { id:'ALT-011', severity:'warning',  service:'auth-service', message:'Failed login spike from 185.x subnet',  time:'1h 22m ago',  status:'ack',      assignee:'Fatima Al-Rashid', node:'auth-pod-2',    region:'ap-south-1' },
-    { id:'ALT-012', severity:'critical', service:'redis-cache',  message:'Node cache-03 unresponsive',            time:'1h 38m ago',  status:'resolved', assignee:'Pavel Novak',      node:'cache-03',      region:'eu-west-1'  },
-    { id:'ALT-013', severity:'info',     service:'user-db',      message:'Slow query avg 2.1s on users_idx',      time:'1h 55m ago',  status:'open',     assignee:'Omar Eriksson',    node:'db-primary',    region:'us-east-1'  },
-    { id:'ALT-014', severity:'warning',  service:'blob-storage', message:'Bucket policy drift detected',          time:'2h ago',      status:'open',     assignee:'Yuki Tanaka',      node:'blob-eu-1',     region:'eu-west-1'  },
-    { id:'ALT-015', severity:'info',     service:'api-gateway',  message:'Rate limit hit on /v1/export',          time:'2h 15m ago',  status:'resolved', assignee:'Fatima Al-Rashid', node:'gw-prod-3',     region:'us-east-1'  },
-    { id:'ALT-016', severity:'critical', service:'task-queue',   message:'Dead-letter queue 312 messages',        time:'2h 30m ago',  status:'open',     assignee:'Pavel Novak',      node:'tq-dlq-01',     region:'us-east-1'  },
-    { id:'ALT-017', severity:'warning',  service:'auth-service', message:'JWKS rotation failed (retry 2/3)',      time:'3h ago',      status:'ack',      assignee:'Omar Eriksson',    node:'auth-pod-1',    region:'ap-south-1' },
-    { id:'ALT-018', severity:'info',     service:'user-db',      message:'Vacuum scheduled on users table',       time:'3h 20m ago',  status:'resolved', assignee:'Yuki Tanaka',      node:'db-primary',    region:'us-east-1'  },
-    { id:'ALT-019', severity:'info',     service:'blob-storage', message:'Lifecycle rule expired 4.2 TB',         time:'4h ago',      status:'resolved', assignee:'Fatima Al-Rashid', node:'blob-ap-1',     region:'ap-south-1' },
-    { id:'ALT-020', severity:'warning',  service:'api-gateway',  message:'Upstream timeout on auth-service call', time:'4h 40m ago',  status:'resolved', assignee:'Pavel Novak',      node:'gw-prod-2',     region:'eu-west-1'  }
-  ];
+      function setIcon(id, name) { var el = document.getElementById(id); if (el && M.icons[name]) el.innerHTML = M.icons[name](); }
 
-  var DEPLOYS = [
-    { id:'DPL-001', service:'api-gateway',  version:'v3.2.1', env:'prod',    status:'success', deployer:'Omar Eriksson',    time:'14m ago',    region:'us-east-1'  },
-    { id:'DPL-002', service:'auth-service', version:'v2.8.0', env:'prod',    status:'running', deployer:'Yuki Tanaka',      time:'28m ago',    region:'eu-west-1'  },
-    { id:'DPL-003', service:'user-db',      version:'v1.5.4', env:'staging', status:'success', deployer:'Fatima Al-Rashid', time:'1h ago',     region:'us-east-1'  },
-    { id:'DPL-004', service:'redis-cache',  version:'v4.0.2', env:'prod',    status:'failed',  deployer:'Pavel Novak',      time:'1h 12m ago', region:'eu-west-1'  },
-    { id:'DPL-005', service:'task-queue',   version:'v2.1.9', env:'staging', status:'success', deployer:'Omar Eriksson',    time:'2h ago',     region:'ap-south-1' },
-    { id:'DPL-006', service:'blob-storage', version:'v1.9.3', env:'prod',    status:'success', deployer:'Yuki Tanaka',      time:'2h 30m ago', region:'us-east-1'  },
-    { id:'DPL-007', service:'api-gateway',  version:'v3.1.8', env:'dev',     status:'success', deployer:'Fatima Al-Rashid', time:'3h ago',     region:'us-east-1'  },
-    { id:'DPL-008', service:'auth-service', version:'v2.7.5', env:'staging', status:'pending', deployer:'Pavel Novak',      time:'3h 20m ago', region:'eu-west-1'  },
-    { id:'DPL-009', service:'user-db',      version:'v1.5.3', env:'prod',    status:'success', deployer:'Omar Eriksson',    time:'4h ago',     region:'ap-south-1' },
-    { id:'DPL-010', service:'task-queue',   version:'v2.1.8', env:'prod',    status:'success', deployer:'Yuki Tanaka',      time:'5h ago',     region:'us-east-1'  },
-    { id:'DPL-011', service:'redis-cache',  version:'v3.9.7', env:'dev',     status:'success', deployer:'Fatima Al-Rashid', time:'6h ago',     region:'eu-west-1'  },
-    { id:'DPL-012', service:'blob-storage', version:'v1.8.9', env:'staging', status:'success', deployer:'Pavel Novak',      time:'7h ago',     region:'us-east-1'  }
-  ];
+      var kbdEl = document.querySelector('.search-bar__kbd');
+      if (kbdEl) kbdEl.textContent = navigator.userAgent.indexOf('Mac') !== -1 ? '\u2318K' : 'Ctrl+K';
 
-  var INFRA = [
-    { name: 'API Gateway',   check: function () { return Promise.resolve({ ok: true,  ms: 42   }); } },
-    { name: 'Auth Service',  check: function () { return Promise.resolve({ ok: true,  ms: 78   }); } },
-    { name: 'User Database', check: function () { return Promise.resolve({ ok: true,  ms: 134  }); } },
-    { name: 'Redis Cache',   check: function () { return Promise.resolve({ ok: true,  ms: 1240 }); } },
-    { name: 'Task Queue',    check: function () { return Promise.resolve({ ok: false, ms: 0    }); } },
-    { name: 'Blob Storage',  check: function () { return Promise.resolve({ ok: true,  ms: 88   }); } }
-  ];
+      var picker = document.getElementById('theme-picker');
+      var saved = localStorage.getItem('mn-theme') || 'editorial';
+      picker.value = saved;
+      picker.addEventListener('change', function () { M.setTheme(picker.value); localStorage.setItem('mn-theme', picker.value); });
 
-  /* ── App state ── */
-  var state = { view: 'dashboard', severity: 'all', query: '' };
-  var alertsInst = null;
-  var deploysInst = null;
-  var statusCtrl = null;
-  var stripCtrl = null;
-
-  /* ── Utilities ── */
-  function esc(str) {
-    return String(str)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-
-  function sevBadge(v) {
-    return '<span class="sev-badge sev-badge--' + esc(v) + '">' + esc(v) + '</span>';
-  }
-  function stBadge(v) {
-    return '<span class="st-badge st-badge--' + esc(v) + '">' + esc(v) + '</span>';
-  }
-  function envBadge(v) {
-    return '<span class="env-badge env-badge--' + esc(v) + '">' + esc(v) + '</span>';
-  }
-
-  /* ── Filtered data ── */
-  function filteredAlerts() {
-    return ALERTS.filter(function (a) {
-      if (state.severity !== 'all' && a.severity !== state.severity) return false;
-      if (!state.query) return true;
-      var q = state.query.toLowerCase();
-      return (a.service + ' ' + a.message + ' ' + a.id).toLowerCase().indexOf(q) !== -1;
-    });
-  }
-
-  function filteredDeploys() {
-    if (!state.query) return DEPLOYS;
-    var q = state.query.toLowerCase();
-    return DEPLOYS.filter(function (d) {
-      return (d.service + ' ' + d.version + ' ' + d.id).toLowerCase().indexOf(q) !== -1;
-    });
-  }
-
-  /* ── Sidebar ── */
-  function buildSidebar() {
-    var list = document.getElementById('service-list');
-    if (!list) return;
-    list.textContent = '';
-    SERVICES.forEach(function (svc) {
-      var li = document.createElement('li');
-      li.setAttribute('role', 'listitem');
-      var btn = document.createElement('button');
-      btn.className = 'service-item';
-      btn.setAttribute('type', 'button');
-      btn.setAttribute('aria-label', svc.label + ': status ' + svc.status);
-      var dotClass = svc.status === 'ok' ? 'svc-dot--ok' : svc.status === 'warn' ? 'svc-dot--warn' : 'svc-dot--error';
-      var dot = document.createElement('span');
-      dot.className = 'svc-dot ' + dotClass;
-      dot.setAttribute('aria-hidden', 'true');
-      var labelEl = document.createElement('span');
-      labelEl.textContent = svc.label;
-      btn.appendChild(dot);
-      btn.appendChild(labelEl);
-      li.appendChild(btn);
-      list.appendChild(li);
-    });
-  }
-
-  /* ── View management ── */
-  var VIEW_IDS = ['dashboard', 'alerts', 'deployments', 'infrastructure'];
-
-  function showView(id) {
-    state.view = id;
-    VIEW_IDS.forEach(function (v) {
-      var el = document.getElementById('view-' + v);
-      if (!el) return;
-      if (v === id) el.removeAttribute('hidden');
-      else el.setAttribute('hidden', '');
-    });
-    if (id === 'dashboard')       mountDashboard();
-    else if (id === 'alerts')     mountAlerts();
-    else if (id === 'deployments') mountDeploys();
-    else if (id === 'infrastructure') mountInfra();
-    syncNavButtons();
-  }
-
-  function syncNavButtons() {
-    VIEW_IDS.forEach(function (v) {
-      var btn = document.querySelector('[data-header-shell-action-id="' + v + '"]');
-      if (!btn) return;
-      if (v === state.view) btn.classList.add('mn-header-shell__action--active');
-      else btn.classList.remove('mn-header-shell__action--active');
-    });
-  }
-
-  /* ── Dashboard view ── */
-  function mountDashboard() {
-    var stripEl = document.getElementById('strip-zone');
-    if (stripEl && M.dashboardStrip && !stripCtrl) {
-      stripCtrl = M.dashboardStrip(stripEl, {
-        ariaLabel: 'Operations metrics',
-        animate: true,
-        zones: [
-          {
-            type: 'gauge',
-            label: 'Utilization',
-            value: 86,
-            max: 100,
-            unit: '%',
-            thresholds: [{ value: 75, color: 'warning' }, { value: 90, color: 'danger' }]
-          },
-          {
-            type: 'pipeline',
-            label: 'Pipeline',
-            stages: [
-              { label: 'Build',  value: 100, status: 'ok'   },
-              { label: 'Test',   value: 98,  status: 'ok'   },
-              { label: 'Stage',  value: 94,  status: 'warn' },
-              { label: 'Deploy', value: 87,  status: 'warn' }
-            ]
-          },
-          {
-            type: 'trend',
-            label: 'Traffic',
-            metrics: [
-              { label: 'Req/s', value: '4,218', trend: [38, 42, 39, 48, 51, 47, 53, 55, 52, 58] },
-              { label: 'Err/s', value: '1.3',   trend: [0.8, 1.1, 0.9, 1.4, 1.2, 1.5, 1.3, 1.1, 1.4, 1.3] }
-            ]
-          },
-          {
-            type: 'board',
-            label: 'Status',
-            cells: [
-              { label: 'Uptime',    value: '99.97%' },
-              { label: 'Deploys',   value: '12'     },
-              { label: 'Incidents', value: '3'      },
-              { label: 'Resp ms',   value: '142'    }
-            ]
-          }
-        ]
+      var shell = document.getElementById('app-shell');
+      document.getElementById('sidebar-toggle').addEventListener('click', function () {
+        if (shell.className.indexOf('is-collapsed') !== -1) shell.className = shell.className.replace('is-collapsed', '').trim();
+        else shell.className = shell.className.trim() + ' is-collapsed';
       });
-    }
 
-    var sparkCanvas = document.getElementById('sparkline-canvas');
-    if (sparkCanvas && M.sparkline) {
-      M.sparkline(sparkCanvas, [3810, 3940, 4120, 3980, 4050, 4210, 4180, 4318, 4100, 4218], {
-        color: 'var(--mn-accent)', fillOpacity: 0.18, smooth: true, showDot: true
-      });
-    }
+      var links = document.querySelectorAll('.sidebar__link');
+      var bcCurrent = document.querySelector('.breadcrumb__current');
+      for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', function () {
+          for (var j = 0; j < links.length; j++) links[j].className = links[j].className.replace(' is-active', '');
+          this.className += ' is-active';
+          var t = this.querySelector('.sidebar__link-text');
+          if (t && bcCurrent) bcCurrent.textContent = t.textContent;
+        });
+      }
 
-    var barCanvas = document.getElementById('bar-canvas');
-    if (barCanvas && M.charts && M.charts.barChart) {
-      M.charts.barChart(barCanvas, [
-        { label: 'api-gw',  value: 14 },
-        { label: 'auth',    value: 7  },
-        { label: 'user-db', value: 3  },
-        { label: 'redis',   value: 21 },
-        { label: 'queue',   value: 38 },
-        { label: 'blob',    value: 5  }
-      ], { showLabels: true, animate: true });
-    }
-  }
+      setIcon('sidebar-toggle', 'menu');
+      setIcon('search-icon', 'search');
+      setIcon('btn-bell', 'bell');
+      setIcon('btn-settings', 'settings');
+      setIcon('ic-dashboard', 'dashboard');
+      setIcon('ic-server', 'server');
+      setIcon('ic-bell', 'bellDot');
+      setIcon('ic-cpu', 'cpu');
+      setIcon('ic-network', 'network');
+      setIcon('ic-database', 'database');
+      setIcon('ic-deploy', 'deploy');
+      setIcon('ic-terminal', 'terminal');
+      setIcon('ic-settings', 'settings');
 
-  /* ── Alerts view ── */
-  function mountAlerts() {
-    var host = document.getElementById('alerts-table-mount');
-    if (!host || !M.dataTable) return;
-    if (alertsInst) { alertsInst.destroy(); alertsInst = null; }
-    host.textContent = '';
-    alertsInst = M.dataTable(host, {
-      columns: [
-        { key: 'severity', label: 'Severity', type: 'badge', sortable: true, width: 100, render: sevBadge },
-        { key: 'service',  label: 'Service',  type: 'text',  sortable: true, width: 140 },
-        { key: 'message',  label: 'Message',  type: 'text',  sortable: false },
-        { key: 'time',     label: 'Time',     type: 'text',  sortable: true, width: 105 },
-        { key: 'status',   label: 'Status',   type: 'badge', sortable: true, width: 110, render: stBadge }
-      ],
-      data: filteredAlerts(),
-      selectable: true,
-      stickyHeader: true,
-      onRowClick: function (row) { openDetail('alert', row); }
-    });
-  }
+      // Dashboard Strip
+      var stripEl = document.getElementById('cell-strip');
+      if (stripEl && M.dashboardStrip) {
+        M.dashboardStrip(stripEl, {
+          zones: [
+            { type: 'gauge', label: 'CPU', gaugeConfig: { value: 42, max: 100, showNeedle: true, complications: { centerValue: '42', centerUnit: '%' } } },
+            { type: 'gauge', label: 'Memory', gaugeConfig: { value: 68, max: 100, showNeedle: true, complications: { centerValue: '68', centerUnit: '%' } } },
+            { type: 'gauge', label: 'Disk I/O', gaugeConfig: { value: 31, max: 100, showNeedle: true, complications: { centerValue: '31', centerUnit: '%' } } },
+            { type: 'pipeline', title: 'Bandwidth', rows: [
+              { label: 'Ingress', value: 720, color: 'var(--mn-chart-series-1)' },
+              { label: 'Egress', value: 480, color: 'var(--mn-chart-series-2)' }
+            ], maxValue: 1000, footer: { label: 'Total', value: '1.2 Gbps' } }
+          ],
+          ariaLabel: 'Infrastructure gauges'
+        });
+      }
 
-  /* ── Deployments view ── */
-  function mountDeploys() {
-    var host = document.getElementById('deploys-table-mount');
-    if (!host || !M.dataTable) return;
-    if (deploysInst) { deploysInst.destroy(); deploysInst = null; }
-    host.textContent = '';
-    deploysInst = M.dataTable(host, {
-      columns: [
-        { key: 'service',  label: 'Service',     type: 'text',  sortable: true, width: 130 },
-        { key: 'version',  label: 'Version',     type: 'text',  sortable: true, width: 90  },
-        { key: 'env',      label: 'Environment', type: 'badge', sortable: true, width: 110, render: envBadge },
-        { key: 'status',   label: 'Status',      type: 'badge', sortable: true, width: 110, render: stBadge },
-        { key: 'deployer', label: 'Deployed By', type: 'text',  sortable: true, width: 155 },
-        { key: 'time',     label: 'Time',        type: 'text',  sortable: true, width: 110 },
-        { key: 'region',   label: 'Region',      type: 'text',  sortable: true, width: 110 }
-      ],
-      data: filteredDeploys(),
-      selectable: true,
-      stickyHeader: true,
-      onRowClick: function (row) { openDetail('deploy', row); }
-    });
-  }
-
-  /* ── Infrastructure view ── */
-  function mountInfra() {
-    var host = document.getElementById('infra-status-mount');
-    if (!host || !M.systemStatus) return;
-    host.textContent = '';
-    if (statusCtrl && statusCtrl.destroy) statusCtrl.destroy();
-    statusCtrl = M.systemStatus(host, {
-      version: 'v3.2.1',
-      environment: 'production',
-      services: INFRA
-    });
-  }
-
-  /* ── Detail panel ── */
-  function openDetail(type, row) {
-    var titleEl = document.getElementById('detail-panel-title');
-    var panel   = document.getElementById('detail-panel');
-    var body    = document.getElementById('app-body');
-    if (titleEl) titleEl.textContent = type === 'alert' ? 'Alert ' + row.id : 'Deploy ' + row.id;
-    renderDetailRows(row, type);
-    renderTimeline(row, type);
-    renderRelated(row, type);
-    activateTab('dp-details');
-    if (panel) panel.removeAttribute('hidden');
-    if (body)  body.classList.add('detail-open');
-  }
-
-  function closeDetail() {
-    var panel = document.getElementById('detail-panel');
-    var body  = document.getElementById('app-body');
-    if (panel) panel.setAttribute('hidden', '');
-    if (body)  body.classList.remove('detail-open');
-  }
-
-  function detailRow(key, val) {
-    return '<div class="detail-row">'
-      + '<span class="detail-row-key">' + esc(key) + '</span>'
-      + '<span class="detail-row-val">' + esc(val) + '</span>'
-      + '</div>';
-  }
-
-  function renderDetailRows(row, type) {
-    var el = document.getElementById('dp-details');
-    if (!el) return;
-    var pairs;
-    if (type === 'alert') {
-      pairs = [
-        ['ID', row.id], ['Severity', row.severity], ['Service', row.service],
-        ['Message', row.message], ['Time', row.time], ['Status', row.status],
-        ['Assigned To', row.assignee], ['Node', row.node], ['Region', row.region]
-      ];
-    } else {
-      pairs = [
-        ['ID', row.id], ['Service', row.service], ['Version', row.version],
-        ['Environment', row.env], ['Status', row.status],
-        ['Deployed By', row.deployer], ['Time', row.time], ['Region', row.region]
-      ];
-    }
-    var html = '';
-    pairs.forEach(function (p) { html += detailRow(p[0], p[1]); });
-    el.innerHTML = html;
-  }
-
-  function renderTimeline(row, type) {
-    var el = document.getElementById('dp-timeline');
-    if (!el) return;
-    var events;
-    if (type === 'alert') {
-      events = [
-        { text: 'Alert triggered on ' + row.node, time: row.time },
-        { text: 'On-call notified: ' + row.assignee, time: 'shortly after' },
-        { text: 'Status set to ' + row.status, time: 'current' }
-      ];
-    } else {
-      events = [
-        { text: 'Deploy queued by ' + row.deployer, time: row.time },
-        { text: 'Container image built and pushed', time: 'in progress' },
-        { text: 'Rollout to ' + row.region + ' — ' + row.status, time: 'current' }
-      ];
-    }
-    var html = '';
-    events.forEach(function (e) {
-      html += '<div class="detail-timeline-item">'
-        + '<span class="detail-tl-dot" aria-hidden="true"></span>'
-        + '<div><div class="detail-tl-text">' + esc(e.text) + '</div>'
-        + '<div class="detail-tl-time">' + esc(e.time) + '</div></div>'
-        + '</div>';
-    });
-    el.innerHTML = html;
-  }
-
-  function renderRelated(row, type) {
-    var el = document.getElementById('dp-related');
-    if (!el) return;
-    var items;
-    if (type === 'alert') {
-      items = ALERTS.filter(function (a) { return a.service === row.service && a.id !== row.id; }).slice(0, 5);
-    } else {
-      items = DEPLOYS.filter(function (d) { return d.service === row.service && d.id !== row.id; }).slice(0, 5);
-    }
-    if (!items.length) {
-      el.innerHTML = '<p style="color:var(--mn-text-muted);font-size:0.8rem;padding:0.5rem 0">No related items found.</p>';
-      return;
-    }
-    var html = '';
-    items.forEach(function (r) {
-      var desc = type === 'alert' ? r.severity + ' — ' + r.message : r.version + ' — ' + r.status;
-      html += '<div class="detail-related-item">'
-        + '<span class="detail-related-id">' + esc(r.id) + '</span>'
-        + '<span>' + esc(desc) + '</span>'
-        + '</div>';
-    });
-    el.innerHTML = html;
-  }
-
-  function activateTab(paneId) {
-    var tablist = document.getElementById('detail-tablist');
-    if (!tablist) return;
-    var tabs  = tablist.querySelectorAll('.detail-tab-btn');
-    var panes = ['dp-details', 'dp-timeline', 'dp-related'];
-    var i;
-    for (i = 0; i < tabs.length; i++) {
-      tabs[i].setAttribute('aria-selected', tabs[i].getAttribute('data-pane') === paneId ? 'true' : 'false');
-    }
-    panes.forEach(function (p) {
-      var paneEl = document.getElementById(p);
-      if (!paneEl) return;
-      if (p === paneId) paneEl.removeAttribute('hidden');
-      else paneEl.setAttribute('hidden', '');
-    });
-  }
-
-  /* Tab and close button wiring */
-  var tablistEl = document.getElementById('detail-tablist');
-  if (tablistEl) {
-    tablistEl.addEventListener('click', function (e) {
-      var btn = e.target.closest('.detail-tab-btn');
-      if (btn) activateTab(btn.getAttribute('data-pane'));
-    });
-  }
-  var closeBtn = document.getElementById('detail-close-btn');
-  if (closeBtn) closeBtn.addEventListener('click', closeDetail);
-
-  /* ── Build sidebar ── */
-  buildSidebar();
-
-  /* ── Mount header shell ── */
-  var navbar = document.getElementById('navbar');
-  if (!navbar) return;
-
-  function icon(name) {
-    if (M.icons && typeof M.icons[name] === 'function') return M.icons[name]();
-    return '';
-  }
-
-  var headerHost = document.createElement('mn-header-shell');
-  headerHost.config = {
-    ariaLabel: 'ConvergIO Operations navigation',
-    sections: [
-      {
-        type: 'brand',
-        label: 'ConvergIO Operations',
-        logoSrc: '../src/assets/favicon.svg',
-        logoAlt: 'ConvergIO Operations logo',
-        href: './index.html'
-      },
-      {
-        type: 'actions',
-        role: 'pre',
-        presentation: 'segmented',
-        items: [
-          { id: 'dashboard',      label: 'Dashboard',      active: true },
-          { id: 'alerts',         label: 'Alerts' },
-          { id: 'deployments',    label: 'Deployments' },
-          { id: 'infrastructure', label: 'Infrastructure' }
-        ]
-      },
-      {
-        type: 'search',
-        placeholder: 'Search alerts, services...',
-        shortcut: 'Cmd-K',
-        filterButtonLabel: 'Severity',
-        filters: [
-          {
-            id: 'severity',
-            label: 'Severity',
-            options: [
-              { id: 'all',      label: 'All' },
-              { id: 'critical', label: 'Critical' },
-              { id: 'warning',  label: 'Warning' },
-              { id: 'info',     label: 'Info' }
-            ]
-          }
-        ]
-      },
-      {
-        type: 'actions',
-        role: 'post',
-        presentation: 'cluster',
-        items: [
-          { id: 'notifications', title: 'Notifications (3 unread)', icon: icon('bell') },
-          { id: 'settings',      title: 'Settings',                 icon: icon('settings') }
-        ]
-      },
-      { type: 'divider' },
-      { type: 'theme' },
-      { type: 'profile', name: 'Omar Eriksson' }
-    ],
-    callbacks: {
-      onAction: function (payload) {
-        var viewList = ['dashboard', 'alerts', 'deployments', 'infrastructure'];
-        if (viewList.indexOf(payload.id) !== -1) showView(payload.id);
-      },
-      onSearch: function (payload) {
-        state.query = payload.query;
-        if (state.view === 'alerts' && alertsInst && alertsInst.setData) {
-          alertsInst.setData(filteredAlerts());
-        } else if (state.view === 'deployments' && deploysInst && deploysInst.setData) {
-          deploysInst.setData(filteredDeploys());
-        }
-      },
-      onFilter: function (payload) {
-        if (payload.groupId === 'severity') {
-          var val = payload.values && payload.values.length ? payload.values[0] : 'all';
-          state.severity = val;
-          if (state.view === 'alerts' && alertsInst && alertsInst.setData) {
-            alertsInst.setData(filteredAlerts());
-          }
+      // Sparklines
+      function mountSparkline(id, data, label) {
+        var el = document.getElementById(id);
+        if (el && M.sparkline) {
+          var c = document.createElement('canvas');
+          c.setAttribute('role', 'img'); c.setAttribute('aria-label', label);
+          c.style.width = '100%'; c.style.height = '100%';
+          el.appendChild(c);
+          M.sparkline(c, data);
         }
       }
-    }
-  };
+      mountSparkline('cell-spark1', [2400,2600,2500,2800,3100,2900,3200,3400,3100,3500,3700,3600], 'Request rate per second');
+      mountSparkline('cell-spark2', [12,8,15,11,9,14,10,7,13,8,6,9], 'Error rate per minute');
+      mountSparkline('cell-spark3', [45,42,48,52,47,55,50,44,49,46,43,41], 'P99 latency in ms');
 
-  navbar.textContent = '';
-  navbar.appendChild(headerHost);
+      // System Status
+      var statusEl = document.getElementById('cell-status');
+      if (statusEl && M.systemStatus) {
+        M.systemStatus(statusEl, {
+          version: 'v3.8.2',
+          environment: 'production',
+          services: [
+            { name: 'API Gateway', status: 'healthy', latency: 12, uptime: 99.99 },
+            { name: 'Auth Service', status: 'healthy', latency: 8, uptime: 99.98 },
+            { name: 'Database Primary', status: 'healthy', latency: 3, uptime: 99.97 },
+            { name: 'Cache Layer', status: 'degraded', latency: 45, uptime: 99.82 },
+            { name: 'Queue Worker', status: 'healthy', latency: 15, uptime: 99.95 },
+            { name: 'CDN Edge', status: 'healthy', latency: 22, uptime: 99.99 }
+          ]
+        });
+      }
 
-  /* After header mounts: add notification badge, sync buttons */
-  var whenReady = typeof headerHost.whenReady === 'function'
-    ? headerHost.whenReady()
-    : Promise.resolve();
+      // Bar chart
+      var barEl = document.getElementById('cell-bar');
+      if (barEl && M.charts && M.charts.barChart) {
+        var bc = document.createElement('canvas');
+        bc.width = 280; bc.height = 180;
+        bc.setAttribute('role', 'img'); bc.setAttribute('aria-label', 'Errors by service');
+        barEl.appendChild(bc);
+        M.charts.barChart(bc, [
+          { label: 'API', value: 142 }, { label: 'Auth', value: 38 },
+          { label: 'Queue', value: 24 }, { label: 'Cache', value: 67 },
+          { label: 'CDN', value: 11 }
+        ], { showLabels: true, showValues: true });
+      }
 
-  whenReady.then(function () {
-    if (!headerHost.isConnected) return;
-    syncNavButtons();
-    var bellBtn = headerHost.querySelector('[data-header-shell-action-id="notifications"]');
-    if (bellBtn) {
-      bellBtn.style.position = 'relative';
-      var badge = document.createElement('span');
-      badge.className = 'mn-bell-badge';
-      badge.setAttribute('aria-hidden', 'true');
-      badge.textContent = '3';
-      bellBtn.appendChild(badge);
-    }
-  });
+      // Incidents table
+      var tableEl = document.getElementById('cell-table');
+      if (tableEl && M.dataTable) {
+        M.dataTable(tableEl, {
+          columns: [
+            { key: 'id', label: 'ID', width: 80 },
+            { key: 'title', label: 'Incident', sortable: true },
+            { key: 'severity', label: 'Severity', type: 'status' },
+            { key: 'status', label: 'Status', type: 'badge' },
+            { key: 'duration', label: 'Duration' }
+          ],
+          data: [
+            { id: 'INC-2847', title: 'Cache latency spike', severity: 'Warning', status: 'Investigating', duration: '23 min' },
+            { id: 'INC-2846', title: 'Auth timeout burst', severity: 'Critical', status: 'Resolved', duration: '4 min' },
+            { id: 'INC-2845', title: 'CDN cache invalidation delay', severity: 'Low', status: 'Resolved', duration: '12 min' },
+            { id: 'INC-2844', title: 'Database failover triggered', severity: 'Critical', status: 'Resolved', duration: '2 min' },
+            { id: 'INC-2843', title: 'Queue backpressure alert', severity: 'Warning', status: 'Resolved', duration: '8 min' }
+          ],
+          compact: true, ariaLabel: 'Recent incidents'
+        });
+      }
 
-  /* Initial mount */
-  mountDashboard();
-
-})();
-</script>
-
+      // Deploy log
+      var actEl = document.getElementById('cell-activity');
+      if (actEl && M.activityFeed) {
+        M.activityFeed(actEl, [
+          { id: '1', title: 'api-gateway v3.8.2', body: 'Deployed to prod-eu-west', meta: '12 min ago', type: 'success' },
+          { id: '2', title: 'auth-service v2.14.0', body: 'Rolling update 3/3 nodes', meta: '45 min ago', type: 'success' },
+          { id: '3', title: 'cache-layer v1.9.1', body: 'Hotfix deployed', meta: '2h ago', type: 'warning' },
+          { id: '4', title: 'queue-worker v4.2.0', body: 'Canary 10% traffic', meta: '4h ago', type: 'info' }
+        ], { maxItems: 6 });
+      }
+    })();
+  </script>
 </body>
 </html>

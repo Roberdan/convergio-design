@@ -3,744 +3,403 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ConvergIO Programs — PMO Dashboard</title>
+  <title>Program Management — Maranello Luce Design</title>
   <link rel="icon" href="../src/assets/favicon.svg">
   <link rel="stylesheet" href="../src/fonts/local-fonts.css">
   <link rel="stylesheet" href="../dist/css/maranello.css">
   <style>
-    @layer pmo-shell {
-      *, *::before, *::after { box-sizing: border-box; }
-      html, body { height: 100%; margin: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: var(--mn-surface);
+      color: var(--mn-text);
+      font-family: var(--font-body, sans-serif);
+      overflow: hidden;
+    }
 
-      /* ── Shell theme variables ──────────────────────────── */
-      body {
-        --shell-bg: #0a0a0a; --shell-nav: #141414; --shell-card: #171717; --shell-card-2: #1d1d1d;
-        --shell-border: #262626; --shell-text: #eee; --shell-muted: #9a9a9a; --shell-ghost: #666;
-        --shell-accent: #FFC72C; --shell-accent-text: #111;
-        display: grid; grid-template-rows: auto 1fr; overflow: hidden;
-        background: var(--mn-surface); color: var(--mn-text); font-family: var(--font-body, sans-serif);
-      }
-      body.mn-editorial {
-        --shell-bg: #111; --shell-nav: #1a1a1a; --shell-card: #1f1f1f; --shell-card-2: #242424;
-        --shell-border: #2e2e2e; --shell-text: #f0ece4; --shell-muted: #8a8680; --shell-ghost: #5a5650;
-        --shell-accent: #e8c87a; --shell-accent-text: #111;
-      }
-      body.mn-avorio {
-        --shell-bg: #f5efe4; --shell-nav: #f8f1e6; --shell-card: #fffaf4; --shell-card-2: #fffdf8;
-        --shell-border: #d9cbb7; --shell-text: #241f19; --shell-muted: #7b6d5a; --shell-ghost: #8e7f6b;
-        --shell-accent: #b7410e; --shell-accent-text: #fff8ef;
-      }
-      body.mn-colorblind { --shell-accent: #0072B2; --shell-accent-text: #fff; }
-      body.mn-sugar {
-        --shell-bg: #f4f4f6; --shell-nav: #fff; --shell-card: #fff; --shell-card-2: #fff;
-        --shell-border: #d8d8de; --shell-text: #111; --shell-muted: #666; --shell-ghost: #888;
-        --shell-accent: #111; --shell-accent-text: #fff;
-      }
-      body.mn-navy {
-        --shell-bg: #060d1a; --shell-nav: #0b1424; --shell-card: #0f1c30; --shell-card-2: #142238;
-        --shell-border: #1e2f48; --shell-text: #e8ecf4; --shell-muted: #8898b8; --shell-ghost: #586888;
-        --shell-accent: #C9A227; --shell-accent-text: #060d1a;
-      }
+    .app {
+      display: grid;
+      grid-template-rows: 52px 1fr;
+      grid-template-columns: 260px 1fr;
+      grid-template-areas: "header header" "sidebar main";
+      height: 100vh;
+      transition: grid-template-columns 0.2s ease;
+    }
+    .app.is-collapsed { grid-template-columns: 0px 1fr; }
 
-      /* ── Header ─────────────────────────────────────────── */
-      #pmo-navbar { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(12px); }
-      body.mn-avorio #pmo-navbar,
-      body.mn-sugar  #pmo-navbar { background: color-mix(in srgb, var(--shell-nav) 96%, transparent); }
-      #pmo-navbar .mn-header-shell { gap: 12px; background: var(--shell-nav); border-bottom-color: var(--shell-border); }
-      #pmo-navbar .mn-header-shell__brand { color: var(--shell-text); font-size: 1rem; }
-      #pmo-navbar .mn-header-shell__brand-logo { width: 28px; height: 28px; filter: drop-shadow(0 0 8px color-mix(in srgb, var(--shell-accent) 35%, transparent)); }
-      #pmo-navbar .mn-header-shell__actions--segmented,
-      #pmo-navbar .mn-header-shell__actions--cluster { border-color: var(--shell-border); border-radius: 14px; background: var(--shell-card); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 4%, transparent); }
-      #pmo-navbar .mn-header-shell__action { min-width: 48px; min-height: 48px; border-radius: 10px; color: var(--shell-muted); }
-      #pmo-navbar .mn-header-shell__action:hover { background: color-mix(in srgb, var(--shell-card-2) 92%, var(--shell-accent) 8%); color: var(--shell-text); }
-      #pmo-navbar .mn-header-shell__action--active { background: color-mix(in srgb, var(--shell-accent) 20%, transparent); color: var(--shell-accent); }
-      #pmo-navbar .mn-header-shell__action:disabled { opacity: 0.35; cursor: not-allowed; }
-      #pmo-navbar .mn-header-shell__icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
-      #pmo-navbar .mn-header-shell__search { width: 100%; min-width: 0; min-height: 52px; padding: 8px 12px; gap: 12px; border-color: var(--shell-border); border-radius: 14px; background: var(--shell-card); }
-      #pmo-navbar .mn-header-shell__search-input { flex: 1 1 14rem; min-width: 10rem; color: var(--shell-text); font-size: 1.0625rem; }
-      #pmo-navbar .mn-header-shell__search-input::placeholder { color: color-mix(in srgb, var(--shell-muted) 78%, transparent); }
-      #pmo-navbar .mn-header-shell__shortcut { border-color: var(--shell-border); background: var(--shell-card); color: var(--shell-ghost); font-size: 0.875rem; }
-      #pmo-navbar .mn-header-shell__filters { display: none; }
-      #pmo-navbar .mn-header-shell__filter-group legend { color: var(--shell-ghost); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
-      #pmo-navbar .mn-header-shell__filter-option { min-height: 36px; border-color: var(--shell-border); background: transparent; color: var(--shell-text); }
-      #pmo-navbar .mn-header-shell__filter-option.is-selected { color: var(--shell-accent); border-color: color-mix(in srgb, var(--shell-accent) 55%, var(--shell-border)); background: color-mix(in srgb, var(--shell-accent) 12%, transparent); }
-      #pmo-navbar .mn-header-shell__theme { padding-left: 14px; border-left-color: var(--shell-border); }
-      #pmo-navbar .mn-profile-trigger { width: 42px; height: 42px; border-radius: 50%; background: color-mix(in srgb, var(--shell-accent) 18%, transparent); color: var(--shell-accent); font-weight: 700; display: inline-flex; align-items: center; justify-content: center; border: 1px solid color-mix(in srgb, var(--shell-accent) 30%, var(--shell-border)); }
+    .header {
+      grid-area: header;
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 16px; height: 52px;
+      background: var(--mn-surface-raised);
+      border-bottom: 1px solid var(--mn-border);
+      z-index: 10;
+    }
+    .header__left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .header__center { flex: 1; display: flex; justify-content: center; }
+    .header__right { display: flex; align-items: center; gap: 6px; }
 
-      /* ── App layout (CSS Grid) ───────────────────────────── */
-      #pmo-app { display: grid; grid-template-columns: 240px 1fr; height: 100%; overflow: hidden; transition: grid-template-columns 0.25s ease; }
-      #pmo-app.has-detail { grid-template-columns: 240px 1fr 380px; }
-      @media (prefers-reduced-motion: reduce) { #pmo-app { transition: none; } }
+    .icon-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border: none; background: none;
+      color: var(--mn-text-muted); border-radius: var(--radius-md);
+      cursor: pointer; transition: background 0.12s, color 0.12s; flex-shrink: 0;
+    }
+    .icon-btn:hover { background: color-mix(in srgb, var(--mn-accent) 10%, transparent); color: var(--mn-text); }
+    .icon-btn:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .icon-btn svg { width: 18px; height: 18px; }
 
-      /* ── Sidebar ─────────────────────────────────────────── */
-      #pmo-sidebar { overflow-y: auto; border-right: 1px solid var(--mn-border); padding: 0.75rem 0.5rem; background: var(--mn-surface-raised); }
-      .pmo-sb-title { font-family: var(--font-display); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mn-text-muted); margin: 0 0 0.625rem 0.25rem; }
-      .pmo-prog { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.5rem; border-radius: var(--radius-md); border: none; background: transparent; width: 100%; text-align: left; color: var(--mn-text); cursor: pointer; margin-bottom: 1px; }
-      .pmo-prog:hover { background: var(--mn-surface-sunken); }
-      .pmo-prog.is-active { background: var(--mn-surface-sunken); }
-      .pmo-prog:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; border-radius: var(--radius-md); }
-      .pmo-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
-      .pmo-pi { min-width: 0; flex: 1; }
-      .pmo-pname { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
-      .pmo-pmeta { font-family: var(--font-mono); font-size: 0.62rem; color: var(--mn-text-muted); display: block; margin-top: 2px; }
-      .pmo-bwrap { height: 3px; background: var(--mn-border); border-radius: 2px; margin-top: 5px; overflow: hidden; }
-      .pmo-bbar { height: 100%; border-radius: 2px; }
+    .breadcrumb { font-size: 0.85rem; color: var(--mn-text-muted); white-space: nowrap; }
+    .breadcrumb__current { color: var(--mn-text); font-weight: 600; }
 
-      /* ── Main content ────────────────────────────────────── */
-      #pmo-main { overflow-y: auto; }
-      .pmo-view { padding: 1.25rem; }
-      .pmo-sec { font-family: var(--font-display); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mn-accent); margin: 0 0 0.75rem; }
-      .pmo-card { background: var(--mn-surface-raised); border: 1px solid var(--mn-border); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.25rem; }
-      .pmo-strip-wrap { margin-bottom: 1.25rem; }
-      .pmo-gantt-wrap { margin-bottom: 1.25rem; min-height: 300px; }
-      .pmo-gauge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem; }
-      .pmo-gc { background: var(--mn-surface-raised); border: 1px solid var(--mn-border); border-radius: var(--radius-md); padding: 1.25rem; text-align: center; }
-      .pmo-glabel { font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--mn-text-muted); margin-top: 0.5rem; display: block; }
-      .pmo-chart-wrap { position: relative; width: 100%; height: 200px; }
-      .pmo-chart-wrap canvas { width: 100% !important; height: 100% !important; }
+    .search-bar {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%; max-width: 480px; padding: 0 14px; height: 36px;
+      background: var(--mn-surface); border: 1px solid var(--mn-border);
+      border-radius: var(--radius-lg); color: var(--mn-text-muted);
+      cursor: text; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .search-bar:hover { border-color: color-mix(in srgb, var(--mn-accent) 40%, var(--mn-border)); }
+    .search-bar:focus-within { border-color: var(--mn-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--mn-accent) 15%, transparent); }
+    .search-bar svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.5; }
+    .search-bar__input {
+      flex: 1; border: none; background: none; color: var(--mn-text);
+      font-size: 0.85rem; font-family: var(--font-body, sans-serif); outline: none;
+    }
+    .search-bar__input::placeholder { color: var(--mn-text-muted); }
+    .search-bar__kbd {
+      font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600;
+      color: var(--mn-text-muted); background: var(--mn-surface-raised);
+      border: 1px solid var(--mn-border); border-radius: 4px; padding: 2px 6px;
+    }
 
-      /* ── Detail panel ────────────────────────────────────── */
-      #pmo-detail { overflow: hidden; border-left: 1px solid var(--mn-border); background: var(--mn-surface); }
-      #pmo-app.has-detail #pmo-detail { overflow-y: auto; }
-      .pmo-dt { padding: 1.25rem; }
-      .pmo-dth { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 1rem; }
-      .pmo-dttitle { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: var(--mn-text); margin: 0; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .pmo-xbtn { font-size: 0.875rem; line-height: 1; padding: 6px 10px; border: 1px solid var(--mn-border); border-radius: var(--radius-md); background: transparent; color: var(--mn-text-muted); cursor: pointer; min-height: 28px; font-family: var(--font-mono); }
-      .pmo-xbtn:hover { border-color: var(--mn-accent); color: var(--mn-accent); }
-      .pmo-xbtn:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: 2px; }
-      .pmo-tabs { display: flex; border-bottom: 1px solid var(--mn-border); margin-bottom: 1rem; overflow-x: auto; scrollbar-width: none; }
-      .pmo-tabs::-webkit-scrollbar { display: none; }
-      .pmo-tabbtn { font-family: var(--font-body); font-size: 0.78rem; padding: 7px 11px; border: none; border-bottom: 2px solid transparent; background: transparent; color: var(--mn-text-muted); cursor: pointer; white-space: nowrap; margin-bottom: -1px; min-height: 36px; }
-      .pmo-tabbtn:hover { color: var(--mn-text); }
-      .pmo-tabbtn.is-active { color: var(--mn-accent); border-bottom-color: var(--mn-accent); }
-      .pmo-tabbtn:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
-      .pmo-tabp { display: none; }
-      .pmo-tabp.is-active { display: block; }
-      .pmo-field { margin-bottom: 0.875rem; }
-      .pmo-fl { font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mn-text-muted); display: block; margin-bottom: 3px; }
-      .pmo-fv { font-family: var(--font-body); font-size: 0.875rem; color: var(--mn-text); }
-      .pmo-pbwrap { height: 6px; background: var(--mn-border); border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
-      .pmo-pb { height: 100%; border-radius: 3px; background: var(--mn-accent); }
-      .pmo-placeholder { padding: 2rem 1rem; text-align: center; color: var(--mn-text-muted); font-size: 0.875rem; border: 2px dashed var(--mn-border); border-radius: var(--radius-md); }
+    .theme-select {
+      font-size: 0.8rem; padding: 4px 8px; height: 32px;
+      border-radius: var(--radius-md); border: 1px solid var(--mn-border);
+      background: var(--mn-surface); color: var(--mn-text); font-family: inherit; cursor: pointer;
+    }
+    .theme-select:focus-visible { outline: 2px solid var(--mn-accent); }
 
-      /* ── Badges ──────────────────────────────────────────── */
-      .pmo-badge { display: inline-block; font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 10px; font-weight: 600; border: 1px solid currentColor; }
-      .pmo-badge--ok     { color: var(--mn-signal-ok); }
-      .pmo-badge--warn   { color: var(--mn-signal-warning); }
-      .pmo-badge--danger { color: var(--mn-signal-danger); }
-      .pmo-badge--info   { color: var(--mn-info); }
-      .pmo-badge--muted  { color: var(--mn-text-muted); }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--mn-accent); color: var(--mn-surface);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+      flex-shrink: 0; cursor: pointer;
+    }
 
-      /* ── Utility ─────────────────────────────────────────── */
-      .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-      @media (max-width: 768px) { #pmo-sidebar { display: none; } #pmo-app, #pmo-app.has-detail { grid-template-columns: 1fr; } }
+    .sidebar {
+      grid-area: sidebar;
+      background: var(--mn-surface-raised);
+      border-right: 1px solid var(--mn-border);
+      display: flex; flex-direction: column;
+      padding: 16px 12px; overflow-y: auto; overflow-x: hidden;
+      min-width: 0; transition: opacity 0.2s ease, padding 0.2s ease;
+    }
+    .app.is-collapsed .sidebar { opacity: 0; padding: 0; pointer-events: none; }
+    .sidebar__brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
+      color: var(--mn-text); padding: 0 8px 12px;
+    }
+    .sidebar__version {
+      font-size: 0.65rem; font-weight: 600;
+      background: var(--mn-accent); color: var(--mn-surface);
+      padding: 1px 7px; border-radius: 10px; margin-left: auto;
+    }
+    .sidebar__group-label {
+      font-family: var(--font-display); font-size: 0.6rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--mn-text-muted); margin: 20px 0 4px; padding-left: 10px;
+    }
+    .sidebar__group-label:first-of-type { margin-top: 4px; }
+    .sidebar__nav { display: flex; flex-direction: column; gap: 1px; }
+    .sidebar__link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; border-radius: var(--radius-md);
+      font-size: 0.84rem; color: var(--mn-text);
+      cursor: pointer; border: none; background: none;
+      width: 100%; text-align: left; font-family: inherit;
+      transition: background 0.12s; min-height: 34px;
+    }
+    .sidebar__link:hover { background: color-mix(in srgb, var(--mn-accent) 8%, transparent); }
+    .sidebar__link:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .sidebar__link.is-active {
+      background: color-mix(in srgb, var(--mn-accent) 15%, transparent);
+      color: var(--mn-accent); font-weight: 600;
+    }
+    .sidebar__link svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.6; }
+    .sidebar__link.is-active svg { opacity: 1; }
+    .sidebar__link-text { flex: 1; }
+    .sidebar__badge {
+      font-size: 0.65rem; font-weight: 600; min-width: 18px; text-align: center;
+      padding: 1px 6px; border-radius: 10px;
+      background: var(--mn-accent); color: var(--mn-surface);
+    }
+    .sidebar__spacer { flex: 1; }
+    .sidebar__footer {
+      padding-top: 12px; border-top: 1px solid var(--mn-border); margin-top: 8px;
+      display: flex; flex-direction: column; gap: 1px;
+    }
+    .sidebar__footer-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 10px; border-radius: var(--radius-md);
+      font-size: 0.8rem; color: var(--mn-text-muted);
+      cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: inherit;
+    }
+    .sidebar__footer-link svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.5; }
+    .sidebar__footer-link:hover { color: var(--mn-text); background: color-mix(in srgb, var(--mn-accent) 6%, transparent); }
+
+    .main { grid-area: main; overflow-y: auto; padding: 24px 28px; }
+
+    .mn-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .mn-col-3 { grid-column: span 3; } .mn-col-4 { grid-column: span 4; }
+    .mn-col-6 { grid-column: span 6; } .mn-col-8 { grid-column: span 8; }
+    .mn-col-12 { grid-column: span 12; }
+
+    .mn-cell {
+      background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
+      border-radius: var(--radius-md); padding: 16px; min-height: 120px;
+      display: flex; flex-direction: column;
+    }
+    .mn-cell__label {
+      font-family: var(--font-display); font-size: 0.6rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--mn-text-muted); margin-bottom: 12px;
+    }
+    .mn-cell__body { flex: 1; position: relative; min-height: 0; }
+
+    .hero-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; grid-column: span 12; }
+    .hero-kpi {
+      background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
+      border-radius: var(--radius-md); padding: 16px;
+    }
+    .hero-kpi__label {
+      font-family: var(--font-display); font-size: 0.6rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--mn-text-muted); margin-bottom: 6px;
+    }
+    .hero-kpi__value {
+      font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
+      color: var(--mn-text); line-height: 1.1;
+    }
+    .hero-kpi__trend { font-family: var(--font-mono); font-size: 0.7rem; margin-top: 4px; }
+    .hero-kpi__trend--up { color: var(--mn-success); }
+    .hero-kpi__trend--down { color: var(--mn-error); }
+    @media (max-width: 1100px) { .hero-kpis { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) { .hero-kpis { grid-template-columns: 1fr; } }
+
+    @media (max-width: 1100px) {
+      .mn-col-3, .mn-col-4, .mn-col-6, .mn-col-8 { grid-column: span 6; }
+    }
+    @media (max-width: 768px) {
+      .app { grid-template-columns: 0px 1fr; }
+      .app .sidebar { opacity: 0; padding: 0; pointer-events: none; }
+      .mn-col-3,.mn-col-4,.mn-col-6,.mn-col-8,.mn-col-12 { grid-column: span 12; }
+      .main { padding: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .app, .sidebar, .icon-btn, .sidebar__link, .search-bar { transition: none; }
     }
   </style>
 </head>
-<body class="mn-nero">
-  <script>
-    try { var _t = localStorage.getItem('mn-theme'); if (_t) document.body.className = 'mn-' + _t; } catch (_) {}
-  </script>
+<body>
+  <script>try { var t = localStorage.getItem('mn-theme'); if (t && t !== 'editorial') document.body.classList.add('mn-' + t); } catch(e) {}</script>
 
-  <header id="pmo-navbar" role="banner"></header>
+  <div class="app" id="app-shell">
+    <header class="header" role="banner">
+      <div class="header__left">
+        <button class="icon-btn" id="sidebar-toggle" aria-label="Toggle sidebar" title="Toggle sidebar"></button>
+        <span class="breadcrumb">Programs <span style="opacity:0.4;margin:0 4px">&#8250;</span> <span class="breadcrumb__current">Overview</span></span>
+      </div>
+      <div class="header__center">
+        <label class="search-bar">
+          <span id="search-icon"></span>
+          <input type="text" class="search-bar__input" placeholder="Search..." aria-label="Search">
+          <kbd class="search-bar__kbd"></kbd>
+        </label>
+      </div>
+      <div class="header__right">
+        <select class="theme-select" id="theme-picker" aria-label="Theme">
+          <option value="editorial">Editorial</option><option value="nero">Nero</option>
+          <option value="avorio">Avorio</option><option value="colorblind">Colorblind</option>
+          <option value="sugar">Sugar</option><option value="navy">Navy</option>
+        </select>
+        <button class="icon-btn" id="btn-bell" aria-label="Notifications" title="Notifications"></button>
+        <button class="icon-btn" id="btn-settings" aria-label="Settings" title="Settings"></button>
+        <div class="avatar" title="Elena Rossi" aria-label="User menu">ER</div>
+      </div>
+    </header>
 
-  <div id="pmo-app" role="application" aria-label="PMO Dashboard">
-    <nav id="pmo-sidebar" aria-label="Program navigation">
-      <p class="pmo-sb-title" aria-hidden="true">Programs</p>
-      <div id="pmo-prog-list" role="list"></div>
-    </nav>
-    <main id="pmo-main" tabindex="-1" aria-live="polite" aria-atomic="false"></main>
-    <aside id="pmo-detail" aria-label="Item detail" aria-hidden="true"></aside>
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+      <div class="sidebar__brand">
+        <img src="../src/assets/favicon.svg" alt="" width="22" height="22">
+        <span>Program Office</span>
+        <span class="sidebar__version">v6.5</span>
+      </div>
+      <div class="sidebar__group-label">Portfolio</div>
+      <nav class="sidebar__nav">
+        <button class="sidebar__link is-active" data-page="overview"><span id="ic-dashboard"></span><span class="sidebar__link-text">Overview</span></button>
+        <button class="sidebar__link" data-page="timeline"><span id="ic-gantt"></span><span class="sidebar__link-text">Timeline</span></button>
+        <button class="sidebar__link" data-page="resources"><span id="ic-users"></span><span class="sidebar__link-text">Resources</span></button>
+      </nav>
+      <div class="sidebar__group-label">Programs</div>
+      <nav class="sidebar__nav">
+        <button class="sidebar__link" data-page="phoenix"><span id="ic-bolt"></span><span class="sidebar__link-text">Phoenix</span></button>
+        <button class="sidebar__link" data-page="titan"><span id="ic-shield"></span><span class="sidebar__link-text">Titan</span></button>
+        <button class="sidebar__link" data-page="horizon"><span id="ic-compass"></span><span class="sidebar__link-text">Horizon</span></button>
+      </nav>
+      <div class="sidebar__group-label">Reporting</div>
+      <nav class="sidebar__nav">
+        <button class="sidebar__link" data-page="risks"><span id="ic-alert"></span><span class="sidebar__link-text">Risks</span><span class="sidebar__badge">2</span></button>
+        <button class="sidebar__link" data-page="budget"><span id="ic-kpi"></span><span class="sidebar__link-text">Budget</span></button>
+      </nav>
+      <div class="sidebar__spacer"></div>
+      <div class="sidebar__footer">
+        <button class="sidebar__footer-link"><span id="ic-settings"></span>Settings</button>
+      </div>
+    </aside>
+
+    <main class="main" id="main-content">
+      <div class="mn-grid">
+        <div class="hero-kpis">
+          <div class="hero-kpi"><div class="hero-kpi__label">Active programs</div><div class="hero-kpi__value">3</div><div class="hero-kpi__trend hero-kpi__trend--up">All on track</div></div>
+          <div class="hero-kpi"><div class="hero-kpi__label">Total budget</div><div class="hero-kpi__value">$4.8M</div><div class="hero-kpi__trend hero-kpi__trend--up">72% utilized</div></div>
+          <div class="hero-kpi"><div class="hero-kpi__label">Milestones hit</div><div class="hero-kpi__value">18/24</div><div class="hero-kpi__trend hero-kpi__trend--up">75% completion</div></div>
+          <div class="hero-kpi"><div class="hero-kpi__label">Open risks</div><div class="hero-kpi__value">2</div><div class="hero-kpi__trend hero-kpi__trend--down">1 critical</div></div>
+        </div>
+        <div class="mn-cell mn-col-12"><div class="mn-cell__label">Program timeline</div><div class="mn-cell__body" id="cell-gantt" style="min-height:260px"></div></div>
+        <div class="mn-cell mn-col-8"><div class="mn-cell__label">Portfolio tracker</div><div class="mn-cell__body" id="cell-table"></div></div>
+        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Budget allocation</div><div class="mn-cell__body" id="cell-donut" style="display:flex;align-items:center;justify-content:center"></div></div>
+        <div class="mn-cell mn-col-8"><div class="mn-cell__label">Resource utilization</div><div class="mn-cell__body" id="cell-strip"></div></div>
+        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Milestone log</div><div class="mn-cell__body" id="cell-activity"></div></div>
+      </div>
+    </main>
   </div>
 
   <script src="../dist/iife/maranello.min.js"></script>
-  <script type="module" src="../packages/elements/dist/wc/mn-header-shell.js"></script>
   <script>
-  (function () {
-    'use strict';
-    var M = window.Maranello;
-    if (!M) {
-      var _m = document.getElementById('pmo-main');
-      if (_m) _m.innerHTML = '<p style="padding:2rem;font-family:monospace">Build required \u2014 run <code>pnpm build</code>.</p>';
-      return;
-    }
+    (function () {
 
-    /* ── DOM refs ──────────────────────────────────────────── */
-    var navbar   = document.getElementById('pmo-navbar');
-    var progList = document.getElementById('pmo-prog-list');
-    var mainEl   = document.getElementById('pmo-main');
-    var detailEl = document.getElementById('pmo-detail');
-    var appEl    = document.getElementById('pmo-app');
+      var M = window.Maranello;
+      if (!M) return;
 
-    /* ── State ─────────────────────────────────────────────── */
-    var VIEW_IDS     = ['timeline', 'portfolio', 'resources', 'risks'];
-    var currentView  = 'timeline';
-    var selectedProg = '';
-    var headerCtrl   = null;
-    var cleanupFn    = null;
+      function setIcon(id, name) { var el = document.getElementById(id); if (el && M.icons[name]) el.innerHTML = M.icons[name](); }
 
-    /* ── Data ──────────────────────────────────────────────── */
-    var PROGRAMS = [
-      { id: '',        label: 'All Programs',    dotColor: 'var(--mn-text-muted)',     status: '',          budget: '',       pct: 0   },
-      { id: 'quantum', label: 'Quantum Platform', dotColor: 'var(--mn-signal-ok)',      status: 'On Track',  budget: '$2.1M',  pct: 68  },
-      { id: 'nimbus',  label: 'Nimbus Migration', dotColor: 'var(--mn-signal-warning)', status: 'At Risk',   budget: '$3.4M',  pct: 42  },
-      { id: 'helios',  label: 'Helios 360',       dotColor: 'var(--mn-info)',           status: 'Complete',  budget: '$1.8M',  pct: 100 },
-      { id: 'cobalt',  label: 'Cobalt Data Lake',  dotColor: 'var(--mn-signal-danger)',  status: 'Behind',    budget: '$950K',  pct: 28  },
-      { id: 'fortis',  label: 'Fortis Security',  dotColor: 'var(--mn-text-muted)',     status: 'Starting',  budget: '$1.2M',  pct: 12  }
-    ];
+      var kbdEl = document.querySelector('.search-bar__kbd');
+      if (kbdEl) kbdEl.textContent = navigator.userAgent.indexOf('Mac') !== -1 ? '\u2318K' : 'Ctrl+K';
 
-    var ALL_GANTT = [
-      { id: 'quantum', title: 'Quantum Platform', start: '2025-01-06', end: '2025-07-31', children: [
-        { id: 'q-req',  title: 'Requirements Gathering', start: '2025-01-06', end: '2025-02-28', program: 'Quantum Platform', owner: 'Jennifer Walsh',  status: 'Complete',    progress: 100 },
-        { id: 'q-arch', title: 'Architecture Review',    start: '2025-02-17', end: '2025-03-28', program: 'Quantum Platform', owner: 'Jennifer Walsh',  status: 'Complete',    progress: 100 },
-        { id: 'q-spr',  title: 'Sprint 1-4',             start: '2025-03-31', end: '2025-06-27', program: 'Quantum Platform', owner: 'Jennifer Walsh',  status: 'In Progress', progress: 62  },
-        { id: 'q-uat',  title: 'UAT',                    start: '2025-06-30', end: '2025-07-25', program: 'Quantum Platform', owner: 'Jennifer Walsh',  status: 'Not Started', progress: 0   },
-        { id: 'q-live', title: 'Go-Live',                start: '2025-07-28', end: '2025-07-31', program: 'Quantum Platform', owner: 'Jennifer Walsh',  status: 'Not Started', progress: 0   }
-      ]},
-      { id: 'nimbus', title: 'Nimbus Migration', start: '2025-02-03', end: '2025-07-31', children: [
-        { id: 'n-disc',  title: 'Discovery',            start: '2025-02-03', end: '2025-03-14', program: 'Nimbus Migration', owner: 'David Park', status: 'Complete',    progress: 100 },
-        { id: 'n-infra', title: 'Infrastructure Setup', start: '2025-03-17', end: '2025-04-25', program: 'Nimbus Migration', owner: 'David Park', status: 'In Progress', progress: 55  },
-        { id: 'n-mig',   title: 'Data Migration',       start: '2025-04-28', end: '2025-06-27', program: 'Nimbus Migration', owner: 'David Park', status: 'At Risk',     progress: 18  },
-        { id: 'n-test',  title: 'Testing',              start: '2025-06-30', end: '2025-07-18', program: 'Nimbus Migration', owner: 'David Park', status: 'Not Started', progress: 0   },
-        { id: 'n-cut',   title: 'Cutover',              start: '2025-07-21', end: '2025-07-31', program: 'Nimbus Migration', owner: 'David Park', status: 'Not Started', progress: 0   }
-      ]},
-      { id: 'helios', title: 'Helios 360', start: '2025-01-06', end: '2025-05-30', children: [
-        { id: 'h-ux',   title: 'UX Research', start: '2025-01-06', end: '2025-02-14', program: 'Helios 360', owner: 'Aisha Mohammed', status: 'Complete', progress: 100 },
-        { id: 'h-dev',  title: 'Development',  start: '2025-02-17', end: '2025-05-09', program: 'Helios 360', owner: 'Aisha Mohammed', status: 'Complete', progress: 100 },
-        { id: 'h-beta', title: 'Beta Launch',  start: '2025-05-12', end: '2025-05-30', program: 'Helios 360', owner: 'Aisha Mohammed', status: 'Complete', progress: 100 }
-      ]},
-      { id: 'cobalt', title: 'Cobalt Data Lake', start: '2025-03-03', end: '2025-10-31', children: [
-        { id: 'c-plan',  title: 'Planning',               start: '2025-03-03', end: '2025-04-04', program: 'Cobalt Data Lake', owner: 'Carlos Rivera', status: 'Complete',    progress: 100 },
-        { id: 'c-arch',  title: 'Schema Architecture',    start: '2025-04-07', end: '2025-05-16', program: 'Cobalt Data Lake', owner: 'Carlos Rivera', status: 'Behind',      progress: 38  },
-        { id: 'c-ingest','title': 'Data Ingestion Layer', start: '2025-05-19', end: '2025-07-25', program: 'Cobalt Data Lake', owner: 'Carlos Rivera', status: 'Not Started', progress: 0   },
-        { id: 'c-valid', title: 'Validation',             start: '2025-07-28', end: '2025-10-10', program: 'Cobalt Data Lake', owner: 'Carlos Rivera', status: 'Not Started', progress: 0   }
-      ]},
-      { id: 'fortis', title: 'Fortis Security', start: '2025-04-01', end: '2025-10-31', children: [
-        { id: 'f-kick',  title: 'Kickoff',           start: '2025-04-01', end: '2025-04-18', program: 'Fortis Security', owner: 'Emma Thompson', status: 'Complete',    progress: 100 },
-        { id: 'f-iam',   title: 'IAM Integration',   start: '2025-04-22', end: '2025-06-27', program: 'Fortis Security', owner: 'Emma Thompson', status: 'In Progress', progress: 22  },
-        { id: 'f-audit', title: 'Security Audit',    start: '2025-06-30', end: '2025-08-29', program: 'Fortis Security', owner: 'Emma Thompson', status: 'Not Started', progress: 0   },
-        { id: 'f-hard',  title: 'Hardening',         start: '2025-09-01', end: '2025-10-31', program: 'Fortis Security', owner: 'Emma Thompson', status: 'Not Started', progress: 0   }
-      ]}
-    ];
+      var picker = document.getElementById('theme-picker');
+      var saved = localStorage.getItem('mn-theme') || 'editorial';
+      picker.value = saved;
+      picker.addEventListener('change', function () { M.setTheme(picker.value); localStorage.setItem('mn-theme', picker.value); });
 
-    var PORTFOLIO = [
-      { _pid: 'quantum', program: 'Quantum Platform',  owner: 'Jennifer Walsh',  status: 'On Track', budget: '$2,100,000', spent: '$1,428,000', remaining: '$672,000',   risk: 'Medium',   progress: { value: 68,  max: 100, label: '68%'  } },
-      { _pid: 'nimbus',  program: 'Nimbus Migration',  owner: 'David Park',      status: 'At Risk',  budget: '$3,400,000', spent: '$1,428,000', remaining: '$1,972,000', risk: 'High',     progress: { value: 42,  max: 100, label: '42%'  } },
-      { _pid: 'helios',  program: 'Helios 360',        owner: 'Aisha Mohammed',  status: 'Complete', budget: '$1,800,000', spent: '$1,764,000', remaining: '$36,000',    risk: 'Low',      progress: { value: 100, max: 100, label: '100%' } },
-      { _pid: 'cobalt',  program: 'Cobalt Data Lake',  owner: 'Carlos Rivera',   status: 'Behind',   budget: '$950,000',   spent: '$266,000',   remaining: '$684,000',   risk: 'Critical', progress: { value: 28,  max: 100, label: '28%'  } },
-      { _pid: 'fortis',  program: 'Fortis Security',   owner: 'Emma Thompson',   status: 'Starting', budget: '$1,200,000', spent: '$144,000',   remaining: '$1,056,000', risk: 'Low',      progress: { value: 12,  max: 100, label: '12%'  } }
-    ];
-
-    var RISKS = [
-      { _pid: 'quantum', id: 'R-001', description: 'Key architect departure may delay architecture phase',  program: 'Quantum Platform',  impact: 'High',     prob: '35%', owner: 'Jennifer Walsh',  status: 'Open'      },
-      { _pid: 'nimbus',  id: 'R-002', description: 'Legacy data quality issues blocking migration waves',  program: 'Nimbus Migration',  impact: 'High',     prob: '60%', owner: 'David Park',      status: 'Active'    },
-      { _pid: 'nimbus',  id: 'R-003', description: 'Third-party API vendor SLA breach risk',               program: 'Nimbus Migration',  impact: 'Medium',   prob: '25%', owner: 'David Park',      status: 'Monitor'   },
-      { _pid: 'quantum', id: 'R-004', description: 'Scope creep expanding UAT requirements',               program: 'Quantum Platform',  impact: 'Medium',   prob: '50%', owner: 'Jennifer Walsh',  status: 'Active'    },
-      { _pid: 'cobalt',  id: 'R-005', description: 'Cloud cost overrun beyond approved budget threshold',  program: 'Cobalt Data Lake',  impact: 'High',     prob: '70%', owner: 'Carlos Rivera',   status: 'Escalated' },
-      { _pid: 'cobalt',  id: 'R-006', description: 'GDPR compliance gap in data lake schema design',       program: 'Cobalt Data Lake',  impact: 'Critical', prob: '45%', owner: 'Carlos Rivera',   status: 'Active'    },
-      { _pid: 'fortis',  id: 'R-007', description: 'Security tooling integration with legacy IAM system',  program: 'Fortis Security',   impact: 'Medium',   prob: '30%', owner: 'Emma Thompson',   status: 'Open'      },
-      { _pid: 'helios',  id: 'R-008', description: 'UX research findings may require design pivot',        program: 'Helios 360',        impact: 'Low',      prob: '20%', owner: 'Aisha Mohammed',  status: 'Closed'    }
-    ];
-
-    /* ── Helpers ───────────────────────────────────────────── */
-    function esc(str) {
-      var d = document.createElement('div');
-      d.appendChild(document.createTextNode(String(str)));
-      return d.innerHTML;
-    }
-
-    function bdg(val) {
-      var v = String(val || '');
-      var lv = v.toLowerCase();
-      var cls = 'pmo-badge--muted';
-      if (lv === 'on track' || lv === 'complete' || lv === 'closed' || lv === 'low' || lv === 'ok') cls = 'pmo-badge--ok';
-      else if (lv === 'at risk' || lv === 'medium' || lv === 'monitor' || lv === 'active' || lv === 'starting') cls = 'pmo-badge--warn';
-      else if (lv === 'behind' || lv === 'high' || lv === 'blocked' || lv === 'open' || lv === 'escalated' || lv === 'critical') cls = 'pmo-badge--danger';
-      else if (lv === 'completed' || lv === 'info') cls = 'pmo-badge--info';
-      return '<span class="pmo-badge ' + cls + '">' + esc(v) + '</span>';
-    }
-
-    function fld(label, valueHtml) {
-      return '<div class="pmo-field"><span class="pmo-fl">' + esc(label) + '</span><div class="pmo-fv">' + valueHtml + '</div></div>';
-    }
-
-    function pbr(pct) {
-      var n = Math.max(0, Math.min(100, Number(pct) || 0));
-      return '<div class="pmo-pbwrap" role="progressbar" aria-valuenow="' + n + '" aria-valuemin="0" aria-valuemax="100" aria-label="Progress ' + n + '%"><div class="pmo-pb" style="width:' + n + '%;"></div></div><span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--mn-text-muted)">' + n + '%</span>';
-    }
-
-    function filterByProg(arr) {
-      if (!selectedProg) return arr;
-      return arr.filter(function (r) { return r._pid === selectedProg; });
-    }
-
-    function icon(name) {
-      return (M.icons && typeof M.icons[name] === 'function') ? M.icons[name]() : '';
-    }
-
-    /* ── Sidebar ───────────────────────────────────────────── */
-    function buildSidebar() {
-      PROGRAMS.forEach(function (p) {
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'pmo-prog' + (p.id === '' ? ' is-active' : '');
-        btn.setAttribute('role', 'listitem');
-        btn.setAttribute('aria-pressed', p.id === '' ? 'true' : 'false');
-        btn.setAttribute('data-pid', p.id);
-        var inner = '<span class="pmo-dot" style="background:' + p.dotColor + ';" aria-hidden="true"></span><span class="pmo-pi">';
-        inner += '<span class="pmo-pname">' + p.label + '</span>';
-        if (p.id) {
-          inner += '<span class="pmo-pmeta">' + p.budget + ' \u2014 ' + p.status + '</span>';
-          inner += '<div class="pmo-bwrap" role="progressbar" aria-valuenow="' + p.pct + '" aria-valuemin="0" aria-valuemax="100" aria-label="' + p.label + ' progress ' + p.pct + '%">';
-          inner += '<div class="pmo-bbar" style="width:' + p.pct + '%;background:' + p.dotColor + ';"></div></div>';
-        }
-        inner += '</span>';
-        btn.innerHTML = inner;
-        btn.addEventListener('click', function () { applyProgFilter(p.id); });
-        progList.appendChild(btn);
-      });
-    }
-
-    function applyProgFilter(pid) {
-      selectedProg = pid;
-      var btns = progList.querySelectorAll('.pmo-prog');
-      for (var i = 0; i < btns.length; i++) {
-        var active = btns[i].getAttribute('data-pid') === pid;
-        if (active) { btns[i].classList.add('is-active'); } else { btns[i].classList.remove('is-active'); }
-        btns[i].setAttribute('aria-pressed', active ? 'true' : 'false');
-      }
-      if (headerCtrl && headerCtrl.setFilter) {
-        headerCtrl.setFilter('program', [pid || 'all']);
-      }
-      showView(currentView);
-    }
-
-    /* ── Header (mn-header-shell) ──────────────────────────── */
-    function syncViewButtons() {
-      VIEW_IDS.forEach(function (id) {
-        var btn = document.querySelector('[data-header-shell-action-id="' + id + '"]');
-        if (!btn) return;
-        if (id === currentView) { btn.classList.add('mn-header-shell__action--active'); }
-        else { btn.classList.remove('mn-header-shell__action--active'); }
-      });
-    }
-
-    function mountHeader() {
-      var filterGroups = [
-        {
-          id: 'program', label: 'Program',
-          options: [
-            { id: 'all',     label: 'All Programs'    },
-            { id: 'quantum', label: 'Quantum Platform' },
-            { id: 'nimbus',  label: 'Nimbus Migration' },
-            { id: 'helios',  label: 'Helios 360'       },
-            { id: 'cobalt',  label: 'Cobalt Data Lake'  },
-            { id: 'fortis',  label: 'Fortis Security'  }
-          ]
-        }
-      ];
-
-      var host = document.createElement('mn-header-shell');
-      host.config = {
-        ariaLabel: 'ConvergIO Programs navigation',
-        sections: [
-          { type: 'brand', label: 'ConvergIO Programs', logoSrc: '../src/assets/favicon.svg', logoAlt: 'ConvergIO mark', href: './index.html' },
-          {
-            type: 'actions', role: 'pre', presentation: 'segmented',
-            items: [
-              { id: 'timeline',  label: 'Timeline',  icon: icon('gantt'),         active: true },
-              { id: 'portfolio', label: 'Portfolio', icon: icon('table')                       },
-              { id: 'resources', label: 'Resources', icon: icon('capacity')                    },
-              { id: 'risks',     label: 'Risks',     icon: icon('shield')                      }
-            ]
-          },
-          {
-            type: 'search',
-            placeholder: 'Search programs, tasks, risks... \u2318K',
-            shortcut: '\u2318K',
-            filterButtonLabel: 'Program',
-            filters: filterGroups
-          },
-          {
-            type: 'actions', role: 'post', presentation: 'cluster',
-            items: [
-              { id: 'alerts', title: 'Alerts (3)',  icon: icon('bellDot') || icon('bell') },
-              { id: 'report', title: 'Export Report', icon: icon('report')               }
-            ]
-          },
-          { type: 'divider' },
-          { type: 'theme' },
-          { type: 'profile', name: 'Jennifer Walsh' }
-        ],
-        callbacks: {
-          onAction: function (payload) {
-            if (VIEW_IDS.indexOf(payload.id) !== -1) {
-              currentView = payload.id;
-              syncViewButtons();
-              closeDetail();
-              doRender(currentView);
-            }
-            if (payload.id === 'alerts') {
-              if (M.commandPalette) M.commandPalette({ placeholder: 'Active alerts', items: [
-                { label: 'ALERT: Cobalt cloud cost overrun approaching threshold', action: function () { applyProgFilter('cobalt'); } },
-                { label: 'ALERT: Nimbus data migration at risk - 18% progress',   action: function () { applyProgFilter('nimbus'); } },
-                { label: 'ALERT: R-006 GDPR compliance gap requires immediate action', action: function () { currentView = 'risks'; syncViewButtons(); doRender('risks'); } }
-              ]});
-            }
-            if (payload.id === 'report') {
-              if (M.commandPalette) M.commandPalette({ placeholder: 'Export report', items: [
-                { label: 'Export: Portfolio Summary (PDF)'  },
-                { label: 'Export: Risk Register (CSV)'      },
-                { label: 'Export: Gantt Timeline (PNG)'     },
-                { label: 'Export: Resource Utilization (XLSX)' }
-              ]});
-            }
-          },
-          onSearch: function (payload) {
-            if ((payload.query || '').toLowerCase().indexOf('cmd') !== -1 || payload.triggerKey === 'k') {
-              openPalette();
-            }
-          },
-          onFilter: function (payload) {
-            if (payload.groupId === 'program') {
-              var val = (payload.values && payload.values[0]) || 'all';
-              applyProgFilter(val === 'all' ? '' : val);
-            }
-          }
-        }
-      };
-      navbar.textContent = '';
-      navbar.appendChild(host);
-      headerCtrl = host;
-
-      var ready = (typeof host.whenReady === 'function') ? host.whenReady() : Promise.resolve();
-      ready.then(function () {
-        if (!host.isConnected) return;
-        syncViewButtons();
-      });
-    }
-
-    /* ── View switching ────────────────────────────────────── */
-    function showView(viewId) {
-      currentView = viewId;
-      syncViewButtons();
-      closeDetail();
-      if (cleanupFn) { try { cleanupFn(); } catch (_) {} cleanupFn = null; }
-      if (M.StateScaffold) {
-        var scaffold = new M.StateScaffold(mainEl, { state: 'loading' });
-        setTimeout(function () {
-          scaffold.destroy();
-          mainEl.innerHTML = '';
-          cleanupFn = doRender(viewId) || null;
-        }, 400);
-      } else {
-        mainEl.innerHTML = '';
-        cleanupFn = doRender(viewId) || null;
-      }
-    }
-
-    function doRender(viewId) {
-      if (cleanupFn) { try { cleanupFn(); } catch (_) {} cleanupFn = null; }
-      mainEl.innerHTML = '';
-      if (viewId === 'timeline')  return renderTimeline();
-      if (viewId === 'portfolio') return renderPortfolio();
-      if (viewId === 'resources') return renderResources();
-      if (viewId === 'risks')     return renderRisks();
-    }
-
-    /* ── VIEW: Timeline ────────────────────────────────────── */
-    function renderTimeline() {
-      mainEl.innerHTML =
-        '<div class="pmo-view">' +
-          '<h2 class="pmo-sec">Program Health</h2>' +
-          '<div id="pmo-strip" class="pmo-strip-wrap"></div>' +
-          '<h2 class="pmo-sec">Program Timeline</h2>' +
-          '<div id="pmo-gantt" class="pmo-gantt-wrap"></div>' +
-        '</div>';
-
-      M.dashboardStrip('pmo-strip', {
-        ariaLabel: 'Program health instrument strip',
-        zones: [
-          {
-            type: 'gauge', label: 'PROGRAM HEALTH', size: 'sm',
-            gaugeConfig: {
-              value: 82, max: 100, colorMode: 'higher-better',
-              ticks: 10, subticks: 5, startAngle: -225, endAngle: 45, showNeedle: true,
-              numbers: [0, 25, 50, 75, 100],
-              complications: {
-                centerValue: '82', centerUnit: '%', centerLabel: 'HEALTH',
-                arcBar: { labelLeft: '0', labelRight: '100' },
-                statusLed: { label: 'ON TRACK' }
-              }
-            }
-          },
-          {
-            type: 'board', title: 'PORTFOLIO STATUS',
-            stats: [
-              { label: 'ACTIVE',   value: 8 },
-              { label: 'ON SCHED', value: 5 },
-              { label: 'BEHIND',   value: 2 },
-              { label: 'BLOCKED',  value: 1 }
-            ]
-          },
-          {
-            type: 'trend', title: 'BURN RATE / UTIL',
-            items: [
-              { label: 'BURN RATE', value: 68, data: [42, 48, 53, 58, 62, 68] },
-              { label: 'RESOURCE',  value: 76, data: [60, 63, 68, 71, 74, 76] }
-            ]
-          }
-        ]
+      var shell = document.getElementById('app-shell');
+      document.getElementById('sidebar-toggle').addEventListener('click', function () {
+        if (shell.className.indexOf('is-collapsed') !== -1) shell.className = shell.className.replace('is-collapsed', '').trim();
+        else shell.className = shell.className.trim() + ' is-collapsed';
       });
 
-      var tasks = selectedProg ? ALL_GANTT.filter(function (t) { return t.id === selectedProg; }) : ALL_GANTT;
-      var ganttWrap = document.getElementById('pmo-gantt');
-      if (M.gantt && ganttWrap && tasks.length) {
-        M.gantt(ganttWrap, tasks, {
-          onClick: function (task) { openDetail({ type: 'task', name: task.title, task: task }); }
-        });
-      }
-    }
-
-    /* ── VIEW: Portfolio ───────────────────────────────────── */
-    function renderPortfolio() {
-      mainEl.innerHTML =
-        '<div class="pmo-view">' +
-          '<h2 class="pmo-sec">Portfolio Overview</h2>' +
-          '<div id="pmo-ptable"></div>' +
-        '</div>';
-
-      var tbl = M.dataTable('pmo-ptable', {
-        ariaLabel: 'Program portfolio overview',
-        stickyHeader: true,
-        stripedRows: true,
-        columns: [
-          { key: 'program',   label: 'Program',    type: 'text',     sortable: true                        },
-          { key: 'owner',     label: 'PM',         type: 'text',     sortable: true                        },
-          { key: 'status',    label: 'Status',     type: 'badge',    sortable: true,  filterable: true      },
-          { key: 'budget',    label: 'Budget',     type: 'text',     sortable: false, align: 'right'        },
-          { key: 'spent',     label: 'Spent',      type: 'text',     sortable: false, align: 'right'        },
-          { key: 'remaining', label: 'Remaining',  type: 'text',     sortable: false, align: 'right'        },
-          { key: 'risk',      label: 'Risk',       type: 'badge',    sortable: true,  filterable: true      },
-          { key: 'progress',  label: 'Progress',   type: 'progress'                                        }
-        ],
-        data: filterByProg(PORTFOLIO),
-        onRowClick: function (row) { openDetail({ type: 'program', name: row.program, row: row }); }
-      });
-      return function () { if (tbl && tbl.destroy) tbl.destroy(); };
-    }
-
-    /* ── VIEW: Resources ───────────────────────────────────── */
-    function renderResources() {
-      mainEl.innerHTML =
-        '<div class="pmo-view">' +
-          '<h2 class="pmo-sec">Resource Utilization</h2>' +
-          '<div class="pmo-gauge-grid">' +
-            '<div class="pmo-gc" role="group" aria-label="Engineering utilization">' +
-              '<canvas id="pmo-g-eng" width="200" height="200" role="img" aria-label="Engineering resource utilization at 91 percent, high"></canvas>' +
-              '<span class="sr-only">Engineering: 91% utilized. High utilization — action required.</span>' +
-              '<span class="pmo-glabel">Engineering</span>' +
-            '</div>' +
-            '<div class="pmo-gc" role="group" aria-label="Design utilization">' +
-              '<canvas id="pmo-g-des" width="200" height="200" role="img" aria-label="Design resource utilization at 67 percent, medium"></canvas>' +
-              '<span class="sr-only">Design: 67% utilized. Medium utilization.</span>' +
-              '<span class="pmo-glabel">Design</span>' +
-            '</div>' +
-            '<div class="pmo-gc" role="group" aria-label="QA utilization">' +
-              '<canvas id="pmo-g-qa"  width="200" height="200" role="img" aria-label="QA resource utilization at 45 percent, capacity available"></canvas>' +
-              '<span class="sr-only">QA: 45% utilized. Available capacity.</span>' +
-              '<span class="pmo-glabel">QA</span>' +
-            '</div>' +
-          '</div>' +
-          '<h2 class="pmo-sec">Budget Allocation by Program</h2>' +
-          '<div class="pmo-card">' +
-            '<div class="pmo-chart-wrap">' +
-              '<canvas id="pmo-bchart" role="img" aria-label="Bar chart: budget by program. Quantum $2.1M, Nimbus $3.4M, Helios $1.8M, Cobalt $950K, Fortis $1.2M"></canvas>' +
-              '<span class="sr-only">Budget allocation: Quantum Platform $2,100K, Nimbus Migration $3,400K, Helios 360 $1,800K, Cobalt Data Lake $950K, Fortis Security $1,200K.</span>' +
-            '</div>' +
-          '</div>' +
-        '</div>';
-
-      [
-        { id: 'pmo-g-eng', value: 91, label: 'ENGINEERING', led: 'HIGH UTIL'  },
-        { id: 'pmo-g-des', value: 67, label: 'DESIGN',      led: 'MED UTIL'   },
-        { id: 'pmo-g-qa',  value: 45, label: 'QA',          led: 'OK'         }
-      ].forEach(function (gc) {
-        M.createGauge({
-          target: '#' + gc.id,
-          size: 'md',
-          config: {
-            value: gc.value, max: 100, colorMode: 'lower-better',
-            ticks: 10, subticks: 5, startAngle: -225, endAngle: 45, showNeedle: true,
-            numbers: [0, 25, 50, 75, 100],
-            complications: {
-              centerValue: String(gc.value), centerUnit: '%', centerLabel: gc.label,
-              arcBar: { labelLeft: '0', labelRight: '100' },
-              statusLed: { label: gc.led }
-            }
-          }
-        });
-      });
-
-      var bc = document.getElementById('pmo-bchart');
-      if (bc && M.charts && M.charts.barChart) {
-        M.charts.barChart(bc, [
-          { label: 'Quantum', value: 2100 },
-          { label: 'Nimbus',  value: 3400 },
-          { label: 'Helios',  value: 1800 },
-          { label: 'Cobalt',  value: 950  },
-          { label: 'Fortis',  value: 1200 }
-        ], { showLabels: true, showValues: true, animate: true, responsive: true });
-      }
-    }
-
-    /* ── VIEW: Risks ───────────────────────────────────────── */
-    function renderRisks() {
-      mainEl.innerHTML =
-        '<div class="pmo-view">' +
-          '<h2 class="pmo-sec">Risk Register</h2>' +
-          '<div id="pmo-rtable"></div>' +
-        '</div>';
-
-      var tbl = M.dataTable('pmo-rtable', {
-        ariaLabel: 'Risk register',
-        stickyHeader: true,
-        stripedRows: true,
-        columns: [
-          { key: 'id',          label: 'ID',          type: 'text',  sortable: true                   },
-          { key: 'description', label: 'Description', type: 'text'                                    },
-          { key: 'program',     label: 'Program',     type: 'text',  sortable: true, filterable: true },
-          { key: 'impact',      label: 'Impact',      type: 'badge', sortable: true, filterable: true },
-          { key: 'prob',        label: 'Probability', type: 'text',  sortable: true, align: 'right'   },
-          { key: 'owner',       label: 'Owner',       type: 'text',  sortable: true                   },
-          { key: 'status',      label: 'Status',      type: 'badge', sortable: true, filterable: true }
-        ],
-        data: filterByProg(RISKS),
-        onRowClick: function (row) { openDetail({ type: 'risk', name: row.id + ': ' + row.description, row: row }); }
-      });
-      return function () { if (tbl && tbl.destroy) tbl.destroy(); };
-    }
-
-    /* ── Detail panel ──────────────────────────────────────── */
-    function openDetail(data) {
-      var d   = data || {};
-      var row = d.row || d.task || {};
-
-      detailEl.innerHTML =
-        '<div class="pmo-dt">' +
-          '<div class="pmo-dth">' +
-            '<h2 class="pmo-dttitle" id="pmo-dt-title">' + esc(d.name || 'Detail') + '</h2>' +
-            '<button type="button" class="pmo-xbtn" id="pmo-dt-close" aria-label="Close detail panel">X</button>' +
-          '</div>' +
-          '<div class="pmo-tabs" role="tablist" aria-label="Detail sections">' +
-            '<button type="button" class="pmo-tabbtn is-active" role="tab" aria-selected="true"  aria-controls="pmo-tp-details"  id="pmo-th-details">Details</button>'  +
-            '<button type="button" class="pmo-tabbtn"           role="tab" aria-selected="false" aria-controls="pmo-tp-tasks"    id="pmo-th-tasks">Tasks</button>'     +
-            '<button type="button" class="pmo-tabbtn"           role="tab" aria-selected="false" aria-controls="pmo-tp-res"      id="pmo-th-res">Resources</button>'   +
-            '<button type="button" class="pmo-tabbtn"           role="tab" aria-selected="false" aria-controls="pmo-tp-risks"    id="pmo-th-risks">Risks</button>'     +
-            '<button type="button" class="pmo-tabbtn"           role="tab" aria-selected="false" aria-controls="pmo-tp-hist"     id="pmo-th-hist">History</button>'    +
-          '</div>' +
-          '<div id="pmo-tp-details" class="pmo-tabp is-active" role="tabpanel" aria-labelledby="pmo-th-details">' + buildDetailTab(d, row) + '</div>' +
-          '<div id="pmo-tp-tasks"   class="pmo-tabp"           role="tabpanel" aria-labelledby="pmo-th-tasks"><div class="pmo-placeholder">Task breakdown linked to project management system.</div></div>' +
-          '<div id="pmo-tp-res"     class="pmo-tabp"           role="tabpanel" aria-labelledby="pmo-th-res"><div class="pmo-placeholder">Resource assignments and utilization details.</div></div>' +
-          '<div id="pmo-tp-risks"   class="pmo-tabp"           role="tabpanel" aria-labelledby="pmo-th-risks"><div class="pmo-placeholder">Associated risks and mitigation actions.</div></div>' +
-          '<div id="pmo-tp-hist"    class="pmo-tabp"           role="tabpanel" aria-labelledby="pmo-th-hist"><div class="pmo-placeholder">Audit trail and change history.</div></div>' +
-        '</div>';
-
-      var tbs = detailEl.querySelectorAll('.pmo-tabbtn');
-      for (var ti = 0; ti < tbs.length; ti++) {
-        tbs[ti].addEventListener('click', function (e) {
-          var pid = e.currentTarget.getAttribute('aria-controls');
-          for (var tj = 0; tj < tbs.length; tj++) {
-            tbs[tj].classList.remove('is-active');
-            tbs[tj].setAttribute('aria-selected', 'false');
-          }
-          e.currentTarget.classList.add('is-active');
-          e.currentTarget.setAttribute('aria-selected', 'true');
-          var panels = detailEl.querySelectorAll('.pmo-tabp');
-          for (var tp = 0; tp < panels.length; tp++) {
-            if (panels[tp].id === pid) { panels[tp].classList.add('is-active'); } else { panels[tp].classList.remove('is-active'); }
-          }
+      var links = document.querySelectorAll('.sidebar__link');
+      var bcCurrent = document.querySelector('.breadcrumb__current');
+      for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', function () {
+          for (var j = 0; j < links.length; j++) links[j].className = links[j].className.replace(' is-active', '');
+          this.className += ' is-active';
+          var t = this.querySelector('.sidebar__link-text');
+          if (t && bcCurrent) bcCurrent.textContent = t.textContent;
         });
       }
 
-      var closeBtn = document.getElementById('pmo-dt-close');
-      if (closeBtn) closeBtn.addEventListener('click', closeDetail);
+      setIcon('sidebar-toggle', 'menu');
+      setIcon('search-icon', 'search');
+      setIcon('btn-bell', 'bell');
+      setIcon('btn-settings', 'settings');
+      setIcon('ic-dashboard', 'dashboard');
+      setIcon('ic-gantt', 'gantt');
+      setIcon('ic-users', 'users');
+      setIcon('ic-bolt', 'bolt');
+      setIcon('ic-shield', 'shield');
+      setIcon('ic-compass', 'compass');
+      setIcon('ic-alert', 'alertTriangle');
+      setIcon('ic-kpi', 'kpi');
+      setIcon('ic-settings', 'settings');
 
-      detailEl.setAttribute('aria-hidden', 'false');
-      appEl.classList.add('has-detail');
-    }
-
-    function closeDetail() {
-      detailEl.setAttribute('aria-hidden', 'true');
-      detailEl.innerHTML = '';
-      appEl.classList.remove('has-detail');
-    }
-
-    function buildDetailTab(d, row) {
-      if (d.type === 'risk') {
-        return fld('Risk ID',     esc(row.id          || '-')) +
-               fld('Description', esc(row.description || '-')) +
-               fld('Program',     esc(row.program     || '-')) +
-               fld('Impact',      bdg(row.impact))             +
-               fld('Probability', esc(row.prob        || '-')) +
-               fld('Owner',       esc(row.owner       || '-')) +
-               fld('Status',      bdg(row.status));
+      // Gantt
+      var ganttEl = document.getElementById('cell-gantt');
+      if (ganttEl && M.gantt) {
+        M.gantt(ganttEl, [
+          { id: '1', title: 'Phoenix - Discovery', start: '2026-01-10', end: '2026-03-15' },
+          { id: '2', title: 'Phoenix - Build', start: '2026-03-01', end: '2026-06-30' },
+          { id: '3', title: 'Phoenix - Launch', start: '2026-06-15', end: '2026-07-15' },
+          { id: '4', title: 'Titan - Architecture', start: '2026-02-01', end: '2026-04-30' },
+          { id: '5', title: 'Titan - Implementation', start: '2026-04-15', end: '2026-09-30' },
+          { id: '6', title: 'Horizon - Research', start: '2026-03-01', end: '2026-05-31' },
+          { id: '7', title: 'Horizon - Prototype', start: '2026-05-15', end: '2026-08-31' }
+        ]);
       }
-      if (d.type === 'program') {
-        return fld('Program',   esc(row.program   || '-')) +
-               fld('PM Owner',  esc(row.owner     || '-')) +
-               fld('Status',    bdg(row.status))           +
-               fld('Budget',    esc(row.budget    || '-')) +
-               fld('Spent',     esc(row.spent     || '-')) +
-               fld('Remaining', esc(row.remaining || '-')) +
-               fld('Risk',      bdg(row.risk))             +
-               fld('Progress',  pbr(row.progress ? row.progress.value : 0));
+
+      // Portfolio table
+      var tableEl = document.getElementById('cell-table');
+      if (tableEl && M.dataTable) {
+        M.dataTable(tableEl, {
+          columns: [
+            { key: 'program', label: 'Program', sortable: true },
+            { key: 'lead', label: 'Lead' },
+            { key: 'status', label: 'Status', type: 'status' },
+            { key: 'budget', label: 'Budget' },
+            { key: 'progress', label: 'Progress', type: 'progress' }
+          ],
+          data: [
+            { program: 'Phoenix', lead: 'Elena Rossi', status: 'On Track', budget: '$2.1M', progress: 55 },
+            { program: 'Titan', lead: 'Marco Bianchi', status: 'On Track', budget: '$1.8M', progress: 35 },
+            { program: 'Horizon', lead: 'Yuki Watanabe', status: 'At Risk', budget: '$900K', progress: 20 }
+          ],
+          compact: true, ariaLabel: 'Portfolio tracker'
+        });
       }
-      var task = d.task || {};
-      return fld('Task',     esc(task.title   || d.name || '-')) +
-             fld('Program',  esc(task.program || '-'))           +
-             fld('Owner',    esc(task.owner   || '-'))           +
-             fld('Status',   bdg(task.status  || '-'))           +
-             fld('Progress', pbr(task.progress || 0))            +
-             fld('Start',    esc(task.start   || '-'))           +
-             fld('End',      esc(task.end     || '-'));
-    }
 
-    /* ── Command palette ───────────────────────────────────── */
-    function openPalette() {
-      if (!M.commandPalette) return;
-      M.commandPalette({
-        placeholder: 'Search programs, views, commands...',
-        items: [
-          { label: 'View: Timeline',           action: function () { showView('timeline');  } },
-          { label: 'View: Portfolio',          action: function () { showView('portfolio'); } },
-          { label: 'View: Resources',          action: function () { showView('resources'); } },
-          { label: 'View: Risks',              action: function () { showView('risks');     } },
-          { label: 'Filter: All Programs',     action: function () { applyProgFilter('');         } },
-          { label: 'Filter: Quantum Platform', action: function () { applyProgFilter('quantum');  } },
-          { label: 'Filter: Nimbus Migration', action: function () { applyProgFilter('nimbus');   } },
-          { label: 'Filter: Helios 360',       action: function () { applyProgFilter('helios');   } },
-          { label: 'Filter: Cobalt Data Lake', action: function () { applyProgFilter('cobalt');   } },
-          { label: 'Filter: Fortis Security',  action: function () { applyProgFilter('fortis');   } },
-          { label: 'Theme: Nero',              action: function () { M.setTheme('nero');       } },
-          { label: 'Theme: Editorial',         action: function () { M.setTheme('editorial');  } },
-          { label: 'Theme: Avorio',            action: function () { M.setTheme('avorio');     } },
-          { label: 'Theme: Colorblind',        action: function () { M.setTheme('colorblind'); } },
-          { label: 'Theme: Sugar',             action: function () { M.setTheme('sugar');      } },
-          { label: 'Theme: Navy',              action: function () { M.setTheme('navy');       } }
-        ]
-      });
-    }
+      // Donut
+      var donutEl = document.getElementById('cell-donut');
+      if (donutEl && M.charts && M.charts.donut) {
+        var dc = document.createElement('canvas');
+        dc.width = 180; dc.height = 180;
+        dc.setAttribute('role', 'img'); dc.setAttribute('aria-label', 'Budget allocation by program');
+        donutEl.appendChild(dc);
+        M.charts.donut(dc, [
+          { value: 2100, color: 'var(--mn-chart-series-1)' },
+          { value: 1800, color: 'var(--mn-chart-series-2)' },
+          { value: 900, color: 'var(--mn-chart-series-3)' }
+        ], { centerText: '$4.8M', centerSubtext: 'Total' });
+      }
 
-    document.addEventListener('keydown', function (e) {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openPalette(); }
-    });
+      // Dashboard Strip
+      var stripEl = document.getElementById('cell-strip');
+      if (stripEl && M.dashboardStrip) {
+        M.dashboardStrip(stripEl, {
+          zones: [
+            { type: 'gauge', label: 'Eng Capacity', gaugeConfig: { value: 82, max: 100, showNeedle: true, complications: { centerValue: '82', centerUnit: '%' } } },
+            { type: 'trend', title: 'Velocity', items: [
+              { label: 'Phoenix', value: '34 pts', trend: 'up' },
+              { label: 'Titan', value: '28 pts', trend: 'up' },
+              { label: 'Horizon', value: '12 pts', trend: 'flat' }
+            ] }
+          ],
+          ariaLabel: 'Resource utilization'
+        });
+      }
 
-    /* ── Bootstrap ─────────────────────────────────────────── */
-    buildSidebar();
-    mountHeader();
-    showView('timeline');
-  })();
+      // Activity
+      var actEl = document.getElementById('cell-activity');
+      if (actEl && M.activityFeed) {
+        M.activityFeed(actEl, [
+          { id: '1', title: 'Phoenix M3', body: 'API MVP delivered on time', meta: '1 day ago', type: 'success' },
+          { id: '2', title: 'Titan M2', body: 'Architecture review passed', meta: '3 days ago', type: 'success' },
+          { id: '3', title: 'Horizon R1', body: 'Research phase extended 2 weeks', meta: '5 days ago', type: 'warning' },
+          { id: '4', title: 'Phoenix M2', body: 'Design system integration done', meta: '1 week ago', type: 'info' }
+        ], { maxItems: 6 });
+      }
+    })();
   </script>
 </body>
 </html>

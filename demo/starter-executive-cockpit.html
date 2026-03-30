@@ -3,954 +3,401 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ConvergIO Executive — Maranello Luce Design</title>
+  <title>Executive Cockpit — Maranello Luce Design</title>
   <link rel="icon" href="../src/assets/favicon.svg">
   <link rel="stylesheet" href="../src/fonts/local-fonts.css">
   <link rel="stylesheet" href="../dist/css/maranello.css">
   <style>
-    /* === Shell theme palette (matching header-responsive.html) === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
     body {
-      --shell-bg: #0a0a0a; --shell-nav: #141414; --shell-card: #171717; --shell-card-2: #1d1d1d;
-      --shell-border: #262626; --shell-text: #eee; --shell-muted: #9a9a9a; --shell-ghost: #666;
-      --shell-accent: #FFC72C; --shell-accent-text: #111;
-      margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
-      background: var(--mn-surface); color: var(--mn-text); font-family: var(--font-body, sans-serif);
-    }
-    body.mn-avorio {
-      --shell-bg: #f5efe4; --shell-nav: #f8f1e6; --shell-card: #fffaf4; --shell-card-2: #fffdf8;
-      --shell-border: #d9cbb7; --shell-text: #241f19; --shell-muted: #7b6d5a; --shell-ghost: #8e7f6b;
-      --shell-accent: #b7410e; --shell-accent-text: #fff8ef;
-    }
-    body.mn-colorblind { --shell-accent: #0072B2; --shell-accent-text: #fff; }
-    body.mn-sugar {
-      --shell-bg: #f4f4f6; --shell-nav: #fff; --shell-card: #fff; --shell-card-2: #ffffff;
-      --shell-border: #d8d8de; --shell-text: #111; --shell-muted: #666; --shell-ghost: #888;
-      --shell-accent: #111; --shell-accent-text: #fff;
-    }
-    body.mn-navy {
-      --shell-bg: #0e1628; --shell-nav: #111d33; --shell-card: #162040; --shell-card-2: #1c2a4e;
-      --shell-border: #243360; --shell-text: #e8eaf6; --shell-muted: #7f8db5; --shell-ghost: #505c8a;
-      --shell-accent: #d4a843; --shell-accent-text: #0e1628;
-    }
-    body.mn-editorial {
-      --shell-bg: #fafafa; --shell-nav: #fff; --shell-card: #fff; --shell-card-2: #f8f8f8;
-      --shell-border: #e2e2e2; --shell-text: #121212; --shell-muted: #777; --shell-ghost: #aaa;
-      --shell-accent: #cc1f1f; --shell-accent-text: #fff;
+      background: var(--mn-surface);
+      color: var(--mn-text);
+      font-family: var(--font-body, sans-serif);
+      overflow: hidden;
     }
 
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-
-    /* === Navbar === */
-    #navbar { flex-shrink: 0; position: sticky; top: 0; z-index: 20; backdrop-filter: blur(12px); }
-    body.mn-avorio #navbar, body.mn-sugar #navbar, body.mn-editorial #navbar {
-      background: color-mix(in srgb, var(--shell-nav) 96%, transparent);
-    }
-
-    /* === Header Shell overrides (exact header-responsive.html pattern) === */
-    #navbar .mn-header-shell { gap: 12px; background: var(--shell-nav); border-bottom-color: var(--shell-border); }
-    #navbar .mn-header-shell__brand { color: var(--shell-text); font-size: 1rem; }
-    #navbar .mn-header-shell__brand-logo { width: 28px; height: 28px; filter: drop-shadow(0 0 8px color-mix(in srgb, var(--shell-accent) 35%, transparent)); }
-    #navbar .mn-header-shell__actions--segmented,
-    #navbar .mn-header-shell__actions--cluster { border-color: var(--shell-border); border-radius: 14px; background: var(--shell-card); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 4%, transparent); }
-    #navbar .mn-header-shell__action { min-width: 48px; min-height: 48px; border-radius: 10px; color: var(--shell-muted); }
-    #navbar .mn-header-shell__action:hover { background: color-mix(in srgb, var(--shell-card-2) 92%, var(--shell-accent) 8%); color: var(--shell-text); }
-    #navbar .mn-header-shell__action--active { background: color-mix(in srgb, var(--shell-accent) 20%, transparent); color: var(--shell-accent); }
-    #navbar .mn-header-shell__action:disabled { opacity: .35; cursor: not-allowed; }
-    #navbar .mn-header-shell__icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
-    #navbar .mn-header-shell__search { width: 100%; min-width: 0; min-height: 52px; padding: 8px 12px; gap: 12px; border-color: var(--shell-border); border-radius: 14px; background: var(--shell-card); }
-    #navbar .mn-header-shell__search-input { flex: 1 1 14rem; min-width: 10rem; color: var(--shell-text); font-size: 1.0625rem; }
-    #navbar .mn-header-shell__search-input::placeholder { color: color-mix(in srgb, var(--shell-muted) 78%, transparent); }
-    #navbar .mn-header-shell__shortcut { border-color: var(--shell-border); background: var(--shell-card); color: var(--shell-ghost); font-size: 0.875rem; }
-    #navbar .mn-header-shell__filters { display: none; }
-    #navbar .mn-header-shell__filter-group legend { color: var(--shell-ghost); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
-    #navbar .mn-header-shell__filter-option { min-height: 36px; border-color: var(--shell-border); background: transparent; color: var(--shell-text); }
-    #navbar .mn-header-shell__filter-option.is-selected { color: var(--shell-accent); border-color: color-mix(in srgb, var(--shell-accent) 55%, var(--shell-border)); background: color-mix(in srgb, var(--shell-accent) 12%, transparent); }
-    #navbar .mn-header-shell__theme { padding-left: 14px; border-left-color: var(--shell-border); }
-    #navbar .mn-profile-trigger { width: 42px; height: 42px; border-radius: 50%; background: color-mix(in srgb, var(--shell-accent) 18%, transparent); color: var(--shell-accent); font-weight: 700; display: inline-flex; align-items: center; justify-content: center; border: 1px solid color-mix(in srgb, var(--shell-accent) 30%, var(--shell-border)); }
-
-    /* === Shell layout === */
-    .exec-layout {
-      flex: 1;
-      min-height: 0;
+    .app {
       display: grid;
-      grid-template-columns: 240px 1fr;
-      overflow: hidden;
+      grid-template-rows: 52px 1fr;
+      grid-template-columns: 260px 1fr;
+      grid-template-areas: "header header" "sidebar main";
+      height: 100vh;
+      transition: grid-template-columns 0.2s ease;
     }
-    .exec-layout.has-detail { grid-template-columns: 240px 1fr 380px; }
+    .app.is-collapsed { grid-template-columns: 0px 1fr; }
 
-    /* === Sidebar === */
-    .exec-sidebar {
-      border-right: 1px solid var(--mn-border);
+    .header {
+      grid-area: header;
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 16px; height: 52px;
       background: var(--mn-surface-raised);
-      overflow-y: auto; overflow-x: hidden;
+      border-bottom: 1px solid var(--mn-border);
+      z-index: 10;
     }
-    .sidebar-label {
-      padding: 0.65rem 0.75rem 0.45rem;
-      font-family: var(--font-mono); font-size: 0.63rem;
-      text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--mn-text-muted); border-bottom: 1px solid var(--mn-border);
-    }
-    .exec-funnel { display: grid; gap: 0.2rem; padding: 0.45rem; }
-    .funnel-card {
-      display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
-      padding: 0.45rem 0.65rem;
-      border: 1px solid var(--mn-border);
-      border-left: 3px solid var(--funnel-color, var(--mn-border));
-      border-radius: var(--radius-md, 6px);
-      background: var(--mn-surface-raised);
-      color: var(--mn-text); cursor: pointer; text-align: left;
-      font-family: var(--font-mono); font-size: 0.69rem;
-      transition: background 0.12s, border-color 0.12s;
-    }
-    .funnel-card:hover { background: var(--mn-surface); border-color: var(--funnel-color, var(--mn-accent)); }
-    .funnel-card.is-active { background: var(--mn-surface); border-left-width: 4px; }
-    .funnel-card--all { border-left-color: var(--mn-border-strong, var(--mn-border)); }
-    .funnel-card__name { text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.64rem; }
-    .funnel-card__meta { display: flex; align-items: baseline; gap: 0.3rem; }
-    .funnel-card__count { font-weight: 700; font-size: 0.79rem; }
-    .funnel-card__pct { font-size: 0.61rem; color: var(--mn-text-muted); }
+    .header__left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .header__center { flex: 1; display: flex; justify-content: center; }
+    .header__right { display: flex; align-items: center; gap: 6px; }
 
-    /* === Main area === */
-    .exec-main { overflow: hidden; background: var(--mn-surface); display: flex; flex-direction: column; }
-    .exec-view { flex: 1; min-height: 0; display: none; overflow: auto; }
-    .exec-view.is-active { display: flex; flex-direction: column; }
-
-    /* === Cockpit view === */
-    .cockpit-wrap { padding: 1rem; display: flex; flex-direction: column; gap: 1.25rem; overflow: auto; }
-    .cockpit-gauge-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .gauge-card {
-      background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
-      border-radius: var(--radius-md, 6px); padding: 1.25rem; text-align: center;
+    .icon-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border: none; background: none;
+      color: var(--mn-text-muted); border-radius: var(--radius-md);
+      cursor: pointer; transition: background 0.12s, color 0.12s; flex-shrink: 0;
     }
-    .gauge-card canvas { display: block; margin: 0 auto 0.75rem; }
-    .gauge-label {
-      font-family: var(--font-mono); font-size: 0.63rem; text-transform: uppercase;
-      letter-spacing: 0.08em; color: var(--mn-text-muted); margin: 0;
+    .icon-btn:hover { background: color-mix(in srgb, var(--mn-accent) 10%, transparent); color: var(--mn-text); }
+    .icon-btn:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .icon-btn svg { width: 18px; height: 18px; }
+
+    .breadcrumb { font-size: 0.85rem; color: var(--mn-text-muted); white-space: nowrap; }
+    .breadcrumb__current { color: var(--mn-text); font-weight: 600; }
+
+    .search-bar {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%; max-width: 480px; padding: 0 14px; height: 36px;
+      background: var(--mn-surface); border: 1px solid var(--mn-border);
+      border-radius: var(--radius-lg); color: var(--mn-text-muted);
+      cursor: text; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .search-bar:hover { border-color: color-mix(in srgb, var(--mn-accent) 40%, var(--mn-border)); }
+    .search-bar:focus-within { border-color: var(--mn-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--mn-accent) 15%, transparent); }
+    .search-bar svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.5; }
+    .search-bar__input {
+      flex: 1; border: none; background: none; color: var(--mn-text);
+      font-size: 0.85rem; font-family: var(--font-body, sans-serif); outline: none;
+    }
+    .search-bar__input::placeholder { color: var(--mn-text-muted); }
+    .search-bar__kbd {
+      font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600;
+      color: var(--mn-text-muted); background: var(--mn-surface-raised);
+      border: 1px solid var(--mn-border); border-radius: 4px; padding: 2px 6px;
     }
 
-    /* === Portfolio view === */
-    .portfolio-wrap { flex: 1; min-height: 520px; }
-
-    /* === Market view === */
-    .market-wrap { flex: 1; padding: 1rem; }
-
-    /* === Board view === */
-    .board-wrap { flex: 1; padding: 1rem; }
-
-    /* === Detail panel === */
-    .exec-detail {
-      border-left: 1px solid var(--mn-border);
-      background: var(--mn-surface-raised);
-      display: flex; flex-direction: column;
-      overflow: hidden;
+    .theme-select {
+      font-size: 0.8rem; padding: 4px 8px; height: 32px;
+      border-radius: var(--radius-md); border: 1px solid var(--mn-border);
+      background: var(--mn-surface); color: var(--mn-text); font-family: inherit; cursor: pointer;
     }
-    .exec-detail[hidden] { display: none; }
-    .detail-header {
-      padding: 1rem; border-bottom: 1px solid var(--mn-border);
-      background: var(--mn-surface-raised); flex-shrink: 0;
-    }
-    .detail-title-row {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      gap: 0.75rem; margin-bottom: 0.5rem;
-    }
-    .detail-company { font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; }
-    .detail-project { font-size: 0.73rem; color: var(--mn-text-muted); margin-top: 0.15rem; }
-    .detail-close {
-      background: none; border: none; cursor: pointer;
-      color: var(--mn-text-muted); padding: 0.25rem; line-height: 0;
-      border-radius: var(--radius-sm, 4px); min-width: 28px; min-height: 28px;
+    .theme-select:focus-visible { outline: 2px solid var(--mn-accent); }
+
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--mn-accent); color: var(--mn-surface);
       display: flex; align-items: center; justify-content: center;
-    }
-    .detail-close:hover { color: var(--mn-text); background: var(--mn-surface); }
-    .detail-close svg { width: 16px; height: 16px; }
-    .detail-tabs {
-      display: flex; border-bottom: 1px solid var(--mn-border); flex-shrink: 0;
-      background: var(--mn-surface-raised); overflow-x: auto; scrollbar-width: none;
-    }
-    .detail-tabs::-webkit-scrollbar { display: none; }
-    .detail-tab {
-      padding: 0.6rem 1rem; font-family: var(--font-mono); font-size: 0.7rem;
-      text-transform: uppercase; letter-spacing: 0.04em; border: none;
-      border-bottom: 2px solid transparent; background: none; color: var(--mn-text-muted);
-      cursor: pointer; white-space: nowrap; transition: color 0.15s, border-color 0.15s;
-      min-height: 40px;
-    }
-    .detail-tab:hover { color: var(--mn-text); }
-    .detail-tab.is-active { color: var(--mn-accent); border-bottom-color: var(--mn-accent); }
-    .detail-panel-body { padding: 1rem; overflow: auto; flex: 1; }
-    .detail-tab-content { display: none; }
-    .detail-tab-content.is-active { display: block; }
-    .detail-field { margin-bottom: 1rem; }
-    .detail-field-label {
-      font-family: var(--font-mono); font-size: 0.63rem; text-transform: uppercase;
-      letter-spacing: 0.06em; color: var(--mn-text-muted); margin-bottom: 0.25rem;
-    }
-    .detail-field-value { font-size: 0.83rem; color: var(--mn-text); }
-    .detail-fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
-    .detail-description {
-      font-size: 0.82rem; color: var(--mn-text); line-height: 1.65; margin-bottom: 1.25rem;
-      padding: 0.75rem; background: var(--mn-surface);
-      border-radius: var(--radius-sm, 4px); border: 1px solid var(--mn-border);
-    }
-    .detail-placeholder {
-      padding: 2.5rem 1rem; text-align: center; color: var(--mn-text-muted);
-      font-size: 0.78rem; font-family: var(--font-mono);
-      text-transform: uppercase; letter-spacing: 0.06em;
-    }
-    .state-dot {
-      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-      background: var(--state-color, var(--mn-border)); margin-right: 0.4rem; vertical-align: middle;
+      font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+      flex-shrink: 0; cursor: pointer;
     }
 
-    @media (max-width: 1200px) {
-      #navbar .mn-header-shell__search { min-height: 48px; }
-      #navbar .mn-header-shell__action { min-width: 42px; min-height: 42px; }
-      #navbar .mn-header-shell__theme { padding-left: 10px; }
+    .sidebar {
+      grid-area: sidebar;
+      background: var(--mn-surface-raised);
+      border-right: 1px solid var(--mn-border);
+      display: flex; flex-direction: column;
+      padding: 16px 12px; overflow-y: auto; overflow-x: hidden;
+      min-width: 0; transition: opacity 0.2s ease, padding 0.2s ease;
     }
-    @media (max-width: 900px) {
-      .exec-layout, .exec-layout.has-detail { grid-template-columns: 1fr; }
-      .exec-sidebar { display: none; }
+    .app.is-collapsed .sidebar { opacity: 0; padding: 0; pointer-events: none; }
+    .sidebar__brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
+      color: var(--mn-text); padding: 0 8px 12px;
     }
-    @media (max-width: 640px) {
-      #navbar .mn-header-shell__shortcut { display: none; }
-      #navbar .mn-header-shell__actions--segmented,
-      #navbar .mn-header-shell__actions--cluster { width: 100%; justify-content: space-between; }
-      #navbar .mn-header-shell__search { max-width: none; }
-      #navbar .mn-header-shell__theme { width: 100%; justify-content: flex-end; border-left: none; padding-left: 0; }
-      .cockpit-gauge-row { grid-template-columns: 1fr; }
+    .sidebar__version {
+      font-size: 0.65rem; font-weight: 600;
+      background: var(--mn-accent); color: var(--mn-surface);
+      padding: 1px 7px; border-radius: 10px; margin-left: auto;
+    }
+    .sidebar__group-label {
+      font-family: var(--font-display); font-size: 0.6rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--mn-text-muted); margin: 20px 0 4px; padding-left: 10px;
+    }
+    .sidebar__group-label:first-of-type { margin-top: 4px; }
+    .sidebar__nav { display: flex; flex-direction: column; gap: 1px; }
+    .sidebar__link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; border-radius: var(--radius-md);
+      font-size: 0.84rem; color: var(--mn-text);
+      cursor: pointer; border: none; background: none;
+      width: 100%; text-align: left; font-family: inherit;
+      transition: background 0.12s; min-height: 34px;
+    }
+    .sidebar__link:hover { background: color-mix(in srgb, var(--mn-accent) 8%, transparent); }
+    .sidebar__link:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .sidebar__link.is-active {
+      background: color-mix(in srgb, var(--mn-accent) 15%, transparent);
+      color: var(--mn-accent); font-weight: 600;
+    }
+    .sidebar__link svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.6; }
+    .sidebar__link.is-active svg { opacity: 1; }
+    .sidebar__link-text { flex: 1; }
+    .sidebar__badge {
+      font-size: 0.65rem; font-weight: 600; min-width: 18px; text-align: center;
+      padding: 1px 6px; border-radius: 10px;
+      background: var(--mn-accent); color: var(--mn-surface);
+    }
+    .sidebar__spacer { flex: 1; }
+    .sidebar__footer {
+      padding-top: 12px; border-top: 1px solid var(--mn-border); margin-top: 8px;
+      display: flex; flex-direction: column; gap: 1px;
+    }
+    .sidebar__footer-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 10px; border-radius: var(--radius-md);
+      font-size: 0.8rem; color: var(--mn-text-muted);
+      cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: inherit;
+    }
+    .sidebar__footer-link svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.5; }
+    .sidebar__footer-link:hover { color: var(--mn-text); background: color-mix(in srgb, var(--mn-accent) 6%, transparent); }
+
+    .main { grid-area: main; overflow-y: auto; padding: 24px 28px; }
+
+    .mn-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .mn-col-3 { grid-column: span 3; } .mn-col-4 { grid-column: span 4; }
+    .mn-col-6 { grid-column: span 6; } .mn-col-8 { grid-column: span 8; }
+    .mn-col-12 { grid-column: span 12; }
+
+    .mn-cell {
+      background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
+      border-radius: var(--radius-md); padding: 16px; min-height: 120px;
+      display: flex; flex-direction: column;
+    }
+    .mn-cell__label {
+      font-family: var(--font-display); font-size: 0.6rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--mn-text-muted); margin-bottom: 12px;
+    }
+    .mn-cell__body { flex: 1; position: relative; min-height: 0; }
+
+    .hero-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; grid-column: span 12; }
+    .hero-kpi {
+      background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
+      border-radius: var(--radius-md); padding: 20px;
+    }
+    .hero-kpi__label {
+      font-family: var(--font-display); font-size: 0.6rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--mn-text-muted); margin-bottom: 8px;
+    }
+    .hero-kpi__value {
+      font-family: var(--font-display); font-size: 2rem; font-weight: 700;
+      color: var(--mn-text); line-height: 1.1;
+    }
+    .hero-kpi__trend { font-family: var(--font-mono); font-size: 0.7rem; margin-top: 6px; }
+    .hero-kpi__trend--up { color: var(--mn-success); }
+    .hero-kpi__trend--down { color: var(--mn-error); }
+    @media (max-width: 1100px) { .hero-kpis { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) { .hero-kpis { grid-template-columns: 1fr; } }
+
+    @media (max-width: 1100px) {
+      .mn-col-3, .mn-col-4, .mn-col-6, .mn-col-8 { grid-column: span 6; }
+    }
+    @media (max-width: 768px) {
+      .app { grid-template-columns: 0px 1fr; }
+      .app .sidebar { opacity: 0; padding: 0; pointer-events: none; }
+      .mn-col-3,.mn-col-4,.mn-col-6,.mn-col-8,.mn-col-12 { grid-column: span 12; }
+      .main { padding: 16px; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .funnel-card { transition: none; }
-      .detail-tab { transition: none; }
+      .app, .sidebar, .icon-btn, .sidebar__link, .search-bar { transition: none; }
     }
   </style>
 </head>
-<body class="mn-nero">
-  <script>
-    try {
-      var _t = localStorage.getItem('mn-theme');
-      if (_t) document.body.className = 'mn-' + _t;
-    } catch (_) {}
-  </script>
+<body>
+  <script>try { var t = localStorage.getItem('mn-theme'); if (t && t !== 'editorial') document.body.classList.add('mn-' + t); } catch(e) {}</script>
 
-  <header id="navbar"></header>
+  <div class="app" id="app-shell">
+    <header class="header" role="banner">
+      <div class="header__left">
+        <button class="icon-btn" id="sidebar-toggle" aria-label="Toggle sidebar" title="Toggle sidebar"></button>
+        <span class="breadcrumb">Executive <span style="opacity:0.4;margin:0 4px">&#8250;</span> <span class="breadcrumb__current">Cockpit</span></span>
+      </div>
+      <div class="header__center">
+        <label class="search-bar">
+          <span id="search-icon"></span>
+          <input type="text" class="search-bar__input" placeholder="Search..." aria-label="Search">
+          <kbd class="search-bar__kbd"></kbd>
+        </label>
+      </div>
+      <div class="header__right">
+        <select class="theme-select" id="theme-picker" aria-label="Theme">
+          <option value="editorial">Editorial</option><option value="nero">Nero</option>
+          <option value="avorio">Avorio</option><option value="colorblind">Colorblind</option>
+          <option value="sugar">Sugar</option><option value="navy">Navy</option>
+        </select>
+        <button class="icon-btn" id="btn-bell" aria-label="Notifications" title="Notifications"></button>
+        <button class="icon-btn" id="btn-settings" aria-label="Settings" title="Settings"></button>
+        <div class="avatar" title="Clara Visconti" aria-label="User menu">CV</div>
+      </div>
+    </header>
 
-  <div class="exec-layout" id="exec-layout">
-    <!-- Sidebar: Pipeline funnel -->
-    <aside class="exec-sidebar" aria-label="Engagement pipeline filter">
-      <div class="sidebar-label">Pipeline</div>
-      <nav class="exec-funnel" id="funnel-nav" aria-label="Filter portfolio by stage">
-        <button type="button" class="funnel-card funnel-card--all is-active" data-state="all" aria-pressed="true">
-          <span class="funnel-card__name">All Stages</span>
-          <span class="funnel-card__count">362</span>
-        </button>
-        <button type="button" class="funnel-card" data-state="Prospect" style="--funnel-color:#FFC72C" aria-pressed="false">
-          <span class="funnel-card__name">Prospect</span>
-          <div class="funnel-card__meta"><span class="funnel-card__count">45</span><span class="funnel-card__pct">18%</span></div>
-        </button>
-        <button type="button" class="funnel-card" data-state="Exploration" style="--funnel-color:#448AFF" aria-pressed="false">
-          <span class="funnel-card__name">Exploration</span>
-          <div class="funnel-card__meta"><span class="funnel-card__count">40</span><span class="funnel-card__pct">16%</span></div>
-        </button>
-        <button type="button" class="funnel-card" data-state="Sprint" style="--funnel-color:#7C4DFF" aria-pressed="false">
-          <span class="funnel-card__name">Sprint</span>
-          <div class="funnel-card__meta"><span class="funnel-card__count">40</span><span class="funnel-card__pct">16%</span></div>
-        </button>
-        <button type="button" class="funnel-card" data-state="Wrap Up" style="--funnel-color:#DC0000" aria-pressed="false">
-          <span class="funnel-card__name">Wrap Up</span>
-          <div class="funnel-card__meta"><span class="funnel-card__count">4</span><span class="funnel-card__pct">2%</span></div>
-        </button>
-        <button type="button" class="funnel-card" data-state="On Hold" style="--funnel-color:#9e9e9e" aria-pressed="false">
-          <span class="funnel-card__name">On Hold</span>
-          <div class="funnel-card__meta"><span class="funnel-card__count">14</span><span class="funnel-card__pct">6%</span></div>
-        </button>
-        <button type="button" class="funnel-card" data-state="Completed" style="--funnel-color:#00A651" aria-pressed="false">
-          <span class="funnel-card__name">Completed</span>
-          <div class="funnel-card__meta"><span class="funnel-card__count">138</span><span class="funnel-card__pct">55%</span></div>
-        </button>
-        <button type="button" class="funnel-card" data-state="Withdrawn" style="--funnel-color:#616161" aria-pressed="false">
-          <span class="funnel-card__name">Withdrawn</span>
-          <div class="funnel-card__meta"><span class="funnel-card__count">81</span></div>
-        </button>
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+      <div class="sidebar__brand">
+        <img src="../src/assets/favicon.svg" alt="" width="22" height="22">
+        <span>Executive Suite</span>
+        <span class="sidebar__version">v6.5</span>
+      </div>
+      <div class="sidebar__group-label">Views</div>
+      <nav class="sidebar__nav">
+        <button class="sidebar__link is-active" data-page="cockpit"><span id="ic-gauge"></span><span class="sidebar__link-text">Cockpit</span></button>
+        <button class="sidebar__link" data-page="portfolio"><span id="ic-layers"></span><span class="sidebar__link-text">Portfolio</span></button>
+        <button class="sidebar__link" data-page="market"><span id="ic-trend"></span><span class="sidebar__link-text">Market</span></button>
+        <button class="sidebar__link" data-page="board"><span id="ic-grid"></span><span class="sidebar__link-text">Board</span></button>
       </nav>
+      <div class="sidebar__group-label">Insights</div>
+      <nav class="sidebar__nav">
+        <button class="sidebar__link" data-page="funnel"><span id="ic-funnel"></span><span class="sidebar__link-text">Pipeline</span></button>
+        <button class="sidebar__link" data-page="heatmap"><span id="ic-heatmap"></span><span class="sidebar__link-text">Heatmap</span></button>
+        <button class="sidebar__link" data-page="reports"><span id="ic-report"></span><span class="sidebar__link-text">Reports</span></button>
+      </nav>
+      <div class="sidebar__spacer"></div>
+      <div class="sidebar__footer">
+        <button class="sidebar__footer-link"><span id="ic-settings"></span>Settings</button>
+      </div>
     </aside>
 
-    <!-- Main view area -->
-    <main class="exec-main">
-      <div class="exec-view is-active" id="view-cockpit"   role="region" aria-label="Cockpit overview"></div>
-      <div class="exec-view"           id="view-portfolio" role="region" aria-label="Portfolio gantt"></div>
-      <div class="exec-view"           id="view-market"    role="region" aria-label="Market heatmap"></div>
-      <div class="exec-view"           id="view-board"     role="region" aria-label="Board initiatives"></div>
+    <main class="main" id="main-content">
+      <div class="mn-grid">
+        <div class="hero-kpis">
+          <div class="hero-kpi"><div class="hero-kpi__label">Revenue</div><div class="hero-kpi__value">$14.2M</div><div class="hero-kpi__trend hero-kpi__trend--up">+8.3% QoQ</div></div>
+          <div class="hero-kpi"><div class="hero-kpi__label">EBITDA Margin</div><div class="hero-kpi__value">23.7%</div><div class="hero-kpi__trend hero-kpi__trend--up">+1.2pp YoY</div></div>
+          <div class="hero-kpi"><div class="hero-kpi__label">Active Clients</div><div class="hero-kpi__value">1,247</div><div class="hero-kpi__trend hero-kpi__trend--up">+42 this quarter</div></div>
+          <div class="hero-kpi"><div class="hero-kpi__label">Employee NPS</div><div class="hero-kpi__value">72</div><div class="hero-kpi__trend hero-kpi__trend--down">-3 vs prior</div></div>
+        </div>
+        <div class="mn-cell mn-col-8"><div class="mn-cell__label">Performance gauges</div><div class="mn-cell__body" id="cell-strip"></div></div>
+        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Revenue trend</div><div class="mn-cell__body" id="cell-sparkline"></div></div>
+        <div class="mn-cell mn-col-6"><div class="mn-cell__label">Regional performance</div><div class="mn-cell__body" id="cell-heatmap"></div></div>
+        <div class="mn-cell mn-col-6"><div class="mn-cell__label">Sales pipeline</div><div class="mn-cell__body" id="cell-funnel"></div></div>
+        <div class="mn-cell mn-col-8"><div class="mn-cell__label">Strategic initiatives</div><div class="mn-cell__body" id="cell-gantt" style="min-height:220px"></div></div>
+        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Board updates</div><div class="mn-cell__body" id="cell-activity"></div></div>
+      </div>
     </main>
-
-    <!-- Detail panel (hidden until item selected) -->
-    <aside class="exec-detail" id="exec-detail" hidden aria-label="Item detail" aria-live="polite">
-      <div id="detail-inner" style="height:100%;display:flex;flex-direction:column;overflow:hidden;"></div>
-    </aside>
   </div>
 
   <script src="../dist/iife/maranello.min.js"></script>
-  <script type="module" src="../packages/elements/dist/wc/mn-header-shell.js"></script>
   <script>
-  (function () {
-    var M = window.Maranello;
-    if (!M) return;
+    (function () {
 
-    /* ============================================================
-       DATA
-    ============================================================ */
-    var STATE_COLORS = {
-      'Prospect':    '#FFC72C',
-      'Exploration': '#448AFF',
-      'Sprint':      '#7C4DFF',
-      'Wrap Up':     '#DC0000',
-      'On Hold':     '#9e9e9e',
-      'Completed':   '#00A651',
-      'Withdrawn':   '#616161'
-    };
+      var M = window.Maranello;
+      if (!M) return;
 
-    var ENGAGEMENTS = [
-      {
-        id: 'AUR-001', company: 'Aurelia Dynamics',  project: 'Velocity ERP Rollout',
-        state: 'Sprint',      owner: 'Mara Fossati',   pm: 'Leo Hartmann',   account: 'Enterprise',
-        start: '2026-01-15', end: '2026-08-30', progress: 62,
-        description: 'Full ERP implementation across 3 business units, replacing a legacy Oracle stack with a cloud-native platform serving 2 400 users.'
-      },
-      {
-        id: 'SOL-002', company: 'Solstice Networks',  project: 'CoreNet SDWAN Migration',
-        state: 'Exploration', owner: 'Anika Patel',    pm: 'Diego Navarro',  account: 'Strategic',
-        start: '2026-02-01', end: '2026-11-15', progress: 25,
-        description: 'Network transformation from legacy MPLS to software-defined WAN across 18 global offices and 3 data centres.'
-      },
-      {
-        id: 'PIN-003', company: 'Pinnacle Steel',     project: 'OpsCenter Analytics',
-        state: 'Prospect',    owner: 'Leo Hartmann',   pm: 'Mara Fossati',   account: 'Commercial',
-        start: '2026-03-01', end: '2026-09-30', progress: 5,
-        description: 'Real-time operations analytics for production lines and supply-chain visibility across two primary manufacturing facilities.'
-      },
-      {
-        id: 'CRE-004', company: 'Crestview Banking',  project: 'Compliance Vault 2026',
-        state: 'Wrap Up',     owner: 'Suki Tanaka',    pm: 'Jonas Eriksson', account: 'Financial',
-        start: '2025-09-01', end: '2026-04-30', progress: 92,
-        description: 'Regulatory reporting automation and audit trail management aligned with Basel IV and DORA requirements. Final sign-off pending.'
-      },
-      {
-        id: 'HOR-005', company: 'Horizon Minerals',   project: 'FieldSense IoT Platform',
-        state: 'Sprint',      owner: 'Diego Navarro',  pm: 'Anika Patel',    account: 'Enterprise',
-        start: '2026-01-20', end: '2026-10-15', progress: 55,
-        description: 'Industrial IoT deployment for remote monitoring of 200+ extraction sites across 4 continents with edge compute and satellite uplink.'
-      },
-      {
-        id: 'CAS-006', company: 'Cascade Financial',  project: 'Wealth 360 Portal',
-        state: 'Completed',   owner: 'Jonas Eriksson', pm: 'Suki Tanaka',    account: 'Financial',
-        start: '2025-06-01', end: '2026-02-28', progress: 100,
-        description: 'Unified wealth management portal integrating portfolio analytics, client reporting, and advisor tools. Delivered on time and on budget.'
-      },
-      {
-        id: 'NEX-007', company: 'Nexus Telecom',      project: 'BillingCore Modernization',
-        state: 'On Hold',     owner: 'Mara Fossati',   pm: 'Leo Hartmann',   account: 'Strategic',
-        start: '2025-11-01', end: '2026-08-31', progress: 38,
-        description: 'Billing system overhaul paused pending regulatory review of new subscriber classification rules expected to conclude Q3 2026.'
-      },
-      {
-        id: 'VER-008', company: 'Verdant Solutions',  project: 'CarbonTrack ESG Suite',
-        state: 'Exploration', owner: 'Anika Patel',    pm: 'Diego Navarro',  account: 'Commercial',
-        start: '2026-02-15', end: '2026-12-31', progress: 18,
-        description: 'ESG reporting and carbon-footprint tracking platform built to satisfy mandatory EU disclosure requirements before 2027 deadline.'
-      },
-      {
-        id: 'ATL-009', company: 'Atlas Digital',      project: 'MarketEdge CDP',
-        state: 'Completed',   owner: 'Leo Hartmann',   pm: 'Mara Fossati',   account: 'Enterprise',
-        start: '2025-04-01', end: '2026-01-31', progress: 100,
-        description: 'Customer data platform consolidating 6 siloed marketing databases into a unified customer profile store powering personalised campaigns.'
-      },
-      {
-        id: 'PRI-010', company: 'Prism Logistics',    project: 'SupplySync Integration',
-        state: 'Prospect',    owner: 'Jonas Eriksson', pm: 'Suki Tanaka',    account: 'Commercial',
-        start: '2026-04-01', end: '2026-12-31', progress: 0,
-        description: 'Multi-modal logistics optimisation integrating sea, air, and land freight into a single control tower with AI-driven route planning.'
-      }
-    ];
+      function setIcon(id, name) { var el = document.getElementById(id); if (el && M.icons[name]) el.innerHTML = M.icons[name](); }
 
-    var BOARD_ITEMS = [
-      { initiative: 'Digital Operations Transformation', owner: 'Mara Fossati',   role: 'CEO',      status: 'On Track',    budget: '$4.2M', progress: { value: 72,  max: 100, label: '72%'  } },
-      { initiative: 'APAC Market Expansion',             owner: 'Leo Hartmann',   role: 'VP Sales', status: 'At Risk',     budget: '$2.8M', progress: { value: 45,  max: 100, label: '45%'  } },
-      { initiative: 'Cost Structure Optimisation',       owner: 'Anika Patel',    role: 'CFO',      status: 'On Track',    budget: '$1.5M', progress: { value: 88,  max: 100, label: '88%'  } },
-      { initiative: 'Platform Architecture Renewal',     owner: 'Diego Navarro',  role: 'CTO',      status: 'In Progress', budget: '$3.1M', progress: { value: 34,  max: 100, label: '34%'  } },
-      { initiative: 'Talent Pipeline Development',       owner: 'Suki Tanaka',    role: 'COO',      status: 'On Track',    budget: '$1.8M', progress: { value: 61,  max: 100, label: '61%'  } },
-      { initiative: 'ESG Compliance Framework',          owner: 'Jonas Eriksson', role: 'CLO',      status: 'In Progress', budget: '$0.9M', progress: { value: 52,  max: 100, label: '52%'  } }
-    ];
+      var kbdEl = document.querySelector('.search-bar__kbd');
+      if (kbdEl) kbdEl.textContent = navigator.userAgent.indexOf('Mac') !== -1 ? '\u2318K' : 'Ctrl+K';
 
-    /* ============================================================
-       STATE
-    ============================================================ */
-    var currentView  = 'cockpit';
-    var activeFilter = 'all';
-    var ganttCtrl    = null;
-    var tableCtrl    = null;
-    var viewInited   = {};
+      var picker = document.getElementById('theme-picker');
+      var saved = localStorage.getItem('mn-theme') || 'editorial';
+      picker.value = saved;
+      picker.addEventListener('change', function () { M.setTheme(picker.value); localStorage.setItem('mn-theme', picker.value); });
 
-    var VIEW_IDS = ['cockpit', 'portfolio', 'market', 'board'];
-    var navbar    = document.getElementById('navbar');
-    var layoutEl  = document.getElementById('exec-layout');
-    var detailEl  = document.getElementById('exec-detail');
-    var headerCtrl = null;
-
-    /* ============================================================
-       HELPERS
-    ============================================================ */
-    function icon(name) {
-      if (!M.icons || typeof M.icons[name] !== 'function') return '';
-      return M.icons[name]();
-    }
-
-    function setClass(node, cls, on) {
-      if (!node) return;
-      if (on) node.classList.add(cls);
-      else node.classList.remove(cls);
-    }
-
-    function findEng(id) {
-      for (var i = 0; i < ENGAGEMENTS.length; i++) {
-        if (ENGAGEMENTS[i].id === id) return ENGAGEMENTS[i];
-      }
-      return null;
-    }
-
-    function filteredGanttTasks() {
-      var list = activeFilter === 'all'
-        ? ENGAGEMENTS
-        : ENGAGEMENTS.filter(function (e) { return e.state === activeFilter; });
-      return list.map(function (e) {
-        return {
-          id: e.id,
-          title: e.company + ' \u2014 ' + e.project,
-          start: e.start,
-          end: e.end,
-          progress: e.progress,
-          color: STATE_COLORS[e.state] || '#888'
-        };
-      });
-    }
-
-    function makeField(label, value) {
-      var wrap = document.createElement('div');
-      wrap.className = 'detail-field';
-      var lbl = document.createElement('div');
-      lbl.className = 'detail-field-label';
-      lbl.textContent = label;
-      var val = document.createElement('div');
-      val.className = 'detail-field-value';
-      val.textContent = value;
-      wrap.appendChild(lbl);
-      wrap.appendChild(val);
-      return wrap;
-    }
-
-    /* ============================================================
-       DETAIL PANEL
-    ============================================================ */
-    function openDetail(eng) {
-      var inner = document.getElementById('detail-inner');
-      inner.innerHTML = '';
-
-      /* Header */
-      var hdr = document.createElement('div');
-      hdr.className = 'detail-header';
-      var titleRow = document.createElement('div');
-      titleRow.className = 'detail-title-row';
-      var titleBlock = document.createElement('div');
-      var companyEl = document.createElement('div');
-      companyEl.className = 'detail-company';
-      companyEl.textContent = eng.company;
-      var projectEl = document.createElement('div');
-      projectEl.className = 'detail-project';
-      projectEl.textContent = eng.project;
-      titleBlock.appendChild(companyEl);
-      titleBlock.appendChild(projectEl);
-      var closeBtn = document.createElement('button');
-      closeBtn.type = 'button';
-      closeBtn.className = 'detail-close';
-      closeBtn.setAttribute('aria-label', 'Close detail panel');
-      closeBtn.innerHTML = icon('close');
-      closeBtn.addEventListener('click', closeDetail);
-      titleRow.appendChild(titleBlock);
-      titleRow.appendChild(closeBtn);
-      hdr.appendChild(titleRow);
-
-      var stateLine = document.createElement('div');
-      var stateDot = document.createElement('span');
-      stateDot.className = 'state-dot';
-      stateDot.style.setProperty('--state-color', STATE_COLORS[eng.state] || '#888');
-      var stateText = document.createElement('span');
-      stateText.style.cssText = 'font-family:var(--font-mono);font-size:0.7rem;color:var(--mn-text-muted);';
-      stateText.textContent = eng.state;
-      stateLine.appendChild(stateDot);
-      stateLine.appendChild(stateText);
-      hdr.appendChild(stateLine);
-      inner.appendChild(hdr);
-
-      /* Tabs */
-      var tabNames = ['Overview', 'Activities', 'Impact', 'Quality', 'Comments'];
-      var tabsEl = document.createElement('div');
-      tabsEl.className = 'detail-tabs';
-      tabsEl.setAttribute('role', 'tablist');
-      var panelBody = document.createElement('div');
-      panelBody.className = 'detail-panel-body';
-      var tabPanels = [];
-
-      tabNames.forEach(function (name, idx) {
-        var tabBtn = document.createElement('button');
-        tabBtn.type = 'button';
-        tabBtn.className = 'detail-tab' + (idx === 0 ? ' is-active' : '');
-        tabBtn.setAttribute('role', 'tab');
-        tabBtn.setAttribute('aria-selected', idx === 0 ? 'true' : 'false');
-        tabBtn.textContent = name;
-        tabsEl.appendChild(tabBtn);
-
-        var panel = document.createElement('div');
-        panel.className = 'detail-tab-content' + (idx === 0 ? ' is-active' : '');
-        panel.setAttribute('role', 'tabpanel');
-        tabPanels.push(panel);
-
-        (function (i) {
-          tabBtn.addEventListener('click', function () {
-            tabsEl.querySelectorAll('.detail-tab').forEach(function (b, j) {
-              setClass(b, 'is-active', j === i);
-              b.setAttribute('aria-selected', j === i ? 'true' : 'false');
-            });
-            tabPanels.forEach(function (p, j) { setClass(p, 'is-active', j === i); });
-          });
-        }(idx));
+      var shell = document.getElementById('app-shell');
+      document.getElementById('sidebar-toggle').addEventListener('click', function () {
+        if (shell.className.indexOf('is-collapsed') !== -1) shell.className = shell.className.replace('is-collapsed', '').trim();
+        else shell.className = shell.className.trim() + ' is-collapsed';
       });
 
-      /* Overview content */
-      var desc = document.createElement('p');
-      desc.className = 'detail-description';
-      desc.textContent = eng.description;
-      tabPanels[0].appendChild(desc);
-      var fieldsGrid = document.createElement('div');
-      fieldsGrid.className = 'detail-fields-grid';
-      fieldsGrid.appendChild(makeField('State', eng.state));
-      fieldsGrid.appendChild(makeField('Account', eng.account));
-      fieldsGrid.appendChild(makeField('Owner', eng.owner));
-      fieldsGrid.appendChild(makeField('PM', eng.pm));
-      fieldsGrid.appendChild(makeField('Start', eng.start));
-      fieldsGrid.appendChild(makeField('End', eng.end));
-      tabPanels[0].appendChild(fieldsGrid);
-
-      /* Other tab placeholders */
-      for (var t = 1; t < tabPanels.length; t++) {
-        var ph = document.createElement('div');
-        ph.className = 'detail-placeholder';
-        ph.textContent = tabNames[t] + ' — coming soon';
-        tabPanels[t].appendChild(ph);
+      var links = document.querySelectorAll('.sidebar__link');
+      var bcCurrent = document.querySelector('.breadcrumb__current');
+      for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', function () {
+          for (var j = 0; j < links.length; j++) links[j].className = links[j].className.replace(' is-active', '');
+          this.className += ' is-active';
+          var t = this.querySelector('.sidebar__link-text');
+          if (t && bcCurrent) bcCurrent.textContent = t.textContent;
+        });
       }
 
-      inner.appendChild(tabsEl);
-      tabPanels.forEach(function (p) { panelBody.appendChild(p); });
-      inner.appendChild(panelBody);
+      setIcon('sidebar-toggle', 'menu');
+      setIcon('search-icon', 'search');
+      setIcon('btn-bell', 'bell');
+      setIcon('btn-settings', 'settings');
+      setIcon('ic-gauge', 'gauge');
+      setIcon('ic-layers', 'layers');
+      setIcon('ic-trend', 'trendUp');
+      setIcon('ic-grid', 'grid');
+      setIcon('ic-funnel', 'funnel');
+      setIcon('ic-heatmap', 'heatmap');
+      setIcon('ic-report', 'report');
+      setIcon('ic-settings', 'settings');
 
-      detailEl.hidden = false;
-      setClass(layoutEl, 'has-detail', true);
-    }
-
-    function closeDetail() {
-      detailEl.hidden = true;
-      setClass(layoutEl, 'has-detail', false);
-      document.getElementById('detail-inner').innerHTML = '';
-    }
-
-    /* ============================================================
-       VIEW: COCKPIT
-    ============================================================ */
-    function initCockpit() {
-      var container = document.getElementById('view-cockpit');
-      container.innerHTML = '';
-      var wrap = document.createElement('div');
-      wrap.className = 'cockpit-wrap';
-
-      var stripMount = document.createElement('div');
-      wrap.appendChild(stripMount);
-
-      var gaugeRow = document.createElement('div');
-      gaugeRow.className = 'cockpit-gauge-row';
-
-      var revCard = document.createElement('div');
-      revCard.className = 'gauge-card';
-      revCard.setAttribute('role', 'group');
-      revCard.setAttribute('aria-label', 'Revenue performance gauge');
-      var revCanvas = document.createElement('canvas');
-      revCanvas.id = 'cockpit-gauge-rev';
-      revCanvas.setAttribute('width', '200');
-      revCanvas.setAttribute('height', '200');
-      revCanvas.setAttribute('role', 'img');
-      revCanvas.setAttribute('aria-label', 'Revenue at $42.3M, 84.6 percent of $50M target');
-      var revSR = document.createElement('span');
-      revSR.className = 'sr-only';
-      revSR.textContent = 'Revenue: $42.3M of $50M target (84.6%)';
-      var revLbl = document.createElement('p');
-      revLbl.className = 'gauge-label';
-      revLbl.textContent = 'Revenue';
-      revCard.appendChild(revCanvas);
-      revCard.appendChild(revSR);
-      revCard.appendChild(revLbl);
-
-      var qualCard = document.createElement('div');
-      qualCard.className = 'gauge-card';
-      qualCard.setAttribute('role', 'group');
-      qualCard.setAttribute('aria-label', 'Delivery quality gauge');
-      var qualCanvas = document.createElement('canvas');
-      qualCanvas.id = 'cockpit-gauge-qual';
-      qualCanvas.setAttribute('width', '200');
-      qualCanvas.setAttribute('height', '200');
-      qualCanvas.setAttribute('role', 'img');
-      qualCanvas.setAttribute('aria-label', 'Delivery quality at 60 percent');
-      var qualSR = document.createElement('span');
-      qualSR.className = 'sr-only';
-      qualSR.textContent = 'Delivery quality: 60%';
-      var qualLbl = document.createElement('p');
-      qualLbl.className = 'gauge-label';
-      qualLbl.textContent = 'Delivery Quality';
-      qualCard.appendChild(qualCanvas);
-      qualCard.appendChild(qualSR);
-      qualCard.appendChild(qualLbl);
-
-      gaugeRow.appendChild(revCard);
-      gaugeRow.appendChild(qualCard);
-      wrap.appendChild(gaugeRow);
-      container.appendChild(wrap);
-
-      M.dashboardStrip(stripMount, {
-        ariaLabel: 'Executive instrument strip',
-        zones: [
-          {
-            type: 'gauge',
-            label: 'UTILIZATION',
-            size: 'sm',
-            gaugeConfig: {
-              value: 86, max: 100, color: '#FFC72C', colorMode: 'lower-better',
-              ticks: 10, subticks: 5, startAngle: -225, endAngle: 45, showNeedle: true,
-              numbers: [0, 25, 50, 75, 100],
-              complications: {
-                centerValue: '86', centerUnit: '%', centerLabel: 'UTILIZATION',
-                arcBar: { labelLeft: '0', labelRight: '100' },
-                statusLed: { color: '#FFC72C', label: 'HIGH' }
-              }
-            }
-          },
-          {
-            type: 'pipeline',
-            title: 'PIPELINE AND AVG DURATION',
-            rows: [
-              { label: 'PROSPECT',    value: 47,  color: '#FFC72C', secondary: '47d' },
-              { label: 'EXPLORATION', value: 48,  color: '#448AFF', secondary: '119d' },
-              { label: 'SPRINT',      value: 40,  color: '#7C4DFF', secondary: '141d' },
-              { label: 'WRAP UP',     value: 4,   color: '#DC0000', secondary: '181d' },
-              { label: 'ON HOLD',     value: 14,  color: '#9e9e9e', secondary: '118d' },
-              { label: 'COMPLETED',   value: 138, color: '#00A651', secondary: '166d' },
-              { label: 'WITHDRAWN',   value: 81,  color: '#616161', secondary: '142d' }
-            ],
-            footer: { label: 'E2E', value: '157d' }
-          },
-          {
-            type: 'trend',
-            title: '6 MONTH TREND',
-            items: [
-              { label: 'PROSPECTS', value: 47,  color: '#FFC72C', data: [32, 28, 35, 42, 38, 47] },
-              { label: 'IN FLIGHT', value: 94,  color: '#448AFF', data: [60, 68, 72, 78, 85, 94] },
-              { label: 'CLOSED',    value: 126, color: '#00A651', data: [80, 90, 95, 105, 118, 126] }
-            ]
-          },
-          {
-            type: 'board',
-            title: 'KEY METRICS',
-            stats: [
-              { label: 'REVENUE',      value: '$42.3M' },
-              { label: 'MARGIN',       value: '68.2%' },
-              { label: 'NPS',          value: '72' },
-              { label: 'GROWTH',       value: '23.4%' },
-              { label: 'ENGAGEMENTS',  value: '377' },
-              { label: 'FTE',          value: '260' }
-            ]
-          }
-        ]
-      });
-
-      M.createGauge({
-        target: '#cockpit-gauge-rev',
-        size: 'md',
-        config: {
-          value: 84.6, max: 100, color: '#00A651', colorMode: 'higher-better',
-          ticks: 10, subticks: 5, startAngle: -225, endAngle: 45, showNeedle: true,
-          numbers: [0, 25, 50, 75, 100],
-          complications: {
-            centerValue: '$42.3M', centerUnit: '', centerLabel: 'REVENUE',
-            arcBar: { labelLeft: '0', labelRight: '$50M' },
-            statusLed: { color: '#00A651', label: 'ON TRACK' }
-          }
-        }
-      });
-
-      M.createGauge({
-        target: '#cockpit-gauge-qual',
-        size: 'md',
-        config: {
-          value: 60, max: 100, color: '#DC0000', colorMode: 'higher-better',
-          ticks: 10, subticks: 5, startAngle: -225, endAngle: 45, showNeedle: true,
-          numbers: [0, 25, 50, 75, 100],
-          complications: {
-            centerValue: '60', centerUnit: '%', centerLabel: 'QUALITY',
-            arcBar: { labelLeft: '0', labelRight: '100' },
-            statusLed: { color: '#DC0000', label: 'ALERT' }
-          }
-        }
-      });
-    }
-
-    /* ============================================================
-       VIEW: PORTFOLIO
-    ============================================================ */
-    function initPortfolio() {
-      var container = document.getElementById('view-portfolio');
-      container.innerHTML = '';
-      var wrap = document.createElement('div');
-      wrap.className = 'portfolio-wrap';
-      container.appendChild(wrap);
-      if (ganttCtrl && ganttCtrl.destroy) ganttCtrl.destroy();
-      ganttCtrl = M.gantt(wrap, filteredGanttTasks(), {
-        onClick: function (task) {
-          var eng = findEng(task.id);
-          if (eng) openDetail(eng);
-        }
-      });
-    }
-
-    /* ============================================================
-       VIEW: MARKET
-    ============================================================ */
-    function initMarket() {
-      var container = document.getElementById('view-market');
-      container.innerHTML = '';
-      var wrap = document.createElement('div');
-      wrap.className = 'market-wrap';
-      var mountId = 'exec-heatmap-mount';
-      var mount = document.createElement('div');
-      mount.id = mountId;
-      wrap.appendChild(mount);
-      container.appendChild(wrap);
-
-      M.heatmap(mountId, {
-        ariaLabel: 'Market opportunity matrix by region and product line',
-        columnLabels: ['Platform', 'Analytics', 'Services', 'Cloud'],
-        showValues: true,
-        cellSize: 'md',
-        colorScale: ['#DC0000', '#FFC72C', '#00A651'],
-        minValue: 0,
-        maxValue: 100,
-        rows: [
-          { label: 'North America', cells: [{ value: 92, label: '92' }, { value: 78, label: '78' }, { value: 85, label: '85' }, { value: 71, label: '71' }] },
-          { label: 'EMEA',          cells: [{ value: 74, label: '74' }, { value: 82, label: '82' }, { value: 68, label: '68' }, { value: 59, label: '59' }] },
-          { label: 'APAC',          cells: [{ value: 88, label: '88' }, { value: 55, label: '55' }, { value: 91, label: '91' }, { value: 77, label: '77' }] },
-          { label: 'LATAM',         cells: [{ value: 45, label: '45' }, { value: 62, label: '62' }, { value: 38, label: '38' }, { value: 51, label: '51' }] }
-        ],
-        onCellClick: function (row, cell) {
-          console.log('Market cell:', row.label, cell.label);
-        }
-      });
-    }
-
-    /* ============================================================
-       VIEW: BOARD
-    ============================================================ */
-    function initBoard() {
-      var container = document.getElementById('view-board');
-      container.innerHTML = '';
-      var wrap = document.createElement('div');
-      wrap.className = 'board-wrap';
-      container.appendChild(wrap);
-      if (tableCtrl && tableCtrl.destroy) tableCtrl.destroy();
-      tableCtrl = M.dataTable(wrap, {
-        ariaLabel: 'Board strategic initiatives',
-        stickyHeader: true,
-        stripedRows: true,
-        columns: [
-          { key: 'initiative', label: 'Initiative', type: 'text',     sortable: true },
-          { key: 'owner',      label: 'Owner',      type: 'text',     sortable: true },
-          { key: 'role',       label: 'Role',       type: 'text' },
-          { key: 'status',     label: 'Status',     type: 'status',   sortable: true },
-          { key: 'budget',     label: 'Budget',     type: 'text',     sortable: true },
-          { key: 'progress',   label: 'Progress',   type: 'progress' }
-        ],
-        data: BOARD_ITEMS,
-        onRowClick: function (row) {
-          openDetail({
-            id: row.initiative,
-            company: 'Board Initiative',
-            project: row.initiative,
-            state: row.status,
-            owner: row.owner,
-            pm: row.role,
-            account: row.budget,
-            start: '2026-01-01',
-            end: '2026-12-31',
-            progress: row.progress.value,
-            description: row.initiative + ' — owned by ' + row.owner + ' (' + row.role + '). Allocated budget: ' + row.budget + '. Current progress: ' + row.progress.label + '.'
-          });
-        }
-      });
-    }
-
-    /* ============================================================
-       VIEW SWITCHING
-    ============================================================ */
-    function showView(id) {
-      VIEW_IDS.forEach(function (vid) {
-        var el = document.getElementById('view-' + vid);
-        setClass(el, 'is-active', vid === id);
-      });
-      currentView = id;
-      syncViewButtons();
-      closeDetail();
-      if (viewInited[id]) return;
-      viewInited[id] = true;
-      if (id === 'cockpit')   initCockpit();
-      else if (id === 'portfolio') initPortfolio();
-      else if (id === 'market')    initMarket();
-      else if (id === 'board')     initBoard();
-    }
-
-    function syncViewButtons() {
-      VIEW_IDS.forEach(function (id) {
-        var btn = document.querySelector('[data-header-shell-action-id="' + id + '"]');
-        setClass(btn, 'mn-header-shell__action--active', id === currentView);
-      });
-    }
-
-    /* ============================================================
-       FUNNEL SIDEBAR
-    ============================================================ */
-    document.getElementById('funnel-nav').addEventListener('click', function (e) {
-      var btn = e.target;
-      while (btn && btn !== this) {
-        if (btn.classList && btn.classList.contains('funnel-card')) break;
-        btn = btn.parentElement;
+      // Dashboard Strip
+      var stripEl = document.getElementById('cell-strip');
+      if (stripEl && M.dashboardStrip) {
+        M.dashboardStrip(stripEl, {
+          zones: [
+            { type: 'gauge', label: 'Gross Margin', gaugeConfig: { value: 67, max: 100, showNeedle: true, complications: { centerValue: '67', centerUnit: '%' } } },
+            { type: 'gauge', label: 'Cash Ratio', gaugeConfig: { value: 1.8, max: 3, showNeedle: true, complications: { centerValue: '1.8', centerUnit: 'x' } } },
+            { type: 'board', title: 'Quarterly', stats: [
+              { label: 'ARR', value: '$18.4M' }, { label: 'CAC', value: '$2,140' },
+              { label: 'LTV', value: '$38K' }, { label: 'Churn', value: '2.1%' }
+            ] }
+          ],
+          ariaLabel: 'Executive performance gauges'
+        });
       }
-      if (!btn || !btn.classList.contains('funnel-card')) return;
-      var state = btn.getAttribute('data-state');
-      if (!state) return;
-      activeFilter = state;
-      this.querySelectorAll('.funnel-card').forEach(function (card) {
-        var on = card.getAttribute('data-state') === state;
-        setClass(card, 'is-active', on);
-        card.setAttribute('aria-pressed', on ? 'true' : 'false');
-      });
-      if (currentView === 'portfolio' && ganttCtrl && ganttCtrl.setTasks) {
-        ganttCtrl.setTasks(filteredGanttTasks());
-      } else {
-        viewInited['portfolio'] = false;
+
+      // Sparkline
+      var sparkEl = document.getElementById('cell-sparkline');
+      if (sparkEl && M.sparkline) {
+        var c = document.createElement('canvas');
+        c.setAttribute('role', 'img'); c.setAttribute('aria-label', 'Revenue trend');
+        c.style.width = '100%'; c.style.height = '100%';
+        sparkEl.appendChild(c);
+        M.sparkline(c, [8.2,8.5,9.1,9.4,9.8,10.2,10.5,11.0,11.3,11.8,12.1,12.6,12.9,13.2,13.5,13.4,13.7,13.9,14.0,14.1,14.0,14.2,14.3,14.2]);
       }
-    });
 
-    /* ============================================================
-       HEADER (exact header-responsive-shell.js pattern)
-    ============================================================ */
-    function mountHeader() {
-      var headerHost = document.createElement('mn-header-shell');
-      headerHost.config = {
-        ariaLabel: 'ConvergIO Executive navigation',
-        sections: [
-          {
-            type: 'brand',
-            label: 'ConvergIO Executive',
-            logoSrc: '../src/assets/favicon.svg',
-            logoAlt: 'ConvergIO mark',
-            href: './index.html'
-          },
-          {
-            type: 'actions',
-            role: 'pre',
-            presentation: 'segmented',
-            items: [
-              { id: 'cockpit',   label: 'Cockpit',   icon: icon('dashboard'), active: true },
-              { id: 'portfolio', label: 'Portfolio', icon: icon('gantt') },
-              { id: 'market',    label: 'Market',    icon: icon('heatmap') },
-              { id: 'board',     label: 'Board',     icon: icon('table') }
-            ]
-          },
-          {
-            type: 'search',
-            placeholder: 'Search engagements, accounts...',
-            shortcut: 'Cmd+K',
-            filterButtonLabel: 'Filters',
-            filters: [
-              {
-                id: 'quarter',
-                label: 'Quarter',
-                options: [
-                  { id: 'all', label: 'All Quarters' },
-                  { id: 'Q1', label: 'Q1 2026' },
-                  { id: 'Q2', label: 'Q2 2026' },
-                  { id: 'Q3', label: 'Q3 2026' },
-                  { id: 'Q4', label: 'Q4 2026' }
-                ]
-              }
-            ]
-          },
-          {
-            type: 'actions',
-            role: 'post',
-            presentation: 'cluster',
-            items: [
-              { id: 'notifications', title: 'Notifications', icon: icon('bell') },
-              { id: 'messages',      title: 'Messages',      icon: icon('message') },
-              { id: 'settings',      title: 'Settings',      icon: icon('settings') }
-            ]
-          },
-          { type: 'divider' },
-          { type: 'theme' },
-          { type: 'profile', name: 'RD' }
-        ],
-        callbacks: {
-          onAction: function (payload) {
-            if (VIEW_IDS.indexOf(payload.id) !== -1) showView(payload.id);
-          },
-          onSearch: function (payload) {
-            console.log('Search:', payload.query);
-          },
-          onFilter: function (payload) {
-            console.log('Filter:', payload.groupId, payload.values);
-          }
-        }
-      };
-      navbar.textContent = '';
-      navbar.appendChild(headerHost);
-      headerCtrl = headerHost;
-
-      var ready = typeof headerHost.whenReady === 'function'
-        ? headerHost.whenReady()
-        : Promise.resolve();
-      ready.then(function () {
-        if (!headerHost.isConnected) return;
-        syncViewButtons();
-      });
-    }
-
-    /* ============================================================
-       INIT
-    ============================================================ */
-    mountHeader();
-    showView('cockpit');
-
-    document.addEventListener('keydown', function (e) {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        var inp = navbar.querySelector('.mn-header-shell__search-input');
-        if (inp) inp.focus();
+      // Heatmap
+      var heatEl = document.getElementById('cell-heatmap');
+      if (heatEl && M.heatmap) {
+        M.heatmap(heatEl, {
+          columnLabels: ['Q1', 'Q2', 'Q3', 'Q4'],
+          rows: [
+            { label: 'EMEA', cells: [{ value: 82 }, { value: 91 }, { value: 78 }, { value: 88 }] },
+            { label: 'APAC', cells: [{ value: 65 }, { value: 72 }, { value: 80 }, { value: 85 }] },
+            { label: 'Americas', cells: [{ value: 94 }, { value: 88 }, { value: 92 }, { value: 96 }] },
+            { label: 'LATAM', cells: [{ value: 48 }, { value: 55 }, { value: 62 }, { value: 70 }] }
+          ],
+          showValues: true, ariaLabel: 'Regional performance heatmap'
+        });
       }
-    });
 
-  }());
+      // Funnel
+      var funnelEl = document.getElementById('cell-funnel');
+      if (funnelEl && M.funnel) {
+        M.funnel(funnelEl, {
+          data: { pipeline: [
+            { label: 'Leads', count: 2840 }, { label: 'Qualified', count: 1420 },
+            { label: 'Proposal', count: 680 }, { label: 'Negotiation', count: 340 },
+            { label: 'Closed Won', count: 187 }
+          ], total: 2840 },
+          showCounts: true, showLabels: true
+        });
+      }
+
+      // Gantt
+      var ganttEl = document.getElementById('cell-gantt');
+      if (ganttEl && M.gantt) {
+        M.gantt(ganttEl, [
+          { id: '1', title: 'Market Expansion APAC', start: '2026-01-15', end: '2026-06-30' },
+          { id: '2', title: 'Platform Modernization', start: '2026-02-01', end: '2026-08-15' },
+          { id: '3', title: 'AI Integration Phase 1', start: '2026-03-01', end: '2026-05-31' },
+          { id: '4', title: 'Sustainability Roadmap', start: '2026-04-01', end: '2026-09-30' },
+          { id: '5', title: 'Due Diligence - Volta', start: '2026-05-01', end: '2026-07-15' }
+        ]);
+      }
+
+      // Activity
+      var actEl = document.getElementById('cell-activity');
+      if (actEl && M.activityFeed) {
+        M.activityFeed(actEl, [
+          { id: '1', title: 'Board Meeting', body: 'Q1 results approved unanimously', meta: '2 days ago', type: 'success' },
+          { id: '2', title: 'IR Update', body: 'Analyst coverage initiated', meta: '4 days ago', type: 'info' },
+          { id: '3', title: 'Risk Alert', body: 'APAC FX exposure above threshold', meta: '1 week ago', type: 'warning' },
+          { id: '4', title: 'Compliance', body: 'SOC 2 Type II audit completed', meta: '2 weeks ago', type: 'success' }
+        ], { maxItems: 6 });
+      }
+    })();
   </script>
 </body>
 </html>
