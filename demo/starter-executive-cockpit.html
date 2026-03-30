@@ -312,19 +312,25 @@
 
       // KPI sparklines
       var spd = [[10.2,10.8,11.3,11.8,12.4,12.9,13.2,13.5,13.4,13.7,14.0,14.2],[20.1,20.8,21.2,21.9,22.3,22.8,23.1,23.0,23.2,23.5,23.6,23.7],[980,1010,1040,1060,1095,1120,1145,1170,1195,1210,1230,1247],[64,66,68,71,70,73,74,72,75,74,73,72]];
-      if (M.sparkline) { for (var p = 0; p < 4; p++) { var cv = document.getElementById('s'+p); if (cv) M.sparkline(cv, spd[p]); } }
+      try { if (M.sparkline) { for (var p = 0; p < 4; p++) { var sc = document.getElementById('s'+p); if (sc) M.sparkline(sc, spd[p]); } } } catch(e) { console.warn('sparkline:', e.message); }
 
-      // Dashboard strip — 5 zones
-      if (M.dashboardStrip) {
+      // Resolve colors from computed styles (canvas APIs need hex, not var())
+      var cstyles = getComputedStyle(document.documentElement);
+      function resolveColor(n) { return cstyles.getPropertyValue(n).trim() || '#888888'; }
+
+      // Mount each component independently so one failure doesn't break others
+
+      // Dashboard strip
+      try { if (M.dashboardStrip) {
         M.dashboardStrip(document.getElementById('strip'), {
           ariaLabel: 'Executive instruments',
           zones: [
-            { type:'gauge', label:'OPS', gaugeConfig:{ value:92, max:100, ticks:10, subticks:5, startAngle:-225, endAngle:45, showNeedle:true, numbers:[0,50,100], complications:{ centerValue:'92', centerUnit:'%', statusLed:{ color:'var(--mn-success)', label:'LIVE' } } }, size:'sm' },
+            { type:'gauge', label:'OPS', gaugeConfig:{ value:92, max:100, ticks:10, subticks:5, startAngle:-225, endAngle:45, showNeedle:true, numbers:[0,50,100], complications:{ centerValue:'92', centerUnit:'%', statusLed:{ color:resolveColor("--mn-success"), label:'LIVE' } } }, size:'sm' },
             { type:'pipeline', title:'REVENUE', rows:[
-              { label:'Prospect', value:49, color:'var(--mn-chart-series-1)', secondary:'$2.8M' },
-              { label:'Qualified', value:36, color:'var(--mn-chart-series-2)', secondary:'$1.9M' },
-              { label:'Proposal', value:22, color:'var(--mn-chart-series-3)', secondary:'$1.2M' },
-              { label:'Closed', value:126, color:'var(--mn-success)', secondary:'$14.2M' }
+              { label:'Prospect', value:49, color:resolveColor("--mn-chart-series-1"), secondary:'$2.8M' },
+              { label:'Qualified', value:36, color:resolveColor("--mn-chart-series-2"), secondary:'$1.9M' },
+              { label:'Proposal', value:22, color:resolveColor("--mn-chart-series-3"), secondary:'$1.2M' },
+              { label:'Closed', value:126, color:resolveColor("--mn-success"), secondary:'$14.2M' }
             ], footer:{ label:'Avg cycle', value:'47d' } },
             { type:'trend', title:'TREND', items:[
               { label:'Rev', value:'$14.2M', trend:'up', data:[10.2,11.3,12.9,14.2] },
@@ -333,13 +339,13 @@
               { label:'NPS', value:'72', trend:'down', data:[68,74,75,72] }
             ] },
             { type:'board', title:'UNIT ECONOMICS', stats:[ { label:'ARR', value:'$18.4M' }, { label:'CAC', value:'$2,140' }, { label:'LTV', value:'$38K' }, { label:'LTV/CAC', value:'17.8x' } ] },
-            { type:'gauge', label:'CHURN', gaugeConfig:{ value:21, max:100, colorMode:'lower-better', ticks:10, subticks:5, startAngle:-225, endAngle:45, showNeedle:true, numbers:[0,50,100], complications:{ centerValue:'2.1', centerUnit:'%', centerLabel:'CHURN', statusLed:{ color:'var(--mn-success)', label:'LOW' }, trend:{ direction:'down', delta:'-0.3', color:'var(--mn-success)' } } }, size:'sm' }
+            { type:'gauge', label:'CHURN', gaugeConfig:{ value:21, max:100, colorMode:'lower-better', ticks:10, subticks:5, startAngle:-225, endAngle:45, showNeedle:true, numbers:[0,50,100], complications:{ centerValue:'2.1', centerUnit:'%', centerLabel:'CHURN', statusLed:{ color:resolveColor("--mn-success"), label:'LOW' }, trend:{ direction:'down', delta:'-0.3', color:resolveColor("--mn-success") } } }, size:'sm' }
           ]
         });
-      }
+      } } catch(e) { console.warn('strip:', e.message); }
 
       // Heatmap
-      if (M.heatmap) {
+      try { if (M.heatmap) {
         M.heatmap(document.getElementById('heat'), {
           columnLabels:['Q1','Q2','Q3','Q4'],
           rows:[
@@ -352,19 +358,19 @@
           showValues:true, ariaLabel:'Regional heatmap',
           onCellClick:function(r,c,ri,ci){ if(M.toast) M.toast({type:'info',title:r.label+' Q'+(ci+1),message:'Score: '+c.value+'%'}); }
         });
-      }
+      } } catch(e) { console.warn('heatmap:', e.message); }
 
       // Funnel
-      if (M.funnel) {
+      try { if (M.funnel) {
         M.funnel(document.getElementById('funnel'), {
           data:{ pipeline:[{label:'Leads',count:2840},{label:'Qualified',count:1420},{label:'Proposal',count:680},{label:'Negotiation',count:340},{label:'Won',count:187}], total:2840 },
           showCounts:true, showLabels:true,
           onClick:function(s){ if(M.toast) M.toast({type:'info',title:s.label,message:s.count+' deals'}); }
         });
-      }
+      } } catch(e) { console.warn('funnel:', e.message); }
 
       // Gantt
-      if (M.gantt) {
+      try { if (M.gantt) {
         M.gantt(document.getElementById('gantt'), [
           {id:'1',title:'APAC Expansion',start:'2026-01-15',end:'2026-06-30'},
           {id:'2',title:'Platform v3',start:'2026-02-01',end:'2026-08-15'},
@@ -373,10 +379,10 @@
           {id:'5',title:'Due Diligence Volta',start:'2026-05-01',end:'2026-07-15'},
           {id:'6',title:'Brand Refresh',start:'2026-06-01',end:'2026-08-31'}
         ], { onClick:function(t){ if(M.toast) M.toast({type:'info',title:t.title,message:t.start+' \u2192 '+t.end}); } });
-      }
+      } } catch(e) { console.warn('gantt:', e.message); }
 
       // Activity
-      if (M.activityFeed) {
+      try { if (M.activityFeed) {
         M.activityFeed(document.getElementById('feed'), [
           {id:'1',title:'Board Meeting',body:'Q1 approved unanimously',meta:'2d ago',type:'success'},
           {id:'2',title:'IR Update',body:'Goldman coverage initiated',meta:'4d ago',type:'info'},
@@ -384,10 +390,10 @@
           {id:'4',title:'Compliance',body:'SOC 2 II completed',meta:'2w ago',type:'success'},
           {id:'5',title:'M&A',body:'Volta NDA signed',meta:'3w ago',type:'info'}
         ], {maxItems:8});
-      }
+      } } catch(e) { console.warn('activityFeed:', e.message); }
 
       // Table
-      if (M.dataTable) {
+      try { if (M.dataTable) {
         M.dataTable(document.getElementById('tbl'), {
           columns:[
             {key:'unit',label:'Business Unit',sortable:true},
@@ -408,7 +414,7 @@
           ariaLabel:'Portfolio overview',
           onRowClick:function(r){ if(M.toast) M.toast({type:'info',title:r.unit,message:r.revenue+' rev, '+r.margin+' margin'}); }
         });
-      }
+      } } catch(e) { console.warn('dataTable:', e.message); }
     })();
   </script>
 </body>
