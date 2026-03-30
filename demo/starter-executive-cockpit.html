@@ -325,7 +325,7 @@
         M.dashboardStrip(document.getElementById('strip'), {
           ariaLabel: 'Executive instruments',
           zones: [
-            { type:'gauge', label:'OPS', gaugeConfig:{ value:92, max:100, ticks:10, subticks:5, startAngle:-225, endAngle:45, showNeedle:true, numbers:[0,50,100], complications:{ centerValue:'92', centerUnit:'%', statusLed:{ color:resolveColor("--mn-success"), label:'LIVE' } } }, size:'sm' },
+            { type:'gauge', label:'OPS', gaugeConfig:{ value:92, max:100, color:resolveColor("--mn-success"), ticks:10, subticks:5, startAngle:-225, endAngle:45, showNeedle:true, numbers:[0,50,100], complications:{ centerValue:'92', centerUnit:'%', statusLed:{ color:resolveColor("--mn-success"), label:'LIVE' } } }, size:'sm' },
             { type:'pipeline', title:'REVENUE', rows:[
               { label:'Prospect', value:49, color:resolveColor("--mn-chart-series-1"), secondary:'$2.8M' },
               { label:'Qualified', value:36, color:resolveColor("--mn-chart-series-2"), secondary:'$1.9M' },
@@ -339,7 +339,7 @@
               { label:'NPS', value:'72', trend:'down', data:[68,74,75,72] }
             ] },
             { type:'board', title:'UNIT ECONOMICS', stats:[ { label:'ARR', value:'$18.4M' }, { label:'CAC', value:'$2,140' }, { label:'LTV', value:'$38K' }, { label:'LTV/CAC', value:'17.8x' } ] },
-            { type:'gauge', label:'CHURN', gaugeConfig:{ value:21, max:100, colorMode:'lower-better', ticks:10, subticks:5, startAngle:-225, endAngle:45, showNeedle:true, numbers:[0,50,100], complications:{ centerValue:'2.1', centerUnit:'%', centerLabel:'CHURN', statusLed:{ color:resolveColor("--mn-success"), label:'LOW' }, trend:{ direction:'down', delta:'-0.3', color:resolveColor("--mn-success") } } }, size:'sm' }
+            { type:'gauge', label:'CHURN', gaugeConfig:{ value:21, max:100, color:resolveColor("--mn-error"), colorMode:'lower-better', ticks:10, subticks:5, startAngle:-225, endAngle:45, showNeedle:true, numbers:[0,50,100], complications:{ centerValue:'2.1', centerUnit:'%', centerLabel:'CHURN', statusLed:{ color:resolveColor("--mn-success"), label:'LOW' }, trend:{ direction:'down', delta:'-0.3', color:resolveColor("--mn-success") } } }, size:'sm' }
           ]
         });
       } } catch(e) { console.warn('strip:', e.message); }
