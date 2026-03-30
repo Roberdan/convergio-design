@@ -1,4 +1,4 @@
-import type { SharedShellConfig } from '../../shared-shell/src/contracts';
+import type { SharedShellConfig } from '@convergio/shared-shell-starter';
 
 export interface CommandRailItem {
   id: string;

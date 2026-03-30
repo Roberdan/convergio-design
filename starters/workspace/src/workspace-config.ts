@@ -1,4 +1,4 @@
-import type { SharedShellConfig } from '../../shared-shell/src/index';
+import type { SharedShellConfig } from '@convergio/shared-shell-starter';
 
 /**
  * A single project entry in the workspace project switcher.
@@ -129,8 +129,9 @@ const DEFAULT_CONFIG: WorkspaceConfig = {
  * @returns A complete WorkspaceConfig ready for use.
  */
 export function createWorkspaceConfig(overrides?: Partial<WorkspaceConfig>): WorkspaceConfig {
+  const base: WorkspaceConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
   if (overrides === undefined) {
-    return Object.assign({}, DEFAULT_CONFIG);
+    return base;
   }
-  return Object.assign({}, DEFAULT_CONFIG, overrides);
+  return { ...base, ...overrides };
 }

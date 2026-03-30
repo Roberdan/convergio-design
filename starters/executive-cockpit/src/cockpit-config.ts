@@ -1,4 +1,4 @@
-import type { SharedShellConfig } from '../../shared-shell/src/contracts';
+import type { SharedShellConfig } from '@convergio/shared-shell-starter';
 
 export interface KpiCard {
   id: string;
@@ -98,7 +98,7 @@ export function createCockpitConfig(overrides?: Partial<CockpitConfig>): Cockpit
       eyebrow: 'Board-ready metrics',
       body: '<section data-slot="primary">Hero KPIs and narrative summaries</section>',
     },
-    heroKpis: DEFAULT_HERO_KPIS,
+    heroKpis: JSON.parse(JSON.stringify(DEFAULT_HERO_KPIS)),
     narrativeHero: {
       headline: 'Q2 on track: revenue ahead of plan, margin expanding',
       summary:
@@ -106,8 +106,8 @@ export function createCockpitConfig(overrides?: Partial<CockpitConfig>): Cockpit
         'performance in the Americas and APAC segments. EBITDA margin improved ' +
         '180 bps year-on-year. Free cash flow conversion remains solid at 94%.',
     },
-    boardSummaries: DEFAULT_BOARD_SUMMARIES,
-    drillDownPaths: DEFAULT_DRILL_DOWN_PATHS,
+    boardSummaries: JSON.parse(JSON.stringify(DEFAULT_BOARD_SUMMARIES)),
+    drillDownPaths: JSON.parse(JSON.stringify(DEFAULT_DRILL_DOWN_PATHS)),
   };
 
   if (!overrides) return base;
@@ -115,8 +115,8 @@ export function createCockpitConfig(overrides?: Partial<CockpitConfig>): Cockpit
   return {
     ...base,
     ...overrides,
-    heroKpis: overrides.heroKpis ?? base.heroKpis,
-    boardSummaries: overrides.boardSummaries ?? base.boardSummaries,
-    drillDownPaths: overrides.drillDownPaths ?? base.drillDownPaths,
+    heroKpis: overrides.heroKpis ?? JSON.parse(JSON.stringify(DEFAULT_HERO_KPIS)),
+    boardSummaries: overrides.boardSummaries ?? JSON.parse(JSON.stringify(DEFAULT_BOARD_SUMMARIES)),
+    drillDownPaths: overrides.drillDownPaths ?? JSON.parse(JSON.stringify(DEFAULT_DRILL_DOWN_PATHS)),
   };
 }

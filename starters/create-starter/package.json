@@ -4,9 +4,6 @@
   "version": "0.1.0",
   "type": "module",
   "description": "CLI tool to scaffold Convergio starter templates into a project tree",
-  "bin": {
-    "create-convergio-app": "./dist/cli.js"
-  },
   "main": "./dist/index.js",
   "types": "./dist/types/index.d.ts",
   "files": [

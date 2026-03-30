@@ -1,4 +1,4 @@
-import type { SharedShellConfig } from '../../shared-shell/src/contracts';
+import type { SharedShellConfig } from '@convergio/shared-shell-starter';
 
 export interface StripZoneConfig {
   type: 'gauge' | 'pipeline' | 'trend' | 'board';
