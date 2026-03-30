@@ -81,7 +81,7 @@ describe('deployment asset generators', () => {
 
       expect(yaml).toContain('AI_PROVIDER_API_KEY');
       expect(yaml).toContain('AUTH_SECRET');
-      expect(yaml).toContain('secretRef: api-base-url');
+      expect(yaml).toContain('secretKeyRef');
     });
   });
 
