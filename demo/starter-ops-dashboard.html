@@ -3,270 +3,233 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ops Dashboard — Maranello Luce Design</title>
+  <title>IT Operations Center — Maranello Luce</title>
   <link rel="icon" href="../src/assets/favicon.svg">
   <link rel="stylesheet" href="../src/fonts/local-fonts.css">
   <link rel="stylesheet" href="../dist/css/maranello.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
-    body {
-      background: var(--mn-surface);
-      color: var(--mn-text);
-      font-family: var(--font-body, sans-serif);
-      overflow: hidden;
-    }
+    body { background: var(--mn-surface); color: var(--mn-text); font-family: var(--font-body, sans-serif); overflow: hidden; }
 
     .app {
-      display: grid;
-      grid-template-rows: 52px 1fr;
-      grid-template-columns: 260px 1fr;
-      grid-template-areas: "header header" "sidebar main";
-      height: 100vh;
-      transition: grid-template-columns 0.2s ease;
+      display: grid; grid-template-rows: 48px 1fr;
+      grid-template-columns: 220px 1fr;
+      grid-template-areas: "side top" "side main";
+      height: 100vh; transition: grid-template-columns 0.18s ease;
     }
     .app.is-collapsed { grid-template-columns: 0px 1fr; }
 
-    .header {
-      grid-area: header;
-      display: flex; align-items: center; gap: 12px;
-      padding: 0 16px; height: 52px;
-      background: var(--mn-surface-raised);
+    .top {
+      grid-area: top; display: flex; align-items: center; gap: 16px;
+      padding: 0 24px; height: 48px;
       border-bottom: 1px solid var(--mn-border);
-      z-index: 10;
     }
-    .header__left { display: flex; align-items: center; gap: 12px; min-width: 0; }
-    .header__center { flex: 1; display: flex; justify-content: center; }
-    .header__right { display: flex; align-items: center; gap: 6px; }
-
-    .icon-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 36px; height: 36px; border: none; background: none;
-      color: var(--mn-text-muted); border-radius: var(--radius-md);
-      cursor: pointer; transition: background 0.12s, color 0.12s; flex-shrink: 0;
+    .top__crumb { font-size: 0.85rem; color: var(--mn-text-muted); }
+    .top__crumb b { color: var(--mn-text); font-weight: 600; }
+    .top__spacer { flex: 1; }
+    .top__search {
+      display: flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: var(--radius-md);
+      border: 1px solid var(--mn-border); background: var(--mn-surface-raised);
+      color: var(--mn-text-muted); font-size: 0.78rem; cursor: text;
+      min-width: 220px; transition: border-color 0.12s;
     }
-    .icon-btn:hover { background: color-mix(in srgb, var(--mn-accent) 10%, transparent); color: var(--mn-text); }
-    .icon-btn:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
-    .icon-btn svg { width: 18px; height: 18px; }
-
-    .breadcrumb { font-size: 0.85rem; color: var(--mn-text-muted); white-space: nowrap; }
-    .breadcrumb__current { color: var(--mn-text); font-weight: 600; }
-
-    .search-bar {
-      display: flex; align-items: center; gap: 8px;
-      width: 100%; max-width: 480px; padding: 0 14px; height: 36px;
-      background: var(--mn-surface); border: 1px solid var(--mn-border);
-      border-radius: var(--radius-lg); color: var(--mn-text-muted);
-      cursor: text; transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .search-bar:hover { border-color: color-mix(in srgb, var(--mn-accent) 40%, var(--mn-border)); }
-    .search-bar:focus-within { border-color: var(--mn-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--mn-accent) 15%, transparent); }
-    .search-bar svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.5; }
-    .search-bar__input {
+    .top__search:focus-within { border-color: var(--mn-accent); }
+    .top__search svg { width: 14px; height: 14px; opacity: 0.4; flex-shrink: 0; }
+    .top__search input {
       flex: 1; border: none; background: none; color: var(--mn-text);
-      font-size: 0.85rem; font-family: var(--font-body, sans-serif); outline: none;
+      font-size: 0.78rem; font-family: inherit; outline: none;
     }
-    .search-bar__input::placeholder { color: var(--mn-text-muted); }
-    .search-bar__kbd {
-      font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600;
-      color: var(--mn-text-muted); background: var(--mn-surface-raised);
-      border: 1px solid var(--mn-border); border-radius: 4px; padding: 2px 6px;
+    .top__search input::placeholder { color: var(--mn-text-muted); }
+    .top__kbd { font-family: var(--font-mono); font-size: 0.55rem; color: var(--mn-text-muted); opacity: 0.5; }
+    .ib {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border: none; background: none;
+      color: var(--mn-text-muted); border-radius: var(--radius-md);
+      cursor: pointer; flex-shrink: 0;
+    }
+    .ib:hover { color: var(--mn-text); }
+    .ib:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .ib svg { width: 16px; height: 16px; }
+    .top__av {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: color-mix(in srgb, var(--mn-accent) 18%, var(--mn-surface-raised));
+      color: var(--mn-accent); display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 0.6rem; font-weight: 700; cursor: pointer;
+    }
+    .tsel {
+      font-size: 0.72rem; padding: 3px 6px; border-radius: var(--radius-sm, 4px);
+      border: 1px solid var(--mn-border); background: var(--mn-surface-raised);
+      color: var(--mn-text-muted); font-family: inherit; cursor: pointer;
     }
 
-    .theme-select {
-      font-size: 0.8rem; padding: 4px 8px; height: 32px;
-      border-radius: var(--radius-md); border: 1px solid var(--mn-border);
-      background: var(--mn-surface); color: var(--mn-text); font-family: inherit; cursor: pointer;
-    }
-    .theme-select:focus-visible { outline: 2px solid var(--mn-accent); }
-
-    .avatar {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: var(--mn-accent); color: var(--mn-surface);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
-      flex-shrink: 0; cursor: pointer;
-    }
-
-    .sidebar {
-      grid-area: sidebar;
-      background: var(--mn-surface-raised);
+    .side {
+      grid-area: side; background: var(--mn-surface-raised);
       border-right: 1px solid var(--mn-border);
-      display: flex; flex-direction: column;
-      padding: 16px 12px; overflow-y: auto; overflow-x: hidden;
-      min-width: 0; transition: opacity 0.2s ease, padding 0.2s ease;
+      display: flex; flex-direction: column; padding: 12px 8px;
+      overflow-y: auto; min-width: 0; transition: opacity 0.18s;
     }
-    .app.is-collapsed .sidebar { opacity: 0; padding: 0; pointer-events: none; }
-    .sidebar__brand {
+    .app.is-collapsed .side { opacity: 0; pointer-events: none; }
+    .side__brand {
+      display: flex; align-items: center; gap: 8px; padding: 4px 10px 14px;
+      font-family: var(--font-display); font-weight: 700; font-size: 0.82rem; color: var(--mn-text);
+    }
+    .side__v { font-family: var(--font-mono); font-size: 0.5rem; color: var(--mn-text-muted); margin-left: auto; }
+    .side__sep { font-size: 0.58rem; font-weight: 500; color: var(--mn-text-muted); padding: 14px 10px 4px; letter-spacing: 0.03em; }
+    .side__it {
+      display: flex; align-items: center; gap: 8px; padding: 6px 10px;
+      border-radius: var(--radius-md); font-size: 0.8rem; color: var(--mn-text-muted);
+      cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+      font-family: inherit; transition: background 0.1s, color 0.1s; min-height: 32px;
+    }
+    .side__it:hover { background: var(--mn-surface); color: var(--mn-text); }
+    .side__it:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .side__it.on { background: var(--mn-surface); color: var(--mn-text); font-weight: 500; }
+    .side__it svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.45; }
+    .side__it.on svg { opacity: 0.75; }
+    .side__it span:last-child:not(:first-child) { flex: 1; }
+    .side__badge { font-family: var(--font-mono); font-size: 0.55rem; color: var(--mn-text-muted); background: var(--mn-surface); padding: 1px 5px; border-radius: 6px; }
+    .side__foot { margin-top: auto; padding-top: 8px; border-top: 1px solid var(--mn-border); }
+
+    .main { grid-area: main; overflow-y: auto; padding: 24px 28px 56px; }
+
+    .ptitle { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .ptitle h1 { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; }
+    .ptitle__meta { display: flex; align-items: center; gap: 10px; }
+    .live { display: inline-flex; align-items: center; gap: 5px; font-size: 0.68rem; color: var(--mn-success); font-weight: 500; }
+    .live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--mn-success); }
+    .ts { font-size: 0.7rem; color: var(--mn-text-muted); }
+
+    .banner {
+      padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 20px;
+      background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
       display: flex; align-items: center; gap: 10px;
-      font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
-      color: var(--mn-text); padding: 0 8px 12px;
     }
-    .sidebar__version {
-      font-size: 0.65rem; font-weight: 600;
-      background: var(--mn-accent); color: var(--mn-surface);
-      padding: 1px 7px; border-radius: 10px; margin-left: auto;
-    }
-    .sidebar__group-label {
-      font-family: var(--font-display); font-size: 0.6rem;
-      text-transform: uppercase; letter-spacing: 0.12em;
-      color: var(--mn-text-muted); margin: 20px 0 4px; padding-left: 10px;
-    }
-    .sidebar__group-label:first-of-type { margin-top: 4px; }
-    .sidebar__nav { display: flex; flex-direction: column; gap: 1px; }
-    .sidebar__link {
-      display: flex; align-items: center; gap: 8px;
-      padding: 7px 10px; border-radius: var(--radius-md);
-      font-size: 0.84rem; color: var(--mn-text);
-      cursor: pointer; border: none; background: none;
-      width: 100%; text-align: left; font-family: inherit;
-      transition: background 0.12s; min-height: 34px;
-    }
-    .sidebar__link:hover { background: color-mix(in srgb, var(--mn-accent) 8%, transparent); }
-    .sidebar__link:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
-    .sidebar__link.is-active {
-      background: color-mix(in srgb, var(--mn-accent) 15%, transparent);
-      color: var(--mn-accent); font-weight: 600;
-    }
-    .sidebar__link svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.6; }
-    .sidebar__link.is-active svg { opacity: 1; }
-    .sidebar__link-text { flex: 1; }
-    .sidebar__badge {
-      font-size: 0.65rem; font-weight: 600; min-width: 18px; text-align: center;
-      padding: 1px 6px; border-radius: 10px;
-      background: var(--mn-accent); color: var(--mn-surface);
-    }
-    .sidebar__spacer { flex: 1; }
-    .sidebar__footer {
-      padding-top: 12px; border-top: 1px solid var(--mn-border); margin-top: 8px;
-      display: flex; flex-direction: column; gap: 1px;
-    }
-    .sidebar__footer-link {
-      display: flex; align-items: center; gap: 8px;
-      padding: 6px 10px; border-radius: var(--radius-md);
-      font-size: 0.8rem; color: var(--mn-text-muted);
-      cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: inherit;
-    }
-    .sidebar__footer-link svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.5; }
-    .sidebar__footer-link:hover { color: var(--mn-text); background: color-mix(in srgb, var(--mn-accent) 6%, transparent); }
+    .banner__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--mn-success); flex-shrink: 0; }
+    .banner__txt { flex: 1; font-size: 0.82rem; font-weight: 500; }
+    .banner__meta { font-size: 0.7rem; color: var(--mn-text-muted); }
 
-    .main { grid-area: main; overflow-y: auto; padding: 24px 28px; }
-
-    .mn-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
-    .mn-col-3 { grid-column: span 3; } .mn-col-4 { grid-column: span 4; }
-    .mn-col-6 { grid-column: span 6; } .mn-col-8 { grid-column: span 8; }
-    .mn-col-12 { grid-column: span 12; }
-
-    .mn-cell {
+    .mrow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    .mcard {
+      padding: 14px 16px; border-radius: var(--radius-md);
       background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
-      border-radius: var(--radius-md); padding: 16px; min-height: 120px;
-      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
     }
-    .mn-cell__label {
-      font-family: var(--font-display); font-size: 0.6rem;
-      text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--mn-text-muted); margin-bottom: 12px;
-    }
-    .mn-cell__body { flex: 1; position: relative; min-height: 0; }
+    .mcard__lab { font-size: 0.7rem; color: var(--mn-text-muted); margin-bottom: 6px; }
+    .mcard__sp { width: 100%; height: 80px; }
 
-    .status-bar {
-      display: flex; align-items: center; gap: 12px;
-      grid-column: span 12; padding: 12px 16px;
-      background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
-      border-radius: var(--radius-md); font-size: 0.8rem;
+    .g { display: grid; gap: 10px; margin-bottom: 20px; }
+    .g1 { grid-template-columns: 1fr; }
+    .g2 { grid-template-columns: 1fr 1fr; }
+    .g73 { grid-template-columns: 3fr 2fr; }
+    .g82 { grid-template-columns: 2fr 1fr; }
+    .pn {
+      border-radius: var(--radius-md); background: var(--mn-surface-raised);
+      border: 1px solid var(--mn-border); padding: 14px 16px;
     }
-    .status-dot {
-      width: 8px; height: 8px; border-radius: 50%; background: var(--mn-success); flex-shrink: 0;
-    }
-    .status-bar__text { color: var(--mn-text); font-weight: 600; }
-    .status-bar__meta { color: var(--mn-text-muted); margin-left: auto; font-family: var(--font-mono); font-size: 0.75rem; }
+    .pn__lab { font-size: 0.7rem; color: var(--mn-text-muted); margin-bottom: 10px; }
 
-    @media (max-width: 1100px) {
-      .mn-col-3, .mn-col-4, .mn-col-6, .mn-col-8 { grid-column: span 6; }
-    }
+    @media (max-width: 1100px) { .mrow { grid-template-columns: 1fr; } .g2,.g73,.g82 { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
-      .app { grid-template-columns: 0px 1fr; }
-      .app .sidebar { opacity: 0; padding: 0; pointer-events: none; }
-      .mn-col-3,.mn-col-4,.mn-col-6,.mn-col-8,.mn-col-12 { grid-column: span 12; }
+      .app { grid-template-columns: 0px 1fr; } .app .side { opacity: 0; pointer-events: none; }
       .main { padding: 16px; }
     }
-    @media (prefers-reduced-motion: reduce) {
-      .app, .sidebar, .icon-btn, .sidebar__link, .search-bar { transition: none; }
-    }
+    @media (prefers-reduced-motion: reduce) { .app,.side { transition: none; } }
   </style>
 </head>
 <body>
-  <script>try { var t = localStorage.getItem('mn-theme'); if (t && t !== 'editorial') document.body.classList.add('mn-' + t); } catch(e) {}</script>
+  <script>try{var t=localStorage.getItem('mn-theme');if(t&&t!=='editorial')document.body.classList.add('mn-'+t)}catch(e){}</script>
 
-  <div class="app" id="app-shell">
-    <header class="header" role="banner">
-      <div class="header__left">
-        <button class="icon-btn" id="sidebar-toggle" aria-label="Toggle sidebar" title="Toggle sidebar"></button>
-        <span class="breadcrumb">Operations <span style="opacity:0.4;margin:0 4px">&#8250;</span> <span class="breadcrumb__current">Overview</span></span>
-      </div>
-      <div class="header__center">
-        <label class="search-bar">
-          <span id="search-icon"></span>
-          <input type="text" class="search-bar__input" placeholder="Search..." aria-label="Search">
-          <kbd class="search-bar__kbd"></kbd>
-        </label>
-      </div>
-      <div class="header__right">
-        <select class="theme-select" id="theme-picker" aria-label="Theme">
-          <option value="editorial">Editorial</option><option value="nero">Nero</option>
-          <option value="avorio">Avorio</option><option value="colorblind">Colorblind</option>
-          <option value="sugar">Sugar</option><option value="navy">Navy</option>
-        </select>
-        <button class="icon-btn" id="btn-bell" aria-label="Notifications" title="Notifications"></button>
-        <button class="icon-btn" id="btn-settings" aria-label="Settings" title="Settings"></button>
-        <div class="avatar" title="Ravi Kumar" aria-label="User menu">RK</div>
-      </div>
-    </header>
+  <div class="app" id="app">
+    <div class="top">
+      <button class="ib" id="tog" aria-label="Toggle sidebar"></button>
+      <span class="top__crumb">Monitor / <b id="bc">Overview</b></span>
+      <div class="top__spacer"></div>
+      <label class="top__search">
+        <span id="si"></span>
+        <input type="text" placeholder="Search..." aria-label="Search">
+        <span class="top__kbd" id="sk"></span>
+      </label>
+      <select class="tsel" id="tp" aria-label="Theme">
+        <option value="editorial">Editorial</option><option value="nero">Nero</option>
+        <option value="avorio">Avorio</option><option value="colorblind">Colorblind</option>
+        <option value="sugar">Sugar</option><option value="navy">Navy</option>
+      </select>
+      <button class="ib" id="ib" aria-label="Notifications"></button>
+      <button class="ib" id="is" aria-label="Settings"></button>
+      <div class="top__av" title="Sam Rivera">SR</div>
+    </div>
 
-    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-      <div class="sidebar__brand">
-        <img src="../src/assets/favicon.svg" alt="" width="22" height="22">
-        <span>Ops Center</span>
-        <span class="sidebar__version">v6.5</span>
-      </div>
-      <div class="sidebar__group-label">Monitor</div>
-      <nav class="sidebar__nav">
-        <button class="sidebar__link is-active" data-page="overview"><span id="ic-dashboard"></span><span class="sidebar__link-text">Overview</span></button>
-        <button class="sidebar__link" data-page="services"><span id="ic-server"></span><span class="sidebar__link-text">Services</span></button>
-        <button class="sidebar__link" data-page="alerts"><span id="ic-bell"></span><span class="sidebar__link-text">Alerts</span><span class="sidebar__badge">5</span></button>
-      </nav>
-      <div class="sidebar__group-label">Infrastructure</div>
-      <nav class="sidebar__nav">
-        <button class="sidebar__link" data-page="compute"><span id="ic-cpu"></span><span class="sidebar__link-text">Compute</span></button>
-        <button class="sidebar__link" data-page="network"><span id="ic-network"></span><span class="sidebar__link-text">Network</span></button>
-        <button class="sidebar__link" data-page="storage"><span id="ic-database"></span><span class="sidebar__link-text">Storage</span></button>
-      </nav>
-      <div class="sidebar__group-label">Tools</div>
-      <nav class="sidebar__nav">
-        <button class="sidebar__link" data-page="deploy"><span id="ic-deploy"></span><span class="sidebar__link-text">Deployments</span></button>
-        <button class="sidebar__link" data-page="logs"><span id="ic-terminal"></span><span class="sidebar__link-text">Logs</span></button>
-      </nav>
-      <div class="sidebar__spacer"></div>
-      <div class="sidebar__footer">
-        <button class="sidebar__footer-link"><span id="ic-settings"></span>Settings</button>
-      </div>
-    </aside>
+    <nav class="side" id="side" aria-label="Navigation">
+      <div class="side__brand"><img src="../src/assets/favicon.svg" alt="" width="18" height="18"> Operations <span class="side__v">6.5</span></div>
+      <div class="side__sep">Monitor</div>
+      <button class="side__it on" data-p="Overview"><span id="n1"></span><span>Overview</span></button>
+      <button class="side__it" data-p="Services"><span id="n2"></span><span>Services</span></button>
+      <button class="side__it" data-p="Alerts"><span id="n3"></span><span>Alerts</span><span class="side__badge">5</span></button>
+      <div class="side__sep">Infrastructure</div>
+      <button class="side__it" data-p="Compute"><span id="n4"></span><span>Compute</span></button>
+      <button class="side__it" data-p="Network"><span id="n5"></span><span>Network</span></button>
+      <button class="side__it" data-p="Storage"><span id="n6"></span><span>Storage</span></button>
+      <div class="side__sep">Tools</div>
+      <button class="side__it" data-p="Deployments"><span id="n7"></span><span>Deployments</span></button>
+      <button class="side__it" data-p="Logs"><span id="n8"></span><span>Logs</span></button>
+    </nav>
 
-    <main class="main" id="main-content">
-      <div class="mn-grid">
-        <div class="status-bar">
-          <span class="status-dot"></span>
-          <span class="status-bar__text">All systems operational</span>
-          <span class="status-bar__meta">uptime 99.97%</span>
+    <main class="main">
+      <div class="ptitle">
+        <h1>System Operations</h1>
+        <div class="ptitle__meta"><span class="live">Live</span><span class="ts">Updated 12s ago</span></div>
+      </div>
+
+      <div class="banner">
+        <div class="banner__dot"></div>
+        <div class="banner__txt">All systems operational</div>
+        <div class="banner__meta">Uptime: 99.97%</div>
+      </div>
+
+      <div class="pn g1" style="margin-bottom:20px">
+        <div class="pn__lab">Infrastructure metrics</div>
+        <div id="strip"></div>
+      </div>
+
+      <div class="mrow">
+        <div class="mcard">
+          <div class="mcard__lab">Request rate</div>
+          <canvas class="mcard__sp" id="sp1" role="img" aria-label="Request rate sparkline"></canvas>
         </div>
-        <div class="mn-cell mn-col-12"><div class="mn-cell__label">Infrastructure gauges</div><div class="mn-cell__body" id="cell-strip"></div></div>
-        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Request rate</div><div class="mn-cell__body" id="cell-spark1"></div></div>
-        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Error rate</div><div class="mn-cell__body" id="cell-spark2"></div></div>
-        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Latency p99</div><div class="mn-cell__body" id="cell-spark3"></div></div>
-        <div class="mn-cell mn-col-6"><div class="mn-cell__label">Service status</div><div class="mn-cell__body" id="cell-status"></div></div>
-        <div class="mn-cell mn-col-6"><div class="mn-cell__label">Errors by service</div><div class="mn-cell__body" id="cell-bar" style="display:flex;align-items:center;justify-content:center"></div></div>
-        <div class="mn-cell mn-col-8"><div class="mn-cell__label">Recent incidents</div><div class="mn-cell__body" id="cell-table"></div></div>
-        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Deploy log</div><div class="mn-cell__body" id="cell-activity"></div></div>
+        <div class="mcard">
+          <div class="mcard__lab">Error rate</div>
+          <canvas class="mcard__sp" id="sp2" role="img" aria-label="Error rate sparkline"></canvas>
+        </div>
+        <div class="mcard">
+          <div class="mcard__lab">Latency p99</div>
+          <canvas class="mcard__sp" id="sp3" role="img" aria-label="Latency p99 sparkline"></canvas>
+        </div>
+      </div>
+
+      <div class="g g2">
+        <div class="pn"><div class="pn__lab">Service status</div><div id="status"></div></div>
+        <div class="pn"><div class="pn__lab">Errors by service</div><canvas id="bar" style="width:100%;height:200px" role="img" aria-label="Errors by service bar chart"></canvas></div>
+      </div>
+
+      <div class="pn" style="margin-bottom:20px">
+        <div class="pn__lab">Active incidents</div>
+        <div id="tbl"></div>
+      </div>
+
+      <div class="pn" style="margin-bottom:20px">
+        <div class="pn__lab">Deployment activity</div>
+        <div id="feed"></div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-top:12px;border-top:1px solid var(--mn-border)">
+        <div class="mn-segmented" role="tablist" id="seg">
+          <button class="mn-segmented__item mn-segmented__item--active" role="tab" aria-selected="true">1h</button>
+          <button class="mn-segmented__item" role="tab">6h</button>
+          <button class="mn-segmented__item" role="tab">24h</button>
+          <button class="mn-segmented__item" role="tab">7d</button>
+        </div>
       </div>
     </main>
   </div>
@@ -274,146 +237,138 @@
   <script src="../dist/iife/maranello.min.js"></script>
   <script>
     (function () {
-
       var M = window.Maranello;
       if (!M) return;
 
-      function setIcon(id, name) { var el = document.getElementById(id); if (el && M.icons[name]) el.innerHTML = M.icons[name](); }
+      function ic(id, n) { var e = document.getElementById(id); if (e && M.icons[n]) e.innerHTML = M.icons[n](); }
+      ic('tog','menu'); ic('si','search'); ic('ib','bell'); ic('is','settings');
+      ic('n1','dashboard'); ic('n2','server'); ic('n3','alertTriangle'); ic('n4','cpu');
+      ic('n5','network'); ic('n6','database'); ic('n7','deploy'); ic('n8','file');
 
-      var kbdEl = document.querySelector('.search-bar__kbd');
-      if (kbdEl) kbdEl.textContent = navigator.userAgent.indexOf('Mac') !== -1 ? '\u2318K' : 'Ctrl+K';
+      var sk = document.getElementById('sk');
+      if (sk) sk.textContent = navigator.userAgent.indexOf('Mac') !== -1 ? '\u2318K' : 'Ctrl+K';
 
-      var picker = document.getElementById('theme-picker');
-      var saved = localStorage.getItem('mn-theme') || 'editorial';
-      picker.value = saved;
-      picker.addEventListener('change', function () { M.setTheme(picker.value); localStorage.setItem('mn-theme', picker.value); });
+      var tp = document.getElementById('tp');
+      tp.value = localStorage.getItem('mn-theme') || 'editorial';
+      tp.addEventListener('change', function () { M.setTheme(tp.value); localStorage.setItem('mn-theme', tp.value); });
 
-      var shell = document.getElementById('app-shell');
-      document.getElementById('sidebar-toggle').addEventListener('click', function () {
-        if (shell.className.indexOf('is-collapsed') !== -1) shell.className = shell.className.replace('is-collapsed', '').trim();
-        else shell.className = shell.className.trim() + ' is-collapsed';
+      var app = document.getElementById('app');
+      document.getElementById('tog').addEventListener('click', function () {
+        if (app.className.indexOf('is-collapsed') !== -1) app.className = app.className.replace('is-collapsed','').trim();
+        else app.className = app.className.trim() + ' is-collapsed';
       });
 
-      var links = document.querySelectorAll('.sidebar__link');
-      var bcCurrent = document.querySelector('.breadcrumb__current');
-      for (var i = 0; i < links.length; i++) {
-        links[i].addEventListener('click', function () {
-          for (var j = 0; j < links.length; j++) links[j].className = links[j].className.replace(' is-active', '');
-          this.className += ' is-active';
-          var t = this.querySelector('.sidebar__link-text');
-          if (t && bcCurrent) bcCurrent.textContent = t.textContent;
+      var navs = document.querySelectorAll('.side__it');
+      var bc = document.getElementById('bc');
+      for (var i = 0; i < navs.length; i++) {
+        navs[i].addEventListener('click', function () {
+          for (var j = 0; j < navs.length; j++) navs[j].className = navs[j].className.replace(' on', '');
+          this.className += ' on';
+          if (bc) bc.textContent = this.getAttribute('data-p');
         });
       }
 
-      setIcon('sidebar-toggle', 'menu');
-      setIcon('search-icon', 'search');
-      setIcon('btn-bell', 'bell');
-      setIcon('btn-settings', 'settings');
-      setIcon('ic-dashboard', 'dashboard');
-      setIcon('ic-server', 'server');
-      setIcon('ic-bell', 'bellDot');
-      setIcon('ic-cpu', 'cpu');
-      setIcon('ic-network', 'network');
-      setIcon('ic-database', 'database');
-      setIcon('ic-deploy', 'deploy');
-      setIcon('ic-terminal', 'terminal');
-      setIcon('ic-settings', 'settings');
+      var segs = document.querySelectorAll('#seg .mn-segmented__item');
+      for (var s = 0; s < segs.length; s++) {
+        segs[s].addEventListener('click', function () {
+          for (var k = 0; k < segs.length; k++) { segs[k].className = segs[k].className.replace(' mn-segmented__item--active',''); segs[k].removeAttribute('aria-selected'); }
+          this.className += ' mn-segmented__item--active'; this.setAttribute('aria-selected','true');
+          if (M.toast) M.toast({ type:'info', title:'Range', message:'Switched to ' + this.textContent });
+        });
+      }
 
-      // Dashboard Strip
-      var stripEl = document.getElementById('cell-strip');
-      if (stripEl && M.dashboardStrip) {
-        M.dashboardStrip(stripEl, {
+      var cstyles = getComputedStyle(document.documentElement);
+      function resolveColor(n) { return cstyles.getPropertyValue(n).trim() || '#888888'; }
+
+      try { if (M.sparkline) {
+        var sp1 = document.getElementById('sp1');
+        var sp2 = document.getElementById('sp2');
+        var sp3 = document.getElementById('sp3');
+        if (sp1) M.sparkline(sp1, [2840,2910,3020,2980,3100,3240,3180,3320,3280,3420,3380,3520]);
+        if (sp2) M.sparkline(sp2, [12,15,18,14,22,19,16,21,17,23,20,18]);
+        if (sp3) M.sparkline(sp3, [142,138,145,152,148,156,151,159,154,162,158,165]);
+      } } catch(e) { console.warn('sparkline:', e.message); }
+
+      try { if (M.dashboardStrip) {
+        M.dashboardStrip(document.getElementById('strip'), {
+          ariaLabel: 'Infrastructure metrics',
           zones: [
-            { type: 'gauge', label: 'CPU', gaugeConfig: { value: 42, max: 100, showNeedle: true, complications: { centerValue: '42', centerUnit: '%' } } },
-            { type: 'gauge', label: 'Memory', gaugeConfig: { value: 68, max: 100, showNeedle: true, complications: { centerValue: '68', centerUnit: '%' } } },
-            { type: 'gauge', label: 'Disk I/O', gaugeConfig: { value: 31, max: 100, showNeedle: true, complications: { centerValue: '31', centerUnit: '%' } } },
-            { type: 'pipeline', title: 'Bandwidth', rows: [
-              { label: 'Ingress', value: 720, color: 'var(--mn-chart-series-1)' },
-              { label: 'Egress', value: 480, color: 'var(--mn-chart-series-2)' }
-            ], maxValue: 1000, footer: { label: 'Total', value: '1.2 Gbps' } }
-          ],
-          ariaLabel: 'Infrastructure gauges'
-        });
-      }
-
-      // Sparklines
-      function mountSparkline(id, data, label) {
-        var el = document.getElementById(id);
-        if (el && M.sparkline) {
-          var c = document.createElement('canvas');
-          c.setAttribute('role', 'img'); c.setAttribute('aria-label', label);
-          c.style.width = '100%'; c.style.height = '100%';
-          el.appendChild(c);
-          M.sparkline(c, data);
-        }
-      }
-      mountSparkline('cell-spark1', [2400,2600,2500,2800,3100,2900,3200,3400,3100,3500,3700,3600], 'Request rate per second');
-      mountSparkline('cell-spark2', [12,8,15,11,9,14,10,7,13,8,6,9], 'Error rate per minute');
-      mountSparkline('cell-spark3', [45,42,48,52,47,55,50,44,49,46,43,41], 'P99 latency in ms');
-
-      // System Status
-      var statusEl = document.getElementById('cell-status');
-      if (statusEl && M.systemStatus) {
-        M.systemStatus(statusEl, {
-          version: 'v3.8.2',
-          environment: 'production',
-          services: [
-            { name: 'API Gateway', status: 'healthy', latency: 12, uptime: 99.99 },
-            { name: 'Auth Service', status: 'healthy', latency: 8, uptime: 99.98 },
-            { name: 'Database Primary', status: 'healthy', latency: 3, uptime: 99.97 },
-            { name: 'Cache Layer', status: 'degraded', latency: 45, uptime: 99.82 },
-            { name: 'Queue Worker', status: 'healthy', latency: 15, uptime: 99.95 },
-            { name: 'CDN Edge', status: 'healthy', latency: 22, uptime: 99.99 }
+            { type:'gauge', label:'CPU', gaugeConfig:{ value:68, max:100, color:resolveColor("--mn-warning"), ticks:10, subticks:5, startAngle:-225, endAngle:45, showNeedle:true, numbers:[0,50,100], complications:{ centerValue:'68', centerUnit:'%' } }, size:'sm' },
+            { type:'gauge', label:'MEMORY', gaugeConfig:{ value:74, max:100, color:resolveColor("--mn-warning"), ticks:10, subticks:5, startAngle:-225, endAngle:45, showNeedle:true, numbers:[0,50,100], complications:{ centerValue:'74', centerUnit:'%' } }, size:'sm' },
+            { type:'gauge', label:'DISK I/O', gaugeConfig:{ value:42, max:100, color:resolveColor("--mn-success"), ticks:10, subticks:5, startAngle:-225, endAngle:45, showNeedle:true, numbers:[0,50,100], complications:{ centerValue:'42', centerUnit:'%' } }, size:'sm' },
+            { type:'pipeline', title:'BANDWIDTH', rows:[
+              { label:'Inbound', value:3240, color:resolveColor("--mn-chart-series-1"), secondary:'3.2 Gbps' },
+              { label:'Outbound', value:1820, color:resolveColor("--mn-chart-series-2"), secondary:'1.8 Gbps' },
+              { label:'Internal', value:840, color:resolveColor("--mn-chart-series-3"), secondary:'840 Mbps' }
+            ], footer:{ label:'Total', value:'5.84 Gbps' } }
           ]
         });
-      }
+      } } catch(e) { console.warn('strip:', e.message); }
 
-      // Bar chart
-      var barEl = document.getElementById('cell-bar');
-      if (barEl && M.charts && M.charts.barChart) {
-        var bc = document.createElement('canvas');
-        bc.width = 280; bc.height = 180;
-        bc.setAttribute('role', 'img'); bc.setAttribute('aria-label', 'Errors by service');
-        barEl.appendChild(bc);
-        M.charts.barChart(bc, [
-          { label: 'API', value: 142 }, { label: 'Auth', value: 38 },
-          { label: 'Queue', value: 24 }, { label: 'Cache', value: 67 },
-          { label: 'CDN', value: 11 }
-        ], { showLabels: true, showValues: true });
-      }
-
-      // Incidents table
-      var tableEl = document.getElementById('cell-table');
-      if (tableEl && M.dataTable) {
-        M.dataTable(tableEl, {
-          columns: [
-            { key: 'id', label: 'ID', width: 80 },
-            { key: 'title', label: 'Incident', sortable: true },
-            { key: 'severity', label: 'Severity', type: 'status' },
-            { key: 'status', label: 'Status', type: 'badge' },
-            { key: 'duration', label: 'Duration' }
-          ],
-          data: [
-            { id: 'INC-2847', title: 'Cache latency spike', severity: 'Warning', status: 'Investigating', duration: '23 min' },
-            { id: 'INC-2846', title: 'Auth timeout burst', severity: 'Critical', status: 'Resolved', duration: '4 min' },
-            { id: 'INC-2845', title: 'CDN cache invalidation delay', severity: 'Low', status: 'Resolved', duration: '12 min' },
-            { id: 'INC-2844', title: 'Database failover triggered', severity: 'Critical', status: 'Resolved', duration: '2 min' },
-            { id: 'INC-2843', title: 'Queue backpressure alert', severity: 'Warning', status: 'Resolved', duration: '8 min' }
-          ],
-          compact: true, ariaLabel: 'Recent incidents'
+      try { if (M.systemStatus) {
+        M.systemStatus(document.getElementById('status'), {
+          version: 'v2.8.1',
+          environment: 'Production',
+          services: [
+            { name:'API Gateway', status:'healthy', latency:14, uptime:99.98 },
+            { name:'Auth Service', status:'healthy', latency:9, uptime:99.96 },
+            { name:'Database Primary', status:'healthy', latency:4, uptime:99.99 },
+            { name:'Cache Layer', status:'degraded', latency:41, uptime:98.82 },
+            { name:'Queue Service', status:'healthy', latency:18, uptime:99.94 },
+            { name:'Storage', status:'healthy', latency:22, uptime:99.97 }
+          ]
         });
-      }
+      } } catch(e) { console.warn('systemStatus:', e.message); }
 
-      // Deploy log
-      var actEl = document.getElementById('cell-activity');
-      if (actEl && M.activityFeed) {
-        M.activityFeed(actEl, [
-          { id: '1', title: 'api-gateway v3.8.2', body: 'Deployed to prod-eu-west', meta: '12 min ago', type: 'success' },
-          { id: '2', title: 'auth-service v2.14.0', body: 'Rolling update 3/3 nodes', meta: '45 min ago', type: 'success' },
-          { id: '3', title: 'cache-layer v1.9.1', body: 'Hotfix deployed', meta: '2h ago', type: 'warning' },
-          { id: '4', title: 'queue-worker v4.2.0', body: 'Canary 10% traffic', meta: '4h ago', type: 'info' }
-        ], { maxItems: 6 });
-      }
+      try { if (M.charts && M.charts.barChart) {
+        var bar = document.getElementById('bar');
+        if (bar) {
+          M.charts.barChart(bar, [
+            { label:'Gateway', value:342 },
+            { label:'Auth', value:128 },
+            { label:'API', value:584 },
+            { label:'Database', value:92 },
+            { label:'Cache', value:217 },
+            { label:'Queue', value:64 }
+          ], { showLabels:true, showValues:true });
+        }
+      } } catch(e) { console.warn('barChart:', e.message); }
+
+      try { if (M.dataTable) {
+        M.dataTable(document.getElementById('tbl'), {
+          columns:[
+            {key:'id',label:'ID',sortable:true},
+            {key:'title',label:'Incident'},
+            {key:'severity',label:'Severity',type:'status'},
+            {key:'status',label:'Status',type:'badge'},
+            {key:'duration',label:'Duration',align:'right'},
+            {key:'assignee',label:'Assignee'}
+          ],
+          data:[
+            {id:'INC-842',title:'Cache layer degraded performance',severity:'Warning',status:'Investigating',duration:'12m',assignee:'Alex Chen'},
+            {id:'INC-841',title:'High memory usage on web-03',severity:'Info',status:'Monitoring',duration:'1h 24m',assignee:'Jordan Lee'},
+            {id:'INC-839',title:'Increased API latency EU region',severity:'Warning',status:'Mitigating',duration:'2h 18m',assignee:'Taylor Kim'},
+            {id:'INC-837',title:'Database connection pool saturation',severity:'Critical',status:'Resolved',duration:'45m',assignee:'Morgan Wu'},
+            {id:'INC-835',title:'SSL certificate renewal pending',severity:'Info',status:'Scheduled',duration:'3d',assignee:'Casey Park'}
+          ],
+          ariaLabel:'Active incidents table',
+          compact:true,
+          onRowClick:function(r){ if(M.toast) M.toast({type:'info',title:r.id,message:r.title+' - '+r.status}); }
+        });
+      } } catch(e) { console.warn('dataTable:', e.message); }
+
+      try { if (M.activityFeed) {
+        M.activityFeed(document.getElementById('feed'), [
+          {id:'1',title:'Deployment Successful',body:'API v2.8.1 deployed to production',meta:'8m ago',type:'success'},
+          {id:'2',title:'Auto-scaling Event',body:'Added 2 instances to web tier',meta:'23m ago',type:'info'},
+          {id:'3',title:'Certificate Renewed',body:'SSL cert for api.example.com renewed',meta:'1h ago',type:'success'},
+          {id:'4',title:'Backup Completed',body:'Daily database backup finished',meta:'2h ago',type:'success'},
+          {id:'5',title:'Alert Triggered',body:'Cache hit ratio below threshold',meta:'3h ago',type:'warning'},
+          {id:'6',title:'Deployment Started',body:'Worker v1.4.2 deployment initiated',meta:'4h ago',type:'info'},
+          {id:'7',title:'Maintenance Window',body:'Scheduled maintenance completed',meta:'6h ago',type:'success'},
+          {id:'8',title:'Config Updated',body:'Load balancer rules updated',meta:'8h ago',type:'info'}
+        ], {maxItems:10});
+      } } catch(e) { console.warn('activityFeed:', e.message); }
     })();
   </script>
 </body>

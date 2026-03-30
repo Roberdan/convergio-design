@@ -3,268 +3,222 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Workspace — Maranello Luce Design</title>
+  <title>SaaS Workspace — Maranello Luce</title>
   <link rel="icon" href="../src/assets/favicon.svg">
   <link rel="stylesheet" href="../src/fonts/local-fonts.css">
   <link rel="stylesheet" href="../dist/css/maranello.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
-    body {
-      background: var(--mn-surface);
-      color: var(--mn-text);
-      font-family: var(--font-body, sans-serif);
-      overflow: hidden;
-    }
+    body { background: var(--mn-surface); color: var(--mn-text); font-family: var(--font-body, sans-serif); overflow: hidden; }
 
     .app {
-      display: grid;
-      grid-template-rows: 52px 1fr;
-      grid-template-columns: 260px 1fr;
-      grid-template-areas: "header header" "sidebar main";
-      height: 100vh;
-      transition: grid-template-columns 0.2s ease;
+      display: grid; grid-template-rows: 48px 1fr;
+      grid-template-columns: 220px 1fr;
+      grid-template-areas: "side top" "side main";
+      height: 100vh; transition: grid-template-columns 0.18s ease;
     }
     .app.is-collapsed { grid-template-columns: 0px 1fr; }
 
-    .header {
-      grid-area: header;
-      display: flex; align-items: center; gap: 12px;
-      padding: 0 16px; height: 52px;
-      background: var(--mn-surface-raised);
+    .top {
+      grid-area: top; display: flex; align-items: center; gap: 16px;
+      padding: 0 24px; height: 48px;
       border-bottom: 1px solid var(--mn-border);
-      z-index: 10;
     }
-    .header__left { display: flex; align-items: center; gap: 12px; min-width: 0; }
-    .header__center { flex: 1; display: flex; justify-content: center; }
-    .header__right { display: flex; align-items: center; gap: 6px; }
-
-    .icon-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 36px; height: 36px; border: none; background: none;
-      color: var(--mn-text-muted); border-radius: var(--radius-md);
-      cursor: pointer; transition: background 0.12s, color 0.12s; flex-shrink: 0;
+    .top__crumb { font-size: 0.85rem; color: var(--mn-text-muted); }
+    .top__crumb b { color: var(--mn-text); font-weight: 600; }
+    .top__spacer { flex: 1; }
+    .top__search {
+      display: flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: var(--radius-md);
+      border: 1px solid var(--mn-border); background: var(--mn-surface-raised);
+      color: var(--mn-text-muted); font-size: 0.78rem; cursor: text;
+      min-width: 220px; transition: border-color 0.12s;
     }
-    .icon-btn:hover { background: color-mix(in srgb, var(--mn-accent) 10%, transparent); color: var(--mn-text); }
-    .icon-btn:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
-    .icon-btn svg { width: 18px; height: 18px; }
-
-    .breadcrumb { font-size: 0.85rem; color: var(--mn-text-muted); white-space: nowrap; }
-    .breadcrumb__current { color: var(--mn-text); font-weight: 600; }
-
-    .search-bar {
-      display: flex; align-items: center; gap: 8px;
-      width: 100%; max-width: 480px; padding: 0 14px; height: 36px;
-      background: var(--mn-surface); border: 1px solid var(--mn-border);
-      border-radius: var(--radius-lg); color: var(--mn-text-muted);
-      cursor: text; transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .search-bar:hover { border-color: color-mix(in srgb, var(--mn-accent) 40%, var(--mn-border)); }
-    .search-bar:focus-within { border-color: var(--mn-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--mn-accent) 15%, transparent); }
-    .search-bar svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.5; }
-    .search-bar__input {
+    .top__search:focus-within { border-color: var(--mn-accent); }
+    .top__search svg { width: 14px; height: 14px; opacity: 0.4; flex-shrink: 0; }
+    .top__search input {
       flex: 1; border: none; background: none; color: var(--mn-text);
-      font-size: 0.85rem; font-family: var(--font-body, sans-serif); outline: none;
+      font-size: 0.78rem; font-family: inherit; outline: none;
     }
-    .search-bar__input::placeholder { color: var(--mn-text-muted); }
-    .search-bar__kbd {
-      font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600;
-      color: var(--mn-text-muted); background: var(--mn-surface-raised);
-      border: 1px solid var(--mn-border); border-radius: 4px; padding: 2px 6px;
+    .top__search input::placeholder { color: var(--mn-text-muted); }
+    .top__kbd { font-family: var(--font-mono); font-size: 0.55rem; color: var(--mn-text-muted); opacity: 0.5; }
+    .ib {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border: none; background: none;
+      color: var(--mn-text-muted); border-radius: var(--radius-md);
+      cursor: pointer; flex-shrink: 0;
+    }
+    .ib:hover { color: var(--mn-text); }
+    .ib:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .ib svg { width: 16px; height: 16px; }
+    .top__av {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: color-mix(in srgb, var(--mn-accent) 18%, var(--mn-surface-raised));
+      color: var(--mn-accent); display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 0.6rem; font-weight: 700; cursor: pointer;
+    }
+    .tsel {
+      font-size: 0.72rem; padding: 3px 6px; border-radius: var(--radius-sm, 4px);
+      border: 1px solid var(--mn-border); background: var(--mn-surface-raised);
+      color: var(--mn-text-muted); font-family: inherit; cursor: pointer;
     }
 
-    .theme-select {
-      font-size: 0.8rem; padding: 4px 8px; height: 32px;
-      border-radius: var(--radius-md); border: 1px solid var(--mn-border);
-      background: var(--mn-surface); color: var(--mn-text); font-family: inherit; cursor: pointer;
-    }
-    .theme-select:focus-visible { outline: 2px solid var(--mn-accent); }
-
-    .avatar {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: var(--mn-accent); color: var(--mn-surface);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
-      flex-shrink: 0; cursor: pointer;
-    }
-
-    .sidebar {
-      grid-area: sidebar;
-      background: var(--mn-surface-raised);
+    .side {
+      grid-area: side; background: var(--mn-surface-raised);
       border-right: 1px solid var(--mn-border);
-      display: flex; flex-direction: column;
-      padding: 16px 12px; overflow-y: auto; overflow-x: hidden;
-      min-width: 0; transition: opacity 0.2s ease, padding 0.2s ease;
+      display: flex; flex-direction: column; padding: 12px 8px;
+      overflow-y: auto; min-width: 0; transition: opacity 0.18s;
     }
-    .app.is-collapsed .sidebar { opacity: 0; padding: 0; pointer-events: none; }
-    .sidebar__brand {
-      display: flex; align-items: center; gap: 10px;
-      font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
-      color: var(--mn-text); padding: 0 8px 12px;
+    .app.is-collapsed .side { opacity: 0; pointer-events: none; }
+    .side__brand {
+      display: flex; align-items: center; gap: 8px; padding: 4px 10px 14px;
+      font-family: var(--font-display); font-weight: 700; font-size: 0.82rem; color: var(--mn-text);
     }
-    .sidebar__version {
-      font-size: 0.65rem; font-weight: 600;
-      background: var(--mn-accent); color: var(--mn-surface);
-      padding: 1px 7px; border-radius: 10px; margin-left: auto;
+    .side__v { font-family: var(--font-mono); font-size: 0.5rem; color: var(--mn-text-muted); margin-left: auto; }
+    .side__sep { font-size: 0.58rem; font-weight: 500; color: var(--mn-text-muted); padding: 14px 10px 4px; letter-spacing: 0.03em; }
+    .side__it {
+      display: flex; align-items: center; gap: 8px; padding: 6px 10px;
+      border-radius: var(--radius-md); font-size: 0.8rem; color: var(--mn-text-muted);
+      cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+      font-family: inherit; transition: background 0.1s, color 0.1s; min-height: 32px;
     }
-    .sidebar__group-label {
-      font-family: var(--font-display); font-size: 0.6rem;
-      text-transform: uppercase; letter-spacing: 0.12em;
-      color: var(--mn-text-muted); margin: 20px 0 4px; padding-left: 10px;
-    }
-    .sidebar__group-label:first-of-type { margin-top: 4px; }
-    .sidebar__nav { display: flex; flex-direction: column; gap: 1px; }
-    .sidebar__link {
-      display: flex; align-items: center; gap: 8px;
-      padding: 7px 10px; border-radius: var(--radius-md);
-      font-size: 0.84rem; color: var(--mn-text);
-      cursor: pointer; border: none; background: none;
-      width: 100%; text-align: left; font-family: inherit;
-      transition: background 0.12s; min-height: 34px;
-    }
-    .sidebar__link:hover { background: color-mix(in srgb, var(--mn-accent) 8%, transparent); }
-    .sidebar__link:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
-    .sidebar__link.is-active {
-      background: color-mix(in srgb, var(--mn-accent) 15%, transparent);
-      color: var(--mn-accent); font-weight: 600;
-    }
-    .sidebar__link svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.6; }
-    .sidebar__link.is-active svg { opacity: 1; }
-    .sidebar__link-text { flex: 1; }
-    .sidebar__badge {
-      font-size: 0.65rem; font-weight: 600; min-width: 18px; text-align: center;
-      padding: 1px 6px; border-radius: 10px;
-      background: var(--mn-accent); color: var(--mn-surface);
-    }
-    .sidebar__spacer { flex: 1; }
-    .sidebar__footer {
-      padding-top: 12px; border-top: 1px solid var(--mn-border); margin-top: 8px;
-      display: flex; flex-direction: column; gap: 1px;
-    }
-    .sidebar__footer-link {
-      display: flex; align-items: center; gap: 8px;
-      padding: 6px 10px; border-radius: var(--radius-md);
-      font-size: 0.8rem; color: var(--mn-text-muted);
-      cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: inherit;
-    }
-    .sidebar__footer-link svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.5; }
-    .sidebar__footer-link:hover { color: var(--mn-text); background: color-mix(in srgb, var(--mn-accent) 6%, transparent); }
+    .side__it:hover { background: var(--mn-surface); color: var(--mn-text); }
+    .side__it:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .side__it.on { background: var(--mn-surface); color: var(--mn-text); font-weight: 500; }
+    .side__it svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.45; }
+    .side__it.on svg { opacity: 0.75; }
+    .side__it span:last-child:not(:first-child) { flex: 1; }
+    .side__badge { font-family: var(--font-mono); font-size: 0.55rem; color: var(--mn-text-muted); background: var(--mn-surface); padding: 1px 5px; border-radius: 6px; }
+    .side__foot { margin-top: auto; padding-top: 8px; border-top: 1px solid var(--mn-border); }
 
-    .main { grid-area: main; overflow-y: auto; padding: 24px 28px; }
+    .main { grid-area: main; overflow-y: auto; padding: 24px 28px 56px; }
 
-    .mn-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
-    .mn-col-3 { grid-column: span 3; } .mn-col-4 { grid-column: span 4; }
-    .mn-col-6 { grid-column: span 6; } .mn-col-8 { grid-column: span 8; }
-    .mn-col-12 { grid-column: span 12; }
+    .ptitle { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .ptitle h1 { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; }
+    .ptitle__meta { display: flex; align-items: center; gap: 10px; }
 
-    .mn-cell {
+    .mrow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+    .mcard {
+      padding: 14px 16px; border-radius: var(--radius-md);
       background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
-      border-radius: var(--radius-md); padding: 16px; min-height: 120px;
-      display: flex; flex-direction: column;
+      position: relative; overflow: hidden; cursor: pointer; transition: border-color 0.12s;
     }
-    .mn-cell__label {
-      font-family: var(--font-display); font-size: 0.6rem;
-      text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--mn-text-muted); margin-bottom: 12px;
-    }
-    .mn-cell__body { flex: 1; position: relative; min-height: 0; }
+    .mcard:hover { border-color: color-mix(in srgb, var(--mn-accent) 25%, var(--mn-border)); }
+    .mcard__sp { position: absolute; bottom: 0; right: 0; width: 80px; height: 32px; opacity: 0.2; }
+    .mcard__lab { font-size: 0.7rem; color: var(--mn-text-muted); margin-bottom: 4px; }
+    .mcard__val { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; line-height: 1; }
+    .mcard__row { display: flex; gap: 10px; margin-top: 6px; }
+    .mcard__d { font-family: var(--font-mono); font-size: 0.6rem; }
+    .d-up { color: var(--mn-success); } .d-dn { color: var(--mn-error); } .d-fl { color: var(--mn-text-muted); }
 
-    .view-tabs {
-      display: flex; gap: 2px; grid-column: span 12;
-      border-bottom: 1px solid var(--mn-border); padding-bottom: 0; margin-bottom: -8px;
+    .g { display: grid; gap: 10px; margin-bottom: 20px; }
+    .g1 { grid-template-columns: 1fr; }
+    .g2 { grid-template-columns: 1fr 1fr; }
+    .g73 { grid-template-columns: 3fr 2fr; }
+    .g82 { grid-template-columns: 2fr 1fr; }
+    .pn {
+      border-radius: var(--radius-md); background: var(--mn-surface-raised);
+      border: 1px solid var(--mn-border); padding: 14px 16px;
     }
-    .view-tab {
-      padding: 8px 16px; border: none; background: none;
-      font-family: var(--font-display); font-size: 0.8rem; color: var(--mn-text-muted);
-      cursor: pointer; border-bottom: 2px solid transparent;
-      transition: color 0.12s, border-color 0.12s;
-    }
-    .view-tab:hover { color: var(--mn-text); }
-    .view-tab.is-active { color: var(--mn-accent); border-bottom-color: var(--mn-accent); font-weight: 600; }
-    .view-tab:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .pn__lab { font-size: 0.7rem; color: var(--mn-text-muted); margin-bottom: 10px; }
 
-    @media (max-width: 1100px) {
-      .mn-col-3, .mn-col-4, .mn-col-6, .mn-col-8 { grid-column: span 6; }
-    }
+    @media (max-width: 1100px) { .mrow { grid-template-columns: 1fr 1fr; } .g2,.g73,.g82 { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
-      .app { grid-template-columns: 0px 1fr; }
-      .app .sidebar { opacity: 0; padding: 0; pointer-events: none; }
-      .mn-col-3,.mn-col-4,.mn-col-6,.mn-col-8,.mn-col-12 { grid-column: span 12; }
-      .main { padding: 16px; }
+      .app { grid-template-columns: 0px 1fr; } .app .side { opacity: 0; pointer-events: none; }
+      .mrow { grid-template-columns: 1fr 1fr; } .main { padding: 16px; }
     }
-    @media (prefers-reduced-motion: reduce) {
-      .app, .sidebar, .icon-btn, .sidebar__link, .search-bar { transition: none; }
-    }
+    @media (prefers-reduced-motion: reduce) { .app,.side,.mcard { transition: none; } }
   </style>
 </head>
 <body>
-  <script>try { var t = localStorage.getItem('mn-theme'); if (t && t !== 'editorial') document.body.classList.add('mn-' + t); } catch(e) {}</script>
+  <script>try{var t=localStorage.getItem('mn-theme');if(t&&t!=='editorial')document.body.classList.add('mn-'+t)}catch(e){}</script>
 
-  <div class="app" id="app-shell">
-    <header class="header" role="banner">
-      <div class="header__left">
-        <button class="icon-btn" id="sidebar-toggle" aria-label="Toggle sidebar" title="Toggle sidebar"></button>
-        <span class="breadcrumb">Projects <span style="opacity:0.4;margin:0 4px">&#8250;</span> <span class="breadcrumb__current">Aurora Platform</span></span>
-      </div>
-      <div class="header__center">
-        <label class="search-bar">
-          <span id="search-icon"></span>
-          <input type="text" class="search-bar__input" placeholder="Search..." aria-label="Search">
-          <kbd class="search-bar__kbd"></kbd>
-        </label>
-      </div>
-      <div class="header__right">
-        <select class="theme-select" id="theme-picker" aria-label="Theme">
-          <option value="editorial">Editorial</option><option value="nero">Nero</option>
-          <option value="avorio">Avorio</option><option value="colorblind">Colorblind</option>
-          <option value="sugar">Sugar</option><option value="navy">Navy</option>
-        </select>
-        <button class="icon-btn" id="btn-bell" aria-label="Notifications" title="Notifications"></button>
-        <button class="icon-btn" id="btn-settings" aria-label="Settings" title="Settings"></button>
-        <div class="avatar" title="Mara Fossati" aria-label="User menu">MF</div>
-      </div>
-    </header>
+  <div class="app" id="app">
+    <div class="top">
+      <button class="ib" id="tog" aria-label="Toggle sidebar"></button>
+      <span class="top__crumb">Workspace / <b id="bc">Aurora Platform</b></span>
+      <div class="top__spacer"></div>
+      <label class="top__search">
+        <span id="si"></span>
+        <input type="text" placeholder="Search..." aria-label="Search">
+        <span class="top__kbd" id="sk"></span>
+      </label>
+      <select class="tsel" id="tp" aria-label="Theme">
+        <option value="editorial">Editorial</option><option value="nero">Nero</option>
+        <option value="avorio">Avorio</option><option value="colorblind">Colorblind</option>
+        <option value="sugar">Sugar</option><option value="navy">Navy</option>
+      </select>
+      <button class="ib" id="ib" aria-label="Notifications"></button>
+      <button class="ib" id="is" aria-label="Settings"></button>
+      <div class="top__av" title="Alex Morgan">AM</div>
+    </div>
 
-    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-      <div class="sidebar__brand">
-        <img src="../src/assets/favicon.svg" alt="" width="22" height="22">
-        <span>Workspace</span>
-        <span class="sidebar__version">v6.5</span>
-      </div>
-      <div class="sidebar__group-label">Projects</div>
-      <nav class="sidebar__nav">
-        <button class="sidebar__link is-active" data-page="aurora"><span id="ic-layers"></span><span class="sidebar__link-text">Aurora Platform</span></button>
-        <button class="sidebar__link" data-page="nexus"><span id="ic-code"></span><span class="sidebar__link-text">Nexus API</span></button>
-        <button class="sidebar__link" data-page="stellar"><span id="ic-globe"></span><span class="sidebar__link-text">Stellar Mobile</span></button>
-      </nav>
-      <div class="sidebar__group-label">Team</div>
-      <nav class="sidebar__nav">
-        <button class="sidebar__link" data-page="members"><span id="ic-users"></span><span class="sidebar__link-text">Members</span><span class="sidebar__badge">8</span></button>
-        <button class="sidebar__link" data-page="activity"><span id="ic-activity"></span><span class="sidebar__link-text">Activity</span></button>
-      </nav>
-      <div class="sidebar__group-label">Settings</div>
-      <nav class="sidebar__nav">
-        <button class="sidebar__link" data-page="integrations"><span id="ic-link"></span><span class="sidebar__link-text">Integrations</span></button>
-      </nav>
-      <div class="sidebar__spacer"></div>
-      <div class="sidebar__footer">
-        <button class="sidebar__footer-link"><span id="ic-settings"></span>Preferences</button>
-        <button class="sidebar__footer-link"><span id="ic-file"></span>Documentation</button>
-      </div>
-    </aside>
+    <nav class="side" id="side" aria-label="Navigation">
+      <div class="side__brand"><img src="../src/assets/favicon.svg" alt="" width="18" height="18"> Workspace <span class="side__v">6.5</span></div>
+      <div class="side__sep">Projects</div>
+      <button class="side__it on" data-p="Aurora Platform"><span id="n1"></span><span>Aurora Platform</span></button>
+      <button class="side__it" data-p="Nexus API"><span id="n2"></span><span>Nexus API</span></button>
+      <button class="side__it" data-p="Stellar Mobile"><span id="n3"></span><span>Stellar Mobile</span></button>
+      <div class="side__sep">Team</div>
+      <button class="side__it" data-p="Team"><span id="n4"></span><span>Team</span></button>
+      <div class="side__foot"><button class="side__it" data-p="Settings"><span id="n5"></span><span>Settings</span></button></div>
+    </nav>
 
-    <main class="main" id="main-content">
-      <div class="mn-grid">
-        <div class="view-tabs">
-          <button class="view-tab is-active">Board</button>
-          <button class="view-tab">List</button>
-          <button class="view-tab">Timeline</button>
+    <main class="main">
+      <div class="ptitle">
+        <h1>Aurora Platform Sprint 14</h1>
+        <div class="ptitle__meta"><button class="mn-btn mn-btn--accent mn-btn--sm" id="newissue">New Issue</button></div>
+      </div>
+
+      <div class="mrow" id="kpis">
+        <div class="mcard" data-k="Open Issues: 47 in current sprint">
+          <canvas class="mcard__sp" id="s0" role="img" aria-label="Open issues sparkline"></canvas>
+          <div class="mcard__lab">Open Issues</div>
+          <div class="mcard__val">47</div>
+          <div class="mcard__row"><span class="mcard__d d-dn">+5 this week</span></div>
         </div>
-        <div class="mn-cell mn-col-8"><div class="mn-cell__label">Kanban board</div><div class="mn-cell__body" id="cell-kanban"></div></div>
-        <div class="mn-cell mn-col-4"><div class="mn-cell__label">Activity</div><div class="mn-cell__body" id="cell-activity"></div></div>
-        <div class="mn-cell mn-col-12"><div class="mn-cell__label">Backlog</div><div class="mn-cell__body" id="cell-table"></div></div>
-        <div class="mn-cell mn-col-8"><div class="mn-cell__label">Velocity</div><div class="mn-cell__body" id="cell-spark"></div></div>
-        <div class="mn-cell mn-col-4"><div class="mn-cell__label">By assignee</div><div class="mn-cell__body" id="cell-bar" style="display:flex;align-items:center;justify-content:center"></div></div>
+        <div class="mcard" data-k="Sprint Velocity: 34 story points per sprint">
+          <canvas class="mcard__sp" id="s1" role="img" aria-label="Sprint velocity sparkline"></canvas>
+          <div class="mcard__lab">Sprint Velocity</div>
+          <div class="mcard__val">34 pts</div>
+          <div class="mcard__row"><span class="mcard__d d-up">+3 vs prior</span></div>
+        </div>
+        <div class="mcard" data-k="Cycle Time: 3.2 days average">
+          <canvas class="mcard__sp" id="s2" role="img" aria-label="Cycle time sparkline"></canvas>
+          <div class="mcard__lab">Cycle Time</div>
+          <div class="mcard__val">3.2 days</div>
+          <div class="mcard__row"><span class="mcard__d d-up">-0.4d</span></div>
+        </div>
+        <div class="mcard" data-k="Completion Rate: 89% tasks completed on time">
+          <canvas class="mcard__sp" id="s3" role="img" aria-label="Completion rate sparkline"></canvas>
+          <div class="mcard__lab">Completion Rate</div>
+          <div class="mcard__val">89%</div>
+          <div class="mcard__row"><span class="mcard__d d-up">+2pp</span></div>
+        </div>
+      </div>
+
+      <div class="g g73">
+        <div class="pn"><div class="pn__lab">Sprint board</div><div id="kanban"></div></div>
+        <div class="pn"><div class="pn__lab">Velocity trend</div><canvas id="velsp" style="width:100%;height:180px" role="img" aria-label="Velocity trend sparkline"></canvas></div>
+      </div>
+
+      <div class="pn" style="margin-bottom:20px">
+        <div class="pn__lab">Backlog issues</div>
+        <div id="tbl"></div>
+      </div>
+
+      <div class="pn" style="margin-bottom:20px">
+        <div class="pn__lab">Recent activity</div>
+        <div id="feed"></div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-top:12px;border-top:1px solid var(--mn-border)">
+        <div class="mn-segmented" role="tablist" id="seg">
+          <button class="mn-segmented__item mn-segmented__item--active" role="tab" aria-selected="true">Board</button>
+          <button class="mn-segmented__item" role="tab">List</button>
+          <button class="mn-segmented__item" role="tab">Timeline</button>
+        </div>
       </div>
     </main>
   </div>
@@ -272,128 +226,130 @@
   <script src="../dist/iife/maranello.min.js"></script>
   <script>
     (function () {
-
       var M = window.Maranello;
       if (!M) return;
 
-      function setIcon(id, name) { var el = document.getElementById(id); if (el && M.icons[name]) el.innerHTML = M.icons[name](); }
+      function ic(id, n) { var e = document.getElementById(id); if (e && M.icons[n]) e.innerHTML = M.icons[n](); }
+      ic('tog','menu'); ic('si','search'); ic('ib','bell'); ic('is','settings');
+      ic('n1','layers'); ic('n2','code'); ic('n3','globe'); ic('n4','users'); ic('n5','settings');
 
-      var kbdEl = document.querySelector('.search-bar__kbd');
-      if (kbdEl) kbdEl.textContent = navigator.userAgent.indexOf('Mac') !== -1 ? '\u2318K' : 'Ctrl+K';
+      var sk = document.getElementById('sk');
+      if (sk) sk.textContent = navigator.userAgent.indexOf('Mac') !== -1 ? '\u2318K' : 'Ctrl+K';
 
-      var picker = document.getElementById('theme-picker');
-      var saved = localStorage.getItem('mn-theme') || 'editorial';
-      picker.value = saved;
-      picker.addEventListener('change', function () { M.setTheme(picker.value); localStorage.setItem('mn-theme', picker.value); });
+      var tp = document.getElementById('tp');
+      tp.value = localStorage.getItem('mn-theme') || 'editorial';
+      tp.addEventListener('change', function () { M.setTheme(tp.value); localStorage.setItem('mn-theme', tp.value); });
 
-      var shell = document.getElementById('app-shell');
-      document.getElementById('sidebar-toggle').addEventListener('click', function () {
-        if (shell.className.indexOf('is-collapsed') !== -1) shell.className = shell.className.replace('is-collapsed', '').trim();
-        else shell.className = shell.className.trim() + ' is-collapsed';
+      var app = document.getElementById('app');
+      document.getElementById('tog').addEventListener('click', function () {
+        if (app.className.indexOf('is-collapsed') !== -1) app.className = app.className.replace('is-collapsed','').trim();
+        else app.className = app.className.trim() + ' is-collapsed';
       });
 
-      var links = document.querySelectorAll('.sidebar__link');
-      var bcCurrent = document.querySelector('.breadcrumb__current');
-      for (var i = 0; i < links.length; i++) {
-        links[i].addEventListener('click', function () {
-          for (var j = 0; j < links.length; j++) links[j].className = links[j].className.replace(' is-active', '');
-          this.className += ' is-active';
-          var t = this.querySelector('.sidebar__link-text');
-          if (t && bcCurrent) bcCurrent.textContent = t.textContent;
+      var navs = document.querySelectorAll('.side__it');
+      var bc = document.getElementById('bc');
+      for (var i = 0; i < navs.length; i++) {
+        navs[i].addEventListener('click', function () {
+          for (var j = 0; j < navs.length; j++) navs[j].className = navs[j].className.replace(' on', '');
+          this.className += ' on';
+          if (bc) bc.textContent = this.getAttribute('data-p');
         });
       }
 
-      setIcon('sidebar-toggle', 'menu');
-      setIcon('search-icon', 'search');
-      setIcon('btn-bell', 'bell');
-      setIcon('btn-settings', 'settings');
-      setIcon('ic-layers', 'layers');
-      setIcon('ic-code', 'code');
-      setIcon('ic-globe', 'globe');
-      setIcon('ic-users', 'users');
-      setIcon('ic-activity', 'activity');
-      setIcon('ic-link', 'link');
-      setIcon('ic-settings', 'settings');
-      setIcon('ic-file', 'file');
+      var segs = document.querySelectorAll('#seg .mn-segmented__item');
+      for (var s = 0; s < segs.length; s++) {
+        segs[s].addEventListener('click', function () {
+          for (var k = 0; k < segs.length; k++) { segs[k].className = segs[k].className.replace(' mn-segmented__item--active',''); segs[k].removeAttribute('aria-selected'); }
+          this.className += ' mn-segmented__item--active'; this.setAttribute('aria-selected','true');
+          if (M.toast) M.toast({ type:'info', title:'View', message:'Switched to ' + this.textContent });
+        });
+      }
 
-      // Kanban
-      var kanbanEl = document.getElementById('cell-kanban');
-      if (kanbanEl && M.kanbanBoard) {
-        M.kanbanBoard(kanbanEl, {
+      document.getElementById('newissue').addEventListener('click', function () {
+        if (M.toast) M.toast({ type:'success', title:'Issue', message:'Create new issue dialog' });
+      });
+
+      var mcards = document.querySelectorAll('[data-k]');
+      for (var m = 0; m < mcards.length; m++) {
+        mcards[m].addEventListener('click', function () {
+          if (M.toast) M.toast({ type:'info', title:'Metric', message: this.getAttribute('data-k') });
+        });
+      }
+
+      var spd = [[42,45,47,50,49,48,47],[28,30,31,29,32,33,34],[4.2,3.9,3.8,3.5,3.4,3.3,3.2],[84,86,87,88,87,88,89]];
+      try { if (M.sparkline) { for (var p = 0; p < 4; p++) { var sc = document.getElementById('s'+p); if (sc) M.sparkline(sc, spd[p]); } } } catch(e) { console.warn('sparkline:', e.message); }
+
+      try { if (M.sparkline) {
+        var velc = document.getElementById('velsp');
+        if (velc) M.sparkline(velc, [28,30,31,29,32,33,34,31,29,32,33,34]);
+      } } catch(e) { console.warn('velocity sparkline:', e.message); }
+
+      try { if (M.kanbanBoard) {
+        M.kanbanBoard(document.getElementById('kanban'), {
           columns: [
-            { id: 'todo', title: 'To Do' },
-            { id: 'progress', title: 'In Progress' },
-            { id: 'review', title: 'Review' },
-            { id: 'done', title: 'Done' }
+            { id:'todo', title:'To Do', limit:10 },
+            { id:'prog', title:'In Progress', limit:5 },
+            { id:'review', title:'Review', limit:3 },
+            { id:'done', title:'Done' }
           ],
           cards: [
-            { id: 'c1', columnId: 'todo', title: 'Design token audit', subtitle: 'Mara Fossati', priority: 'high', tags: ['design'] },
-            { id: 'c2', columnId: 'todo', title: 'API rate limiting', subtitle: 'Leo Hartmann', priority: 'medium', tags: ['backend'] },
-            { id: 'c3', columnId: 'progress', title: 'Search indexing', subtitle: 'Anika Patel', priority: 'high', tags: ['backend'] },
-            { id: 'c4', columnId: 'progress', title: 'Dashboard widgets', subtitle: 'Diego Navarro', priority: 'medium', tags: ['frontend'] },
-            { id: 'c5', columnId: 'review', title: 'Auth flow redesign', subtitle: 'Suki Tanaka', priority: 'critical', tags: ['security'] },
-            { id: 'c6', columnId: 'done', title: 'CI pipeline setup', subtitle: 'Leo Hartmann', tags: ['devops'] },
-            { id: 'c7', columnId: 'done', title: 'Dark mode support', subtitle: 'Mara Fossati', tags: ['design'] }
-          ]
-        });
-      }
-
-      // Activity
-      var actEl = document.getElementById('cell-activity');
-      if (actEl && M.activityFeed) {
-        M.activityFeed(actEl, [
-          { id: '1', title: 'Suki Tanaka', body: 'moved Auth flow to Review', meta: '5 min ago', type: 'info' },
-          { id: '2', title: 'Diego Navarro', body: 'created Dashboard widgets', meta: '20 min ago', type: 'default' },
-          { id: '3', title: 'Anika Patel', body: 'started Search indexing', meta: '1h ago', type: 'success' },
-          { id: '4', title: 'Leo Hartmann', body: 'completed CI pipeline', meta: '3h ago', type: 'success' }
-        ], { maxItems: 8 });
-      }
-
-      // Data table
-      var tableEl = document.getElementById('cell-table');
-      if (tableEl && M.dataTable) {
-        M.dataTable(tableEl, {
-          columns: [
-            { key: 'title', label: 'Issue', sortable: true },
-            { key: 'assignee', label: 'Assignee' },
-            { key: 'priority', label: 'Priority', type: 'status' },
-            { key: 'status', label: 'Status', type: 'badge' },
-            { key: 'created', label: 'Created' }
+            { id:'1', columnId:'todo', title:'Implement user profile API', assignee:'Sarah Chen', priority:'high' },
+            { id:'2', columnId:'todo', title:'Fix login redirect bug', assignee:'Marcus Lee', priority:'critical' },
+            { id:'3', columnId:'todo', title:'Update documentation', assignee:'Priya Patel', priority:'low' },
+            { id:'4', columnId:'prog', title:'Add OAuth2 support', assignee:'Jordan Kim', priority:'high' },
+            { id:'5', columnId:'prog', title:'Refactor data layer', assignee:'Alex Morgan', priority:'medium' },
+            { id:'6', columnId:'review', title:'Dashboard UI redesign', assignee:'Taylor Brooks', priority:'medium' },
+            { id:'7', columnId:'review', title:'Performance optimization', assignee:'Casey Wong', priority:'high' },
+            { id:'8', columnId:'done', title:'Setup CI pipeline', assignee:'Jamie Rodriguez', priority:'high' },
+            { id:'9', columnId:'done', title:'Database migration', assignee:'Morgan Silva', priority:'critical' },
+            { id:'10', columnId:'done', title:'Email notifications', assignee:'River Adams', priority:'medium' }
           ],
-          data: [
-            { title: 'Pagination component', assignee: 'Mara Fossati', priority: 'Medium', status: 'Open', created: 'Mar 20' },
-            { title: 'Export CSV feature', assignee: 'Leo Hartmann', priority: 'Low', status: 'Open', created: 'Mar 18' },
-            { title: 'Mobile nav breakpoint', assignee: 'Anika Patel', priority: 'High', status: 'In Progress', created: 'Mar 15' },
-            { title: 'Token refresh flow', assignee: 'Suki Tanaka', priority: 'Critical', status: 'Open', created: 'Mar 12' },
-            { title: 'A11y color audit', assignee: 'Diego Navarro', priority: 'Medium', status: 'Blocked', created: 'Mar 10' }
-          ],
-          compact: true, ariaLabel: 'Backlog issues'
+          onCardClick: function(card) {
+            if (M.toast) M.toast({ type:'info', title:card.title, message:'Assigned: ' + card.assignee });
+          }
         });
-      }
+      } } catch(e) { console.warn('kanbanBoard:', e.message); }
 
-      // Sparkline (velocity)
-      var sparkEl = document.getElementById('cell-spark');
-      if (sparkEl && M.sparkline) {
-        var c = document.createElement('canvas');
-        c.setAttribute('role', 'img'); c.setAttribute('aria-label', 'Sprint velocity trend');
-        c.style.width = '100%'; c.style.height = '100%';
-        sparkEl.appendChild(c);
-        M.sparkline(c, [18,22,19,25,28,24,30,27,32,35,31,38]);
-      }
+      try { if (M.dataTable) {
+        M.dataTable(document.getElementById('tbl'), {
+          columns:[
+            {key:'issue',label:'Issue',sortable:true},
+            {key:'assignee',label:'Assignee'},
+            {key:'priority',label:'Priority',type:'status'},
+            {key:'status',label:'Status',type:'badge'},
+            {key:'sprint',label:'Sprint'},
+            {key:'created',label:'Created',align:'right'}
+          ],
+          data:[
+            {issue:'Migrate legacy auth system',assignee:'Sarah Chen',priority:'Critical',status:'In Progress',sprint:'S14',created:'3d ago'},
+            {issue:'Add bulk export feature',assignee:'Marcus Lee',priority:'High',status:'To Do',sprint:'S14',created:'5d ago'},
+            {issue:'Fix PDF generation encoding',assignee:'Priya Patel',priority:'High',status:'Review',sprint:'S14',created:'1w ago'},
+            {issue:'Implement rate limiting',assignee:'Jordan Kim',priority:'Medium',status:'To Do',sprint:'S15',created:'1w ago'},
+            {issue:'Upgrade React to v19',assignee:'Alex Morgan',priority:'Medium',status:'In Progress',sprint:'S14',created:'2w ago'},
+            {issue:'Add dark mode support',assignee:'Taylor Brooks',priority:'Low',status:'Backlog',sprint:'S16',created:'2w ago'},
+            {issue:'Refactor notification service',assignee:'Casey Wong',priority:'Medium',status:'Review',sprint:'S14',created:'3w ago'},
+            {issue:'Fix mobile responsiveness',assignee:'Jamie Rodriguez',priority:'High',status:'Done',sprint:'S13',created:'3w ago'},
+            {issue:'Add webhook support',assignee:'Morgan Silva',priority:'Low',status:'Backlog',sprint:'S16',created:'1mo ago'},
+            {issue:'Implement SSO integration',assignee:'River Adams',priority:'High',status:'To Do',sprint:'S15',created:'1mo ago'}
+          ],
+          ariaLabel:'Backlog issues table',
+          compact:true,
+          onRowClick:function(r){ if(M.toast) M.toast({type:'info',title:r.issue,message:'Assignee: '+r.assignee+', Priority: '+r.priority}); }
+        });
+      } } catch(e) { console.warn('dataTable:', e.message); }
 
-      // Bar chart
-      var barEl = document.getElementById('cell-bar');
-      if (barEl && M.charts && M.charts.barChart) {
-        var bc = document.createElement('canvas');
-        bc.width = 240; bc.height = 160;
-        bc.setAttribute('role', 'img'); bc.setAttribute('aria-label', 'Tasks by assignee');
-        barEl.appendChild(bc);
-        M.charts.barChart(bc, [
-          { label: 'Mara', value: 8 }, { label: 'Leo', value: 6 },
-          { label: 'Anika', value: 5 }, { label: 'Diego', value: 4 },
-          { label: 'Suki', value: 7 }
-        ], { showLabels: true, showValues: true });
-      }
+      try { if (M.activityFeed) {
+        M.activityFeed(document.getElementById('feed'), [
+          {id:'1',title:'Issue Completed',body:'Dashboard UI redesign merged to main',meta:'12m ago',type:'success'},
+          {id:'2',title:'New Comment',body:'Sarah Chen commented on AUTH-847',meta:'45m ago',type:'info'},
+          {id:'3',title:'Sprint Updated',body:'5 issues moved to In Progress',meta:'2h ago',type:'info'},
+          {id:'4',title:'Build Failed',body:'PR #342 failed CI checks',meta:'3h ago',type:'danger'},
+          {id:'5',title:'Deployment',body:'Production deployment v2.8.1 successful',meta:'5h ago',type:'success'},
+          {id:'6',title:'New Issue',body:'Critical bug reported: login redirect',meta:'6h ago',type:'warning'},
+          {id:'7',title:'PR Merged',body:'Marcus Lee merged PR #338',meta:'8h ago',type:'success'},
+          {id:'8',title:'Review Requested',body:'Performance optimization needs review',meta:'1d ago',type:'info'}
+        ], {maxItems:10});
+      } } catch(e) { console.warn('activityFeed:', e.message); }
     })();
   </script>
 </body>

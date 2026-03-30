@@ -3,547 +3,232 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>App Template — Maranello Luce Design</title>
+  <title>Admin Dashboard — Maranello Luce</title>
   <link rel="icon" href="../src/assets/favicon.svg">
   <link rel="stylesheet" href="../src/fonts/local-fonts.css">
   <link rel="stylesheet" href="../dist/css/maranello.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
-    body {
-      background: var(--mn-surface);
-      color: var(--mn-text);
-      font-family: var(--font-body, sans-serif);
-      overflow: hidden;
-    }
+    body { background: var(--mn-surface); color: var(--mn-text); font-family: var(--font-body, sans-serif); overflow: hidden; }
 
-    /* ── Layout shell ── */
     .app {
-      display: grid;
-      grid-template-rows: 52px 1fr;
-      grid-template-columns: 260px 1fr;
-      grid-template-areas:
-        "header header"
-        "sidebar main";
-      height: 100vh;
-      transition: grid-template-columns 0.2s ease;
+      display: grid; grid-template-rows: 48px 1fr;
+      grid-template-columns: 220px 1fr;
+      grid-template-areas: "side top" "side main";
+      height: 100vh; transition: grid-template-columns 0.18s ease;
     }
     .app.is-collapsed { grid-template-columns: 0px 1fr; }
 
-    /* ── Top header bar ── */
-    .header {
-      grid-area: header;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 16px;
-      height: 52px;
-      background: var(--mn-surface-raised);
+    .top {
+      grid-area: top; display: flex; align-items: center; gap: 16px;
+      padding: 0 24px; height: 48px;
       border-bottom: 1px solid var(--mn-border);
-      z-index: 10;
     }
-    .header__left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
+    .top__crumb { font-size: 0.85rem; color: var(--mn-text-muted); }
+    .top__crumb b { color: var(--mn-text); font-weight: 600; }
+    .top__spacer { flex: 1; }
+    .top__search {
+      display: flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: var(--radius-md);
+      border: 1px solid var(--mn-border); background: var(--mn-surface-raised);
+      color: var(--mn-text-muted); font-size: 0.78rem; cursor: text;
+      min-width: 220px; transition: border-color 0.12s;
     }
-    .header__center { flex: 1; display: flex; justify-content: center; }
-    .header__right {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .top__search:focus-within { border-color: var(--mn-accent); }
+    .top__search svg { width: 14px; height: 14px; opacity: 0.4; flex-shrink: 0; }
+    .top__search input {
+      flex: 1; border: none; background: none; color: var(--mn-text);
+      font-size: 0.78rem; font-family: inherit; outline: none;
     }
-
-    /* Icon buttons */
-    .icon-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-      border: none;
-      background: none;
-      color: var(--mn-text-muted);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: background 0.12s, color 0.12s;
-      flex-shrink: 0;
+    .top__search input::placeholder { color: var(--mn-text-muted); }
+    .top__kbd { font-family: var(--font-mono); font-size: 0.55rem; color: var(--mn-text-muted); opacity: 0.5; }
+    .ib {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border: none; background: none;
+      color: var(--mn-text-muted); border-radius: var(--radius-md);
+      cursor: pointer; flex-shrink: 0;
     }
-    .icon-btn:hover { background: color-mix(in srgb, var(--mn-accent) 10%, transparent); color: var(--mn-text); }
-    .icon-btn:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
-    .icon-btn svg { width: 18px; height: 18px; }
-
-    /* Breadcrumb */
-    .breadcrumb {
-      font-size: 0.85rem;
-      color: var(--mn-text-muted);
-      white-space: nowrap;
+    .ib:hover { color: var(--mn-text); }
+    .ib:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .ib svg { width: 16px; height: 16px; }
+    .top__av {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: color-mix(in srgb, var(--mn-accent) 18%, var(--mn-surface-raised));
+      color: var(--mn-accent); display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 0.6rem; font-weight: 700; cursor: pointer;
     }
-    .breadcrumb__current {
-      color: var(--mn-text);
-      font-weight: 600;
+    .tsel {
+      font-size: 0.72rem; padding: 3px 6px; border-radius: var(--radius-sm, 4px);
+      border: 1px solid var(--mn-border); background: var(--mn-surface-raised);
+      color: var(--mn-text-muted); font-family: inherit; cursor: pointer;
     }
 
-    /* Search bar */
-    .search-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-      max-width: 480px;
-      padding: 0 14px;
-      height: 36px;
-      background: var(--mn-surface);
-      border: 1px solid var(--mn-border);
-      border-radius: var(--radius-lg);
-      color: var(--mn-text-muted);
-      cursor: text;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .search-bar:hover { border-color: color-mix(in srgb, var(--mn-accent) 40%, var(--mn-border)); }
-    .search-bar:focus-within {
-      border-color: var(--mn-accent);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--mn-accent) 15%, transparent);
-    }
-    .search-bar svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.5; }
-    .search-bar__input {
-      flex: 1;
-      border: none;
-      background: none;
-      color: var(--mn-text);
-      font-size: 0.85rem;
-      font-family: var(--font-body, sans-serif);
-      outline: none;
-    }
-    .search-bar__input::placeholder { color: var(--mn-text-muted); }
-    .search-bar__kbd {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      font-weight: 600;
-      color: var(--mn-text-muted);
-      background: var(--mn-surface-raised);
-      border: 1px solid var(--mn-border);
-      border-radius: 4px;
-      padding: 2px 6px;
-      white-space: nowrap;
-    }
-
-    /* Theme picker */
-    .theme-select {
-      font-size: 0.8rem;
-      padding: 4px 8px;
-      height: 32px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--mn-border);
-      background: var(--mn-surface);
-      color: var(--mn-text);
-      font-family: inherit;
-      cursor: pointer;
-    }
-    .theme-select:focus-visible { outline: 2px solid var(--mn-accent); }
-
-    /* Avatar */
-    .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--mn-accent);
-      color: var(--mn-surface);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-display);
-      font-size: 0.7rem;
-      font-weight: 700;
-      flex-shrink: 0;
-      cursor: pointer;
-    }
-
-    /* ── Sidebar ── */
-    .sidebar {
-      grid-area: sidebar;
-      background: var(--mn-surface-raised);
+    .side {
+      grid-area: side; background: var(--mn-surface-raised);
       border-right: 1px solid var(--mn-border);
-      display: flex;
-      flex-direction: column;
-      padding: 16px 12px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      min-width: 0;
-      transition: opacity 0.2s ease, padding 0.2s ease;
+      display: flex; flex-direction: column; padding: 12px 8px;
+      overflow-y: auto; min-width: 0; transition: opacity 0.18s;
     }
-    .app.is-collapsed .sidebar {
-      opacity: 0;
-      padding: 0;
-      pointer-events: none;
+    .app.is-collapsed .side { opacity: 0; pointer-events: none; }
+    .side__brand {
+      display: flex; align-items: center; gap: 8px; padding: 4px 10px 14px;
+      font-family: var(--font-display); font-weight: 700; font-size: 0.82rem; color: var(--mn-text);
     }
-    .sidebar__brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: var(--mn-text);
-      padding: 0 8px 12px;
+    .side__v { font-family: var(--font-mono); font-size: 0.5rem; color: var(--mn-text-muted); margin-left: auto; }
+    .side__sep { font-size: 0.58rem; font-weight: 500; color: var(--mn-text-muted); padding: 14px 10px 4px; letter-spacing: 0.03em; }
+    .side__it {
+      display: flex; align-items: center; gap: 8px; padding: 6px 10px;
+      border-radius: var(--radius-md); font-size: 0.8rem; color: var(--mn-text-muted);
+      cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+      font-family: inherit; transition: background 0.1s, color 0.1s; min-height: 32px;
     }
-    .sidebar__version {
-      font-size: 0.65rem;
-      font-weight: 600;
-      background: var(--mn-accent);
-      color: var(--mn-surface);
-      padding: 1px 7px;
-      border-radius: 10px;
-      margin-left: auto;
-    }
-    .sidebar__search-wrap {
-      position: relative;
-      margin-bottom: 12px;
-    }
-    .sidebar__search {
-      width: 100%;
-      padding: 7px 12px 7px 32px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--mn-border);
-      background: var(--mn-surface);
-      color: var(--mn-text);
-      font-size: 0.8rem;
-      font-family: var(--font-body, sans-serif);
-    }
-    .sidebar__search:focus {
-      outline: 2px solid var(--mn-accent);
-      outline-offset: -1px;
-      border-color: var(--mn-accent);
-    }
-    .sidebar__search-icon {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 14px;
-      height: 14px;
-      color: var(--mn-text-muted);
-      pointer-events: none;
-    }
-    .sidebar__search-kbd {
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      color: var(--mn-text-muted);
-      background: var(--mn-surface-raised);
-      border: 1px solid var(--mn-border);
-      border-radius: 3px;
-      padding: 1px 5px;
-    }
+    .side__it:hover { background: var(--mn-surface); color: var(--mn-text); }
+    .side__it:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
+    .side__it.on { background: var(--mn-surface); color: var(--mn-text); font-weight: 500; }
+    .side__it svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.45; }
+    .side__it.on svg { opacity: 0.75; }
+    .side__it span:last-child:not(:first-child) { flex: 1; }
+    .side__badge { font-family: var(--font-mono); font-size: 0.55rem; color: var(--mn-text-muted); background: var(--mn-surface); padding: 1px 5px; border-radius: 6px; }
+    .side__foot { margin-top: auto; padding-top: 8px; border-top: 1px solid var(--mn-border); }
 
-    /* Nav groups */
-    .sidebar__group-label {
-      font-family: var(--font-display);
-      font-size: 0.6rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--mn-text-muted);
-      margin: 20px 0 4px;
-      padding-left: 10px;
-    }
-    .sidebar__group-label:first-of-type { margin-top: 4px; }
-    .sidebar__nav { display: flex; flex-direction: column; gap: 1px; }
-    .sidebar__link {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 10px;
-      border-radius: var(--radius-md);
-      font-size: 0.84rem;
-      color: var(--mn-text);
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      background: none;
-      width: 100%;
-      text-align: left;
-      font-family: inherit;
-      transition: background 0.12s;
-      min-height: 34px;
-    }
-    .sidebar__link:hover { background: color-mix(in srgb, var(--mn-accent) 8%, transparent); }
-    .sidebar__link:focus-visible { outline: 2px solid var(--mn-accent); outline-offset: -2px; }
-    .sidebar__link.is-active {
-      background: color-mix(in srgb, var(--mn-accent) 15%, transparent);
-      color: var(--mn-accent);
-      font-weight: 600;
-    }
-    .sidebar__link svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.6; }
-    .sidebar__link.is-active svg { opacity: 1; }
-    .sidebar__link-text { flex: 1; }
-    .sidebar__badge {
-      font-size: 0.65rem;
-      font-weight: 600;
-      min-width: 18px;
-      text-align: center;
-      padding: 1px 6px;
-      border-radius: 10px;
-      background: var(--mn-accent);
-      color: var(--mn-surface);
-    }
-    .sidebar__spacer { flex: 1; }
-    .sidebar__footer {
-      padding-top: 12px;
-      border-top: 1px solid var(--mn-border);
-      margin-top: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-    }
-    .sidebar__footer-link {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: var(--radius-md);
-      font-size: 0.8rem;
-      color: var(--mn-text-muted);
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      background: none;
-      width: 100%;
-      text-align: left;
-      font-family: inherit;
-    }
-    .sidebar__footer-link svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.5; }
-    .sidebar__footer-link:hover {
-      color: var(--mn-text);
-      background: color-mix(in srgb, var(--mn-accent) 6%, transparent);
-    }
+    .main { grid-area: main; overflow-y: auto; padding: 24px 28px 56px; }
 
-    /* ── Main area ── */
-    .main {
-      grid-area: main;
-      overflow-y: auto;
-      padding: 24px 28px;
-    }
+    .ptitle { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .ptitle h1 { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; }
+    .ptitle__meta { display: flex; align-items: center; gap: 10px; }
 
-    /* ── Composable grid ── */
-    .mn-grid {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 16px;
+    .mrow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+    .mcard {
+      padding: 14px 16px; border-radius: var(--radius-md);
+      background: var(--mn-surface-raised); border: 1px solid var(--mn-border);
+      position: relative; overflow: hidden; cursor: pointer; transition: border-color 0.12s;
     }
-    .mn-col-3 { grid-column: span 3; }
-    .mn-col-4 { grid-column: span 4; }
-    .mn-col-6 { grid-column: span 6; }
-    .mn-col-8 { grid-column: span 8; }
-    .mn-col-12 { grid-column: span 12; }
+    .mcard:hover { border-color: color-mix(in srgb, var(--mn-accent) 25%, var(--mn-border)); }
+    .mcard__lab { font-size: 0.7rem; color: var(--mn-text-muted); margin-bottom: 4px; }
+    .mcard__val { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; line-height: 1; }
+    .mcard__row { display: flex; gap: 10px; margin-top: 6px; }
+    .mcard__d { font-family: var(--font-mono); font-size: 0.6rem; }
+    .d-up { color: var(--mn-success); } .d-dn { color: var(--mn-error); } .d-fl { color: var(--mn-text-muted); }
 
-    .mn-cell {
-      background: var(--mn-surface-raised);
-      border: 1px solid var(--mn-border);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      min-height: 120px;
-      display: flex;
-      flex-direction: column;
+    .g { display: grid; gap: 10px; margin-bottom: 20px; }
+    .g1 { grid-template-columns: 1fr; }
+    .g2 { grid-template-columns: 1fr 1fr; }
+    .g73 { grid-template-columns: 3fr 2fr; }
+    .g82 { grid-template-columns: 2fr 1fr; }
+    .pn {
+      border-radius: var(--radius-md); background: var(--mn-surface-raised);
+      border: 1px solid var(--mn-border); padding: 14px 16px;
     }
-    .mn-cell__label {
-      font-family: var(--font-display);
-      font-size: 0.6rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--mn-text-muted);
-      margin-bottom: 12px;
-    }
-    .mn-cell__body { flex: 1; position: relative; min-height: 0; }
+    .pn__lab { font-size: 0.7rem; color: var(--mn-text-muted); margin-bottom: 10px; }
 
-    /* ── KPI card ── */
-    .kpi {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .kpi__value {
-      font-family: var(--font-display);
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--mn-accent);
-      line-height: 1.1;
-    }
-    .kpi__label {
-      font-size: 0.75rem;
-      color: var(--mn-text-muted);
-    }
-    .kpi__trend {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--mn-success);
-      margin-top: 2px;
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 1100px) {
-      .mn-col-3, .mn-col-4, .mn-col-6, .mn-col-8 { grid-column: span 6; }
-    }
+    @media (max-width: 1100px) { .mrow { grid-template-columns: 1fr 1fr; } .g2,.g73,.g82 { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
-      .app { grid-template-columns: 0px 1fr; }
-      .app .sidebar { opacity: 0; padding: 0; pointer-events: none; }
-      .mn-col-3, .mn-col-4, .mn-col-6, .mn-col-8, .mn-col-12 { grid-column: span 12; }
-      .main { padding: 16px; }
-      .search-bar { max-width: 240px; }
+      .app { grid-template-columns: 0px 1fr; } .app .side { opacity: 0; pointer-events: none; }
+      .mrow { grid-template-columns: 1fr 1fr; } .main { padding: 16px; }
     }
-
-    /* ── Reduced motion ── */
-    @media (prefers-reduced-motion: reduce) {
-      .app, .sidebar, .icon-btn, .sidebar__link, .search-bar { transition: none; }
-    }
+    @media (prefers-reduced-motion: reduce) { .app,.side,.mcard { transition: none; } }
   </style>
 </head>
 <body>
-  <script>try { var t = localStorage.getItem('mn-theme'); if (t && t !== 'editorial') document.body.classList.add('mn-' + t); } catch(e) {}</script>
+  <script>try{var t=localStorage.getItem('mn-theme');if(t&&t!=='editorial')document.body.classList.add('mn-'+t)}catch(e){}</script>
 
-  <div class="app" id="app-shell">
-    <!-- ── HEADER BAR ── -->
-    <header class="header" role="banner">
-      <div class="header__left">
-        <button class="icon-btn" id="sidebar-toggle" aria-label="Toggle sidebar" title="Toggle sidebar"></button>
-        <span class="breadcrumb" id="breadcrumb">Admin <span style="opacity:0.4;margin:0 4px">&#8250;</span> <span class="breadcrumb__current">Dashboard</span></span>
+  <div class="app" id="app">
+    <div class="top">
+      <button class="ib" id="tog" aria-label="Toggle sidebar"></button>
+      <span class="top__crumb">General / <b id="bc">Dashboard</b></span>
+      <div class="top__spacer"></div>
+      <label class="top__search">
+        <span id="si"></span>
+        <input type="text" placeholder="Search..." aria-label="Search">
+        <span class="top__kbd" id="sk"></span>
+      </label>
+      <select class="tsel" id="tp" aria-label="Theme">
+        <option value="editorial">Editorial</option><option value="nero">Nero</option>
+        <option value="avorio">Avorio</option><option value="colorblind">Colorblind</option>
+        <option value="sugar">Sugar</option><option value="navy">Navy</option>
+      </select>
+      <button class="ib" id="ib" aria-label="Notifications"></button>
+      <button class="ib" id="is" aria-label="Settings"></button>
+      <div class="top__av" title="Admin User">AU</div>
+    </div>
+
+    <nav class="side" id="side" aria-label="Navigation">
+      <div class="side__brand"><img src="../src/assets/favicon.svg" alt="" width="18" height="18"> Admin <span class="side__v">6.5</span></div>
+      <div class="side__sep">General</div>
+      <button class="side__it on" data-p="Dashboard"><span id="n1"></span><span>Dashboard</span></button>
+      <button class="side__it" data-p="Users"><span id="n2"></span><span>Users</span></button>
+      <button class="side__it" data-p="Audit Log"><span id="n3"></span><span>Audit Log</span><span class="side__badge">3</span></button>
+      <div class="side__sep">Security</div>
+      <button class="side__it" data-p="PAT Tokens"><span id="n4"></span><span>PAT Tokens</span></button>
+      <button class="side__it" data-p="Feature Flags"><span id="n5"></span><span>Feature Flags</span></button>
+      <div class="side__sep">Account</div>
+      <button class="side__it" data-p="Billing"><span id="n6"></span><span>Billing</span></button>
+      <div class="side__foot">
+        <button class="side__it" data-p="Settings"><span id="n7"></span><span>Settings</span></button>
+        <button class="side__it" data-p="Documentation"><span id="n8"></span><span>Documentation</span></button>
+      </div>
+    </nav>
+
+    <main class="main">
+      <div class="ptitle">
+        <h1>Dashboard Overview</h1>
+        <div class="ptitle__meta"><button class="mn-btn mn-btn--accent mn-btn--sm" id="refresh">Refresh Data</button></div>
       </div>
 
-      <div class="header__center">
-        <label class="search-bar" id="search-bar">
-          <span id="search-icon"></span>
-          <input type="text" class="search-bar__input" placeholder="Search..." aria-label="Search">
-          <kbd class="search-bar__kbd"></kbd>
-        </label>
+      <div class="mrow" id="kpis">
+        <div class="mcard" data-k="Active Users: 2,847 monthly active users">
+          <div class="mcard__lab">Active Users</div>
+          <div class="mcard__val">2,847</div>
+          <div class="mcard__row"><span class="mcard__d d-up">+142 this month</span></div>
+        </div>
+        <div class="mcard" data-k="Revenue: $142K monthly recurring revenue">
+          <div class="mcard__lab">Revenue</div>
+          <div class="mcard__val">$142K</div>
+          <div class="mcard__row"><span class="mcard__d d-up">+$8K MRR</span></div>
+        </div>
+        <div class="mcard" data-k="API Calls: 3.2M calls per month">
+          <div class="mcard__lab">API Calls</div>
+          <div class="mcard__val">3.2M/mo</div>
+          <div class="mcard__row"><span class="mcard__d d-up">+240K</span></div>
+        </div>
+        <div class="mcard" data-k="Error Rate: 0.12% of requests failed">
+          <div class="mcard__lab">Error Rate</div>
+          <div class="mcard__val">0.12%</div>
+          <div class="mcard__row"><span class="mcard__d d-up">-0.03pp</span></div>
+        </div>
       </div>
 
-      <div class="header__right">
-        <select class="theme-select" id="theme-picker" aria-label="Theme">
-          <option value="editorial">Editorial</option>
-          <option value="nero">Nero</option>
-          <option value="avorio">Avorio</option>
-          <option value="colorblind">Colorblind</option>
-          <option value="sugar">Sugar</option>
-          <option value="navy">Navy</option>
-        </select>
-        <button class="icon-btn" id="btn-bell" aria-label="Notifications" title="Notifications"></button>
-        <button class="icon-btn" id="btn-settings" aria-label="Settings" title="Settings"></button>
-        <div class="avatar" id="avatar" title="Mara Fossati" aria-label="User menu">MF</div>
-      </div>
-    </header>
-
-    <!-- ── SIDEBAR ── -->
-    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-      <div class="sidebar__brand">
-        <img src="../src/assets/favicon.svg" alt="" width="22" height="22">
-        <span>Maranello Luce</span>
-        <span class="sidebar__version">v6.5</span>
+      <div class="pn g1" style="margin-bottom:20px">
+        <div class="pn__lab">System metrics</div>
+        <div id="strip"></div>
       </div>
 
-      <div class="sidebar__search-wrap">
-        <span class="sidebar__search-icon" id="sidebar-search-icon"></span>
-        <input type="search" class="sidebar__search" placeholder="Cerca pagina..." aria-label="Search pages">
-        <kbd class="sidebar__search-kbd">/</kbd>
+      <div class="pn" style="margin-bottom:20px">
+        <div class="pn__lab">Revenue trend</div>
+        <canvas id="revsp" style="width:100%;height:120px" role="img" aria-label="Revenue trend sparkline"></canvas>
       </div>
 
-      <div class="sidebar__group-label">Generale</div>
-      <nav class="sidebar__nav" id="nav-general">
-        <button class="sidebar__link is-active" data-page="dashboard">
-          <span id="icon-dashboard"></span>
-          <span class="sidebar__link-text">Dashboard</span>
-        </button>
-        <button class="sidebar__link" data-page="utenti">
-          <span id="icon-users"></span>
-          <span class="sidebar__link-text">Utenti</span>
-        </button>
-        <button class="sidebar__link" data-page="audit">
-          <span id="icon-activity"></span>
-          <span class="sidebar__link-text">Audit Log</span>
-          <span class="sidebar__badge">3</span>
-        </button>
-      </nav>
-
-      <div class="sidebar__group-label">Sicurezza</div>
-      <nav class="sidebar__nav">
-        <button class="sidebar__link" data-page="tokens">
-          <span id="icon-key"></span>
-          <span class="sidebar__link-text">PAT Tokens</span>
-        </button>
-        <button class="sidebar__link" data-page="flags">
-          <span id="icon-toggle"></span>
-          <span class="sidebar__link-text">Feature Flags</span>
-        </button>
-      </nav>
-
-      <div class="sidebar__group-label">Account</div>
-      <nav class="sidebar__nav">
-        <button class="sidebar__link" data-page="billing">
-          <span id="icon-briefcase"></span>
-          <span class="sidebar__link-text">Fatturazione</span>
-        </button>
-      </nav>
-
-      <div class="sidebar__spacer"></div>
-      <div class="sidebar__footer">
-        <button class="sidebar__footer-link" data-page="settings">
-          <span id="icon-settings-nav"></span>
-          Impostazioni
-        </button>
-        <button class="sidebar__footer-link" data-page="help">
-          <span id="icon-file"></span>
-          Documentazione
-        </button>
+      <div class="g g2">
+        <div class="pn"><div class="pn__lab">Team members</div><div id="tbl"></div></div>
+        <div class="pn"><div class="pn__lab">Traffic sources</div><canvas id="donut" style="width:100%;height:240px" role="img" aria-label="Traffic sources donut chart"></canvas></div>
       </div>
-    </aside>
 
-    <!-- ── MAIN ── -->
-    <main class="main" id="main-content">
-      <div class="mn-grid">
-        <!-- Row 1: KPI + Chart + Gauge -->
-        <div class="mn-cell mn-col-3">
-          <div class="mn-cell__label">Active users</div>
-          <div class="mn-cell__body" id="cell-kpi"></div>
-        </div>
-        <div class="mn-cell mn-col-6">
-          <div class="mn-cell__label">Revenue trend</div>
-          <div class="mn-cell__body" id="cell-chart"></div>
-        </div>
-        <div class="mn-cell mn-col-3">
-          <div class="mn-cell__label">Server load</div>
-          <div class="mn-cell__body" id="cell-gauge" style="display:flex;align-items:center;justify-content:center"></div>
-        </div>
+      <div class="g g2">
+        <div class="pn"><div class="pn__lab">Errors by service</div><canvas id="bar" style="width:100%;height:200px" role="img" aria-label="Errors by service bar chart"></canvas></div>
+        <div class="pn"><div class="pn__lab">Recent activity</div><div id="feed"></div></div>
+      </div>
 
-        <!-- Row 2: Sparkline + Donut + Bar -->
-        <div class="mn-cell mn-col-4">
-          <div class="mn-cell__label">Request rate</div>
-          <div class="mn-cell__body" id="cell-spark"></div>
-        </div>
-        <div class="mn-cell mn-col-4">
-          <div class="mn-cell__label">Traffic sources</div>
-          <div class="mn-cell__body" id="cell-donut" style="display:flex;align-items:center;justify-content:center"></div>
-        </div>
-        <div class="mn-cell mn-col-4">
-          <div class="mn-cell__label">Errors by service</div>
-          <div class="mn-cell__body" id="cell-bar"></div>
-        </div>
+      <div class="pn" style="margin-bottom:20px">
+        <div class="pn__lab">Project timeline</div>
+        <div id="gantt" style="min-height:200px"></div>
+      </div>
 
-        <!-- Row 3: Table + Activity -->
-        <div class="mn-cell mn-col-8">
-          <div class="mn-cell__label">Team members</div>
-          <div class="mn-cell__body" id="cell-table"></div>
-        </div>
-        <div class="mn-cell mn-col-4">
-          <div class="mn-cell__label">Activity feed</div>
-          <div class="mn-cell__body" id="cell-activity"></div>
-        </div>
-
-        <!-- Row 4: Gantt full width -->
-        <div class="mn-cell mn-col-12">
-          <div class="mn-cell__label">Project timeline</div>
-          <div class="mn-cell__body" id="cell-gantt" style="min-height:200px"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-top:12px;border-top:1px solid var(--mn-border)">
+        <div class="mn-segmented" role="tablist" id="seg">
+          <button class="mn-segmented__item" role="tab">Day</button>
+          <button class="mn-segmented__item" role="tab">Week</button>
+          <button class="mn-segmented__item mn-segmented__item--active" role="tab" aria-selected="true">Month</button>
         </div>
       </div>
     </main>
@@ -555,199 +240,144 @@
       var M = window.Maranello;
       if (!M) return;
 
-      // ── Inject icons via DS icon set ──
-      function setIcon(id, name) {
-        var el = document.getElementById(id);
-        if (el && M.icons[name]) el.innerHTML = M.icons[name]();
-      }
-      setIcon('sidebar-toggle', 'menu');
-      setIcon('search-icon', 'search');
-      setIcon('btn-bell', 'bell');
-      setIcon('btn-settings', 'settings');
-      setIcon('sidebar-search-icon', 'search');
-      setIcon('icon-dashboard', 'dashboard');
-      setIcon('icon-users', 'users');
-      setIcon('icon-activity', 'activity');
-      setIcon('icon-key', 'key');
-      setIcon('icon-toggle', 'toggleOn');
-      setIcon('icon-briefcase', 'briefcase');
-      setIcon('icon-settings-nav', 'settings');
-      setIcon('icon-file', 'file');
+      function ic(id, n) { var e = document.getElementById(id); if (e && M.icons[n]) e.innerHTML = M.icons[n](); }
+      ic('tog','menu'); ic('si','search'); ic('ib','bell'); ic('is','settings');
+      ic('n1','home'); ic('n2','users'); ic('n3','report'); ic('n4','key');
+      ic('n5','toggleOn'); ic('n6','briefcase'); ic('n7','settings'); ic('n8','file');
 
-      // Cmd-K shortcut label
-      var kbdEl = document.querySelector('.search-bar__kbd');
-      if (kbdEl) {
-        var isMac = navigator.userAgent.indexOf('Mac') !== -1;
-        kbdEl.textContent = isMac ? '\u2318K' : 'Ctrl+K';
-      }
+      var sk = document.getElementById('sk');
+      if (sk) sk.textContent = navigator.userAgent.indexOf('Mac') !== -1 ? '\u2318K' : 'Ctrl+K';
 
-      // ── Theme ──
-      var picker = document.getElementById('theme-picker');
-      var saved = localStorage.getItem('mn-theme') || 'editorial';
-      picker.value = saved;
-      picker.addEventListener('change', function () {
-        M.setTheme(picker.value);
-        localStorage.setItem('mn-theme', picker.value);
+      var tp = document.getElementById('tp');
+      tp.value = localStorage.getItem('mn-theme') || 'editorial';
+      tp.addEventListener('change', function () { M.setTheme(tp.value); localStorage.setItem('mn-theme', tp.value); });
+
+      var app = document.getElementById('app');
+      document.getElementById('tog').addEventListener('click', function () {
+        if (app.className.indexOf('is-collapsed') !== -1) app.className = app.className.replace('is-collapsed','').trim();
+        else app.className = app.className.trim() + ' is-collapsed';
       });
 
-      // ── Sidebar toggle ──
-      var shell = document.getElementById('app-shell');
-      var toggleBtn = document.getElementById('sidebar-toggle');
-      toggleBtn.addEventListener('click', function () {
-        var collapsed = shell.className.indexOf('is-collapsed') !== -1;
-        if (collapsed) {
-          shell.className = shell.className.replace('is-collapsed', '').trim();
-        } else {
-          shell.className = shell.className.trim() + ' is-collapsed';
+      var navs = document.querySelectorAll('.side__it');
+      var bc = document.getElementById('bc');
+      for (var i = 0; i < navs.length; i++) {
+        navs[i].addEventListener('click', function () {
+          for (var j = 0; j < navs.length; j++) navs[j].className = navs[j].className.replace(' on', '');
+          this.className += ' on';
+          if (bc) bc.textContent = this.getAttribute('data-p');
+        });
+      }
+
+      var segs = document.querySelectorAll('#seg .mn-segmented__item');
+      for (var s = 0; s < segs.length; s++) {
+        segs[s].addEventListener('click', function () {
+          for (var k = 0; k < segs.length; k++) { segs[k].className = segs[k].className.replace(' mn-segmented__item--active',''); segs[k].removeAttribute('aria-selected'); }
+          this.className += ' mn-segmented__item--active'; this.setAttribute('aria-selected','true');
+          if (M.toast) M.toast({ type:'info', title:'Range', message:'Switched to ' + this.textContent });
+        });
+      }
+
+      document.getElementById('refresh').addEventListener('click', function () {
+        if (M.toast) M.toast({ type:'success', title:'Data', message:'Dashboard data refreshed' });
+      });
+
+      var mcards = document.querySelectorAll('[data-k]');
+      for (var m = 0; m < mcards.length; m++) {
+        mcards[m].addEventListener('click', function () {
+          if (M.toast) M.toast({ type:'info', title:'Metric', message: this.getAttribute('data-k') });
+        });
+      }
+
+      var cstyles = getComputedStyle(document.documentElement);
+      function resolveColor(n) { return cstyles.getPropertyValue(n).trim() || '#888888'; }
+
+      try { if (M.sparkline) {
+        var revsp = document.getElementById('revsp');
+        if (revsp) M.sparkline(revsp, [108,112,118,122,126,128,132,134,136,138,140,142]);
+      } } catch(e) { console.warn('revenue sparkline:', e.message); }
+
+      try { if (M.dashboardStrip) {
+        M.dashboardStrip(document.getElementById('strip'), {
+          ariaLabel: 'System metrics',
+          zones: [
+            { type:'gauge', label:'UPTIME', gaugeConfig:{ value:99.97, max:100, color:resolveColor("--mn-success"), ticks:10, subticks:5, startAngle:-225, endAngle:45, showNeedle:true, numbers:[0,50,100], complications:{ centerValue:'99.97', centerUnit:'%' } }, size:'sm' },
+            { type:'pipeline', title:'API TRAFFIC', rows:[
+              { label:'/auth', value:840000, color:resolveColor("--mn-chart-series-1"), secondary:'840K' },
+              { label:'/users', value:1200000, color:resolveColor("--mn-chart-series-2"), secondary:'1.2M' },
+              { label:'/data', value:720000, color:resolveColor("--mn-chart-series-3"), secondary:'720K' },
+              { label:'/webhooks', value:440000, color:resolveColor("--mn-chart-series-4"), secondary:'440K' }
+            ], footer:{ label:'Total', value:'3.2M' } },
+            { type:'board', title:'KEY METRICS', stats:[ { label:'Uptime', value:'99.97%' }, { label:'Latency', value:'142ms' }, { label:'Throughput', value:'2.4K/s' }, { label:'Cache Hit', value:'94.2%' } ] }
+          ]
+        });
+      } } catch(e) { console.warn('strip:', e.message); }
+
+      try { if (M.dataTable) {
+        M.dataTable(document.getElementById('tbl'), {
+          columns:[
+            {key:'name',label:'Name',sortable:true},
+            {key:'role',label:'Role'},
+            {key:'status',label:'Status',type:'status'},
+            {key:'active',label:'Last Active',align:'right'},
+            {key:'actions',label:'Actions'}
+          ],
+          data:[
+            {name:'Alice Chen',role:'Admin',status:'Active',active:'2m ago',actions:'Edit'},
+            {name:'Bob Martinez',role:'Editor',status:'Active',active:'15m ago',actions:'Edit'},
+            {name:'Carol Singh',role:'Viewer',status:'Inactive',active:'3d ago',actions:'Edit'},
+            {name:'David Kim',role:'Editor',status:'Active',active:'1h ago',actions:'Edit'},
+            {name:'Emma Wilson',role:'Admin',status:'Active',active:'5m ago',actions:'Edit'}
+          ],
+          ariaLabel:'Team members table',
+          compact:true,
+          onRowClick:function(r){ if(M.toast) M.toast({type:'info',title:r.name,message:'Role: '+r.role+', Status: '+r.status}); }
+        });
+      } } catch(e) { console.warn('dataTable:', e.message); }
+
+      try { if (M.charts && M.charts.donut) {
+        var donut = document.getElementById('donut');
+        if (donut) {
+          M.charts.donut(donut, [
+            { value:42, color:resolveColor("--mn-chart-series-1") },
+            { value:28, color:resolveColor("--mn-chart-series-2") },
+            { value:18, color:resolveColor("--mn-chart-series-3") },
+            { value:12, color:resolveColor("--mn-chart-series-4") }
+          ], { centerText:'100%', centerSubtext:'Traffic' });
         }
-      });
+      } } catch(e) { console.warn('donut:', e.message); }
 
-      // ── Sidebar nav ──
-      var links = document.querySelectorAll('.sidebar__link');
-      var bcCurrent = document.querySelector('.breadcrumb__current');
-      for (var i = 0; i < links.length; i++) {
-        links[i].addEventListener('click', function () {
-          for (var j = 0; j < links.length; j++) links[j].className = links[j].className.replace(' is-active', '');
-          this.className += ' is-active';
-          var textEl = this.querySelector('.sidebar__link-text');
-          if (textEl && bcCurrent) bcCurrent.textContent = textEl.textContent;
-        });
-      }
+      try { if (M.charts && M.charts.barChart) {
+        var bar = document.getElementById('bar');
+        if (bar) {
+          M.charts.barChart(bar, [
+            { label:'Auth', value:142 },
+            { label:'API', value:284 },
+            { label:'Database', value:68 },
+            { label:'Cache', value:92 },
+            { label:'Queue', value:34 }
+          ], { showLabels:true, showValues:true });
+        }
+      } } catch(e) { console.warn('barChart:', e.message); }
 
-      // ── Mount components ──
+      try { if (M.activityFeed) {
+        M.activityFeed(document.getElementById('feed'), [
+          {id:'1',title:'User Created',body:'New user Alice Chen added by Admin',meta:'5m ago',type:'success'},
+          {id:'2',title:'Config Updated',body:'Feature flag NEW_UI enabled',meta:'12m ago',type:'info'},
+          {id:'3',title:'Payment Received',body:'Invoice #4821 paid: $4,200',meta:'1h ago',type:'success'},
+          {id:'4',title:'API Error',body:'Rate limit exceeded for client ID 8472',meta:'2h ago',type:'warning'},
+          {id:'5',title:'Backup Complete',body:'Daily backup completed successfully',meta:'3h ago',type:'success'},
+          {id:'6',title:'User Deleted',body:'User Bob Smith deactivated',meta:'5h ago',type:'info'}
+        ], {maxItems:8});
+      } } catch(e) { console.warn('activityFeed:', e.message); }
 
-      // KPI
-      var kpiEl = document.getElementById('cell-kpi');
-      if (kpiEl) {
-        kpiEl.innerHTML =
-          '<div class="kpi">' +
-            '<div class="kpi__value">2,847</div>' +
-            '<div class="kpi__label">Total active this month</div>' +
-            '<div class="kpi__trend">+12.4% vs last month</div>' +
-          '</div>';
-      }
-
-      // Gauge
-      var gaugeEl = document.getElementById('cell-gauge');
-      if (gaugeEl && M.createGauge) {
-        var gCanvas = document.createElement('canvas');
-        gCanvas.width = 140;
-        gCanvas.height = 140;
-        gCanvas.setAttribute('role', 'img');
-        gCanvas.setAttribute('aria-label', 'Server load gauge at 72 percent');
-        gaugeEl.appendChild(gCanvas);
-        M.createGauge({
-          target: gCanvas,
-          config: {
-            value: 72,
-            max: 100,
-            showNeedle: true,
-            complications: { centerValue: '72', centerUnit: '%', centerLabel: 'LOAD' }
-          }
-        });
-      }
-
-      // Sparkline (revenue trend)
-      var chartEl = document.getElementById('cell-chart');
-      if (chartEl && M.sparkline) {
-        var sCanvas = document.createElement('canvas');
-        sCanvas.setAttribute('role', 'img');
-        sCanvas.setAttribute('aria-label', 'Revenue trend sparkline');
-        sCanvas.style.width = '100%';
-        sCanvas.style.height = '100%';
-        chartEl.appendChild(sCanvas);
-        M.sparkline(sCanvas, [42,45,48,52,49,55,58,62,59,65,68,72,70,75,78,82,80,85,88,92,90,95,98,102]);
-      }
-
-      // Request rate sparkline
-      var sparkEl = document.getElementById('cell-spark');
-      if (sparkEl && M.sparkline) {
-        var spCanvas = document.createElement('canvas');
-        spCanvas.setAttribute('role', 'img');
-        spCanvas.setAttribute('aria-label', 'Request rate sparkline');
-        spCanvas.style.width = '100%';
-        spCanvas.style.height = '100%';
-        sparkEl.appendChild(spCanvas);
-        M.sparkline(spCanvas, [120,135,128,142,155,148,160,172,165,178,185,190]);
-      }
-
-      // Donut
-      var donutEl = document.getElementById('cell-donut');
-      if (donutEl && M.charts && M.charts.donut) {
-        var dCanvas = document.createElement('canvas');
-        dCanvas.width = 160;
-        dCanvas.height = 160;
-        dCanvas.setAttribute('role', 'img');
-        dCanvas.setAttribute('aria-label', 'Traffic sources: Direct 48%, Referral 32%, Organic 20%');
-        donutEl.appendChild(dCanvas);
-        M.charts.donut(dCanvas, [
-          { value: 48, color: 'var(--mn-chart-series-1)' },
-          { value: 32, color: 'var(--mn-chart-series-2)' },
-          { value: 20, color: 'var(--mn-chart-series-3)' }
-        ], { centerText: '48%', centerSubtext: 'Direct' });
-      }
-
-      // Bar chart
-      var barEl = document.getElementById('cell-bar');
-      if (barEl && M.charts && M.charts.barChart) {
-        var bCanvas = document.createElement('canvas');
-        bCanvas.setAttribute('role', 'img');
-        bCanvas.setAttribute('aria-label', 'Errors by service: API 45, Auth 23, DB 12, Cache 8');
-        bCanvas.style.width = '100%';
-        bCanvas.style.height = '100%';
-        barEl.appendChild(bCanvas);
-        M.charts.barChart(bCanvas, [
-          { label: 'API', value: 45 },
-          { label: 'Auth', value: 23 },
-          { label: 'DB', value: 12 },
-          { label: 'Cache', value: 8 }
-        ], { showLabels: true, showValues: true });
-      }
-
-      // Data table
-      var tableEl = document.getElementById('cell-table');
-      if (tableEl && M.dataTable) {
-        M.dataTable(tableEl, {
-          columns: [
-            { key: 'name', label: 'Name', sortable: true },
-            { key: 'role', label: 'Role' },
-            { key: 'status', label: 'Status', type: 'status' },
-            { key: 'activity', label: 'Last Active' }
-          ],
-          data: [
-            { name: 'Mara Fossati', role: 'Admin', status: 'Active', activity: '2 min ago' },
-            { name: 'Leo Hartmann', role: 'Editor', status: 'Active', activity: '15 min ago' },
-            { name: 'Anika Patel', role: 'Viewer', status: 'Idle', activity: '2h ago' },
-            { name: 'Diego Navarro', role: 'Admin', status: 'Active', activity: '5 min ago' },
-            { name: 'Suki Tanaka', role: 'Editor', status: 'Offline', activity: '1d ago' }
-          ],
-          compact: true,
-          ariaLabel: 'Team members table'
-        });
-      }
-
-      // Activity feed
-      var actEl = document.getElementById('cell-activity');
-      if (actEl && M.activityFeed) {
-        M.activityFeed(actEl, [
-          { id: '1', title: 'Mara Fossati', body: 'deployed v3.2.1 to production', meta: '2 min ago', type: 'success' },
-          { id: '2', title: 'Leo Hartmann', body: 'updated feature flag dark-mode', meta: '15 min ago', type: 'info' },
-          { id: '3', title: 'Anika Patel', body: 'reviewed audit log entries', meta: '1h ago', type: 'default' },
-          { id: '4', title: 'Diego Navarro', body: 'rotated PAT token api-prod', meta: '3h ago', type: 'warning' }
-        ], { maxItems: 6 });
-      }
-
-      // Gantt
-      var ganttEl = document.getElementById('cell-gantt');
-      if (ganttEl && M.gantt) {
-        M.gantt(ganttEl, [
-          { id: '1', title: 'Platform Setup', start: '2026-03-01', end: '2026-03-15' },
-          { id: '2', title: 'API Development', start: '2026-03-10', end: '2026-04-10' },
-          { id: '3', title: 'Frontend Build', start: '2026-03-20', end: '2026-04-20' },
-          { id: '4', title: 'Integration Testing', start: '2026-04-15', end: '2026-05-01' },
-          { id: '5', title: 'Launch', start: '2026-05-01', end: '2026-05-05' }
-        ]);
-      }
+      try { if (M.gantt) {
+        M.gantt(document.getElementById('gantt'), [
+          {id:'1',title:'Q1 Platform Upgrade',start:'2026-01-01',end:'2026-03-31',progress:68},
+          {id:'2',title:'Security Audit',start:'2026-02-01',end:'2026-04-15',progress:42},
+          {id:'3',title:'Mobile App Launch',start:'2026-03-01',end:'2026-06-30',progress:28},
+          {id:'4',title:'API v3 Migration',start:'2026-04-01',end:'2026-07-31',progress:15}
+        ], { onClick:function(t){ if(M.toast) M.toast({type:'info',title:t.title,message:'Progress: '+t.progress+'%'}); } });
+      } } catch(e) { console.warn('gantt:', e.message); }
     })();
   </script>
 </body>
