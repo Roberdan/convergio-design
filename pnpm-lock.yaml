@@ -53,6 +53,8 @@ importers:
 
   packages/tokens: {}
 
+  starters/create-starter: {}
+
   starters/executive-cockpit:
     dependencies:
       '@convergio/design-elements':
@@ -61,6 +63,9 @@ importers:
       '@convergio/design-tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      '@convergio/shared-shell-starter':
+        specifier: workspace:*
+        version: link:../shared-shell
     devDependencies:
       typescript:
         specifier: ^5.7.0
@@ -80,6 +85,9 @@ importers:
       '@convergio/design-tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      '@convergio/shared-shell-starter':
+        specifier: workspace:*
+        version: link:../shared-shell
     devDependencies:
       typescript:
         specifier: ^5.7.0
@@ -99,6 +107,9 @@ importers:
       '@convergio/design-tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      '@convergio/shared-shell-starter':
+        specifier: workspace:*
+        version: link:../shared-shell
 
   starters/shared-shell:
     dependencies:
@@ -117,6 +128,9 @@ importers:
       '@convergio/design-tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      '@convergio/shared-shell-starter':
+        specifier: workspace:*
+        version: link:../shared-shell
 
 packages:
 
