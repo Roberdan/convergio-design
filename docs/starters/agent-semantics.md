@@ -40,7 +40,7 @@ import { queryByWorkflow } from '@convergio/design-elements';
 
 const entry = queryByWorkflow('ops-monitor');
 // entry.components => [{ id: 'mn-system-status', role: 'service health panel' }, ...]
-// entry.starter    => { package: '@convergio/ops-dashboard-starter', ... }
+// entry.starter    => undefined (no dedicated starter; use shared-shell)
 ```
 
 ### Query by intent (keyword search)

@@ -1,29 +1,60 @@
 {
   "name": "@convergio/design-elements",
-  "version": "6.3.2",
+  "version": "6.5.0",
   "description": "Maranello Luce Design \u2014 31 Web Components + headless viz/domain API",
   "type": "module",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/esm/index.js"
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs"
+    },
+    "./charts": {
+      "types": "./dist/types/charts/index.d.ts",
+      "import": "./dist/esm/charts/index.js",
+      "require": "./dist/cjs/charts/index.cjs"
+    },
+    "./gantt": {
+      "types": "./dist/types/gantt/index.d.ts",
+      "import": "./dist/esm/gantt/index.js",
+      "require": "./dist/cjs/gantt/index.cjs"
+    },
+    "./gauge": {
+      "types": "./dist/types/gauge/index.d.ts",
+      "import": "./dist/esm/gauge/index.js",
+      "require": "./dist/cjs/gauge/index.cjs"
+    },
+    "./controls": {
+      "types": "./dist/types/controls/index.d.ts",
+      "import": "./dist/esm/controls/index.js",
+      "require": "./dist/cjs/controls/index.cjs"
+    },
+    "./forms": {
+      "types": "./dist/types/forms/index.d.ts",
+      "import": "./dist/esm/forms/index.js",
+      "require": "./dist/cjs/forms/index.cjs"
     },
     "./react": {
       "types": "./src/react.d.ts"
     },
     "./wc": {
       "types": "./dist/types/wc/index.d.ts",
-      "import": "./dist/esm/wc/index.js"
+      "import": "./dist/esm/wc/index.js",
+      "require": "./dist/cjs/wc/index.cjs"
     },
     "./wc/*": {
       "types": "./dist/types/wc/*.d.ts",
-      "import": "./dist/esm/wc/*.js"
+      "import": "./dist/esm/wc/*.js",
+      "require": "./dist/cjs/wc/*.cjs"
     },
     "./register-all": {
       "types": "./dist/types/wc/register-all.d.ts",
-      "import": "./dist/esm/wc/register-all.js"
+      "import": "./dist/esm/wc/register-all.js",
+      "require": "./dist/cjs/wc/register-all.cjs"
     },
     "./knowledge": "./dist/knowledge/ckb.json",
+    "./knowledge/components": "./dist/knowledge/component-semantic-recipes.json",
+    "./knowledge/templates": "./dist/knowledge/template-semantic-recipes.json",
     "./css": "./dist/css/index.css",
     "./css/*": "./dist/css/*"
   },

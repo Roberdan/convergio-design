@@ -1,11 +1,11 @@
 // @vitest-environment node
 
 /**
- * Consumer smoke test — validates that all published entrypoints
- * of @convergio/design-tokens and @convergio/design-elements
- * can be imported in Node.js (SSR) without crashing.
+ * Consumer smoke test — validates that source entrypoints are SSR-safe
+ * in Node environment. Imports from packages/*/src/ts/ (not dist) so
+ * vitest can run without a prior build step.
  *
- * This is the first line of defense against module-scope browser globals.
+ * For full published-package validation, see tests/consumer-nextjs/.
  */
 import { describe, expect, it } from 'vitest';
 import { existsSync } from 'node:fs';

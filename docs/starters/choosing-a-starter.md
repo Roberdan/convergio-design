@@ -39,10 +39,10 @@ interface WorkspaceConfig extends SharedShellConfig {
 
 ### ops-dashboard
 
-Extends `ShellConfig` (from `shared-shell`) with real-time monitoring surfaces:
+Extends `SharedShellConfig` (from `shared-shell`) with real-time monitoring surfaces:
 
 ```ts
-interface OpsDashboardConfig extends ShellConfig {
+interface OpsDashboardConfig extends SharedShellConfig {
   dashboardStrip: StripZoneConfig[];  // gauge | pipeline | trend | board
   alerts?: AlertConfig;              // { endpoint, refreshInterval: ms }
   statusBoard?: StatusBoardConfig;   // { columns, swimlanes }

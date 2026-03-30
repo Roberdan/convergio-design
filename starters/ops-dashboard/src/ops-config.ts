@@ -108,10 +108,11 @@ export function createOpsDashboardConfig(
     filters: DEFAULT_FILTERS,
   };
 
+  const clone: OpsDashboardConfig = JSON.parse(JSON.stringify(base));
   return {
-    ...base,
+    ...clone,
     ...overrides,
-    dashboardStrip: overrides.dashboardStrip ?? base.dashboardStrip,
-    filters: overrides.filters ?? base.filters,
+    dashboardStrip: overrides.dashboardStrip ?? clone.dashboardStrip,
+    filters: overrides.filters ?? clone.filters,
   };
 }
