@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.5.1] - 2026-03-31
+
+### Fixed
+- **`isValidColor()`**: guard against `null`/`undefined` input — was crashing funnel and dashboard strip when pipeline stages had no explicit color
+- **`sparkline` color handling**: guard `o.color?.startsWith` — was crashing strip trend zone sparklines when color was undefined
+- **`dashboard-strip-zones`**: only pass color option to sparkline when defined — prevents undefined override of defaults
+- **`parseDate()` in gantt**: use native `new Date(s)` parser — ISO timestamps like `2026-03-30T18:47:42.337Z` caused NaN day with the old manual split on `"-"`
+
+### Added
+- **6 app-quality starter demos**: executive cockpit, workspace, ops dashboard, program management, hacker terminal, generic admin template — all with realistic data, interactivity, and correct API usage
+
 ## [6.5.0] - 2026-03-30
 
 ### Breaking Changes
